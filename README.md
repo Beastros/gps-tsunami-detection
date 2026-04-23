@@ -97,6 +97,14 @@ scripts/
   pierce_point_weighted.py  # PPW vs equal-weight stacking comparison
   control_day_batch.py      # False alarm characterization on quiet days
 
+  # Live operational pipeline
+  pipeline.py               # Master orchestrator — runs all 4 stages
+  usgs_listener.py          # Polls USGS every 15 min, catches Pacific Mw6.5+ events
+  rinex_downloader.py       # Downloads RINEX from CDDIS when event queued
+  detector_runner.py        # Runs frozen detector on downloaded data
+  scorer.py                 # Scores prediction vs NOAA tide gauge 24h later
+  health_check.py           # Verifies all pipeline components are online
+
 figures/
   blind_validation.png
   cascading_demo.png
@@ -126,6 +134,29 @@ python scripts/calibration_updated.py
 
 RINEX files are not included. Each script documents the exact CDDIS URLs for its required files.
 
+## Live Pipeline
+
+The live operational pipeline monitors USGS in real time and scores predictions against NOAA tide gauges automatically.
+
+```bash
+# Run one cycle manually:
+python scripts/pipeline.py --once
+
+# Run continuously (every 15 min):
+python scripts/pipeline.py
+
+# Verify all components are healthy:
+python scripts/health_check.py
+```
+
+Requires a `.env` file in the pipeline directory (never committed):
+```
+EARTHDATA_USER=your_nasa_earthdata_username
+EARTHDATA_PASS=your_nasa_earthdata_password
+```
+
+The health check verifies: pipeline scripts present, credentials loaded, USGS feed reachable, CDDIS archive reachable, NOAA API responding, GitHub logs accessible, dashboard live, event queue status, poll log freshness, and all Python dependencies installed. Run it any time to confirm the system is operational.
+
 ---
 
 ## Key Findings
@@ -149,8 +180,9 @@ RINEX files are not included. Each script documents the exact CDDIS URLs for its
 - [x] Blind validation on held-out events
 - [x] Detection envelope characterized
 - [x] Cascading prediction demonstrated
-- [ ] Paper submission (target: NHESS)
-- [ ] Real-time prototype
+- [x] Live operational pipeline running
+- [x] Public dashboard with live scoring log
+- [ ] Paper submission (target: NHESS Technical Note)
 - [ ] Station-specific calibration for upstream anchors (CHAT, GUAM)
 
 ---
