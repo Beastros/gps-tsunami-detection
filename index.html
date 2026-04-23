@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPS Tsunami Detection — Live Monitor</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #040c14;
+    --surface: #071520;
+    --surface2: #0a1e2e;
+    --border: #0e2a3f;
+    --accent: #00d4ff;
+    --accent2: #00ff9d;
+    --warn: #ff6b35;
+    --danger: #ff3358;
+    --text: #c8dde8;
+    --text-dim: #4a7a94;
+    --text-bright: #eef7ff;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Radial glow */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(0,212,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* Header */
+  header {
+    padding: 40px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .header-left h1 {
+    font-family: var(--sans);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 800;
+    color: var(--text-bright);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  .header-left h1 span {
+    color: var(--accent);
+  }
+
+  .header-left .subtitle {
+    margin-top: 8px;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,255,157,0.08);
+    border: 1px solid rgba(0,255,157,0.25);
+    border-radius: 4px;
+    padding: 8px 14px;
+    font-size: 0.72rem;
+    color: var(--accent2);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent2);
+    animation: pulse 2s infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  /* Stats grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+
+  .stat-card.green::before { background: var(--accent2); }
+  .stat-card.orange::before { background: var(--warn); }
+  .stat-card.red::before { background: var(--danger); }
+
+  .stat-label {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .stat-value {
+    font-family: var(--sans);
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--text-bright);
+    line-height: 1;
+  }
+
+  .stat-value.cyan { color: var(--accent); }
+  .stat-value.green { color: var(--accent2); }
+  .stat-value.orange { color: var(--warn); }
+  .stat-value.red { color: var(--danger); }
+
+  .stat-sub {
+    margin-top: 6px;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+  }
+
+  /* Section headers */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Alert banner */
+  .alert-banner {
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.3);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 16px 20px;
+    margin-bottom: 40px;
+    display: none;
+  }
+
+  .alert-banner.visible { display: flex; align-items: center; gap: 16px; }
+  .alert-banner.detection {
+    background: rgba(255,51,88,0.08);
+    border-color: rgba(255,51,88,0.4);
+    border-left-color: var(--danger);
+  }
+
+  .alert-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .alert-text strong {
+    display: block;
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-bright);
+    margin-bottom: 3px;
+  }
+
+  .alert-text span {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+  }
+
+  .alert-lead {
+    margin-left: auto;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .alert-lead .mins {
+    font-family: var(--sans);
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--danger);
+    line-height: 1;
+  }
+
+  .alert-lead .mins-label {
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Events table */
+  .events-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 40px;
+    overflow: hidden;
+  }
+
+  .events-panel-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .events-panel-header span {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .event-count {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2px 8px;
+    font-size: 0.65rem;
+    color: var(--accent);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    padding: 10px 20px;
+    text-align: left;
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+    font-weight: 400;
+  }
+
+  td {
+    padding: 14px 20px;
+    font-size: 0.72rem;
+    border-bottom: 1px solid rgba(14,42,63,0.5);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,212,255,0.02); }
+
+  .outcome-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .outcome-badge.tp {
+    background: rgba(0,255,157,0.1);
+    color: var(--accent2);
+    border: 1px solid rgba(0,255,157,0.2);
+  }
+
+  .outcome-badge.tn {
+    background: rgba(0,212,255,0.08);
+    color: var(--accent);
+    border: 1px solid rgba(0,212,255,0.15);
+  }
+
+  .outcome-badge.fp {
+    background: rgba(255,51,88,0.1);
+    color: var(--danger);
+    border: 1px solid rgba(255,51,88,0.2);
+  }
+
+  .outcome-badge.fn {
+    background: rgba(255,107,53,0.1);
+    color: var(--warn);
+    border: 1px solid rgba(255,107,53,0.2);
+  }
+
+  .outcome-badge.geo {
+    background: rgba(74,122,148,0.15);
+    color: var(--text-dim);
+    border: 1px solid rgba(74,122,148,0.2);
+  }
+
+  .mw-pill {
+    display: inline-block;
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 0.8rem;
+    min-width: 44px;
+    text-align: center;
+  }
+
+  .mw-high { color: var(--danger); }
+  .mw-mid  { color: var(--warn); }
+  .mw-low  { color: var(--accent); }
+
+  .lead-time {
+    font-family: var(--sans);
+    font-weight: 700;
+    color: var(--accent2);
+  }
+
+  .lead-time.negative { color: var(--text-dim); }
+
+  .place-text {
+    color: var(--text);
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .time-text { color: var(--text-dim); font-size: 0.65rem; }
+
+  /* Two-column layout */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  @media (max-width: 700px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  /* Accuracy panel */
+  .accuracy-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+  }
+
+  .accuracy-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.72rem;
+  }
+
+  .accuracy-row:last-child { border-bottom: none; }
+
+  .accuracy-label { color: var(--text-dim); }
+
+  .accuracy-val {
+    font-family: var(--sans);
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-bright);
+  }
+
+  .accuracy-val.good { color: var(--accent2); }
+  .accuracy-val.warn { color: var(--warn); }
+
+  /* Bar chart */
+  .bar-chart {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 0.68rem;
+  }
+
+  .bar-label {
+    color: var(--text-dim);
+    width: 60px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+  }
+
+  .bar-val {
+    color: var(--text);
+    width: 50px;
+    flex-shrink: 0;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 0.72rem;
+  }
+
+  /* Empty state */
+  .empty-state {
+    padding: 48px 20px;
+    text-align: center;
+  }
+
+  .empty-state .empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    opacity: 0.4;
+  }
+
+  .empty-state p {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  .empty-state .waiting {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.68rem;
+  }
+
+  footer span {
+    color: var(--text-dim);
+    font-size: 0.65rem;
+  }
+
+  .last-updated {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+  }
+
+  /* Loading */
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    gap: 10px;
+    color: var(--text-dim);
+    font-size: 0.72rem;
+  }
+
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Error */
+  .error-state {
+    text-align: center;
+    padding: 48px;
+    color: var(--text-dim);
+    font-size: 0.72rem;
+    line-height: 1.8;
+  }
+
+  /* Pacific map placeholder */
+  .map-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+  }
+
+  .map-svg {
+    width: 100%;
+    height: auto;
+    opacity: 0.7;
+  }
+
+  .station-dot {
+    animation: station-pulse 3s infinite;
+  }
+
+  @keyframes station-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="header-left">
+      <h1>GPS <span>Tsunami</span> Detection</h1>
+      <div class="subtitle">Ionospheric TEC coherence monitor · Pacific basin · parameters frozen 2025-04-22</div>
+    </div>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      Live · 15min poll
+    </div>
+  </header>
+
+  <!-- Alert banner (shown when detection fires) -->
+  <div class="alert-banner" id="alertBanner">
+    <div class="alert-icon">⚡</div>
+    <div class="alert-text">
+      <strong id="alertTitle">Detection Alert</strong>
+      <span id="alertDesc">–</span>
+    </div>
+    <div class="alert-lead">
+      <div class="mins" id="alertMins">–</div>
+      <div class="mins-label">min lead</div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="loading"><div class="spinner"></div> loading data…</div>
+  </div>
+
+  <!-- Pacific station map -->
+  <div class="section-header">
+    <span class="section-title">Station Network</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="map-panel">
+    <svg class="map-svg" viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg">
+      <!-- Pacific ocean fill -->
+      <rect width="800" height="360" fill="#040c14"/>
+
+      <!-- Very simplified Pacific coastlines -->
+      <!-- Japan/Kuril -->
+      <path d="M560,60 L575,80 L570,100 L580,120 L575,140" stroke="#0e2a3f" stroke-width="2" fill="none"/>
+      <!-- Alaska -->
+      <path d="M80,80 L120,70 L180,75 L220,90 L250,80" stroke="#0e2a3f" stroke-width="2" fill="none"/>
+      <!-- North America west coast -->
+      <path d="M250,80 L260,120 L255,160 L265,200 L260,240 L270,280" stroke="#0e2a3f" stroke-width="2" fill="none"/>
+      <!-- South America west coast -->
+      <path d="M270,280 L265,300 L275,320 L270,350" stroke="#0e2a3f" stroke-width="2" fill="none"/>
+      <!-- Australia -->
+      <path d="M580,220 L640,210 L680,230 L700,260 L680,290 L640,300 L590,280 L575,255 L580,220" stroke="#0e2a3f" stroke-width="2" fill="none"/>
+      <!-- New Zealand -->
+      <path d="M660,300 L670,320 L660,340" stroke="#0e2a3f" stroke-width="2" fill="none"/>
+
+      <!-- Grid lines -->
+      <line x1="0" y1="180" x2="800" y2="180" stroke="#0a1e2e" stroke-width="1"/>
+      <line x1="400" y1="0" x2="400" y2="360" stroke="#0a1e2e" stroke-width="1"/>
+
+      <!-- Equator label -->
+      <text x="10" y="175" fill="#0e2a3f" font-size="8" font-family="Space Mono">0°</text>
+
+      <!-- Propagation arcs (subtle) -->
+      <path d="M575,110 Q480,200 440,220" stroke="#00d4ff" stroke-width="1" fill="none" stroke-dasharray="4,6" opacity="0.3"/>
+      <path d="M265,290 Q350,270 440,220" stroke="#00ff9d" stroke-width="1" fill="none" stroke-dasharray="4,6" opacity="0.3"/>
+
+      <!-- Station markers -->
+      <!-- GUAM -->
+      <circle cx="575" cy="175" r="5" fill="#00d4ff" opacity="0.9" class="station-dot"/>
+      <text x="582" y="179" fill="#00d4ff" font-size="8" font-family="Space Mono" opacity="0.8">GUAM</text>
+
+      <!-- CHAT (Chatham Islands) -->
+      <circle cx="350" cy="295" r="5" fill="#00ff9d" opacity="0.9" class="station-dot" style="animation-delay:0.5s"/>
+      <text x="357" y="299" fill="#00ff9d" font-size="8" font-family="Space Mono" opacity="0.8">CHAT</text>
+
+      <!-- THTI (Tahiti) -->
+      <circle cx="310" cy="230" r="5" fill="#ff6b35" opacity="0.9" class="station-dot" style="animation-delay:1s"/>
+      <text x="317" y="234" fill="#ff6b35" font-size="8" font-family="Space Mono" opacity="0.8">THTI</text>
+
+      <!-- MKEA (Mauna Kea) -->
+      <circle cx="440" cy="195" r="6" fill="#fff" opacity="0.95"/>
+      <circle cx="440" cy="195" r="3" fill="#00d4ff"/>
+      <text x="448" y="191" fill="#eef7ff" font-size="8" font-family="Space Mono" opacity="0.9">MKEA</text>
+
+      <!-- KOKB -->
+      <circle cx="432" cy="185" r="4" fill="#7b9db5" opacity="0.7"/>
+      <text x="418" y="181" fill="#7b9db5" font-size="7" font-family="Space Mono" opacity="0.7">KOKB</text>
+
+      <!-- Hilo gauge -->
+      <circle cx="445" cy="205" r="4" fill="#ff3358" opacity="0.8"/>
+      <text x="450" y="209" fill="#ff3358" font-size="7" font-family="Space Mono" opacity="0.8">HILO</text>
+
+      <!-- Source zone indicators -->
+      <text x="555" y="105" fill="#0e2a3f" font-size="7" font-family="Space Mono">JAPAN/KURIL</text>
+      <text x="240" y="310" fill="#0e2a3f" font-size="7" font-family="Space Mono">S.AMERICA</text>
+      <text x="290" y="220" fill="#0e2a3f" font-size="7" font-family="Space Mono">TONGA</text>
+
+      <!-- Legend -->
+      <circle cx="20" cy="330" r="4" fill="#00d4ff"/>
+      <text x="28" y="334" fill="#4a7a94" font-size="7" font-family="Space Mono">GPS Station</text>
+      <circle cx="120" cy="330" r="4" fill="#ff3358"/>
+      <text x="128" y="334" fill="#4a7a94" font-size="7" font-family="Space Mono">Tide Gauge</text>
+    </svg>
+  </div>
+
+  <!-- Recent events -->
+  <div class="section-header">
+    <span class="section-title">Event Log</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="events-panel">
+    <div class="events-panel-header">
+      <span>Scored events — prediction vs actual</span>
+      <span class="event-count" id="eventCountBadge">0 events</span>
+    </div>
+    <div id="eventsTable">
+      <div class="empty-state">
+        <div class="empty-icon">🌊</div>
+        <p>No scored events yet.<br>The pipeline is active and monitoring the Pacific basin.<br>First Mw 6.5+ subduction zone event will trigger the full chain.</p>
+        <div class="waiting"><div class="live-dot"></div>Awaiting qualifying event</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accuracy + lead time -->
+  <div class="two-col">
+    <div>
+      <div class="section-header">
+        <span class="section-title">Performance Metrics</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="accuracy-panel" id="accuracyPanel">
+        <div class="accuracy-row">
+          <span class="accuracy-label">True positive rate</span>
+          <span class="accuracy-val good" id="metTPR">–</span>
+        </div>
+        <div class="accuracy-row">
+          <span class="accuracy-label">False alarm rate</span>
+          <span class="accuracy-val good" id="metFPR">–</span>
+        </div>
+        <div class="accuracy-row">
+          <span class="accuracy-label">Mean lead time</span>
+          <span class="accuracy-val" id="metLead">–</span>
+        </div>
+        <div class="accuracy-row">
+          <span class="accuracy-label">Median lead time</span>
+          <span class="accuracy-val" id="metLeadMed">–</span>
+        </div>
+        <div class="accuracy-row">
+          <span class="accuracy-label">Amplitude error</span>
+          <span class="accuracy-val" id="metAmpErr">–</span>
+        </div>
+        <div class="accuracy-row">
+          <span class="accuracy-label">Events scored</span>
+          <span class="accuracy-val" id="metTotal">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-header">
+        <span class="section-title">Outcome Breakdown</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="bar-chart" id="barChart">
+        <div class="bar-row">
+          <span class="bar-label">TP</span>
+          <div class="bar-track"><div class="bar-fill" id="barTP" style="width:0%;background:#00ff9d"></div></div>
+          <span class="bar-val" id="barTPVal">0</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">TN</span>
+          <div class="bar-track"><div class="bar-fill" id="barTN" style="width:0%;background:#00d4ff"></div></div>
+          <span class="bar-val" id="barTNVal">0</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">FP</span>
+          <div class="bar-track"><div class="bar-fill" id="barFP" style="width:0%;background:#ff3358"></div></div>
+          <span class="bar-val" id="barFPVal">0</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">FN</span>
+          <div class="bar-track"><div class="bar-fill" id="barFN" style="width:0%;background:#ff6b35"></div></div>
+          <span class="bar-val" id="barFNVal">0</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Geo</span>
+          <div class="bar-track"><div class="bar-fill" id="barGeo" style="width:0%;background:#4a7a94"></div></div>
+          <span class="bar-val" id="barGeoVal">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      <a href="https://github.com/Beastros/gps-tsunami-detection" target="_blank">github.com/Beastros/gps-tsunami-detection</a>
+    </div>
+    <div class="last-updated">Last updated: <span id="lastUpdated">–</span></div>
+    <span>Research monitoring · not an operational warning system</span>
+  </footer>
+
+</div>
+
+<script>
+// ── Config ──────────────────────────────────────────────────────
+const DATA_URL = 'https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/running_log.json';
+const REFRESH_MS = 5 * 60 * 1000; // refresh every 5 min
+
+// ── Helpers ─────────────────────────────────────────────────────
+function mwClass(mw) {
+  if (mw >= 8.0) return 'mw-high';
+  if (mw >= 7.0) return 'mw-mid';
+  return 'mw-low';
+}
+
+function outcomeClass(o) {
+  if (!o) return 'geo';
+  if (o === 'TRUE_POSITIVE') return 'tp';
+  if (o.includes('TRUE_NEGATIVE') || o.includes('ABSTENTION')) return 'tn';
+  if (o === 'FALSE_POSITIVE') return 'fp';
+  if (o === 'FALSE_NEGATIVE') return 'fn';
+  return 'geo';
+}
+
+function outcomeLabel(o) {
+  if (!o) return '–';
+  const map = {
+    'TRUE_POSITIVE': '✓ Hit',
+    'TRUE_NEGATIVE': '○ Quiet',
+    'CORRECT_ABSTENTION_NO_ANCHOR': '○ No anchor',
+    'FALSE_POSITIVE': '✗ False alarm',
+    'FALSE_NEGATIVE': '✗ Miss',
+    'GEOMETRY_LIMITED_MISS': '△ Geo limit',
+  };
+  return map[o] || o;
+}
+
+function formatDate(iso) {
+  if (!iso) return '–';
+  const d = new Date(iso);
+  return d.toISOString().slice(0,16).replace('T',' ') + ' UTC';
+}
+
+function shortDate(iso) {
+  if (!iso) return '–';
+  return new Date(iso).toISOString().slice(0,10);
+}
+
+// ── Render ───────────────────────────────────────────────────────
+function render(data) {
+  const events = data.scored_events || [];
+  const summary = data.summary || {};
+
+  // Stats grid
+  const tp = summary.true_positives || 0;
+  const tn = summary.true_negatives || 0;
+  const fp = summary.false_positives || 0;
+  const fn = summary.false_negatives || 0;
+  const total = summary.total_scored || 0;
+
+  document.getElementById('statsGrid').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Events Monitored</div>
+      <div class="stat-value cyan">${total}</div>
+      <div class="stat-sub">Pacific Mw ≥6.5 since launch</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Detections</div>
+      <div class="stat-value green">${tp}</div>
+      <div class="stat-sub">Tsunamis confirmed by gauge</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">False Alarms</div>
+      <div class="stat-value ${fp > 0 ? 'red' : 'green'}">${fp}</div>
+      <div class="stat-sub">Target: 0</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-label">Mean Lead Time</div>
+      <div class="stat-value ${summary.mean_lead_time_min ? 'orange' : ''}">${summary.mean_lead_time_min ? summary.mean_lead_time_min + 'm' : '–'}</div>
+      <div class="stat-sub">Warning before wave arrival</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">TPR</div>
+      <div class="stat-value ${summary.tpr !== null ? 'green' : ''}">${summary.tpr !== null && summary.tpr !== undefined ? (summary.tpr * 100).toFixed(0) + '%' : '–'}</div>
+      <div class="stat-sub">Detection rate</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Amp Error</div>
+      <div class="stat-value">${summary.mean_amplitude_error_pct !== null && summary.mean_amplitude_error_pct !== undefined ? summary.mean_amplitude_error_pct.toFixed(1) + '%' : '–'}</div>
+      <div class="stat-sub">Wave height forecast</div>
+    </div>
+  `;
+
+  // Most recent detection alert
+  const latestTP = [...events].reverse().find(e => e.outcome === 'TRUE_POSITIVE');
+  const banner = document.getElementById('alertBanner');
+  if (latestTP) {
+    banner.classList.add('visible', 'detection');
+    document.getElementById('alertTitle').textContent =
+      `Mw${latestTP.magnitude} ${latestTP.place}`;
+    document.getElementById('alertDesc').textContent =
+      `Detected ${shortDate(latestTP.quake_utc)} · ${latestTP.anchor?.toUpperCase() || '?'} corridor`;
+    document.getElementById('alertMins').textContent =
+      latestTP.lead_time_min !== null ? latestTP.lead_time_min : '–';
+  }
+
+  // Metrics
+  document.getElementById('metTPR').textContent =
+    summary.tpr !== null && summary.tpr !== undefined ? (summary.tpr*100).toFixed(1)+'%' : '–';
+  document.getElementById('metFPR').textContent =
+    summary.fpr !== null && summary.fpr !== undefined ? (summary.fpr*100).toFixed(1)+'%' : '–';
+  document.getElementById('metLead').textContent =
+    summary.mean_lead_time_min !== null && summary.mean_lead_time_min !== undefined
+    ? summary.mean_lead_time_min + ' min' : '–';
+  document.getElementById('metLeadMed').textContent =
+    summary.median_lead_time_min !== null && summary.median_lead_time_min !== undefined
+    ? summary.median_lead_time_min + ' min' : '–';
+  document.getElementById('metAmpErr').textContent =
+    summary.mean_amplitude_error_pct !== null && summary.mean_amplitude_error_pct !== undefined
+    ? summary.mean_amplitude_error_pct.toFixed(1) + '%' : '–';
+  document.getElementById('metTotal').textContent = total;
+
+  // Bar chart
+  const maxBar = Math.max(tp, tn, fp, fn, 1);
+  const setPct = (id, n) => {
+    document.getElementById(id).style.width = (n/maxBar*100) + '%';
+  };
+  setPct('barTP', tp); document.getElementById('barTPVal').textContent = tp;
+  setPct('barTN', tn); document.getElementById('barTNVal').textContent = tn;
+  setPct('barFP', fp); document.getElementById('barFPVal').textContent = fp;
+  setPct('barFN', fn); document.getElementById('barFNVal').textContent = fn;
+  const geo = events.filter(e => e.outcome && e.outcome.includes('GEO')).length;
+  setPct('barGeo', geo); document.getElementById('barGeoVal').textContent = geo;
+
+  // Events table
+  document.getElementById('eventCountBadge').textContent = total + ' event' + (total !== 1 ? 's' : '');
+
+  if (events.length === 0) {
+    document.getElementById('eventsTable').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🌊</div>
+        <p>No scored events yet.<br>Pipeline is active and monitoring the Pacific basin.</p>
+        <div class="waiting"><div class="live-dot"></div>Awaiting qualifying event</div>
+      </div>`;
+    return;
+  }
+
+  const rows = [...events].reverse().slice(0, 30).map(e => {
+    const oc = outcomeClass(e.outcome);
+    const mwc = mwClass(e.magnitude || 0);
+    const lead = e.lead_time_min !== null && e.lead_time_min !== undefined
+      ? `<span class="lead-time ${e.lead_time_min < 0 ? 'negative' : ''}">${e.lead_time_min > 0 ? '+' : ''}${e.lead_time_min}m</span>`
+      : '<span style="color:var(--text-dim)">–</span>';
+    const amp = e.amplitude_predicted_m !== null && e.amplitude_predicted_m !== undefined
+      ? `${e.amplitude_predicted_m}m → ${e.amplitude_actual_m || '?'}m`
+      : '–';
+    return `<tr>
+      <td class="time-text">${shortDate(e.quake_utc)}</td>
+      <td><span class="mw-pill ${mwc}">${e.magnitude || '?'}</span></td>
+      <td><div class="place-text" title="${e.place || ''}">${e.place || '–'}</div></td>
+      <td><span class="outcome-badge ${oc}">${outcomeLabel(e.outcome)}</span></td>
+      <td>${lead}</td>
+      <td style="font-size:0.65rem;color:var(--text-dim)">${amp}</td>
+      <td style="font-size:0.65rem;color:var(--text-dim)">${e.anchor || '–'}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('eventsTable').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Mw</th>
+          <th>Location</th>
+          <th>Outcome</th>
+          <th>Lead</th>
+          <th>Amplitude</th>
+          <th>Anchor</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+
+  // Last updated
+  document.getElementById('lastUpdated').textContent =
+    summary.last_updated ? formatDate(summary.last_updated) : 'unknown';
+}
+
+// ── Fetch ────────────────────────────────────────────────────────
+async function fetchData() {
+  try {
+    const r = await fetch(DATA_URL + '?t=' + Date.now());
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    render(data);
+  } catch(err) {
+    // Show empty state if no data yet
+    const empty = {scored_events:[], summary:{}};
+    render(empty);
+    document.getElementById('lastUpdated').textContent = 'waiting for first event';
+  }
+}
+
+// ── Init ─────────────────────────────────────────────────────────
+fetchData();
+setInterval(fetchData, REFRESH_MS);
+</script>
+</body>
+</html>
