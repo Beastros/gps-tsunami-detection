@@ -112,7 +112,7 @@
   .poll-cand { color:var(--warn); font-weight:700; }
 
   .map-panel { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:20px; margin-bottom:40px; overflow:hidden; }
-  .map-svg { width:100%; height:auto; opacity:0.7; }
+  .map-svg { width:100%; height:auto; opacity:1; }
   .station-dot { animation:station-pulse 3s infinite; }
   @keyframes station-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
@@ -150,39 +150,286 @@
   <div class="tab-panel active" id="tab-dashboard">
     <div class="stats-grid" id="statsGrid"><div style="padding:40px;color:var(--text-dim);font-size:0.72rem"><span class="spinner"></span> loading…</div></div>
 
-    <div class="section-header"><span class="section-title">Station Network</span><div class="section-line"></div></div>
+    <div class="section-header"><span class="section-title">Station Network · Pacific Basin Monitor</span><div class="section-line"></div></div>
     <div class="map-panel">
-      <svg class="map-svg" viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg">
-        <rect width="800" height="360" fill="#040c14"/>
-        <path d="M560,60 L575,80 L570,100 L580,120 L575,140" stroke="#0e2a3f" stroke-width="2" fill="none"/>
-        <path d="M80,80 L120,70 L180,75 L220,90 L250,80" stroke="#0e2a3f" stroke-width="2" fill="none"/>
-        <path d="M250,80 L260,120 L255,160 L265,200 L260,240 L270,280" stroke="#0e2a3f" stroke-width="2" fill="none"/>
-        <path d="M270,280 L265,300 L275,320 L270,350" stroke="#0e2a3f" stroke-width="2" fill="none"/>
-        <path d="M580,220 L640,210 L680,230 L700,260 L680,290 L640,300 L590,280 L575,255 L580,220" stroke="#0e2a3f" stroke-width="2" fill="none"/>
-        <line x1="0" y1="180" x2="800" y2="180" stroke="#0a1e2e" stroke-width="1"/>
-        <line x1="400" y1="0" x2="400" y2="360" stroke="#0a1e2e" stroke-width="1"/>
-        <text x="10" y="175" fill="#0e2a3f" font-size="8" font-family="Space Mono">0°</text>
-        <path d="M575,110 Q480,200 440,220" stroke="#00d4ff" stroke-width="1" fill="none" stroke-dasharray="4,6" opacity="0.3"/>
-        <path d="M265,290 Q350,270 440,220" stroke="#00ff9d" stroke-width="1" fill="none" stroke-dasharray="4,6" opacity="0.3"/>
-        <circle cx="575" cy="175" r="5" fill="#00d4ff" opacity="0.9" class="station-dot"/>
-        <text x="582" y="179" fill="#00d4ff" font-size="8" font-family="Space Mono" opacity="0.8">GUAM</text>
-        <circle cx="350" cy="295" r="5" fill="#00ff9d" opacity="0.9" class="station-dot" style="animation-delay:0.5s"/>
-        <text x="357" y="299" fill="#00ff9d" font-size="8" font-family="Space Mono" opacity="0.8">CHAT</text>
-        <circle cx="310" cy="230" r="5" fill="#ff6b35" opacity="0.9" class="station-dot" style="animation-delay:1s"/>
-        <text x="317" y="234" fill="#ff6b35" font-size="8" font-family="Space Mono" opacity="0.8">THTI</text>
-        <circle cx="440" cy="195" r="6" fill="#fff" opacity="0.95"/>
-        <circle cx="440" cy="195" r="3" fill="#00d4ff"/>
-        <text x="448" y="191" fill="#eef7ff" font-size="8" font-family="Space Mono" opacity="0.9">MKEA</text>
-        <circle cx="432" cy="185" r="4" fill="#7b9db5" opacity="0.7"/>
-        <circle cx="445" cy="205" r="4" fill="#ff3358" opacity="0.8"/>
-        <text x="450" y="209" fill="#ff3358" font-size="7" font-family="Space Mono" opacity="0.8">HILO</text>
-        <text x="555" y="105" fill="#0e2a3f" font-size="7" font-family="Space Mono">JAPAN/KURIL</text>
-        <text x="240" y="310" fill="#0e2a3f" font-size="7" font-family="Space Mono">S.AMERICA</text>
-        <text x="290" y="220" fill="#0e2a3f" font-size="7" font-family="Space Mono">TONGA</text>
-        <circle cx="20" cy="330" r="4" fill="#00d4ff"/>
-        <text x="28" y="334" fill="#4a7a94" font-size="7" font-family="Space Mono">GPS Station</text>
-        <circle cx="120" cy="330" r="4" fill="#ff3358"/>
-        <text x="128" y="334" fill="#4a7a94" font-size="7" font-family="Space Mono">Tide Gauge</text>
+      <svg class="map-svg" viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="og" cx="50%" cy="40%" r="75%">
+            <stop offset="0%" stop-color="#06182a"/>
+            <stop offset="100%" stop-color="#020810"/>
+          </radialGradient>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2.5" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- Ocean -->
+        <rect width="900" height="460" fill="url(#og)"/>
+
+        <!-- Grid -->
+        <g stroke="#0c2235" stroke-width="0.5" fill="none">
+          <line x1="0" y1="29" x2="900" y2="29"/>
+          <line x1="0" y1="136" x2="900" y2="136"/>
+          <line x1="0" y1="243" x2="900" y2="243" stroke="#112233" stroke-width="1"/>
+          <line x1="0" y1="350" x2="900" y2="350"/>
+          <line x1="150" y1="0" x2="150" y2="460"/>
+          <line x1="279" y1="0" x2="279" y2="460"/>
+          <line x1="407" y1="0" x2="407" y2="460" stroke="#112233" stroke-width="1"/>
+          <line x1="536" y1="0" x2="536" y2="460"/>
+          <line x1="664" y1="0" x2="664" y2="460"/>
+          <line x1="793" y1="0" x2="793" y2="460"/>
+        </g>
+        <g fill="#163050" font-size="7" font-family="Space Mono">
+          <text x="281" y="11">150E</text>
+          <text x="409" y="11">180</text>
+          <text x="538" y="11">150W</text>
+          <text x="666" y="11">120W</text>
+          <text x="795" y="11">90W</text>
+          <text x="2" y="32">60N</text>
+          <text x="2" y="139">30N</text>
+          <text x="2" y="246">EQ</text>
+          <text x="2" y="353">30S</text>
+        </g>
+
+        <!-- ── CONTINENTS ── -->
+
+        <!-- ASIA mainland + Kamchatka peninsula -->
+        <path d="
+          M 0,0 L 364,0
+          L 393,11 L 377,18 L 358,25 L 347,25
+          L 339,32 L 334,43 L 326,54 L 307,61
+          L 299,54 L 303,39 L 279,32
+          L 261,47 L 244,47 L 228,72
+          L 201,89 L 190,108 L 183,118
+          L 175,130 L 163,148 L 150,163
+          L 136,178 L 122,197 L 110,214
+          L 99,232 L 88,248 L 80,258
+          L 65,264 L 40,264 L 0,264 Z
+        " fill="#07192a" stroke="#0f3355" stroke-width="0.8"/>
+
+        <!-- Sakhalin island -->
+        <path d="M 228,68 L 232,58 L 238,52 L 244,54 L 242,65 L 237,74 L 228,72 Z"
+              fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+
+        <!-- Kuril island chain (arc of dots) -->
+        <g fill="#07192a" stroke="#0f3355" stroke-width="0.7">
+          <ellipse cx="299" cy="63" rx="3" ry="4"/>
+          <ellipse cx="291" cy="68" rx="3" ry="4"/>
+          <ellipse cx="283" cy="73" rx="2.5" ry="3.5"/>
+          <ellipse cx="274" cy="79" rx="2.5" ry="3.5"/>
+          <ellipse cx="266" cy="83" rx="2" ry="3"/>
+          <ellipse cx="258" cy="87" rx="2" ry="3"/>
+        </g>
+
+        <!-- Japan — Hokkaido -->
+        <path d="M 254,84 L 262,78 L 272,76 L 278,81 L 274,88 L 263,90 L 254,86 Z"
+              fill="#07192a" stroke="#0f3355" stroke-width="0.8"/>
+        <!-- Japan — Honshu -->
+        <path d="
+          M 254,86 L 261,91 L 263,100 L 260,112 L 254,121
+          L 245,127 L 237,127 L 228,123 L 220,117
+          L 214,109 L 214,101 L 219,93 L 228,88 L 239,84 Z
+        " fill="#07192a" stroke="#0f3355" stroke-width="0.8"/>
+        <!-- Japan — Kyushu -->
+        <path d="M 208,112 L 215,110 L 220,117 L 215,125 L 207,126 L 203,118 Z"
+              fill="#07192a" stroke="#0f3355" stroke-width="0.8"/>
+        <!-- Japan — Shikoku (small) -->
+        <ellipse cx="231" cy="127" rx="7" ry="3" fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+
+        <!-- Taiwan -->
+        <ellipse cx="178" cy="160" rx="3" ry="6" fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+
+        <!-- Philippines -->
+        <ellipse cx="197" cy="193" rx="4" ry="12" fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+        <ellipse cx="201" cy="211" rx="3" ry="7" fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+
+        <!-- Indonesia (simplified arc) -->
+        <path d="M 108,258 L 130,254 L 155,252 L 178,251 L 200,253 L 222,256 L 244,256 L 260,253 L 280,248 L 296,245"
+              stroke="#0f3355" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.9"/>
+
+        <!-- PNG/Solomon (small shapes) -->
+        <ellipse cx="313" cy="248" rx="10" ry="5" fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+        <ellipse cx="330" cy="244" rx="5" ry="3" fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+
+        <!-- AUSTRALIA -->
+        <path d="
+          M 155,288 L 196,277 L 238,272 L 262,278
+          L 279,296 L 287,320 L 284,344
+          L 272,360 L 254,373 L 234,378
+          L 212,378 L 194,372 L 178,360
+          L 164,344 L 155,322 L 150,300 Z
+        " fill="#07192a" stroke="#0f3355" stroke-width="0.8"/>
+        <!-- Tasmania -->
+        <ellipse cx="256" cy="385" rx="5" ry="7" fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+
+        <!-- New Zealand — North Island -->
+        <path d="M 364,364 L 372,354 L 379,360 L 377,372 L 371,379 L 364,374 Z"
+              fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+        <!-- New Zealand — South Island -->
+        <path d="M 359,379 L 368,376 L 375,383 L 371,396 L 362,402 L 354,396 L 353,385 Z"
+              fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+
+        <!-- NORTH + CENTRAL + SOUTH AMERICA (Pacific coast + right fill) -->
+        <path d="
+          M 485,0 L 900,0 L 900,460
+          L 882,440 L 868,400 L 860,375 L 870,358 L 875,322
+          L 847,287 L 834,250 L 840,232
+          L 832,214 L 788,192 L 758,183
+          L 726,170 L 704,159
+          L 673,126 L 651,105 L 648,78
+          L 645,72 L 618,49 L 597,38
+          L 576,35 L 554,31 L 536,31
+          L 521,35 L 504,44 L 490,43
+          L 479,46 L 473,38 L 468,23
+          L 472,12 L 478,5 L 485,0 Z
+        " fill="#07192a" stroke="#0f3355" stroke-width="0.8"/>
+
+        <!-- Aleutian island chain (arc from Alaska Peninsula westward) -->
+        <path d="M 490,46 L 476,51 L 462,54 L 447,56 L 432,57 L 418,57 L 407,57"
+              stroke="#0f3355" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.85"/>
+
+        <!-- Hawaii islands -->
+        <circle cx="513" cy="172" r="2.5" fill="#07192a" stroke="#0f3355" stroke-width="0.8"/>
+        <circle cx="520" cy="170" r="1.5" fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+        <circle cx="526" cy="168" r="1.5" fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+        <circle cx="532" cy="166" r="1.5" fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+        <circle cx="538" cy="164" r="1.2" fill="#07192a" stroke="#0f3355" stroke-width="0.7"/>
+
+        <!-- ── SUBDUCTION ZONE FAULT LINES ── -->
+
+        <!-- Japan Trench (E coast of Honshu) -->
+        <path d="M 263,79 L 264,86 L 264,95 L 262,105 L 258,116 L 252,124 L 244,130 L 235,132"
+              stroke="#00d4ff" stroke-width="1.8" fill="none" stroke-dasharray="6,4" opacity="0.55"/>
+        <!-- Kuril Trench -->
+        <path d="M 302,62 L 293,67 L 283,73 L 272,78 L 263,83"
+              stroke="#00d4ff" stroke-width="1.5" fill="none" stroke-dasharray="5,4" opacity="0.5"/>
+        <!-- Kamchatka trench -->
+        <path d="M 310,61 L 318,55 L 323,47 L 327,38"
+              stroke="#00d4ff" stroke-width="1.5" fill="none" stroke-dasharray="5,4" opacity="0.45"/>
+
+        <!-- Alaska/Aleutian Trench -->
+        <path d="M 407,63 L 425,62 L 447,60 L 470,55 L 492,49 L 512,44 L 533,39 L 553,36 L 570,35"
+              stroke="#00d4ff" stroke-width="1.8" fill="none" stroke-dasharray="6,4" opacity="0.55"/>
+
+        <!-- Cascadia Subduction Zone -->
+        <path d="M 491,44 L 489,55 L 487,68 L 486,82 L 486,96"
+              stroke="#00ff9d" stroke-width="1.8" fill="none" stroke-dasharray="6,4" opacity="0.55"/>
+
+        <!-- Middle America Trench -->
+        <path d="M 760,183 L 776,192 L 790,204 L 805,218 L 818,230"
+              stroke="#00ff9d" stroke-width="1.5" fill="none" stroke-dasharray="5,4" opacity="0.45"/>
+
+        <!-- Peru-Chile Trench (S. America) -->
+        <path d="M 836,238 L 840,255 L 844,278 L 848,303 L 852,330 L 856,358 L 855,385 L 850,408"
+              stroke="#00ff9d" stroke-width="1.8" fill="none" stroke-dasharray="6,4" opacity="0.55"/>
+
+        <!-- Tonga-Kermadec Trench -->
+        <path d="M 411,326 L 413,345 L 415,365 L 414,385 L 410,403"
+              stroke="#ff6b35" stroke-width="1.8" fill="none" stroke-dasharray="6,4" opacity="0.55"/>
+
+        <!-- Vanuatu/New Hebrides -->
+        <path d="M 340,278 L 352,268 L 365,260 L 378,253 L 389,249"
+              stroke="#00d4ff" stroke-width="1.3" fill="none" stroke-dasharray="4,5" opacity="0.4"/>
+
+        <!-- ── MONITORING ZONE OVERLAYS ── -->
+        <!-- Japan/Kuril -->
+        <rect x="193" y="44" width="155" height="96" rx="4"
+              fill="rgba(0,212,255,0.03)" stroke="rgba(0,212,255,0.14)" stroke-width="0.8" stroke-dasharray="7,5"/>
+        <!-- Alaska/Aleutian -->
+        <rect x="407" y="19" width="168" height="52" rx="4"
+              fill="rgba(0,212,255,0.03)" stroke="rgba(0,212,255,0.14)" stroke-width="0.8" stroke-dasharray="7,5"/>
+        <!-- Cascadia -->
+        <rect x="481" y="41" width="72" height="64" rx="4"
+              fill="rgba(0,255,157,0.03)" stroke="rgba(0,255,157,0.14)" stroke-width="0.8" stroke-dasharray="7,5"/>
+        <!-- S. America -->
+        <rect x="820" y="230" width="80" height="186" rx="4"
+              fill="rgba(0,255,157,0.03)" stroke="rgba(0,255,157,0.14)" stroke-width="0.8" stroke-dasharray="7,5"/>
+        <!-- Tonga/Kermadec -->
+        <rect x="384" y="298" width="58" height="120" rx="4"
+              fill="rgba(255,107,53,0.03)" stroke="rgba(255,107,53,0.14)" stroke-width="0.8" stroke-dasharray="7,5"/>
+        <!-- Vanuatu/Solomon -->
+        <rect x="316" y="240" width="100" height="60" rx="4"
+              fill="rgba(0,212,255,0.03)" stroke="rgba(0,212,255,0.10)" stroke-width="0.8" stroke-dasharray="7,5"/>
+
+        <!-- Zone labels -->
+        <text x="198" y="57" fill="#00d4ff" font-size="7" font-family="Space Mono" opacity="0.5" letter-spacing="0.5">JAPAN/KURIL</text>
+        <text x="422" y="32" fill="#00d4ff" font-size="7" font-family="Space Mono" opacity="0.5" letter-spacing="0.5">ALASKA/ALEUTIAN</text>
+        <text x="485" y="55" fill="#00ff9d" font-size="7" font-family="Space Mono" opacity="0.5" letter-spacing="0.5">CASCADIA</text>
+        <text x="826" y="244" fill="#00ff9d" font-size="7" font-family="Space Mono" opacity="0.5" letter-spacing="0.5">S.AMERICA</text>
+        <text x="388" y="312" fill="#ff6b35" font-size="7" font-family="Space Mono" opacity="0.5" letter-spacing="0.5">TONGA</text>
+        <text x="320" y="253" fill="#00d4ff" font-size="7" font-family="Space Mono" opacity="0.4" letter-spacing="0.5">VANUATU</text>
+
+        <!-- ── SIGNAL PROPAGATION PATHS ── -->
+        <path d="M 257,195 Q 370,165 511,172"
+              stroke="#00d4ff" stroke-width="1" fill="none" stroke-dasharray="5,6" opacity="0.2"/>
+        <path d="M 421,400 Q 440,310 511,174"
+              stroke="#00ff9d" stroke-width="1" fill="none" stroke-dasharray="5,6" opacity="0.2"/>
+        <path d="M 537,306 Q 530,240 511,176"
+              stroke="#ff6b35" stroke-width="1" fill="none" stroke-dasharray="5,6" opacity="0.2"/>
+
+        <!-- ── STATION MARKERS ── -->
+
+        <!-- GUAM: 13.5N 144.9E → (257, 195) -->
+        <circle cx="257" cy="195" r="9" fill="none" stroke="#00d4ff" stroke-width="1" opacity="0.2" class="station-dot"/>
+        <circle cx="257" cy="195" r="5" fill="#00d4ff" opacity="0.95" filter="url(#glow)"/>
+        <rect x="265" y="187" width="40" height="15" rx="2" fill="#020c16" fill-opacity="0.82"/>
+        <text x="268" y="198" fill="#00d4ff" font-size="9" font-family="Space Mono" font-weight="bold">GUAM</text>
+
+        <!-- CHAT Chatham Is: -43.9N 183.4E → (421, 400) -->
+        <circle cx="421" cy="400" r="9" fill="none" stroke="#00ff9d" stroke-width="1" opacity="0.2" class="station-dot" style="animation-delay:0.7s"/>
+        <circle cx="421" cy="400" r="5" fill="#00ff9d" opacity="0.95" filter="url(#glow)"/>
+        <rect x="429" y="392" width="36" height="15" rx="2" fill="#020c16" fill-opacity="0.82"/>
+        <text x="432" y="403" fill="#00ff9d" font-size="9" font-family="Space Mono" font-weight="bold">CHAT</text>
+
+        <!-- THTI Tahiti: -17.6N 210.4E → (537, 306) -->
+        <circle cx="537" cy="306" r="9" fill="none" stroke="#ff6b35" stroke-width="1" opacity="0.2" class="station-dot" style="animation-delay:1.4s"/>
+        <circle cx="537" cy="306" r="5" fill="#ff6b35" opacity="0.95" filter="url(#glow)"/>
+        <rect x="545" y="298" width="33" height="15" rx="2" fill="#020c16" fill-opacity="0.82"/>
+        <text x="548" y="309" fill="#ff6b35" font-size="9" font-family="Space Mono" font-weight="bold">THTI</text>
+
+        <!-- MKEA Mauna Kea: 19.8N 204.5E → (511, 172) -->
+        <circle cx="511" cy="172" r="10" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+        <circle cx="511" cy="172" r="6" fill="#eef7ff" opacity="0.95"/>
+        <circle cx="511" cy="172" r="3" fill="#00d4ff"/>
+        <rect x="520" y="162" width="43" height="15" rx="2" fill="#020c16" fill-opacity="0.82"/>
+        <text x="523" y="173" fill="#eef7ff" font-size="9" font-family="Space Mono" font-weight="bold">MKEA</text>
+
+        <!-- HILO tide gauge: offset slightly south -->
+        <circle cx="511" cy="186" r="5" fill="#ff3358" opacity="0.95" filter="url(#glow)"/>
+        <rect x="519" y="178" width="30" height="15" rx="2" fill="#020c16" fill-opacity="0.82"/>
+        <text x="522" y="189" fill="#ff3358" font-size="9" font-family="Space Mono" font-weight="bold">HILO</text>
+
+        <!-- ── LEGEND BAR ── -->
+        <rect x="0" y="427" width="900" height="33" fill="rgba(2,8,16,0.88)"/>
+        <line x1="0" y1="427" x2="900" y2="427" stroke="#0e2a3f" stroke-width="0.8"/>
+
+        <!-- GPS station -->
+        <circle cx="16" cy="443" r="4" fill="#00d4ff"/>
+        <text x="24" y="447" fill="#3a6a84" font-size="8" font-family="Space Mono">GPS Anchor Stn</text>
+
+        <!-- Target -->
+        <circle cx="133" cy="443" r="5" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+        <circle cx="133" cy="443" r="2.5" fill="#eef7ff"/>
+        <text x="141" y="447" fill="#3a6a84" font-size="8" font-family="Space Mono">GPS Target (MKEA)</text>
+
+        <!-- Tide gauge -->
+        <circle cx="272" cy="443" r="4" fill="#ff3358"/>
+        <text x="280" y="447" fill="#3a6a84" font-size="8" font-family="Space Mono">Tide Gauge (HILO)</text>
+
+        <!-- Subduction zone line -->
+        <line x1="390" y1="443" x2="412" y2="443" stroke="#00d4ff" stroke-width="1.8" stroke-dasharray="5,3"/>
+        <text x="416" y="447" fill="#3a6a84" font-size="8" font-family="Space Mono">Subduction Zone</text>
+
+        <!-- Monitor zone box -->
+        <rect x="520" y="437" width="13" height="11" rx="2"
+              fill="rgba(0,212,255,0.04)" stroke="rgba(0,212,255,0.3)" stroke-width="0.8" stroke-dasharray="4,3"/>
+        <text x="537" y="447" fill="#3a6a84" font-size="8" font-family="Space Mono">Monitor Zone</text>
+
+        <!-- Signal path -->
+        <line x1="635" y1="443" x2="657" y2="443" stroke="#00d4ff" stroke-width="0.8" stroke-dasharray="4,5" opacity="0.5"/>
+        <text x="661" y="447" fill="#3a6a84" font-size="8" font-family="Space Mono">TEC Signal Path</text>
+
       </svg>
     </div>
 
