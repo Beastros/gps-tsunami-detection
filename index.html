@@ -293,25 +293,35 @@ function switchTab(name) {
   });
 }
 
-// Convert UTC ISO string to Eastern time display
+// Eastern offset: DST = 2nd Sun Mar 2AM → 1st Sun Nov 2AM
+function getEtOffset(d) {
+  const y = d.getUTCFullYear();
+  const march1Day = new Date(Date.UTC(y, 2, 1)).getUTCDay();
+  const dstStart = new Date(Date.UTC(y, 2, 8 + (7 - march1Day) % 7, 7)); // 2 AM ET
+  const nov1Day = new Date(Date.UTC(y, 10, 1)).getUTCDay();
+  const dstEnd = new Date(Date.UTC(y, 10, 1 + (7 - nov1Day) % 7, 6)); // 2 AM ET
+  return (d >= dstStart && d < dstEnd) ? -4 : -5;
+}
+
+// Convert UTC ISO string to Eastern time display — no Intl API (avoids CSP eval)
 function toEastern(iso) {
   if(!iso) return '–';
   const d = new Date(iso);
-  return d.toLocaleString('en-US', {
-    timeZone: 'America/New_York',
-    month: 'numeric', day: 'numeric',
-    hour: 'numeric', minute: '2-digit',
-    hour12: true
-  }) + ' ET';
+  const off = getEtOffset(d);
+  const et = new Date(d.getTime() + off * 3600000);
+  const mo = et.getUTCMonth()+1, dy = et.getUTCDate();
+  let hr = et.getUTCHours(); const mn = String(et.getUTCMinutes()).padStart(2,'0');
+  const ampm = hr >= 12 ? 'PM' : 'AM'; hr = hr % 12 || 12;
+  return `${mo}/${dy}, ${hr}:${mn} ${ampm} ${off===-4?'EDT':'EST'}`;
 }
 
 function toEasternDate(iso) {
   if(!iso) return '–';
   const d = new Date(iso);
-  return d.toLocaleString('en-US', {
-    timeZone: 'America/New_York',
-    month: 'short', day: 'numeric', year: 'numeric'
-  });
+  const off = getEtOffset(d);
+  const et = new Date(d.getTime() + off * 3600000);
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[et.getUTCMonth()]} ${et.getUTCDate()}, ${et.getUTCFullYear()}`;
 }
 
 function timeAgo(iso) {
@@ -444,6 +454,7 @@ async function fetchAll() {
     if(r1.ok) { const d=await r1.json(); renderDashboard(d); renderEvents(d); }
     if(r2.ok) { const d=await r2.json(); renderPollLog(d); }
   } catch(e) {
+    console.error('[GPS-TEC] fetchAll error:', e);
     renderDashboard({scored_events:[],summary:{}});
   }
 }
