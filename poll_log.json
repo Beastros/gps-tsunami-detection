@@ -462,8 +462,14 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-04-25T15:02:28.486362+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-04-25T14:47:29.793564+00:00",
-  "total_polls": 76
+  "last_updated": "2026-04-25T15:02:28.486362+00:00",
+  "total_polls": 77
 }
