@@ -798,9 +798,26 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-04-26T04:47:28.248552+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-04-26T04:32:29.061011+00:00",
-  "total_polls": 132,
-  "recent_seismicity": []
+  "last_updated": "2026-04-26T04:47:28.248552+00:00",
+  "total_polls": 133,
+  "recent_seismicity": [
+    {
+      "ts": "2026-04-26T04:23:24.102000+00:00",
+      "mag": 5.9,
+      "place": "168 km SE of Khovd, Mongolia",
+      "lat": 46.79,
+      "lon": 92.97,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.6
+    }
+  ]
 }
