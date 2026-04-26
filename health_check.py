@@ -276,7 +276,7 @@ else:
 # â”€â”€ 14. GitHub repo + dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 14 ] GitHub Repository & Dashboard")
 BASE = "https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/"
-for fname, label in [("running_log.json","running_log"),("poll_log.json","poll_log")]:
+for fname, label in [("running_log.json (idle ok -- updates on scored events)","running_log"),("poll_log.json","poll_log")]:
     try:
         with urllib.request.urlopen(BASE+fname, timeout=10) as r:
             data = json.loads(r.read())
@@ -323,13 +323,13 @@ for sid in ["auck","noum","kwj1","holb"]:
 
 # â”€â”€ 17. Log files freshness â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 17 ] Log File Freshness")
-for lf in ["poll_log.json","running_log.json","task_runner.log"]:
+for lf in ["poll_log.json","running_log.json (idle ok -- updates on scored events)","task_runner.log"]:
     p = PIPELINE_DIR / lf
     if not p.exists():
         warn(f"{lf} not found locally")
         continue
     age_min = (datetime.now(timezone.utc).timestamp() - p.stat().st_mtime) / 60
-    if lf == "task_runner.log":
+    if lf in ("task_runner.log", "poll_log.json"):
         if age_min < 20:   ok(f"{lf} -- last written {age_min:.0f} min ago")
         elif age_min < 60: warn(f"{lf} -- {age_min:.0f} min ago (missed a cycle?)"); issues.append(f"{lf} stale")
         else:              fail(f"{lf} -- {age_min:.0f} min ago (pipeline may be down)"); issues.append("Pipeline log stale")
@@ -399,4 +399,5 @@ else:
     for i, issue in enumerate(issues,1):
         print(f"  {RED}{i}.{RESET} {issue}")
 print(f"{'='*55}\n")
+
 
