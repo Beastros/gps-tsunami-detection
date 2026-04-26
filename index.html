@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GPS Tsunami Detection — Live Monitor</title>
+<title>GPS Tsunami Detection â€” Live Monitor</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,37 +160,37 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
   <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:20px">
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">GPS TEC</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— ACTIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">L1/L2 carrier</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">GLONASS/GAL</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— ACTIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">Multi-constellation</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">dTEC/dt</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— ACTIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">Wave-front rate</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Space Wx</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● LIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— LIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">4 NOAA feeds</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">DART</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— ACTIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">28 buoys</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Ionosonde</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— ACTIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">GIRO foF2 5-sta</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">ShakeMap</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— ACTIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">Focal mechanism</div>
     </div>
   </div>
@@ -244,7 +244,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
   <div class="card">
     <div id="events-body">
       <div class="empty-state">
-        <div class="empty-icon">🌊</div>
+        <div class="empty-icon">ðŸŒŠ</div>
         <div class="empty-title">No scored events yet</div>
         <div class="empty-sub">Pipeline active - monitoring Pacific basin</div>
       </div>
@@ -259,14 +259,14 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
   <p class="section-title">Poll History <span style="font-size:9px;color:var(--dim);margin-left:4px">(last 50)</span></p>
   <div class="card" style="margin-bottom:24px">
     <div id="poll-body">
-      <div class="empty-state"><div class="empty-icon">📡</div><div class="empty-title">No poll data</div></div>
+      <div class="empty-state"><div class="empty-icon">ðŸ“¡</div><div class="empty-title">No poll data</div></div>
     </div>
   </div>
   <p class="section-title">Recent Seismic Activity - Did Not Qualify <span style="font-size:9px;color:var(--dim);margin-left:4px">(last 50)</span></p>
   <div class="card">
     <div id="seismic-body">
       <div class="empty-state">
-        <div class="empty-icon">🌍</div>
+        <div class="empty-icon">ðŸŒ</div>
         <div class="empty-title">No near-miss events</div>
         <div class="empty-sub">Mw5.5+ events that did not meet qualifying threshold appear here</div>
       </div>
@@ -277,7 +277,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 
 <footer style="border-top:1px solid var(--border);padding:14px 32px;display:flex;justify-content:space-between;margin-top:32px">
   <a href="https://github.com/Beastros/gps-tsunami-detection" style="font-family:var(--font-m);font-size:10px;color:var(--dim);text-decoration:none">github.com/Beastros/gps-tsunami-detection</a>
-  <span style="font-family:var(--font-m);font-size:10px;color:var(--dim)">Research monitoring - not an operational warning system</span>
+  <span style="font-family:var(--font-m);font-size:10px;color:var(--dim)">Research monitoring &middot; not an operational warning system &middot; Scientific inquiries: <a href="mailto:mthhorn@gmail.com" style="color:var(--dim);text-decoration:none">mthhorn@gmail.com</a></span>
 </footer>
 
 <script>
@@ -444,7 +444,7 @@ function renderLog(d){
   el('st-scored').textContent = events.length;
   if(!events.length) return;
 
-  // Outcome counts — scorer uses TRUE_POSITIVE etc.
+  // Outcome counts â€” scorer uses TRUE_POSITIVE etc.
   const tp  = summary.true_positives  ?? events.filter(e=>e.outcome==='TRUE_POSITIVE').length;
   const tn  = summary.true_negatives  ?? events.filter(e=>['TRUE_NEGATIVE','CORRECT_ABSTENTION_NO_ANCHOR'].includes(e.outcome)).length;
   const fp  = summary.false_positives ?? events.filter(e=>e.outcome==='FALSE_POSITIVE').length;
@@ -455,7 +455,7 @@ function renderLog(d){
   el('oc-fp').textContent=fp; el('oc-fn').textContent=fn;
   el('oc-geo').textContent=geo; el('oc-total').textContent=events.length;
 
-  // Performance — prefer summary fields
+  // Performance â€” prefer summary fields
   el('perf-tpr').textContent = summary.tpr!=null ? summary.tpr.toFixed(2) : (tp+fn>0?(tp/(tp+fn)).toFixed(2):'--');
   el('perf-fpr').textContent = summary.fpr!=null ? summary.fpr.toFixed(2) : (fp+tn>0?(fp/(fp+tn)).toFixed(2):'--');
   if(summary.mean_lead_time_min!=null){
@@ -533,7 +533,7 @@ setInterval(loadSW,5*60*1000);
 initMap();
 initMap();
 
-// ── Leaflet Pacific Basin Map ─────────────────────────────────────
+// â”€â”€ Leaflet Pacific Basin Map â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function initMap() {
   var W=960, H=500;
   var svg=d3.select('#pmap').attr('viewBox','0 0 '+W+' '+H).attr('height',H);
@@ -686,3 +686,4 @@ var _origRenderPoll = typeof renderPoll === 'function' ? renderPoll : null;
 </script>
 </body>
 </html>
+
