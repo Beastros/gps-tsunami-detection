@@ -143,7 +143,7 @@ def compute_dart_score(dart_result):
     return min(round(base + sigma_boost, 3), 1.0)
 
 
-def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score, const_agreement=None, dtec_corroborates=False):
+def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score, const_agreement=None, dtec_corroborates=False, ionosonde_confirmed=False):
     """
     Multi-sensor fusion confidence score (0-1).
 
@@ -170,7 +170,9 @@ def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score,
             elif lbl == 'partial':      const_contrib =  0.03
     # dTEC/dt corroboration — small boost (not independent, same GPS data)
     dtec_contrib = 0.05 if (dtec_corroborates and tec_detected) else 0.0
-    confidence = max(tec_contrib + dart_contrib + const_contrib + dtec_contrib, 0.0)
+    # Ionosonde foF2 — truly independent HF radar, significant boost
+    iono_contrib = 0.12 if (ionosonde_confirmed and tec_detected) else 0.0
+    confidence = max(tec_contrib + dart_contrib + const_contrib + dtec_contrib + iono_contrib, 0.0)
     return min(round(confidence, 3), 1.0)
 
 
@@ -712,6 +714,25 @@ def run_event(event, kp_override=None):
         log.info(f"  dTEC/dt CORROBORATES detection — "
                  f"{len(dtec_corroboration)} station(s)")
 
+
+    # Ionosonde foF2 cross-check (independent HF radar — GIRO Digisonde network)
+    ionosonde_result    = None
+    ionosonde_confirmed = False
+    try:
+        from ionosonde_checker import check_ionosonde_network
+        _elat2 = event.get('lat') or event.get('latitude')
+        _elon2 = event.get('lon') or event.get('longitude')
+        if _elat2 is not None and _elon2 is not None:
+            ionosonde_result    = check_ionosonde_network(quake_utc, _elat2, _elon2)
+            ionosonde_confirmed = ionosonde_result.get('ionosonde_detected', False)
+            _ci = ionosonde_result.get('confirming_stations', 0)
+            _di = ionosonde_result.get('stations_with_data', 0)
+            log.info(f'  IONOSONDE: confirmed={ionosonde_confirmed} {_ci}/{_di} stations')
+    except ImportError:
+        log.debug('  ionosonde_checker not available — skipping')
+    except Exception as _ie:
+        log.warning(f'  Ionosonde check failed: {_ie}')
+
     # DART buoy check (runs after TEC; skipped if wave hasn't had time to arrive)
     from datetime import datetime as _dt
     _now      = _dt.now(timezone.utc)
@@ -752,9 +773,12 @@ def run_event(event, kp_override=None):
     _sw   = prediction.get("space_weather_score", 0.0)
     combined_confidence = compute_combined_confidence(
         _tec, dart_score, dart_status, _sw, const_agreement,
-        dtec_corroborates=dtec_corroborates
+        dtec_corroborates=dtec_corroborates,
+        ionosonde_confirmed=ionosonde_confirmed
     )
     prediction["constellation_agreement"] = const_agreement
+    prediction["ionosonde_result"]         = ionosonde_result
+    prediction["ionosonde_confirmed"]      = ionosonde_confirmed
     prediction["dart_result"]              = dart_result
     prediction["dart_score"]          = dart_score
     prediction["dart_status"]         = dart_status
