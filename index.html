@@ -352,7 +352,22 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       <circle cx="478" cy="185" r="4.5" fill="#00c8ff"/>
       <text x="487" y="183" fill="#00c8ff" font-family="JetBrains Mono,monospace" font-size="9" font-weight="600">MKEA</text>
       <!-- GPS Targets -->
-      <circle cx="480" cy="186" r="5"   fill="none" stroke="#00ff9d" stroke-width="1.5"/>
+      <!-- New V4 GPS stations -->
+      <circle cx="342" cy="393" r="8"   fill="#00c8ff" opacity="0.10"/>
+      <circle cx="342" cy="393" r="4.5" fill="#00c8ff" opacity="0.7"/>
+      <text x="318" y="408" fill="#00c8ff" font-family="JetBrains Mono,monospace" font-size="8" opacity="0.8">AUCK</text>
+      <circle cx="304" cy="340" r="8"   fill="#00c8ff" opacity="0.10"/>
+      <circle cx="304" cy="340" r="4.5" fill="#00c8ff" opacity="0.7"/>
+      <text x="280" y="338" fill="#00c8ff" font-family="JetBrains Mono,monospace" font-size="8" opacity="0.8">NOUM</text>
+      <circle cx="310" cy="226" r="8"   fill="#00c8ff" opacity="0.10"/>
+      <circle cx="310" cy="226" r="4.5" fill="#00c8ff" opacity="0.7"/>
+      <text x="318" y="224" fill="#00c8ff" font-family="JetBrains Mono,monospace" font-size="8" opacity="0.8">KWJ1</text>
+      <circle cx="603" cy="71"  r="8"   fill="#00c8ff" opacity="0.10"/>
+      <circle cx="603" cy="71"  r="4.5" fill="#00c8ff" opacity="0.7"/>
+      <text x="612" y="69"  fill="#00c8ff" font-family="JetBrains Mono,monospace" font-size="8" opacity="0.8">HOLB</text>
+      <!-- Seismic near-miss markers (populated by JS) -->
+      <g id="seismic-markers"></g>
+            <circle cx="480" cy="186" r="5"   fill="none" stroke="#00ff9d" stroke-width="1.5"/>
       <circle cx="480" cy="186" r="2.5" fill="#00ff9d"/>
       <text x="455" y="198" fill="#00ff9d" font-family="JetBrains Mono,monospace" font-size="8">HILO</text>
       <rect x="375" y="151" width="5" height="5" fill="#00ff9d" opacity="0.85" transform="rotate(45,378,154)"/>
@@ -362,7 +377,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       <rect x="405" y="308" width="5" height="5" fill="#00ff9d" opacity="0.85" transform="rotate(45,408,311)"/>
       <text x="416" y="315" fill="#00ff9d" font-family="JetBrains Mono,monospace" font-size="8">PAGO PAGO</text>
       <!-- Legend -->
-      <rect x="14" y="368" width="196" height="106" rx="2" fill="#040e1a" stroke="#0e2a3f" stroke-width="1"/>
+      <rect x="14" y="368" width="196" height="118" rx="2" fill="#040e1a" stroke="#0e2a3f" stroke-width="1"/>
       <circle cx="30" cy="384" r="4.5" fill="#00c8ff"/>
       <text x="41" y="387" fill="#4a7a94" font-family="JetBrains Mono,monospace" font-size="8">GPS Anchor Station</text>
       <circle cx="30" cy="400" r="4"   fill="none" stroke="#00ff9d" stroke-width="1.5"/>
@@ -376,6 +391,8 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       <text x="41" y="451" fill="#4a7a94" font-family="JetBrains Mono,monospace" font-size="8">TEC Signal Path</text>
       <rect x="27" y="459" width="5" height="5" fill="none" stroke="#ff9f43" stroke-width="1" transform="rotate(45,30,462)"/>
       <text x="41" y="465" fill="#4a7a94" font-family="JetBrains Mono,monospace" font-size="8">GIRO Ionosonde</text>
+      <circle cx="30" cy="474" r="4" fill="none" stroke="#ffa726" stroke-width="1.2" opacity="0.7"/>
+      <text x="41" y="477" fill="#4a7a94" font-family="JetBrains Mono,monospace" font-size="8">Near-miss seismic event</text>
     </svg>
   </div>
 
@@ -520,6 +537,12 @@ async function loadSW(){
   el('sw-time').textContent='Updated '+new Date().toUTCString();
 }
 
+// SVG map projection helpers (matches viewBox 0 0 960 480)
+// x: 150E=229, 180=366, 150W=503  => 137px per 30deg => 4.5667 px/deg
+// y: 60N=37, 30N=147, EQ=258, 30S=369 => 111px per 30deg => 3.7 px/deg
+function lonToSvgX(lon){var l=lon<0?lon+360:lon;return(l-150)*(137/30)+229;}
+function latToSvgY(lat){return 258-lat*(111/30);}
+
 const BASE='https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/';
 function fmtDate(ts){if(!ts)return'--';const d=new Date(ts);if(isNaN(d))return'--';return d.toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});}
 
@@ -553,6 +576,43 @@ function renderPoll(d){
       return '<tr><td>'+fmtDate(e.ts)+'</td><td style="font-family:var(--font-m)">Mw '+(e.mag!=null?e.mag.toFixed(1):'--')+'</td><td>'+( e.place||'--')+'</td><td>'+(e.depth!=null?e.depth+'km':'--')+'</td><td><span class="reason-tag">'+(e.reason||'--')+'</span></td><td style="font-family:var(--font-m)">'+dStr+'</td></tr>';
     }).join('');
     el('seismic-body').innerHTML='<table class="data-table"><thead><tr><th>Time (UTC)</th><th>Mag</th><th>Location</th><th>Depth</th><th>Reason</th><th title="Delta from qualifying threshold">Delta Mw</th></tr></thead><tbody>'+rows+'</tbody></table>';
+    // Render near-miss events on the Pacific map
+    var grp=document.getElementById('seismic-markers');
+    if(grp){
+      grp.innerHTML='';
+      var recent=rs.slice(-60);
+      var now=Date.now();
+      recent.forEach(function(e){
+        if(e.lat==null||e.lon==null) return;
+        var x=lonToSvgX(e.lon), y=latToSvgY(e.lat);
+        if(x<0||x>960||y<0||y>480) return;
+        var mag=e.mag||5.5;
+        var r=Math.max(2.5, (mag-4.5)*2.2);
+        var age=(now-new Date(e.ts).getTime())/(1000*3600);
+        var op=Math.max(0.25, 0.75-age/48);
+        var nearMiss=(e.delta!=null&&e.delta>-0.5&&e.delta<=0);
+        var stroke=nearMiss?'#ffa726':'#c0702a';
+        var sw=nearMiss?1.5:1.0;
+        var g=document.createElementNS('http://www.w3.org/2000/svg','g');
+        var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+        c.setAttribute('cx',x.toFixed(1)); c.setAttribute('cy',y.toFixed(1));
+        c.setAttribute('r',r.toFixed(1));
+        c.setAttribute('fill','none'); c.setAttribute('stroke',stroke);
+        c.setAttribute('stroke-width',sw); c.setAttribute('opacity',op.toFixed(2));
+        var t=document.createElementNS('http://www.w3.org/2000/svg','title');
+        t.textContent='Mw '+(mag.toFixed?mag.toFixed(1):mag)+' '+( e.place||'')+' ('+( e.reason||'filtered')+')';
+        c.appendChild(t); g.appendChild(c);
+        if(nearMiss){
+          var c2=document.createElementNS('http://www.w3.org/2000/svg','circle');
+          c2.setAttribute('cx',x.toFixed(1)); c2.setAttribute('cy',y.toFixed(1));
+          c2.setAttribute('r',(r+2.5).toFixed(1));
+          c2.setAttribute('fill','none'); c2.setAttribute('stroke','#ffa726');
+          c2.setAttribute('stroke-width','0.6'); c2.setAttribute('opacity',(op*0.4).toFixed(2));
+          g.appendChild(c2);
+        }
+        grp.appendChild(g);
+      });
+    }
   }
 }
 
