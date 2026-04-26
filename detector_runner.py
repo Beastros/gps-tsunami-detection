@@ -33,13 +33,13 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(levelname)s  %(message)s",
     handlers=[
-        logging.FileHandler(LOG_FILE),
+        logging.FileHandler(LOG_FILE, encoding="utf-8"),
         logging.StreamHandler()
     ]
 )
 log = logging.getLogger(__name__)
 
-# ── FROZEN PARAMETERS (locked 2025-04-22) ─────────────────────────
+# â”€â”€ FROZEN PARAMETERS (locked 2025-04-22) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 SNR_THRESHOLD    = 2.0
 MIN_DURATION_MIN = 3
 SPEED_MIN        = 150
@@ -54,7 +54,7 @@ LONG_BASELINE_KM = 1000
 KP_THRESHOLD     = 4.0
 PARAM_FREEZE_DATE = "2025-04-22"
 
-# ── Calibration model (frozen) ─────────────────────────────────────
+# â”€â”€ Calibration model (frozen) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 CALIB_A = 2283.839
 CALIB_B = 0.771
 CALIB_C = 2.614
@@ -108,11 +108,11 @@ def fetch_kp(quake_utc_str):
 
         if best_kp is not None:
             log.info(f"  Kp index at quake time: {best_kp} "
-                     f"({'DISTURBED — gate active' if best_kp >= KP_THRESHOLD else 'quiet'})")
+                     f"({'DISTURBED â€” gate active' if best_kp >= KP_THRESHOLD else 'quiet'})")
         return best_kp
 
     except Exception as e:
-        log.warning(f"  Kp fetch failed: {e} — gate disabled for this event")
+        log.warning(f"  Kp fetch failed: {e} â€” gate disabled for this event")
         return None
 
 
@@ -147,8 +147,8 @@ def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score,
     """
     Multi-sensor fusion confidence score (0-1).
 
-    TEC coherence (GPS):  up to 0.55  — reliability reduced by space weather
-    DART ocean pressure:  up to 0.45  — independent of ionosphere
+    TEC coherence (GPS):  up to 0.55  â€” reliability reduced by space weather
+    DART ocean pressure:  up to 0.45  â€” independent of ionosphere
 
     dart_status: 'pending' | 'no_buoys' | 'negative' | 'confirmed'
     """
@@ -168,9 +168,9 @@ def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score,
             if lbl == 'agreement':     const_contrib =  0.10
             elif lbl == 'disagreement': const_contrib = -0.10
             elif lbl == 'partial':      const_contrib =  0.03
-    # dTEC/dt corroboration — small boost (not independent, same GPS data)
+    # dTEC/dt corroboration â€” small boost (not independent, same GPS data)
     dtec_contrib = 0.05 if (dtec_corroborates and tec_detected) else 0.0
-    # Ionosonde foF2 — truly independent HF radar, significant boost
+    # Ionosonde foF2 â€” truly independent HF radar, significant boost
     iono_contrib = 0.12 if (ionosonde_confirmed and tec_detected) else 0.0
     confidence = max(tec_contrib + dart_contrib + const_contrib + dtec_contrib + iono_contrib, 0.0)
     return min(round(confidence, 3), 1.0)
@@ -513,6 +513,7 @@ def run_event(event, kp_override=None):
     for sid in STATIONS:
         og = rinex_dir / f"{sid}{doy:03d}0.{yr2}o.Z"
         ng = rinex_dir / f"{sid}{doy:03d}0.{yr2}n.Z"
+        print('CHECK', str(og), og.exists())
         if not og.exists(): continue
         op = decompress(og)
         if not op: continue
@@ -531,7 +532,7 @@ def run_event(event, kp_override=None):
         filt = compute_tec(op, nav, scfg['lat'], scfg['lon'], scfg['alt'])
         if filt is not None:
             filts[sid] = filt
-            log.info(f"    → {sid.upper()} OK")
+            log.info(f"    â†’ {sid.upper()} OK")
 
 
     # Multi-constellation TEC (GLONASS + Galileo cross-check)
@@ -635,7 +636,7 @@ def run_event(event, kp_override=None):
                         "CHAT/GUAM may have higher error"
             }
 
-        log.info(f"  ✓ DETECTED: {best['pair']} +{best['post_h']:.1f}h "
+        log.info(f"  âœ“ DETECTED: {best['pair']} +{best['post_h']:.1f}h "
                  f"{best['speed_ms']:.0f}m/s")
         if prediction["wave_forecast"]:
             wf = prediction["wave_forecast"]
@@ -647,7 +648,7 @@ def run_event(event, kp_override=None):
                  "no_coherent_pairs" if not window_pairs else "no_pairs"
         prediction["detected"] = False
         prediction["reason"] = reason
-        log.info(f"  − No detection: {reason}")
+        log.info(f"  âˆ’ No detection: {reason}")
 
     # Save plot
     plot_path = rinex_dir / "tec_plot.png"
@@ -668,8 +669,8 @@ def run_event(event, kp_override=None):
             ax.annotate(f"{d['pair']}\n{d['speed_ms']:.0f}m/s",
                        (d['post_h'], 0.85), xycoords=('data','axes fraction'),
                        fontsize=8, color="green", fontweight="bold")
-        status = "✓ DETECTED" if prediction["detected"] else "− No detection"
-        ax.set_title(f"{event['place']}  Mw{mw}  {quake_utc[:16]} UTC  —  {status}",
+        status = "âœ“ DETECTED" if prediction["detected"] else "âˆ’ No detection"
+        ax.set_title(f"{event['place']}  Mw{mw}  {quake_utc[:16]} UTC  â€”  {status}",
                     fontsize=10, fontweight="bold")
         ax.set_xlabel("Hours after earthquake"); ax.set_ylabel("TEC (TECU)")
         ax.set_xlim(-1, 16); ax.legend(fontsize=7); ax.grid(alpha=0.15)
@@ -711,11 +712,11 @@ def run_event(event, kp_override=None):
     prediction['dtec_corroborates']  = dtec_corroborates
     prediction['dtec_corroboration'] = dtec_corroboration
     if dtec_corroborates:
-        log.info(f"  dTEC/dt CORROBORATES detection — "
+        log.info(f"  dTEC/dt CORROBORATES detection â€” "
                  f"{len(dtec_corroboration)} station(s)")
 
 
-    # Ionosonde foF2 cross-check (independent HF radar — GIRO Digisonde network)
+    # Ionosonde foF2 cross-check (independent HF radar â€” GIRO Digisonde network)
     ionosonde_result    = None
     ionosonde_confirmed = False
     try:
@@ -729,7 +730,7 @@ def run_event(event, kp_override=None):
             _di = ionosonde_result.get('stations_with_data', 0)
             log.info(f'  IONOSONDE: confirmed={ionosonde_confirmed} {_ci}/{_di} stations')
     except ImportError:
-        log.debug('  ionosonde_checker not available — skipping')
+        log.debug('  ionosonde_checker not available â€” skipping')
     except Exception as _ie:
         log.warning(f'  Ionosonde check failed: {_ie}')
 
@@ -748,7 +749,7 @@ def run_event(event, kp_override=None):
         if _elat is not None and _elon is not None:
             if _post_h < 1.5:
                 dart_status = "pending"
-                log.info(f"  DART: too early ({_post_h:.1f}h post-quake) — skipping")
+                log.info(f"  DART: too early ({_post_h:.1f}h post-quake) â€” skipping")
             else:
                 dart_result = check_dart_network(quake_utc, _elat, _elon)
                 dart_score  = compute_dart_score(dart_result)
@@ -764,7 +765,7 @@ def run_event(event, kp_override=None):
                     f"{dart_result['buoys_with_data']}"
                 )
         else:
-            log.warning("  DART: no epicenter coords in event — skipping")
+            log.warning("  DART: no epicenter coords in event â€” skipping")
     except Exception as _e:
         log.warning(f"  DART check failed: {_e}")
         dart_status = "no_buoys"
@@ -799,7 +800,7 @@ def save_queue(q):
 
 def main(event_id=None):
     log.info("="*55)
-    log.info("GPS Tsunami Detector — Detector Runner")
+    log.info("GPS Tsunami Detector â€” Detector Runner")
     log.info(f"Parameters frozen: {PARAM_FREEZE_DATE}")
     log.info("="*55)
 
@@ -826,7 +827,7 @@ def main(event_id=None):
             event["detector_run_utc"] = datetime.now(timezone.utc).isoformat()
             event["status"] = "predicted"
             save_queue(queue)
-            log.info(f"Updated queue: {event['usgs_id']} → predicted")
+            log.info(f"Updated queue: {event['usgs_id']} â†’ predicted")
         except Exception as e:
             log.error(f"Detector failed for {event['usgs_id']}: {e}")
             import traceback; traceback.print_exc()

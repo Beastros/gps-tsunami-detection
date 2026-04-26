@@ -1,0 +1,6208 @@
+{
+  "run_utc": "2026-04-26T20:28:15.152747+00:00",
+  "n_events": 9,
+  "n_skipped": 0,
+  "summary": {
+    "tp": 4,
+    "tn": 4,
+    "fp": 1,
+    "fn": 0,
+    "geometry_limited": 0,
+    "tpr": 1.0,
+    "fpr": 0.2,
+    "calibration": {
+      "0.0-0.2": {
+        "n": 4,
+        "hit_rate": 0.0
+      },
+      "0.4-0.6": {
+        "n": 5,
+        "hit_rate": 0.8
+      }
+    }
+  },
+  "results": [
+    {
+      "usgs_id": "official20110311054624120_30",
+      "place": "Tohoku - KOKB-GUAM in V1",
+      "mw": 9.1,
+      "quake_utc": "2011-03-11T05:46:24Z",
+      "known_outcome": "TSUNAMI",
+      "bt_outcome": "TRUE_POSITIVE",
+      "correct": true,
+      "detected": true,
+      "confidence": 0.52,
+      "dart_status": "negative",
+      "iono_confirmed": false,
+      "dtec_corroborates": true,
+      "const_label": "single_constellation",
+      "reason": "",
+      "prediction": {
+        "run_utc": "2026-04-26T20:23:58.212334+00:00",
+        "param_freeze_date": "2025-04-22",
+        "stations_processed": [
+          "mkea",
+          "kokb",
+          "hnlc",
+          "guam"
+        ],
+        "onset_summary": {
+          "mkea": {
+            "n_triggers": 7,
+            "noise_tecu": 0.2751,
+            "triggers": [
+              {
+                "time": "2011-03-11T03:37:00+00:00",
+                "dur_min": 14.0,
+                "snr": 5.2120086060562745
+              },
+              {
+                "time": "2011-03-11T03:55:30+00:00",
+                "dur_min": 21.5,
+                "snr": 3.048929833933933
+              },
+              {
+                "time": "2011-03-11T19:38:00+00:00",
+                "dur_min": 4.5,
+                "snr": 2.215242217575928
+              },
+              {
+                "time": "2011-03-11T20:06:00+00:00",
+                "dur_min": 8.0,
+                "snr": 2.197600117629091
+              },
+              {
+                "time": "2011-03-11T20:36:30+00:00",
+                "dur_min": 10.5,
+                "snr": 3.5659395817466066
+              }
+            ]
+          },
+          "kokb": {
+            "n_triggers": 12,
+            "noise_tecu": 0.3198,
+            "triggers": [
+              {
+                "time": "2011-03-11T02:29:30+00:00",
+                "dur_min": 10.0,
+                "snr": 2.8274239031198825
+              },
+              {
+                "time": "2011-03-11T04:30:30+00:00",
+                "dur_min": 4.5,
+                "snr": 2.1707527479424296
+              },
+              {
+                "time": "2011-03-11T05:04:30+00:00",
+                "dur_min": 8.0,
+                "snr": 3.394728829577312
+              },
+              {
+                "time": "2011-03-11T05:35:30+00:00",
+                "dur_min": 5.5,
+                "snr": 2.355072085753234
+              },
+              {
+                "time": "2011-03-11T05:54:00+00:00",
+                "dur_min": 8.0,
+                "snr": 2.8108843378746498
+              }
+            ]
+          },
+          "hnlc": {
+            "n_triggers": 5,
+            "noise_tecu": 0.4436,
+            "triggers": [
+              {
+                "time": "2011-03-11T02:34:00+00:00",
+                "dur_min": 6.5,
+                "snr": 2.2894832854741347
+              },
+              {
+                "time": "2011-03-11T03:18:00+00:00",
+                "dur_min": 16.0,
+                "snr": 2.5451664767160738
+              },
+              {
+                "time": "2011-03-11T04:23:30+00:00",
+                "dur_min": 9.0,
+                "snr": 2.861076169949636
+              },
+              {
+                "time": "2011-03-11T05:54:00+00:00",
+                "dur_min": 16.5,
+                "snr": 2.734840200316792
+              },
+              {
+                "time": "2011-03-11T21:00:00+00:00",
+                "dur_min": 10.5,
+                "snr": 3.175775324757373
+              }
+            ]
+          },
+          "guam": {
+            "n_triggers": 21,
+            "noise_tecu": 0.2652,
+            "triggers": [
+              {
+                "time": "2011-03-11T02:44:30+00:00",
+                "dur_min": 12.5,
+                "snr": 2.6513213233650457
+              },
+              {
+                "time": "2011-03-11T05:04:30+00:00",
+                "dur_min": 4.0,
+                "snr": 2.3814222626892145
+              },
+              {
+                "time": "2011-03-11T06:05:00+00:00",
+                "dur_min": 4.5,
+                "snr": 2.2512604598178023
+              },
+              {
+                "time": "2011-03-11T06:18:00+00:00",
+                "dur_min": 28.0,
+                "snr": 6.8666647180124105
+              },
+              {
+                "time": "2011-03-11T06:50:00+00:00",
+                "dur_min": 26.0,
+                "snr": 9.644375322759721
+              }
+            ]
+          }
+        },
+        "lb_pairs_total": 29,
+        "lb_pairs_in_window": 29,
+        "kp": 0.0,
+        "kp_disturbed": false,
+        "detected": true,
+        "detection": {
+          "pair": "kokb-guam",
+          "onset_utc": "2011-03-11T15:30:30+00:00",
+          "post_h": 9.73,
+          "speed_ms": 152.8,
+          "delay_min": 325.5,
+          "snr_near": 3.82,
+          "snr_far": 3.89,
+          "baseline_km": 5920
+        },
+        "wave_forecast": {
+          "tec_amp_tecu": 0.4345,
+          "detecting_station": "kokb",
+          "dist_hilo_km": 6299,
+          "predicted_wave_m": 1.207,
+          "predicted_arrival_h": 8.7,
+          "estimated_lead_min": -59,
+          "model": "w=2283.839*TEC*10^(0.771*Mw)/d^2.614",
+          "note": "calibrated on Hawaii-corridor stations; CHAT/GUAM may have higher error"
+        },
+        "plot_path": "rinex_live\\official20110311054624120_30\\tec_plot.png",
+        "dtec_onsets": {
+          "mkea": [
+            {
+              "time": "2011-03-11T20:47:00+00:00",
+              "post_h": 15.01,
+              "dtec_max_tecu_min": 0.1503,
+              "noise_std": 0.04821,
+              "snr_dtec": 3.1
+            }
+          ],
+          "kokb": [
+            {
+              "time": "2011-03-11T07:34:30+00:00",
+              "post_h": 1.8,
+              "dtec_max_tecu_min": 0.1412,
+              "noise_std": 0.03417,
+              "snr_dtec": 4.1
+            },
+            {
+              "time": "2011-03-11T07:45:00+00:00",
+              "post_h": 1.98,
+              "dtec_max_tecu_min": 0.1209,
+              "noise_std": 0.03417,
+              "snr_dtec": 3.5
+            },
+            {
+              "time": "2011-03-11T08:49:00+00:00",
+              "post_h": 3.04,
+              "dtec_max_tecu_min": 0.1048,
+              "noise_std": 0.03417,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2011-03-11T08:55:30+00:00",
+              "post_h": 3.15,
+              "dtec_max_tecu_min": 0.1427,
+              "noise_std": 0.03417,
+              "snr_dtec": 4.2
+            },
+            {
+              "time": "2011-03-11T12:44:00+00:00",
+              "post_h": 6.96,
+              "dtec_max_tecu_min": 0.1498,
+              "noise_std": 0.03417,
+              "snr_dtec": 4.4
+            },
+            {
+              "time": "2011-03-11T12:52:30+00:00",
+              "post_h": 7.1,
+              "dtec_max_tecu_min": 0.1203,
+              "noise_std": 0.03417,
+              "snr_dtec": 3.5
+            },
+            {
+              "time": "2011-03-11T13:52:30+00:00",
+              "post_h": 8.1,
+              "dtec_max_tecu_min": 0.1282,
+              "noise_std": 0.03417,
+              "snr_dtec": 3.8
+            },
+            {
+              "time": "2011-03-11T14:34:30+00:00",
+              "post_h": 8.8,
+              "dtec_max_tecu_min": 0.1026,
+              "noise_std": 0.03417,
+              "snr_dtec": 3.0
+            },
+            {
+              "time": "2011-03-11T20:45:00+00:00",
+              "post_h": 14.98,
+              "dtec_max_tecu_min": 0.1498,
+              "noise_std": 0.03417,
+              "snr_dtec": 4.4
+            },
+            {
+              "time": "2011-03-11T21:40:30+00:00",
+              "post_h": 15.9,
+              "dtec_max_tecu_min": 0.1092,
+              "noise_std": 0.03417,
+              "snr_dtec": 3.2
+            }
+          ],
+          "hnlc": [
+            {
+              "time": "2011-03-11T07:49:00+00:00",
+              "post_h": 2.04,
+              "dtec_max_tecu_min": 0.1919,
+              "noise_std": 0.05297,
+              "snr_dtec": 3.6
+            },
+            {
+              "time": "2011-03-11T08:07:00+00:00",
+              "post_h": 2.34,
+              "dtec_max_tecu_min": 0.1694,
+              "noise_std": 0.05297,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2011-03-11T20:49:00+00:00",
+              "post_h": 15.04,
+              "dtec_max_tecu_min": 0.1785,
+              "noise_std": 0.05297,
+              "snr_dtec": 3.4
+            },
+            {
+              "time": "2011-03-11T21:10:00+00:00",
+              "post_h": 15.39,
+              "dtec_max_tecu_min": 0.1606,
+              "noise_std": 0.05297,
+              "snr_dtec": 3.0
+            },
+            {
+              "time": "2011-03-11T22:17:00+00:00",
+              "post_h": 16.51,
+              "dtec_max_tecu_min": 0.176,
+              "noise_std": 0.05297,
+              "snr_dtec": 3.3
+            }
+          ],
+          "guam": [
+            {
+              "time": "2011-03-11T07:16:30+00:00",
+              "post_h": 1.5,
+              "dtec_max_tecu_min": 0.1763,
+              "noise_std": 0.02885,
+              "snr_dtec": 6.1
+            },
+            {
+              "time": "2011-03-11T08:33:00+00:00",
+              "post_h": 2.78,
+              "dtec_max_tecu_min": 0.2265,
+              "noise_std": 0.02885,
+              "snr_dtec": 7.8
+            },
+            {
+              "time": "2011-03-11T08:42:00+00:00",
+              "post_h": 2.93,
+              "dtec_max_tecu_min": 0.1517,
+              "noise_std": 0.02885,
+              "snr_dtec": 5.3
+            },
+            {
+              "time": "2011-03-11T08:50:30+00:00",
+              "post_h": 3.07,
+              "dtec_max_tecu_min": 0.1187,
+              "noise_std": 0.02885,
+              "snr_dtec": 4.1
+            },
+            {
+              "time": "2011-03-11T08:57:00+00:00",
+              "post_h": 3.18,
+              "dtec_max_tecu_min": 0.1659,
+              "noise_std": 0.02885,
+              "snr_dtec": 5.8
+            },
+            {
+              "time": "2011-03-11T09:09:00+00:00",
+              "post_h": 3.38,
+              "dtec_max_tecu_min": 0.1702,
+              "noise_std": 0.02885,
+              "snr_dtec": 5.9
+            },
+            {
+              "time": "2011-03-11T09:19:00+00:00",
+              "post_h": 3.54,
+              "dtec_max_tecu_min": 0.146,
+              "noise_std": 0.02885,
+              "snr_dtec": 5.1
+            },
+            {
+              "time": "2011-03-11T09:55:00+00:00",
+              "post_h": 4.14,
+              "dtec_max_tecu_min": 0.0999,
+              "noise_std": 0.02885,
+              "snr_dtec": 3.5
+            },
+            {
+              "time": "2011-03-11T10:02:00+00:00",
+              "post_h": 4.26,
+              "dtec_max_tecu_min": 0.154,
+              "noise_std": 0.02885,
+              "snr_dtec": 5.3
+            },
+            {
+              "time": "2011-03-11T10:56:30+00:00",
+              "post_h": 5.17,
+              "dtec_max_tecu_min": 0.0932,
+              "noise_std": 0.02885,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2011-03-11T11:02:00+00:00",
+              "post_h": 5.26,
+              "dtec_max_tecu_min": 0.1529,
+              "noise_std": 0.02885,
+              "snr_dtec": 5.3
+            },
+            {
+              "time": "2011-03-11T11:10:00+00:00",
+              "post_h": 5.39,
+              "dtec_max_tecu_min": 0.1625,
+              "noise_std": 0.02885,
+              "snr_dtec": 5.6
+            },
+            {
+              "time": "2011-03-11T12:00:00+00:00",
+              "post_h": 6.23,
+              "dtec_max_tecu_min": 0.0924,
+              "noise_std": 0.02885,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2011-03-11T12:07:30+00:00",
+              "post_h": 6.35,
+              "dtec_max_tecu_min": 0.1215,
+              "noise_std": 0.02885,
+              "snr_dtec": 4.2
+            },
+            {
+              "time": "2011-03-11T13:06:00+00:00",
+              "post_h": 7.33,
+              "dtec_max_tecu_min": 0.1144,
+              "noise_std": 0.02885,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2011-03-11T13:13:00+00:00",
+              "post_h": 7.44,
+              "dtec_max_tecu_min": 0.1153,
+              "noise_std": 0.02885,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2011-03-11T13:27:30+00:00",
+              "post_h": 7.68,
+              "dtec_max_tecu_min": 0.0916,
+              "noise_std": 0.02885,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2011-03-11T13:53:00+00:00",
+              "post_h": 8.11,
+              "dtec_max_tecu_min": 0.1859,
+              "noise_std": 0.02885,
+              "snr_dtec": 6.4
+            },
+            {
+              "time": "2011-03-11T14:01:00+00:00",
+              "post_h": 8.24,
+              "dtec_max_tecu_min": 0.1157,
+              "noise_std": 0.02885,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2011-03-11T14:46:30+00:00",
+              "post_h": 9.0,
+              "dtec_max_tecu_min": 0.094,
+              "noise_std": 0.02885,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2011-03-11T15:04:30+00:00",
+              "post_h": 9.3,
+              "dtec_max_tecu_min": 0.1138,
+              "noise_std": 0.02885,
+              "snr_dtec": 3.9
+            },
+            {
+              "time": "2011-03-11T15:14:30+00:00",
+              "post_h": 9.47,
+              "dtec_max_tecu_min": 0.1036,
+              "noise_std": 0.02885,
+              "snr_dtec": 3.6
+            },
+            {
+              "time": "2011-03-11T15:26:30+00:00",
+              "post_h": 9.67,
+              "dtec_max_tecu_min": 0.1688,
+              "noise_std": 0.02885,
+              "snr_dtec": 5.8
+            },
+            {
+              "time": "2011-03-11T15:40:30+00:00",
+              "post_h": 9.9,
+              "dtec_max_tecu_min": 0.1412,
+              "noise_std": 0.02885,
+              "snr_dtec": 4.9
+            },
+            {
+              "time": "2011-03-11T15:53:00+00:00",
+              "post_h": 10.11,
+              "dtec_max_tecu_min": 0.2098,
+              "noise_std": 0.02885,
+              "snr_dtec": 7.3
+            },
+            {
+              "time": "2011-03-11T17:24:30+00:00",
+              "post_h": 11.63,
+              "dtec_max_tecu_min": 0.115,
+              "noise_std": 0.02885,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2011-03-11T20:35:00+00:00",
+              "post_h": 14.81,
+              "dtec_max_tecu_min": 0.0875,
+              "noise_std": 0.02885,
+              "snr_dtec": 3.0
+            }
+          ]
+        },
+        "dtec_corroborates": true,
+        "dtec_corroboration": [
+          {
+            "station": "kokb",
+            "dtec_post_h": 8.8,
+            "amp_post_h": 9.73,
+            "lead_min": 56.0,
+            "snr_dtec": 3.0
+          },
+          {
+            "station": "guam",
+            "dtec_post_h": 8.24,
+            "amp_post_h": 9.73,
+            "lead_min": 89.5,
+            "snr_dtec": 4.0
+          }
+        ],
+        "constellation_agreement": {
+          "constellations": {
+            "G": {
+              "available": true,
+              "anomaly": true,
+              "n_stations": 4
+            },
+            "R": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            },
+            "E": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            }
+          },
+          "n_available": 1,
+          "n_detecting": 1,
+          "detecting": [
+            "G"
+          ],
+          "agreement_score": 0.5,
+          "agreement_label": "single_constellation"
+        },
+        "ionosonde_result": {
+          "stations_checked": 5,
+          "stations_with_data": 0,
+          "ionosonde_detected": false,
+          "confirming_stations": 0,
+          "nearest_station_km": 1848,
+          "results": {
+            "RP536": {
+              "name": "Okinawa",
+              "dist_km": 1848,
+              "lat": 26.7,
+              "lon": 128.2,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "TW637": {
+              "name": "Zhongli",
+              "dist_km": 2480,
+              "lat": 25.0,
+              "lon": 121.2,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "GU513": {
+              "name": "Guam",
+              "dist_km": 2758,
+              "lat": 13.6,
+              "lon": 144.9,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "WP937": {
+              "name": "Wake Island",
+              "dist_km": 3150,
+              "lat": 19.3,
+              "lon": 166.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "KJ609": {
+              "name": "Kwajalein",
+              "dist_km": 4126,
+              "lat": 9.0,
+              "lon": 167.7,
+              "data": false,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "ionosonde_confirmed": false,
+        "dart_result": {
+          "buoys_checked": 8,
+          "buoys_with_data": 5,
+          "tsunami_detected": false,
+          "confirming_buoys": 0,
+          "nearest_buoy_km": 2256,
+          "results": {
+            "21416": {
+              "desc": "W Pacific \u2014 Philippine Sea",
+              "dist_km": 2256,
+              "lat": 19.2,
+              "lon": 134.5,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21413": {
+              "desc": "W Pacific \u2014 Mariana",
+              "dist_km": 2751,
+              "lat": 15.1,
+              "lon": 152.1,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21415": {
+              "desc": "W Pacific \u2014 West Mariana",
+              "dist_km": 2758,
+              "lat": 15.0,
+              "lon": 152.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21414": {
+              "desc": "W Pacific \u2014 Central",
+              "dist_km": 3218,
+              "lat": 15.1,
+              "lon": 162.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "46409": {
+              "desc": "Unimak Pass \u2014 Aleutian",
+              "dist_km": 4182,
+              "lat": 53.9,
+              "lon": -166.7,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "46402": {
+              "desc": "Gulf of Alaska",
+              "dist_km": 4363,
+              "lat": 51.0,
+              "lon": -164.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "46407": {
+              "desc": "Alaska Peninsula",
+              "dist_km": 4490,
+              "lat": 54.0,
+              "lon": -162.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "46403": {
+              "desc": "N Pacific \u2014 SE Alaska",
+              "dist_km": 5108,
+              "lat": 53.6,
+              "lon": -152.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "dart_score": 0.0,
+        "dart_status": "negative",
+        "combined_confidence": 0.52,
+        "space_weather_score": 0.0
+      }
+    },
+    {
+      "usgs_id": "official20100227063411530_30",
+      "place": "Chile - 108 min lead V1",
+      "mw": 8.8,
+      "quake_utc": "2010-02-27T06:34:11Z",
+      "known_outcome": "TSUNAMI",
+      "bt_outcome": "TRUE_POSITIVE",
+      "correct": true,
+      "detected": true,
+      "confidence": 0.52,
+      "dart_status": "negative",
+      "iono_confirmed": false,
+      "dtec_corroborates": true,
+      "const_label": "single_constellation",
+      "reason": "",
+      "prediction": {
+        "run_utc": "2026-04-26T20:24:28.128178+00:00",
+        "param_freeze_date": "2025-04-22",
+        "stations_processed": [
+          "mkea",
+          "kokb",
+          "hnlc",
+          "guam"
+        ],
+        "onset_summary": {
+          "mkea": {
+            "n_triggers": 4,
+            "noise_tecu": 0.4562,
+            "triggers": [
+              {
+                "time": "2010-02-27T00:53:30+00:00",
+                "dur_min": 3.5,
+                "snr": 2.1501740176147153
+              },
+              {
+                "time": "2010-02-27T02:44:00+00:00",
+                "dur_min": 7.5,
+                "snr": 2.7910704852174404
+              },
+              {
+                "time": "2010-02-27T04:59:30+00:00",
+                "dur_min": 3.5,
+                "snr": 2.12594693966735
+              },
+              {
+                "time": "2010-02-27T21:38:00+00:00",
+                "dur_min": 5.0,
+                "snr": 2.5274189978212536
+              }
+            ]
+          },
+          "kokb": {
+            "n_triggers": 7,
+            "noise_tecu": 0.19,
+            "triggers": [
+              {
+                "time": "2010-02-27T00:43:30+00:00",
+                "dur_min": 6.5,
+                "snr": 2.3912070760311375
+              },
+              {
+                "time": "2010-02-27T03:40:00+00:00",
+                "dur_min": 16.5,
+                "snr": 3.523544295730616
+              },
+              {
+                "time": "2010-02-27T04:08:30+00:00",
+                "dur_min": 15.5,
+                "snr": 2.43015306886288
+              },
+              {
+                "time": "2010-02-27T16:50:30+00:00",
+                "dur_min": 5.0,
+                "snr": 2.272072731668627
+              },
+              {
+                "time": "2010-02-27T22:29:00+00:00",
+                "dur_min": 11.0,
+                "snr": 2.860496926813136
+              }
+            ]
+          },
+          "hnlc": {
+            "n_triggers": 2,
+            "noise_tecu": 0.1995,
+            "triggers": [
+              {
+                "time": "2010-02-27T03:58:00+00:00",
+                "dur_min": 6.0,
+                "snr": 2.326743020393204
+              },
+              {
+                "time": "2010-02-27T09:18:00+00:00",
+                "dur_min": 3.0,
+                "snr": 2.086255245500252
+              }
+            ]
+          },
+          "guam": {
+            "n_triggers": 29,
+            "noise_tecu": 0.161,
+            "triggers": [
+              {
+                "time": "2010-02-27T01:09:00+00:00",
+                "dur_min": 7.5,
+                "snr": 3.145074968729688
+              },
+              {
+                "time": "2010-02-27T03:08:00+00:00",
+                "dur_min": 6.0,
+                "snr": 2.7398410944190448
+              },
+              {
+                "time": "2010-02-27T04:25:00+00:00",
+                "dur_min": 4.5,
+                "snr": 2.476431402524274
+              },
+              {
+                "time": "2010-02-27T06:58:30+00:00",
+                "dur_min": 6.5,
+                "snr": 2.9375848333681374
+              },
+              {
+                "time": "2010-02-27T07:08:30+00:00",
+                "dur_min": 4.5,
+                "snr": 2.51328767148584
+              }
+            ]
+          }
+        },
+        "lb_pairs_total": 8,
+        "lb_pairs_in_window": 8,
+        "kp": 0.0,
+        "kp_disturbed": false,
+        "detected": true,
+        "detection": {
+          "pair": "hnlc-guam",
+          "onset_utc": "2010-02-27T09:18:00+00:00",
+          "post_h": 2.73,
+          "speed_ms": 321.7,
+          "delay_min": 236.5,
+          "snr_near": 2.09,
+          "snr_far": 5.36,
+          "baseline_km": 6113
+        },
+        "wave_forecast": {
+          "tec_amp_tecu": 0.4162,
+          "detecting_station": "hnlc",
+          "dist_hilo_km": 10622,
+          "predicted_wave_m": 0.173,
+          "predicted_arrival_h": 14.8,
+          "estimated_lead_min": 721,
+          "model": "w=2283.839*TEC*10^(0.771*Mw)/d^2.614",
+          "note": "calibrated on Hawaii-corridor stations; CHAT/GUAM may have higher error"
+        },
+        "plot_path": "rinex_live\\official20100227063411530_30\\tec_plot.png",
+        "dtec_onsets": {
+          "mkea": [
+            {
+              "time": "2010-02-27T21:35:30+00:00",
+              "post_h": 15.02,
+              "dtec_max_tecu_min": 0.1591,
+              "noise_std": 0.05074,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2010-02-27T21:42:30+00:00",
+              "post_h": 15.14,
+              "dtec_max_tecu_min": 0.2883,
+              "noise_std": 0.05074,
+              "snr_dtec": 5.7
+            },
+            {
+              "time": "2010-02-27T22:45:30+00:00",
+              "post_h": 16.19,
+              "dtec_max_tecu_min": 0.166,
+              "noise_std": 0.05074,
+              "snr_dtec": 3.3
+            }
+          ],
+          "kokb": [
+            {
+              "time": "2010-02-27T09:55:30+00:00",
+              "post_h": 3.36,
+              "dtec_max_tecu_min": 0.081,
+              "noise_std": 0.02413,
+              "snr_dtec": 3.4
+            },
+            {
+              "time": "2010-02-27T16:17:30+00:00",
+              "post_h": 9.72,
+              "dtec_max_tecu_min": 0.0887,
+              "noise_std": 0.02413,
+              "snr_dtec": 3.7
+            },
+            {
+              "time": "2010-02-27T20:06:00+00:00",
+              "post_h": 13.53,
+              "dtec_max_tecu_min": 0.1092,
+              "noise_std": 0.02413,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2010-02-27T20:14:00+00:00",
+              "post_h": 13.66,
+              "dtec_max_tecu_min": 0.0816,
+              "noise_std": 0.02413,
+              "snr_dtec": 3.4
+            },
+            {
+              "time": "2010-02-27T22:42:30+00:00",
+              "post_h": 16.14,
+              "dtec_max_tecu_min": 0.1031,
+              "noise_std": 0.02413,
+              "snr_dtec": 4.3
+            }
+          ],
+          "hnlc": [
+            {
+              "time": "2010-02-27T08:24:00+00:00",
+              "post_h": 1.83,
+              "dtec_max_tecu_min": 0.0597,
+              "noise_std": 0.01809,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2010-02-27T08:30:30+00:00",
+              "post_h": 1.94,
+              "dtec_max_tecu_min": 0.0653,
+              "noise_std": 0.01809,
+              "snr_dtec": 3.6
+            },
+            {
+              "time": "2010-02-27T09:36:30+00:00",
+              "post_h": 3.04,
+              "dtec_max_tecu_min": 0.0572,
+              "noise_std": 0.01809,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2010-02-27T09:44:00+00:00",
+              "post_h": 3.16,
+              "dtec_max_tecu_min": 0.0638,
+              "noise_std": 0.01809,
+              "snr_dtec": 3.5
+            },
+            {
+              "time": "2010-02-27T17:37:00+00:00",
+              "post_h": 11.05,
+              "dtec_max_tecu_min": 0.0597,
+              "noise_std": 0.01809,
+              "snr_dtec": 3.3
+            }
+          ],
+          "guam": [
+            {
+              "time": "2010-02-27T08:30:30+00:00",
+              "post_h": 1.94,
+              "dtec_max_tecu_min": 0.1355,
+              "noise_std": 0.02138,
+              "snr_dtec": 6.3
+            },
+            {
+              "time": "2010-02-27T08:43:00+00:00",
+              "post_h": 2.15,
+              "dtec_max_tecu_min": 0.1165,
+              "noise_std": 0.02138,
+              "snr_dtec": 5.4
+            },
+            {
+              "time": "2010-02-27T09:08:30+00:00",
+              "post_h": 2.57,
+              "dtec_max_tecu_min": 0.1913,
+              "noise_std": 0.02138,
+              "snr_dtec": 8.9
+            },
+            {
+              "time": "2010-02-27T09:19:00+00:00",
+              "post_h": 2.75,
+              "dtec_max_tecu_min": 0.0698,
+              "noise_std": 0.02138,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2010-02-27T09:27:00+00:00",
+              "post_h": 2.88,
+              "dtec_max_tecu_min": 0.1065,
+              "noise_std": 0.02138,
+              "snr_dtec": 5.0
+            },
+            {
+              "time": "2010-02-27T09:34:00+00:00",
+              "post_h": 3.0,
+              "dtec_max_tecu_min": 0.2212,
+              "noise_std": 0.02138,
+              "snr_dtec": 10.3
+            },
+            {
+              "time": "2010-02-27T09:42:00+00:00",
+              "post_h": 3.13,
+              "dtec_max_tecu_min": 0.1579,
+              "noise_std": 0.02138,
+              "snr_dtec": 7.4
+            },
+            {
+              "time": "2010-02-27T09:48:00+00:00",
+              "post_h": 3.23,
+              "dtec_max_tecu_min": 0.2173,
+              "noise_std": 0.02138,
+              "snr_dtec": 10.2
+            },
+            {
+              "time": "2010-02-27T09:55:00+00:00",
+              "post_h": 3.35,
+              "dtec_max_tecu_min": 0.2215,
+              "noise_std": 0.02138,
+              "snr_dtec": 10.4
+            },
+            {
+              "time": "2010-02-27T10:03:30+00:00",
+              "post_h": 3.49,
+              "dtec_max_tecu_min": 0.1733,
+              "noise_std": 0.02138,
+              "snr_dtec": 8.1
+            },
+            {
+              "time": "2010-02-27T10:13:30+00:00",
+              "post_h": 3.66,
+              "dtec_max_tecu_min": 0.1026,
+              "noise_std": 0.02138,
+              "snr_dtec": 4.8
+            },
+            {
+              "time": "2010-02-27T10:30:30+00:00",
+              "post_h": 3.94,
+              "dtec_max_tecu_min": 0.1692,
+              "noise_std": 0.02138,
+              "snr_dtec": 7.9
+            },
+            {
+              "time": "2010-02-27T10:40:00+00:00",
+              "post_h": 4.1,
+              "dtec_max_tecu_min": 0.1647,
+              "noise_std": 0.02138,
+              "snr_dtec": 7.7
+            },
+            {
+              "time": "2010-02-27T10:53:00+00:00",
+              "post_h": 4.31,
+              "dtec_max_tecu_min": 0.1457,
+              "noise_std": 0.02138,
+              "snr_dtec": 6.8
+            },
+            {
+              "time": "2010-02-27T10:59:30+00:00",
+              "post_h": 4.42,
+              "dtec_max_tecu_min": 0.1262,
+              "noise_std": 0.02138,
+              "snr_dtec": 5.9
+            },
+            {
+              "time": "2010-02-27T11:05:30+00:00",
+              "post_h": 4.52,
+              "dtec_max_tecu_min": 0.1445,
+              "noise_std": 0.02138,
+              "snr_dtec": 6.8
+            },
+            {
+              "time": "2010-02-27T11:10:30+00:00",
+              "post_h": 4.61,
+              "dtec_max_tecu_min": 0.2568,
+              "noise_std": 0.02138,
+              "snr_dtec": 12.0
+            },
+            {
+              "time": "2010-02-27T11:19:30+00:00",
+              "post_h": 4.76,
+              "dtec_max_tecu_min": 0.2159,
+              "noise_std": 0.02138,
+              "snr_dtec": 10.1
+            },
+            {
+              "time": "2010-02-27T11:29:00+00:00",
+              "post_h": 4.91,
+              "dtec_max_tecu_min": 0.1587,
+              "noise_std": 0.02138,
+              "snr_dtec": 7.4
+            },
+            {
+              "time": "2010-02-27T11:36:00+00:00",
+              "post_h": 5.03,
+              "dtec_max_tecu_min": 0.0803,
+              "noise_std": 0.02138,
+              "snr_dtec": 3.8
+            },
+            {
+              "time": "2010-02-27T11:40:30+00:00",
+              "post_h": 5.11,
+              "dtec_max_tecu_min": 0.0892,
+              "noise_std": 0.02138,
+              "snr_dtec": 4.2
+            },
+            {
+              "time": "2010-02-27T12:02:30+00:00",
+              "post_h": 5.47,
+              "dtec_max_tecu_min": 0.0802,
+              "noise_std": 0.02138,
+              "snr_dtec": 3.8
+            },
+            {
+              "time": "2010-02-27T12:09:00+00:00",
+              "post_h": 5.58,
+              "dtec_max_tecu_min": 0.0844,
+              "noise_std": 0.02138,
+              "snr_dtec": 3.9
+            },
+            {
+              "time": "2010-02-27T12:22:00+00:00",
+              "post_h": 5.8,
+              "dtec_max_tecu_min": 0.0642,
+              "noise_std": 0.02138,
+              "snr_dtec": 3.0
+            },
+            {
+              "time": "2010-02-27T12:42:30+00:00",
+              "post_h": 6.14,
+              "dtec_max_tecu_min": 0.0729,
+              "noise_std": 0.02138,
+              "snr_dtec": 3.4
+            },
+            {
+              "time": "2010-02-27T12:50:00+00:00",
+              "post_h": 6.26,
+              "dtec_max_tecu_min": 0.1448,
+              "noise_std": 0.02138,
+              "snr_dtec": 6.8
+            },
+            {
+              "time": "2010-02-27T13:12:00+00:00",
+              "post_h": 6.63,
+              "dtec_max_tecu_min": 0.1334,
+              "noise_std": 0.02138,
+              "snr_dtec": 6.2
+            },
+            {
+              "time": "2010-02-27T13:23:00+00:00",
+              "post_h": 6.81,
+              "dtec_max_tecu_min": 0.1002,
+              "noise_std": 0.02138,
+              "snr_dtec": 4.7
+            },
+            {
+              "time": "2010-02-27T14:01:00+00:00",
+              "post_h": 7.45,
+              "dtec_max_tecu_min": 0.1082,
+              "noise_std": 0.02138,
+              "snr_dtec": 5.1
+            },
+            {
+              "time": "2010-02-27T14:09:00+00:00",
+              "post_h": 7.58,
+              "dtec_max_tecu_min": 0.0947,
+              "noise_std": 0.02138,
+              "snr_dtec": 4.4
+            },
+            {
+              "time": "2010-02-27T15:51:00+00:00",
+              "post_h": 9.28,
+              "dtec_max_tecu_min": 0.0811,
+              "noise_std": 0.02138,
+              "snr_dtec": 3.8
+            },
+            {
+              "time": "2010-02-27T16:11:30+00:00",
+              "post_h": 9.62,
+              "dtec_max_tecu_min": 0.1023,
+              "noise_std": 0.02138,
+              "snr_dtec": 4.8
+            }
+          ]
+        },
+        "dtec_corroborates": true,
+        "dtec_corroboration": [
+          {
+            "station": "hnlc",
+            "dtec_post_h": 1.83,
+            "amp_post_h": 2.73,
+            "lead_min": 54.0,
+            "snr_dtec": 3.3
+          },
+          {
+            "station": "guam",
+            "dtec_post_h": 1.94,
+            "amp_post_h": 2.73,
+            "lead_min": 47.5,
+            "snr_dtec": 6.3
+          }
+        ],
+        "constellation_agreement": {
+          "constellations": {
+            "G": {
+              "available": true,
+              "anomaly": true,
+              "n_stations": 4
+            },
+            "R": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            },
+            "E": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            }
+          },
+          "n_available": 1,
+          "n_detecting": 1,
+          "detecting": [
+            "G"
+          ],
+          "agreement_score": 0.5,
+          "agreement_label": "single_constellation"
+        },
+        "ionosonde_result": {
+          "stations_checked": 0,
+          "stations_with_data": 0,
+          "ionosonde_detected": false,
+          "confirming_stations": 0,
+          "results": {}
+        },
+        "ionosonde_confirmed": false,
+        "dart_result": {
+          "buoys_checked": 6,
+          "buoys_with_data": 3,
+          "tsunami_detected": false,
+          "confirming_buoys": 0,
+          "nearest_buoy_km": 876,
+          "results": {
+            "32412": {
+              "desc": "SE Pacific \u2014 Chile C",
+              "dist_km": 876,
+              "lat": -28.0,
+              "lon": -72.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "32411": {
+              "desc": "SE Pacific \u2014 Chile N",
+              "dist_km": 1631,
+              "lat": -24.5,
+              "lon": -83.5,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "32401": {
+              "desc": "SE Pacific \u2014 Peru",
+              "dist_km": 2329,
+              "lat": -18.0,
+              "lon": -85.1,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "32402": {
+              "desc": "SE Pacific \u2014 Central",
+              "dist_km": 3488,
+              "lat": -17.0,
+              "lon": -101.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "32403": {
+              "desc": "SE Pacific \u2014 W Peru",
+              "dist_km": 3786,
+              "lat": -19.8,
+              "lon": -107.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "43412": {
+              "desc": "SE Pacific \u2014 Ecuador",
+              "dist_km": 3835,
+              "lat": -8.0,
+              "lon": -95.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "dart_score": 0.0,
+        "dart_status": "negative",
+        "combined_confidence": 0.52,
+        "space_weather_score": 0.0
+      }
+    },
+    {
+      "usgs_id": "usp000f1s0",
+      "place": "Kuril - MKEA-GUAM V1",
+      "mw": 8.3,
+      "quake_utc": "2006-11-15T11:14:14Z",
+      "known_outcome": "TSUNAMI",
+      "bt_outcome": "TRUE_POSITIVE",
+      "correct": true,
+      "detected": true,
+      "confidence": 0.52,
+      "dart_status": "negative",
+      "iono_confirmed": false,
+      "dtec_corroborates": true,
+      "const_label": "single_constellation",
+      "reason": "",
+      "prediction": {
+        "run_utc": "2026-04-26T20:24:54.824342+00:00",
+        "param_freeze_date": "2025-04-22",
+        "stations_processed": [
+          "mkea",
+          "kokb",
+          "hnlc",
+          "guam"
+        ],
+        "onset_summary": {
+          "mkea": {
+            "n_triggers": 20,
+            "noise_tecu": 0.1691,
+            "triggers": [
+              {
+                "time": "2006-11-15T15:26:00+00:00",
+                "dur_min": 15.5,
+                "snr": 2.7004420772696696
+              },
+              {
+                "time": "2006-11-15T15:59:30+00:00",
+                "dur_min": 26.0,
+                "snr": 2.7003668179912816
+              },
+              {
+                "time": "2006-11-15T17:20:00+00:00",
+                "dur_min": 6.5,
+                "snr": 2.12169075245162
+              },
+              {
+                "time": "2006-11-15T17:57:30+00:00",
+                "dur_min": 4.0,
+                "snr": 2.2190496587972515
+              },
+              {
+                "time": "2006-11-15T18:55:30+00:00",
+                "dur_min": 7.5,
+                "snr": 3.722998630702034
+              }
+            ]
+          },
+          "kokb": {
+            "n_triggers": 12,
+            "noise_tecu": 0.1991,
+            "triggers": [
+              {
+                "time": "2006-11-15T01:32:30+00:00",
+                "dur_min": 9.5,
+                "snr": 2.2880953164173334
+              },
+              {
+                "time": "2006-11-15T16:30:00+00:00",
+                "dur_min": 5.5,
+                "snr": 2.385432083511911
+              },
+              {
+                "time": "2006-11-15T17:14:00+00:00",
+                "dur_min": 9.0,
+                "snr": 2.8306127211813843
+              },
+              {
+                "time": "2006-11-15T19:11:30+00:00",
+                "dur_min": 10.5,
+                "snr": 9.733808830649133
+              },
+              {
+                "time": "2006-11-15T19:42:00+00:00",
+                "dur_min": 16.0,
+                "snr": 3.0166325834782732
+              }
+            ]
+          },
+          "hnlc": {
+            "n_triggers": 14,
+            "noise_tecu": 0.166,
+            "triggers": [
+              {
+                "time": "2006-11-15T00:12:00+00:00",
+                "dur_min": 11.0,
+                "snr": 2.374420220603006
+              },
+              {
+                "time": "2006-11-15T00:49:00+00:00",
+                "dur_min": 7.0,
+                "snr": 2.4224030587327285
+              },
+              {
+                "time": "2006-11-15T16:14:30+00:00",
+                "dur_min": 15.0,
+                "snr": 3.050784956961343
+              },
+              {
+                "time": "2006-11-15T16:37:30+00:00",
+                "dur_min": 8.0,
+                "snr": 2.715142842370477
+              },
+              {
+                "time": "2006-11-15T16:54:00+00:00",
+                "dur_min": 19.5,
+                "snr": 2.912526231094895
+              }
+            ]
+          },
+          "guam": {
+            "n_triggers": 13,
+            "noise_tecu": 0.1269,
+            "triggers": [
+              {
+                "time": "2006-11-15T03:20:00+00:00",
+                "dur_min": 6.5,
+                "snr": 2.181929208154325
+              },
+              {
+                "time": "2006-11-15T03:50:30+00:00",
+                "dur_min": 8.5,
+                "snr": 4.852950438755253
+              },
+              {
+                "time": "2006-11-15T04:06:30+00:00",
+                "dur_min": 6.0,
+                "snr": 2.3654158208345435
+              },
+              {
+                "time": "2006-11-15T04:44:30+00:00",
+                "dur_min": 3.0,
+                "snr": 2.1728239360539114
+              },
+              {
+                "time": "2006-11-15T05:15:30+00:00",
+                "dur_min": 4.5,
+                "snr": 3.206360972877232
+              }
+            ]
+          }
+        },
+        "lb_pairs_total": 15,
+        "lb_pairs_in_window": 15,
+        "kp": 0.0,
+        "kp_disturbed": false,
+        "detected": true,
+        "detection": {
+          "pair": "mkea-guam",
+          "onset_utc": "2006-11-15T20:00:00+00:00",
+          "post_h": 8.76,
+          "speed_ms": 324.2,
+          "delay_min": 89.0,
+          "snr_near": 2.27,
+          "snr_far": 6.81,
+          "baseline_km": 6366
+        },
+        "wave_forecast": {
+          "tec_amp_tecu": 1.2017,
+          "detecting_station": "mkea",
+          "dist_hilo_km": 5527,
+          "predicted_wave_m": 1.134,
+          "predicted_arrival_h": 7.7,
+          "estimated_lead_min": -65,
+          "model": "w=2283.839*TEC*10^(0.771*Mw)/d^2.614",
+          "note": "calibrated on Hawaii-corridor stations; CHAT/GUAM may have higher error"
+        },
+        "plot_path": "rinex_live\\usp000f1s0\\tec_plot.png",
+        "dtec_onsets": {
+          "mkea": [
+            {
+              "time": "2006-11-15T14:38:30+00:00",
+              "post_h": 3.4,
+              "dtec_max_tecu_min": 0.0582,
+              "noise_std": 0.01185,
+              "snr_dtec": 4.9
+            },
+            {
+              "time": "2006-11-15T14:52:00+00:00",
+              "post_h": 3.63,
+              "dtec_max_tecu_min": 0.0496,
+              "noise_std": 0.01185,
+              "snr_dtec": 4.2
+            },
+            {
+              "time": "2006-11-15T15:40:30+00:00",
+              "post_h": 4.44,
+              "dtec_max_tecu_min": 0.0472,
+              "noise_std": 0.01185,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2006-11-15T15:50:30+00:00",
+              "post_h": 4.6,
+              "dtec_max_tecu_min": 0.0465,
+              "noise_std": 0.01185,
+              "snr_dtec": 3.9
+            },
+            {
+              "time": "2006-11-15T16:24:30+00:00",
+              "post_h": 5.17,
+              "dtec_max_tecu_min": 0.084,
+              "noise_std": 0.01185,
+              "snr_dtec": 7.1
+            },
+            {
+              "time": "2006-11-15T17:15:00+00:00",
+              "post_h": 6.01,
+              "dtec_max_tecu_min": 0.047,
+              "noise_std": 0.01185,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2006-11-15T17:30:00+00:00",
+              "post_h": 6.26,
+              "dtec_max_tecu_min": 0.0523,
+              "noise_std": 0.01185,
+              "snr_dtec": 4.4
+            },
+            {
+              "time": "2006-11-15T17:54:30+00:00",
+              "post_h": 6.67,
+              "dtec_max_tecu_min": 0.0419,
+              "noise_std": 0.01185,
+              "snr_dtec": 3.5
+            },
+            {
+              "time": "2006-11-15T18:01:30+00:00",
+              "post_h": 6.79,
+              "dtec_max_tecu_min": 0.052,
+              "noise_std": 0.01185,
+              "snr_dtec": 4.4
+            },
+            {
+              "time": "2006-11-15T18:41:00+00:00",
+              "post_h": 7.45,
+              "dtec_max_tecu_min": 0.0606,
+              "noise_std": 0.01185,
+              "snr_dtec": 5.1
+            },
+            {
+              "time": "2006-11-15T18:47:30+00:00",
+              "post_h": 7.55,
+              "dtec_max_tecu_min": 0.0897,
+              "noise_std": 0.01185,
+              "snr_dtec": 7.6
+            },
+            {
+              "time": "2006-11-15T19:01:00+00:00",
+              "post_h": 7.78,
+              "dtec_max_tecu_min": 0.2866,
+              "noise_std": 0.01185,
+              "snr_dtec": 24.2
+            },
+            {
+              "time": "2006-11-15T19:12:00+00:00",
+              "post_h": 7.96,
+              "dtec_max_tecu_min": 0.2682,
+              "noise_std": 0.01185,
+              "snr_dtec": 22.6
+            },
+            {
+              "time": "2006-11-15T19:23:00+00:00",
+              "post_h": 8.15,
+              "dtec_max_tecu_min": 0.0598,
+              "noise_std": 0.01185,
+              "snr_dtec": 5.0
+            },
+            {
+              "time": "2006-11-15T19:27:30+00:00",
+              "post_h": 8.22,
+              "dtec_max_tecu_min": 0.0926,
+              "noise_std": 0.01185,
+              "snr_dtec": 7.8
+            },
+            {
+              "time": "2006-11-15T19:33:00+00:00",
+              "post_h": 8.31,
+              "dtec_max_tecu_min": 0.141,
+              "noise_std": 0.01185,
+              "snr_dtec": 11.9
+            },
+            {
+              "time": "2006-11-15T19:40:00+00:00",
+              "post_h": 8.43,
+              "dtec_max_tecu_min": 0.0876,
+              "noise_std": 0.01185,
+              "snr_dtec": 7.4
+            },
+            {
+              "time": "2006-11-15T19:50:30+00:00",
+              "post_h": 8.6,
+              "dtec_max_tecu_min": 0.0805,
+              "noise_std": 0.01185,
+              "snr_dtec": 6.8
+            },
+            {
+              "time": "2006-11-15T20:08:30+00:00",
+              "post_h": 8.9,
+              "dtec_max_tecu_min": 0.1095,
+              "noise_std": 0.01185,
+              "snr_dtec": 9.2
+            },
+            {
+              "time": "2006-11-15T20:29:30+00:00",
+              "post_h": 9.25,
+              "dtec_max_tecu_min": 0.0392,
+              "noise_std": 0.01185,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2006-11-15T20:39:30+00:00",
+              "post_h": 9.42,
+              "dtec_max_tecu_min": 0.0717,
+              "noise_std": 0.01185,
+              "snr_dtec": 6.0
+            },
+            {
+              "time": "2006-11-15T20:50:00+00:00",
+              "post_h": 9.6,
+              "dtec_max_tecu_min": 0.239,
+              "noise_std": 0.01185,
+              "snr_dtec": 20.2
+            },
+            {
+              "time": "2006-11-15T20:58:30+00:00",
+              "post_h": 9.74,
+              "dtec_max_tecu_min": 0.1542,
+              "noise_std": 0.01185,
+              "snr_dtec": 13.0
+            },
+            {
+              "time": "2006-11-15T21:12:00+00:00",
+              "post_h": 9.96,
+              "dtec_max_tecu_min": 0.2632,
+              "noise_std": 0.01185,
+              "snr_dtec": 22.2
+            },
+            {
+              "time": "2006-11-15T21:21:30+00:00",
+              "post_h": 10.12,
+              "dtec_max_tecu_min": 0.263,
+              "noise_std": 0.01185,
+              "snr_dtec": 22.2
+            },
+            {
+              "time": "2006-11-15T21:27:30+00:00",
+              "post_h": 10.22,
+              "dtec_max_tecu_min": 0.2494,
+              "noise_std": 0.01185,
+              "snr_dtec": 21.0
+            },
+            {
+              "time": "2006-11-15T21:33:30+00:00",
+              "post_h": 10.32,
+              "dtec_max_tecu_min": 0.3103,
+              "noise_std": 0.01185,
+              "snr_dtec": 26.2
+            },
+            {
+              "time": "2006-11-15T21:43:00+00:00",
+              "post_h": 10.48,
+              "dtec_max_tecu_min": 0.0926,
+              "noise_std": 0.01185,
+              "snr_dtec": 7.8
+            },
+            {
+              "time": "2006-11-15T21:49:00+00:00",
+              "post_h": 10.58,
+              "dtec_max_tecu_min": 0.0543,
+              "noise_std": 0.01185,
+              "snr_dtec": 4.6
+            },
+            {
+              "time": "2006-11-15T21:53:30+00:00",
+              "post_h": 10.65,
+              "dtec_max_tecu_min": 0.0717,
+              "noise_std": 0.01185,
+              "snr_dtec": 6.1
+            },
+            {
+              "time": "2006-11-15T21:58:30+00:00",
+              "post_h": 10.74,
+              "dtec_max_tecu_min": 0.2004,
+              "noise_std": 0.01185,
+              "snr_dtec": 16.9
+            },
+            {
+              "time": "2006-11-15T22:06:00+00:00",
+              "post_h": 10.86,
+              "dtec_max_tecu_min": 0.1812,
+              "noise_std": 0.01185,
+              "snr_dtec": 15.3
+            },
+            {
+              "time": "2006-11-15T22:27:00+00:00",
+              "post_h": 11.21,
+              "dtec_max_tecu_min": 0.115,
+              "noise_std": 0.01185,
+              "snr_dtec": 9.7
+            },
+            {
+              "time": "2006-11-15T22:38:00+00:00",
+              "post_h": 11.4,
+              "dtec_max_tecu_min": 0.0569,
+              "noise_std": 0.01185,
+              "snr_dtec": 4.8
+            },
+            {
+              "time": "2006-11-15T22:55:30+00:00",
+              "post_h": 11.69,
+              "dtec_max_tecu_min": 0.0514,
+              "noise_std": 0.01185,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2006-11-15T23:01:30+00:00",
+              "post_h": 11.79,
+              "dtec_max_tecu_min": 0.1238,
+              "noise_std": 0.01185,
+              "snr_dtec": 10.4
+            },
+            {
+              "time": "2006-11-15T23:17:00+00:00",
+              "post_h": 12.05,
+              "dtec_max_tecu_min": 0.1177,
+              "noise_std": 0.01185,
+              "snr_dtec": 9.9
+            },
+            {
+              "time": "2006-11-15T23:34:30+00:00",
+              "post_h": 12.34,
+              "dtec_max_tecu_min": 0.1038,
+              "noise_std": 0.01185,
+              "snr_dtec": 8.8
+            },
+            {
+              "time": "2006-11-15T23:55:00+00:00",
+              "post_h": 12.68,
+              "dtec_max_tecu_min": 0.0392,
+              "noise_std": 0.01185,
+              "snr_dtec": 3.3
+            }
+          ],
+          "kokb": [
+            {
+              "time": "2006-11-15T13:44:00+00:00",
+              "post_h": 2.5,
+              "dtec_max_tecu_min": 0.0402,
+              "noise_std": 0.01223,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2006-11-15T14:56:30+00:00",
+              "post_h": 3.7,
+              "dtec_max_tecu_min": 0.0472,
+              "noise_std": 0.01223,
+              "snr_dtec": 3.9
+            },
+            {
+              "time": "2006-11-15T15:54:30+00:00",
+              "post_h": 4.67,
+              "dtec_max_tecu_min": 0.0397,
+              "noise_std": 0.01223,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2006-11-15T16:25:30+00:00",
+              "post_h": 5.19,
+              "dtec_max_tecu_min": 0.0665,
+              "noise_std": 0.01223,
+              "snr_dtec": 5.4
+            },
+            {
+              "time": "2006-11-15T16:34:30+00:00",
+              "post_h": 5.34,
+              "dtec_max_tecu_min": 0.0488,
+              "noise_std": 0.01223,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2006-11-15T16:57:00+00:00",
+              "post_h": 5.71,
+              "dtec_max_tecu_min": 0.0484,
+              "noise_std": 0.01223,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2006-11-15T17:13:30+00:00",
+              "post_h": 5.99,
+              "dtec_max_tecu_min": 0.0502,
+              "noise_std": 0.01223,
+              "snr_dtec": 4.1
+            },
+            {
+              "time": "2006-11-15T17:20:30+00:00",
+              "post_h": 6.1,
+              "dtec_max_tecu_min": 0.0495,
+              "noise_std": 0.01223,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2006-11-15T17:34:30+00:00",
+              "post_h": 6.34,
+              "dtec_max_tecu_min": 0.0493,
+              "noise_std": 0.01223,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2006-11-15T17:43:00+00:00",
+              "post_h": 6.48,
+              "dtec_max_tecu_min": 0.0413,
+              "noise_std": 0.01223,
+              "snr_dtec": 3.4
+            },
+            {
+              "time": "2006-11-15T17:48:30+00:00",
+              "post_h": 6.57,
+              "dtec_max_tecu_min": 0.0483,
+              "noise_std": 0.01223,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2006-11-15T17:58:30+00:00",
+              "post_h": 6.74,
+              "dtec_max_tecu_min": 0.0732,
+              "noise_std": 0.01223,
+              "snr_dtec": 6.0
+            },
+            {
+              "time": "2006-11-15T18:05:00+00:00",
+              "post_h": 6.85,
+              "dtec_max_tecu_min": 0.0681,
+              "noise_std": 0.01223,
+              "snr_dtec": 5.6
+            },
+            {
+              "time": "2006-11-15T18:11:00+00:00",
+              "post_h": 6.95,
+              "dtec_max_tecu_min": 0.0526,
+              "noise_std": 0.01223,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2006-11-15T18:28:30+00:00",
+              "post_h": 7.24,
+              "dtec_max_tecu_min": 0.0705,
+              "noise_std": 0.01223,
+              "snr_dtec": 5.8
+            },
+            {
+              "time": "2006-11-15T19:01:00+00:00",
+              "post_h": 7.78,
+              "dtec_max_tecu_min": 0.0379,
+              "noise_std": 0.01223,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2006-11-15T19:05:00+00:00",
+              "post_h": 7.85,
+              "dtec_max_tecu_min": 0.0719,
+              "noise_std": 0.01223,
+              "snr_dtec": 5.9
+            },
+            {
+              "time": "2006-11-15T19:09:00+00:00",
+              "post_h": 7.91,
+              "dtec_max_tecu_min": 0.4214,
+              "noise_std": 0.01223,
+              "snr_dtec": 34.5
+            },
+            {
+              "time": "2006-11-15T19:17:30+00:00",
+              "post_h": 8.05,
+              "dtec_max_tecu_min": 0.409,
+              "noise_std": 0.01223,
+              "snr_dtec": 33.4
+            },
+            {
+              "time": "2006-11-15T19:31:00+00:00",
+              "post_h": 8.28,
+              "dtec_max_tecu_min": 0.0755,
+              "noise_std": 0.01223,
+              "snr_dtec": 6.2
+            },
+            {
+              "time": "2006-11-15T19:38:00+00:00",
+              "post_h": 8.4,
+              "dtec_max_tecu_min": 0.0937,
+              "noise_std": 0.01223,
+              "snr_dtec": 7.7
+            },
+            {
+              "time": "2006-11-15T19:56:00+00:00",
+              "post_h": 8.7,
+              "dtec_max_tecu_min": 0.0662,
+              "noise_std": 0.01223,
+              "snr_dtec": 5.4
+            },
+            {
+              "time": "2006-11-15T20:05:00+00:00",
+              "post_h": 8.85,
+              "dtec_max_tecu_min": 0.0546,
+              "noise_std": 0.01223,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2006-11-15T20:12:30+00:00",
+              "post_h": 8.97,
+              "dtec_max_tecu_min": 0.0802,
+              "noise_std": 0.01223,
+              "snr_dtec": 6.6
+            },
+            {
+              "time": "2006-11-15T20:32:00+00:00",
+              "post_h": 9.3,
+              "dtec_max_tecu_min": 0.0546,
+              "noise_std": 0.01223,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2006-11-15T20:38:30+00:00",
+              "post_h": 9.4,
+              "dtec_max_tecu_min": 0.0394,
+              "noise_std": 0.01223,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2006-11-15T20:42:30+00:00",
+              "post_h": 9.47,
+              "dtec_max_tecu_min": 0.0941,
+              "noise_std": 0.01223,
+              "snr_dtec": 7.7
+            },
+            {
+              "time": "2006-11-15T20:57:00+00:00",
+              "post_h": 9.71,
+              "dtec_max_tecu_min": 0.1588,
+              "noise_std": 0.01223,
+              "snr_dtec": 13.0
+            },
+            {
+              "time": "2006-11-15T21:03:30+00:00",
+              "post_h": 9.82,
+              "dtec_max_tecu_min": 0.2312,
+              "noise_std": 0.01223,
+              "snr_dtec": 18.9
+            },
+            {
+              "time": "2006-11-15T21:11:00+00:00",
+              "post_h": 9.95,
+              "dtec_max_tecu_min": 0.1221,
+              "noise_std": 0.01223,
+              "snr_dtec": 10.0
+            },
+            {
+              "time": "2006-11-15T21:19:00+00:00",
+              "post_h": 10.08,
+              "dtec_max_tecu_min": 0.0393,
+              "noise_std": 0.01223,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2006-11-15T21:25:30+00:00",
+              "post_h": 10.19,
+              "dtec_max_tecu_min": 0.188,
+              "noise_std": 0.01223,
+              "snr_dtec": 15.4
+            },
+            {
+              "time": "2006-11-15T21:33:00+00:00",
+              "post_h": 10.31,
+              "dtec_max_tecu_min": 0.2023,
+              "noise_std": 0.01223,
+              "snr_dtec": 16.5
+            },
+            {
+              "time": "2006-11-15T21:42:30+00:00",
+              "post_h": 10.47,
+              "dtec_max_tecu_min": 0.0392,
+              "noise_std": 0.01223,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2006-11-15T21:47:30+00:00",
+              "post_h": 10.55,
+              "dtec_max_tecu_min": 0.0461,
+              "noise_std": 0.01223,
+              "snr_dtec": 3.8
+            },
+            {
+              "time": "2006-11-15T22:06:00+00:00",
+              "post_h": 10.86,
+              "dtec_max_tecu_min": 0.1193,
+              "noise_std": 0.01223,
+              "snr_dtec": 9.8
+            },
+            {
+              "time": "2006-11-15T22:33:00+00:00",
+              "post_h": 11.31,
+              "dtec_max_tecu_min": 0.0413,
+              "noise_std": 0.01223,
+              "snr_dtec": 3.4
+            },
+            {
+              "time": "2006-11-15T22:38:00+00:00",
+              "post_h": 11.4,
+              "dtec_max_tecu_min": 0.046,
+              "noise_std": 0.01223,
+              "snr_dtec": 3.8
+            },
+            {
+              "time": "2006-11-15T22:42:30+00:00",
+              "post_h": 11.47,
+              "dtec_max_tecu_min": 0.1023,
+              "noise_std": 0.01223,
+              "snr_dtec": 8.4
+            },
+            {
+              "time": "2006-11-15T23:17:00+00:00",
+              "post_h": 12.05,
+              "dtec_max_tecu_min": 0.0703,
+              "noise_std": 0.01223,
+              "snr_dtec": 5.7
+            }
+          ],
+          "hnlc": [
+            {
+              "time": "2006-11-15T16:07:00+00:00",
+              "post_h": 4.88,
+              "dtec_max_tecu_min": 0.0744,
+              "noise_std": 0.01134,
+              "snr_dtec": 6.6
+            },
+            {
+              "time": "2006-11-15T16:37:30+00:00",
+              "post_h": 5.39,
+              "dtec_max_tecu_min": 0.0364,
+              "noise_std": 0.01134,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2006-11-15T16:44:00+00:00",
+              "post_h": 5.5,
+              "dtec_max_tecu_min": 0.0888,
+              "noise_std": 0.01134,
+              "snr_dtec": 7.8
+            },
+            {
+              "time": "2006-11-15T17:23:00+00:00",
+              "post_h": 6.15,
+              "dtec_max_tecu_min": 0.0571,
+              "noise_std": 0.01134,
+              "snr_dtec": 5.0
+            },
+            {
+              "time": "2006-11-15T17:44:30+00:00",
+              "post_h": 6.5,
+              "dtec_max_tecu_min": 0.0492,
+              "noise_std": 0.01134,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2006-11-15T18:01:00+00:00",
+              "post_h": 6.78,
+              "dtec_max_tecu_min": 0.0814,
+              "noise_std": 0.01134,
+              "snr_dtec": 7.2
+            },
+            {
+              "time": "2006-11-15T18:11:30+00:00",
+              "post_h": 6.95,
+              "dtec_max_tecu_min": 0.1057,
+              "noise_std": 0.01134,
+              "snr_dtec": 9.3
+            },
+            {
+              "time": "2006-11-15T18:27:30+00:00",
+              "post_h": 7.22,
+              "dtec_max_tecu_min": 0.1408,
+              "noise_std": 0.01134,
+              "snr_dtec": 12.4
+            },
+            {
+              "time": "2006-11-15T18:35:00+00:00",
+              "post_h": 7.35,
+              "dtec_max_tecu_min": 0.1439,
+              "noise_std": 0.01134,
+              "snr_dtec": 12.7
+            },
+            {
+              "time": "2006-11-15T18:40:30+00:00",
+              "post_h": 7.44,
+              "dtec_max_tecu_min": 0.2014,
+              "noise_std": 0.01134,
+              "snr_dtec": 17.8
+            },
+            {
+              "time": "2006-11-15T18:48:30+00:00",
+              "post_h": 7.57,
+              "dtec_max_tecu_min": 0.118,
+              "noise_std": 0.01134,
+              "snr_dtec": 10.4
+            },
+            {
+              "time": "2006-11-15T19:28:00+00:00",
+              "post_h": 8.23,
+              "dtec_max_tecu_min": 0.067,
+              "noise_std": 0.01134,
+              "snr_dtec": 5.9
+            },
+            {
+              "time": "2006-11-15T19:35:00+00:00",
+              "post_h": 8.35,
+              "dtec_max_tecu_min": 0.1254,
+              "noise_std": 0.01134,
+              "snr_dtec": 11.1
+            },
+            {
+              "time": "2006-11-15T19:43:30+00:00",
+              "post_h": 8.49,
+              "dtec_max_tecu_min": 0.0589,
+              "noise_std": 0.01134,
+              "snr_dtec": 5.2
+            },
+            {
+              "time": "2006-11-15T19:50:30+00:00",
+              "post_h": 8.6,
+              "dtec_max_tecu_min": 0.1022,
+              "noise_std": 0.01134,
+              "snr_dtec": 9.0
+            },
+            {
+              "time": "2006-11-15T20:00:00+00:00",
+              "post_h": 8.76,
+              "dtec_max_tecu_min": 0.115,
+              "noise_std": 0.01134,
+              "snr_dtec": 10.1
+            },
+            {
+              "time": "2006-11-15T20:23:30+00:00",
+              "post_h": 9.15,
+              "dtec_max_tecu_min": 0.0361,
+              "noise_std": 0.01134,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2006-11-15T20:34:00+00:00",
+              "post_h": 9.33,
+              "dtec_max_tecu_min": 0.035,
+              "noise_std": 0.01134,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2006-11-15T20:47:00+00:00",
+              "post_h": 9.55,
+              "dtec_max_tecu_min": 0.0542,
+              "noise_std": 0.01134,
+              "snr_dtec": 4.8
+            },
+            {
+              "time": "2006-11-15T20:53:00+00:00",
+              "post_h": 9.65,
+              "dtec_max_tecu_min": 0.0849,
+              "noise_std": 0.01134,
+              "snr_dtec": 7.5
+            },
+            {
+              "time": "2006-11-15T21:00:00+00:00",
+              "post_h": 9.76,
+              "dtec_max_tecu_min": 0.1012,
+              "noise_std": 0.01134,
+              "snr_dtec": 8.9
+            },
+            {
+              "time": "2006-11-15T21:06:30+00:00",
+              "post_h": 9.87,
+              "dtec_max_tecu_min": 0.0844,
+              "noise_std": 0.01134,
+              "snr_dtec": 7.4
+            },
+            {
+              "time": "2006-11-15T21:21:30+00:00",
+              "post_h": 10.12,
+              "dtec_max_tecu_min": 0.0719,
+              "noise_std": 0.01134,
+              "snr_dtec": 6.3
+            },
+            {
+              "time": "2006-11-15T21:32:00+00:00",
+              "post_h": 10.3,
+              "dtec_max_tecu_min": 0.0736,
+              "noise_std": 0.01134,
+              "snr_dtec": 6.5
+            },
+            {
+              "time": "2006-11-15T21:39:30+00:00",
+              "post_h": 10.42,
+              "dtec_max_tecu_min": 0.0963,
+              "noise_std": 0.01134,
+              "snr_dtec": 8.5
+            },
+            {
+              "time": "2006-11-15T21:46:00+00:00",
+              "post_h": 10.53,
+              "dtec_max_tecu_min": 0.2138,
+              "noise_std": 0.01134,
+              "snr_dtec": 18.8
+            },
+            {
+              "time": "2006-11-15T21:54:30+00:00",
+              "post_h": 10.67,
+              "dtec_max_tecu_min": 0.1039,
+              "noise_std": 0.01134,
+              "snr_dtec": 9.2
+            },
+            {
+              "time": "2006-11-15T22:01:00+00:00",
+              "post_h": 10.78,
+              "dtec_max_tecu_min": 0.0518,
+              "noise_std": 0.01134,
+              "snr_dtec": 4.6
+            },
+            {
+              "time": "2006-11-15T22:06:00+00:00",
+              "post_h": 10.86,
+              "dtec_max_tecu_min": 0.0712,
+              "noise_std": 0.01134,
+              "snr_dtec": 6.3
+            },
+            {
+              "time": "2006-11-15T22:12:30+00:00",
+              "post_h": 10.97,
+              "dtec_max_tecu_min": 0.0475,
+              "noise_std": 0.01134,
+              "snr_dtec": 4.2
+            },
+            {
+              "time": "2006-11-15T22:17:00+00:00",
+              "post_h": 11.05,
+              "dtec_max_tecu_min": 0.0904,
+              "noise_std": 0.01134,
+              "snr_dtec": 8.0
+            },
+            {
+              "time": "2006-11-15T22:29:00+00:00",
+              "post_h": 11.25,
+              "dtec_max_tecu_min": 0.0417,
+              "noise_std": 0.01134,
+              "snr_dtec": 3.7
+            },
+            {
+              "time": "2006-11-15T22:58:00+00:00",
+              "post_h": 11.73,
+              "dtec_max_tecu_min": 0.043,
+              "noise_std": 0.01134,
+              "snr_dtec": 3.8
+            },
+            {
+              "time": "2006-11-15T23:05:00+00:00",
+              "post_h": 11.85,
+              "dtec_max_tecu_min": 0.049,
+              "noise_std": 0.01134,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2006-11-15T23:12:30+00:00",
+              "post_h": 11.97,
+              "dtec_max_tecu_min": 0.0711,
+              "noise_std": 0.01134,
+              "snr_dtec": 6.3
+            },
+            {
+              "time": "2006-11-15T23:21:30+00:00",
+              "post_h": 12.12,
+              "dtec_max_tecu_min": 0.0665,
+              "noise_std": 0.01134,
+              "snr_dtec": 5.9
+            }
+          ],
+          "guam": []
+        },
+        "dtec_corroborates": true,
+        "dtec_corroboration": [
+          {
+            "station": "mkea",
+            "dtec_post_h": 7.45,
+            "amp_post_h": 8.76,
+            "lead_min": 79.0,
+            "snr_dtec": 5.1
+          }
+        ],
+        "constellation_agreement": {
+          "constellations": {
+            "G": {
+              "available": true,
+              "anomaly": true,
+              "n_stations": 4
+            },
+            "R": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            },
+            "E": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            }
+          },
+          "n_available": 1,
+          "n_detecting": 1,
+          "detecting": [
+            "G"
+          ],
+          "agreement_score": 0.5,
+          "agreement_label": "single_constellation"
+        },
+        "ionosonde_result": {
+          "stations_checked": 5,
+          "stations_with_data": 0,
+          "ionosonde_detected": false,
+          "confirming_stations": 0,
+          "nearest_station_km": 3119,
+          "results": {
+            "RP536": {
+              "name": "Okinawa",
+              "dist_km": 3119,
+              "lat": 26.7,
+              "lon": 128.2,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "WP937": {
+              "name": "Wake Island",
+              "dist_km": 3269,
+              "lat": 19.3,
+              "lon": 166.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "TW637": {
+              "name": "Zhongli",
+              "dist_km": 3714,
+              "lat": 25.0,
+              "lon": 121.2,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "GU513": {
+              "name": "Guam",
+              "dist_km": 3751,
+              "lat": 13.6,
+              "lon": 144.9,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "KJ609": {
+              "name": "Kwajalein",
+              "dist_km": 4399,
+              "lat": 9.0,
+              "lon": 167.7,
+              "data": false,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "ionosonde_confirmed": false,
+        "dart_result": {
+          "buoys_checked": 8,
+          "buoys_with_data": 5,
+          "tsunami_detected": false,
+          "confirming_buoys": 0,
+          "nearest_buoy_km": 2917,
+          "results": {
+            "46409": {
+              "desc": "Unimak Pass \u2014 Aleutian",
+              "dist_km": 2917,
+              "lat": 53.9,
+              "lon": -166.7,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "46402": {
+              "desc": "Gulf of Alaska",
+              "dist_km": 3123,
+              "lat": 51.0,
+              "lon": -164.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "46407": {
+              "desc": "Alaska Peninsula",
+              "dist_km": 3224,
+              "lat": 54.0,
+              "lon": -162.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21416": {
+              "desc": "W Pacific \u2014 Philippine Sea",
+              "dist_km": 3494,
+              "lat": 19.2,
+              "lon": 134.5,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21413": {
+              "desc": "W Pacific \u2014 Mariana",
+              "dist_km": 3503,
+              "lat": 15.1,
+              "lon": 152.1,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21415": {
+              "desc": "W Pacific \u2014 West Mariana",
+              "dist_km": 3515,
+              "lat": 15.0,
+              "lon": 152.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21414": {
+              "desc": "W Pacific \u2014 Central",
+              "dist_km": 3594,
+              "lat": 15.1,
+              "lon": 162.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "46403": {
+              "desc": "N Pacific \u2014 SE Alaska",
+              "dist_km": 3841,
+              "lat": 53.6,
+              "lon": -152.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "dart_score": 0.0,
+        "dart_status": "negative",
+        "combined_confidence": 0.52,
+        "space_weather_score": 0.0
+      }
+    },
+    {
+      "usgs_id": "usp000jrsf",
+      "place": "Haida Gwaii - HNLC-GUAM V1",
+      "mw": 7.7,
+      "quake_utc": "2012-10-28T03:04:08Z",
+      "known_outcome": "TSUNAMI",
+      "bt_outcome": "TRUE_POSITIVE",
+      "correct": true,
+      "detected": true,
+      "confidence": 0.52,
+      "dart_status": "negative",
+      "iono_confirmed": false,
+      "dtec_corroborates": true,
+      "const_label": "single_constellation",
+      "reason": "",
+      "prediction": {
+        "run_utc": "2026-04-26T20:25:24.421073+00:00",
+        "param_freeze_date": "2025-04-22",
+        "stations_processed": [
+          "mkea",
+          "kokb",
+          "hnlc",
+          "guam"
+        ],
+        "onset_summary": {
+          "mkea": {
+            "n_triggers": 19,
+            "noise_tecu": 0.2861,
+            "triggers": [
+              {
+                "time": "2012-10-28T00:04:30+00:00",
+                "dur_min": 4.5,
+                "snr": 2.260487768152075
+              },
+              {
+                "time": "2012-10-28T03:58:30+00:00",
+                "dur_min": 4.5,
+                "snr": 2.3862366887270454
+              },
+              {
+                "time": "2012-10-28T04:07:00+00:00",
+                "dur_min": 3.5,
+                "snr": 2.192574890084175
+              },
+              {
+                "time": "2012-10-28T04:38:00+00:00",
+                "dur_min": 8.5,
+                "snr": 2.692404341043268
+              },
+              {
+                "time": "2012-10-28T05:16:30+00:00",
+                "dur_min": 7.0,
+                "snr": 2.458606226490455
+              }
+            ]
+          },
+          "kokb": {
+            "n_triggers": 3,
+            "noise_tecu": 0.468,
+            "triggers": [
+              {
+                "time": "2012-10-28T01:55:30+00:00",
+                "dur_min": 6.5,
+                "snr": 2.141523256204065
+              },
+              {
+                "time": "2012-10-28T03:49:30+00:00",
+                "dur_min": 12.0,
+                "snr": 3.5197896828308974
+              },
+              {
+                "time": "2012-10-28T18:02:30+00:00",
+                "dur_min": 6.0,
+                "snr": 2.6270299660112086
+              }
+            ]
+          },
+          "hnlc": {
+            "n_triggers": 26,
+            "noise_tecu": 0.2364,
+            "triggers": [
+              {
+                "time": "2012-10-28T02:35:30+00:00",
+                "dur_min": 11.5,
+                "snr": 2.5623744375027253
+              },
+              {
+                "time": "2012-10-28T03:11:30+00:00",
+                "dur_min": 15.0,
+                "snr": 3.5656040982615895
+              },
+              {
+                "time": "2012-10-28T03:47:30+00:00",
+                "dur_min": 22.0,
+                "snr": 4.6438791518751845
+              },
+              {
+                "time": "2012-10-28T04:35:30+00:00",
+                "dur_min": 8.0,
+                "snr": 3.6868910885797956
+              },
+              {
+                "time": "2012-10-28T04:47:30+00:00",
+                "dur_min": 5.0,
+                "snr": 2.383152349716975
+              }
+            ]
+          },
+          "guam": {
+            "n_triggers": 27,
+            "noise_tecu": 0.1889,
+            "triggers": [
+              {
+                "time": "2012-10-28T00:03:00+00:00",
+                "dur_min": 11.5,
+                "snr": 3.429918381033935
+              },
+              {
+                "time": "2012-10-28T03:51:30+00:00",
+                "dur_min": 9.0,
+                "snr": 2.7934220858860512
+              },
+              {
+                "time": "2012-10-28T04:27:00+00:00",
+                "dur_min": 12.0,
+                "snr": 2.55156808979939
+              },
+              {
+                "time": "2012-10-28T05:13:00+00:00",
+                "dur_min": 6.0,
+                "snr": 3.1922449670973028
+              },
+              {
+                "time": "2012-10-28T07:02:30+00:00",
+                "dur_min": 13.5,
+                "snr": 3.852876098379382
+              }
+            ]
+          }
+        },
+        "lb_pairs_total": 156,
+        "lb_pairs_in_window": 156,
+        "kp": 0.0,
+        "kp_disturbed": false,
+        "detected": true,
+        "detection": {
+          "pair": "hnlc-guam",
+          "onset_utc": "2012-10-28T04:35:30+00:00",
+          "post_h": 1.52,
+          "speed_ms": 303.0,
+          "delay_min": 232.0,
+          "snr_near": 3.69,
+          "snr_far": 8.82,
+          "baseline_km": 6113
+        },
+        "wave_forecast": {
+          "tec_amp_tecu": 1.071,
+          "detecting_station": "hnlc",
+          "dist_hilo_km": 4175,
+          "predicted_wave_m": 0.726,
+          "predicted_arrival_h": 5.8,
+          "estimated_lead_min": 257,
+          "model": "w=2283.839*TEC*10^(0.771*Mw)/d^2.614",
+          "note": "calibrated on Hawaii-corridor stations; CHAT/GUAM may have higher error"
+        },
+        "plot_path": "rinex_live\\usp000jrsf\\tec_plot.png",
+        "dtec_onsets": {
+          "mkea": [
+            {
+              "time": "2012-10-28T04:35:00+00:00",
+              "post_h": 1.51,
+              "dtec_max_tecu_min": 0.0907,
+              "noise_std": 0.0285,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2012-10-28T04:46:00+00:00",
+              "post_h": 1.7,
+              "dtec_max_tecu_min": 0.127,
+              "noise_std": 0.0285,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2012-10-28T05:23:00+00:00",
+              "post_h": 2.31,
+              "dtec_max_tecu_min": 0.1745,
+              "noise_std": 0.0285,
+              "snr_dtec": 6.1
+            },
+            {
+              "time": "2012-10-28T05:45:00+00:00",
+              "post_h": 2.68,
+              "dtec_max_tecu_min": 0.1683,
+              "noise_std": 0.0285,
+              "snr_dtec": 5.9
+            },
+            {
+              "time": "2012-10-28T05:53:00+00:00",
+              "post_h": 2.81,
+              "dtec_max_tecu_min": 0.1193,
+              "noise_std": 0.0285,
+              "snr_dtec": 4.2
+            },
+            {
+              "time": "2012-10-28T07:09:00+00:00",
+              "post_h": 4.08,
+              "dtec_max_tecu_min": 0.1072,
+              "noise_std": 0.0285,
+              "snr_dtec": 3.8
+            },
+            {
+              "time": "2012-10-28T07:36:30+00:00",
+              "post_h": 4.54,
+              "dtec_max_tecu_min": 0.1687,
+              "noise_std": 0.0285,
+              "snr_dtec": 5.9
+            },
+            {
+              "time": "2012-10-28T11:15:00+00:00",
+              "post_h": 8.18,
+              "dtec_max_tecu_min": 0.0895,
+              "noise_std": 0.0285,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2012-10-28T15:03:00+00:00",
+              "post_h": 11.98,
+              "dtec_max_tecu_min": 0.1207,
+              "noise_std": 0.0285,
+              "snr_dtec": 4.2
+            },
+            {
+              "time": "2012-10-28T16:14:00+00:00",
+              "post_h": 13.16,
+              "dtec_max_tecu_min": 0.1196,
+              "noise_std": 0.0285,
+              "snr_dtec": 4.2
+            },
+            {
+              "time": "2012-10-28T16:28:00+00:00",
+              "post_h": 13.4,
+              "dtec_max_tecu_min": 0.0871,
+              "noise_std": 0.0285,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2012-10-28T16:35:00+00:00",
+              "post_h": 13.51,
+              "dtec_max_tecu_min": 0.1168,
+              "noise_std": 0.0285,
+              "snr_dtec": 4.1
+            },
+            {
+              "time": "2012-10-28T18:20:30+00:00",
+              "post_h": 15.27,
+              "dtec_max_tecu_min": 0.1032,
+              "noise_std": 0.0285,
+              "snr_dtec": 3.6
+            },
+            {
+              "time": "2012-10-28T18:37:30+00:00",
+              "post_h": 15.56,
+              "dtec_max_tecu_min": 0.132,
+              "noise_std": 0.0285,
+              "snr_dtec": 4.6
+            },
+            {
+              "time": "2012-10-28T19:15:00+00:00",
+              "post_h": 16.18,
+              "dtec_max_tecu_min": 0.2299,
+              "noise_std": 0.0285,
+              "snr_dtec": 8.1
+            },
+            {
+              "time": "2012-10-28T19:25:00+00:00",
+              "post_h": 16.35,
+              "dtec_max_tecu_min": 0.095,
+              "noise_std": 0.0285,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2012-10-28T19:56:30+00:00",
+              "post_h": 16.87,
+              "dtec_max_tecu_min": 0.1054,
+              "noise_std": 0.0285,
+              "snr_dtec": 3.7
+            },
+            {
+              "time": "2012-10-28T20:06:30+00:00",
+              "post_h": 17.04,
+              "dtec_max_tecu_min": 0.176,
+              "noise_std": 0.0285,
+              "snr_dtec": 6.2
+            },
+            {
+              "time": "2012-10-28T20:21:30+00:00",
+              "post_h": 17.29,
+              "dtec_max_tecu_min": 0.1144,
+              "noise_std": 0.0285,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2012-10-28T20:36:00+00:00",
+              "post_h": 17.53,
+              "dtec_max_tecu_min": 0.185,
+              "noise_std": 0.0285,
+              "snr_dtec": 6.5
+            },
+            {
+              "time": "2012-10-28T21:35:30+00:00",
+              "post_h": 18.52,
+              "dtec_max_tecu_min": 0.1492,
+              "noise_std": 0.0285,
+              "snr_dtec": 5.2
+            },
+            {
+              "time": "2012-10-28T22:03:30+00:00",
+              "post_h": 18.99,
+              "dtec_max_tecu_min": 0.1223,
+              "noise_std": 0.0285,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2012-10-28T22:19:00+00:00",
+              "post_h": 19.25,
+              "dtec_max_tecu_min": 0.1217,
+              "noise_std": 0.0285,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2012-10-28T22:48:00+00:00",
+              "post_h": 19.73,
+              "dtec_max_tecu_min": 0.0899,
+              "noise_std": 0.0285,
+              "snr_dtec": 3.2
+            }
+          ],
+          "kokb": [
+            {
+              "time": "2012-10-28T04:43:00+00:00",
+              "post_h": 1.65,
+              "dtec_max_tecu_min": 0.1328,
+              "noise_std": 0.04407,
+              "snr_dtec": 3.0
+            },
+            {
+              "time": "2012-10-28T05:34:30+00:00",
+              "post_h": 2.51,
+              "dtec_max_tecu_min": 0.1607,
+              "noise_std": 0.04407,
+              "snr_dtec": 3.6
+            },
+            {
+              "time": "2012-10-28T06:03:30+00:00",
+              "post_h": 2.99,
+              "dtec_max_tecu_min": 0.1359,
+              "noise_std": 0.04407,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2012-10-28T07:02:30+00:00",
+              "post_h": 3.97,
+              "dtec_max_tecu_min": 0.1907,
+              "noise_std": 0.04407,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2012-10-28T07:13:00+00:00",
+              "post_h": 4.15,
+              "dtec_max_tecu_min": 0.2119,
+              "noise_std": 0.04407,
+              "snr_dtec": 4.8
+            },
+            {
+              "time": "2012-10-28T07:23:00+00:00",
+              "post_h": 4.31,
+              "dtec_max_tecu_min": 0.1767,
+              "noise_std": 0.04407,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2012-10-28T15:18:00+00:00",
+              "post_h": 12.23,
+              "dtec_max_tecu_min": 0.1506,
+              "noise_std": 0.04407,
+              "snr_dtec": 3.4
+            },
+            {
+              "time": "2012-10-28T16:16:30+00:00",
+              "post_h": 13.21,
+              "dtec_max_tecu_min": 0.2332,
+              "noise_std": 0.04407,
+              "snr_dtec": 5.3
+            },
+            {
+              "time": "2012-10-28T16:27:00+00:00",
+              "post_h": 13.38,
+              "dtec_max_tecu_min": 0.1913,
+              "noise_std": 0.04407,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2012-10-28T17:57:30+00:00",
+              "post_h": 14.89,
+              "dtec_max_tecu_min": 0.302,
+              "noise_std": 0.04407,
+              "snr_dtec": 6.9
+            },
+            {
+              "time": "2012-10-28T19:22:00+00:00",
+              "post_h": 16.3,
+              "dtec_max_tecu_min": 0.2369,
+              "noise_std": 0.04407,
+              "snr_dtec": 5.4
+            },
+            {
+              "time": "2012-10-28T19:43:00+00:00",
+              "post_h": 16.65,
+              "dtec_max_tecu_min": 0.2651,
+              "noise_std": 0.04407,
+              "snr_dtec": 6.0
+            },
+            {
+              "time": "2012-10-28T21:24:30+00:00",
+              "post_h": 18.34,
+              "dtec_max_tecu_min": 0.171,
+              "noise_std": 0.04407,
+              "snr_dtec": 3.9
+            },
+            {
+              "time": "2012-10-28T21:31:30+00:00",
+              "post_h": 18.46,
+              "dtec_max_tecu_min": 0.1351,
+              "noise_std": 0.04407,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2012-10-28T21:35:00+00:00",
+              "post_h": 18.51,
+              "dtec_max_tecu_min": 0.3219,
+              "noise_std": 0.04407,
+              "snr_dtec": 7.3
+            },
+            {
+              "time": "2012-10-28T21:42:30+00:00",
+              "post_h": 18.64,
+              "dtec_max_tecu_min": 0.1936,
+              "noise_std": 0.04407,
+              "snr_dtec": 4.4
+            },
+            {
+              "time": "2012-10-28T21:49:00+00:00",
+              "post_h": 18.75,
+              "dtec_max_tecu_min": 0.1352,
+              "noise_std": 0.04407,
+              "snr_dtec": 3.1
+            }
+          ],
+          "hnlc": [
+            {
+              "time": "2012-10-28T04:34:30+00:00",
+              "post_h": 1.51,
+              "dtec_max_tecu_min": 0.2106,
+              "noise_std": 0.02729,
+              "snr_dtec": 7.7
+            },
+            {
+              "time": "2012-10-28T04:40:30+00:00",
+              "post_h": 1.61,
+              "dtec_max_tecu_min": 0.1071,
+              "noise_std": 0.02729,
+              "snr_dtec": 3.9
+            },
+            {
+              "time": "2012-10-28T05:01:30+00:00",
+              "post_h": 1.96,
+              "dtec_max_tecu_min": 0.1207,
+              "noise_std": 0.02729,
+              "snr_dtec": 4.4
+            },
+            {
+              "time": "2012-10-28T05:43:00+00:00",
+              "post_h": 2.65,
+              "dtec_max_tecu_min": 0.2072,
+              "noise_std": 0.02729,
+              "snr_dtec": 7.6
+            },
+            {
+              "time": "2012-10-28T06:02:30+00:00",
+              "post_h": 2.97,
+              "dtec_max_tecu_min": 0.1822,
+              "noise_std": 0.02729,
+              "snr_dtec": 6.7
+            },
+            {
+              "time": "2012-10-28T06:10:30+00:00",
+              "post_h": 3.11,
+              "dtec_max_tecu_min": 0.1385,
+              "noise_std": 0.02729,
+              "snr_dtec": 5.1
+            },
+            {
+              "time": "2012-10-28T06:29:00+00:00",
+              "post_h": 3.41,
+              "dtec_max_tecu_min": 0.2081,
+              "noise_std": 0.02729,
+              "snr_dtec": 7.6
+            },
+            {
+              "time": "2012-10-28T07:04:00+00:00",
+              "post_h": 4.0,
+              "dtec_max_tecu_min": 0.2473,
+              "noise_std": 0.02729,
+              "snr_dtec": 9.1
+            },
+            {
+              "time": "2012-10-28T07:16:00+00:00",
+              "post_h": 4.2,
+              "dtec_max_tecu_min": 0.1138,
+              "noise_std": 0.02729,
+              "snr_dtec": 4.2
+            },
+            {
+              "time": "2012-10-28T07:26:30+00:00",
+              "post_h": 4.37,
+              "dtec_max_tecu_min": 0.1227,
+              "noise_std": 0.02729,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2012-10-28T07:51:30+00:00",
+              "post_h": 4.79,
+              "dtec_max_tecu_min": 0.1847,
+              "noise_std": 0.02729,
+              "snr_dtec": 6.8
+            },
+            {
+              "time": "2012-10-28T08:00:30+00:00",
+              "post_h": 4.94,
+              "dtec_max_tecu_min": 0.1081,
+              "noise_std": 0.02729,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2012-10-28T10:01:30+00:00",
+              "post_h": 6.96,
+              "dtec_max_tecu_min": 0.0873,
+              "noise_std": 0.02729,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2012-10-28T11:20:30+00:00",
+              "post_h": 8.27,
+              "dtec_max_tecu_min": 0.0842,
+              "noise_std": 0.02729,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2012-10-28T16:11:30+00:00",
+              "post_h": 13.12,
+              "dtec_max_tecu_min": 0.1869,
+              "noise_std": 0.02729,
+              "snr_dtec": 6.8
+            },
+            {
+              "time": "2012-10-28T16:35:30+00:00",
+              "post_h": 13.52,
+              "dtec_max_tecu_min": 0.1557,
+              "noise_std": 0.02729,
+              "snr_dtec": 5.7
+            },
+            {
+              "time": "2012-10-28T17:44:00+00:00",
+              "post_h": 14.66,
+              "dtec_max_tecu_min": 0.1171,
+              "noise_std": 0.02729,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2012-10-28T18:04:00+00:00",
+              "post_h": 15.0,
+              "dtec_max_tecu_min": 0.1394,
+              "noise_std": 0.02729,
+              "snr_dtec": 5.1
+            },
+            {
+              "time": "2012-10-28T18:12:00+00:00",
+              "post_h": 15.13,
+              "dtec_max_tecu_min": 0.1354,
+              "noise_std": 0.02729,
+              "snr_dtec": 5.0
+            },
+            {
+              "time": "2012-10-28T18:17:30+00:00",
+              "post_h": 15.22,
+              "dtec_max_tecu_min": 0.1293,
+              "noise_std": 0.02729,
+              "snr_dtec": 4.7
+            },
+            {
+              "time": "2012-10-28T18:22:00+00:00",
+              "post_h": 15.3,
+              "dtec_max_tecu_min": 0.2238,
+              "noise_std": 0.02729,
+              "snr_dtec": 8.2
+            },
+            {
+              "time": "2012-10-28T18:30:00+00:00",
+              "post_h": 15.43,
+              "dtec_max_tecu_min": 0.1302,
+              "noise_std": 0.02729,
+              "snr_dtec": 4.8
+            },
+            {
+              "time": "2012-10-28T18:39:30+00:00",
+              "post_h": 15.59,
+              "dtec_max_tecu_min": 0.1329,
+              "noise_std": 0.02729,
+              "snr_dtec": 4.9
+            },
+            {
+              "time": "2012-10-28T18:56:00+00:00",
+              "post_h": 15.86,
+              "dtec_max_tecu_min": 0.1026,
+              "noise_std": 0.02729,
+              "snr_dtec": 3.8
+            },
+            {
+              "time": "2012-10-28T19:09:30+00:00",
+              "post_h": 16.09,
+              "dtec_max_tecu_min": 0.1003,
+              "noise_std": 0.02729,
+              "snr_dtec": 3.7
+            },
+            {
+              "time": "2012-10-28T19:14:00+00:00",
+              "post_h": 16.16,
+              "dtec_max_tecu_min": 0.4106,
+              "noise_std": 0.02729,
+              "snr_dtec": 15.0
+            },
+            {
+              "time": "2012-10-28T19:27:00+00:00",
+              "post_h": 16.38,
+              "dtec_max_tecu_min": 0.1482,
+              "noise_std": 0.02729,
+              "snr_dtec": 5.4
+            },
+            {
+              "time": "2012-10-28T19:33:30+00:00",
+              "post_h": 16.49,
+              "dtec_max_tecu_min": 0.1891,
+              "noise_std": 0.02729,
+              "snr_dtec": 6.9
+            },
+            {
+              "time": "2012-10-28T19:45:00+00:00",
+              "post_h": 16.68,
+              "dtec_max_tecu_min": 0.0837,
+              "noise_std": 0.02729,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2012-10-28T19:50:00+00:00",
+              "post_h": 16.76,
+              "dtec_max_tecu_min": 0.1399,
+              "noise_std": 0.02729,
+              "snr_dtec": 5.1
+            },
+            {
+              "time": "2012-10-28T19:58:00+00:00",
+              "post_h": 16.9,
+              "dtec_max_tecu_min": 0.1222,
+              "noise_std": 0.02729,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2012-10-28T20:10:30+00:00",
+              "post_h": 17.11,
+              "dtec_max_tecu_min": 0.091,
+              "noise_std": 0.02729,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2012-10-28T20:21:30+00:00",
+              "post_h": 17.29,
+              "dtec_max_tecu_min": 0.3544,
+              "noise_std": 0.02729,
+              "snr_dtec": 13.0
+            },
+            {
+              "time": "2012-10-28T20:31:00+00:00",
+              "post_h": 17.45,
+              "dtec_max_tecu_min": 0.2374,
+              "noise_std": 0.02729,
+              "snr_dtec": 8.7
+            },
+            {
+              "time": "2012-10-28T20:41:30+00:00",
+              "post_h": 17.62,
+              "dtec_max_tecu_min": 0.1184,
+              "noise_std": 0.02729,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2012-10-28T21:13:00+00:00",
+              "post_h": 18.15,
+              "dtec_max_tecu_min": 0.1049,
+              "noise_std": 0.02729,
+              "snr_dtec": 3.8
+            },
+            {
+              "time": "2012-10-28T22:50:00+00:00",
+              "post_h": 19.76,
+              "dtec_max_tecu_min": 0.0872,
+              "noise_std": 0.02729,
+              "snr_dtec": 3.2
+            }
+          ],
+          "guam": [
+            {
+              "time": "2012-10-28T04:41:00+00:00",
+              "post_h": 1.61,
+              "dtec_max_tecu_min": 0.0728,
+              "noise_std": 0.02256,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2012-10-28T05:11:00+00:00",
+              "post_h": 2.11,
+              "dtec_max_tecu_min": 0.113,
+              "noise_std": 0.02256,
+              "snr_dtec": 5.0
+            },
+            {
+              "time": "2012-10-28T05:17:30+00:00",
+              "post_h": 2.22,
+              "dtec_max_tecu_min": 0.1112,
+              "noise_std": 0.02256,
+              "snr_dtec": 4.9
+            },
+            {
+              "time": "2012-10-28T05:30:30+00:00",
+              "post_h": 2.44,
+              "dtec_max_tecu_min": 0.1007,
+              "noise_std": 0.02256,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2012-10-28T05:38:00+00:00",
+              "post_h": 2.56,
+              "dtec_max_tecu_min": 0.0761,
+              "noise_std": 0.02256,
+              "snr_dtec": 3.4
+            },
+            {
+              "time": "2012-10-28T06:58:00+00:00",
+              "post_h": 3.9,
+              "dtec_max_tecu_min": 0.1016,
+              "noise_std": 0.02256,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2012-10-28T07:13:00+00:00",
+              "post_h": 4.15,
+              "dtec_max_tecu_min": 0.0693,
+              "noise_std": 0.02256,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2012-10-28T07:32:30+00:00",
+              "post_h": 4.47,
+              "dtec_max_tecu_min": 0.2025,
+              "noise_std": 0.02256,
+              "snr_dtec": 9.0
+            },
+            {
+              "time": "2012-10-28T07:53:00+00:00",
+              "post_h": 4.81,
+              "dtec_max_tecu_min": 0.0816,
+              "noise_std": 0.02256,
+              "snr_dtec": 3.6
+            },
+            {
+              "time": "2012-10-28T08:07:00+00:00",
+              "post_h": 5.05,
+              "dtec_max_tecu_min": 0.0753,
+              "noise_std": 0.02256,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2012-10-28T08:12:30+00:00",
+              "post_h": 5.14,
+              "dtec_max_tecu_min": 0.1034,
+              "noise_std": 0.02256,
+              "snr_dtec": 4.6
+            },
+            {
+              "time": "2012-10-28T08:20:00+00:00",
+              "post_h": 5.26,
+              "dtec_max_tecu_min": 0.1475,
+              "noise_std": 0.02256,
+              "snr_dtec": 6.5
+            },
+            {
+              "time": "2012-10-28T08:55:00+00:00",
+              "post_h": 5.85,
+              "dtec_max_tecu_min": 0.1695,
+              "noise_std": 0.02256,
+              "snr_dtec": 7.5
+            },
+            {
+              "time": "2012-10-28T09:32:30+00:00",
+              "post_h": 6.47,
+              "dtec_max_tecu_min": 0.1035,
+              "noise_std": 0.02256,
+              "snr_dtec": 4.6
+            },
+            {
+              "time": "2012-10-28T09:51:30+00:00",
+              "post_h": 6.79,
+              "dtec_max_tecu_min": 0.0982,
+              "noise_std": 0.02256,
+              "snr_dtec": 4.4
+            },
+            {
+              "time": "2012-10-28T10:02:00+00:00",
+              "post_h": 6.96,
+              "dtec_max_tecu_min": 0.1167,
+              "noise_std": 0.02256,
+              "snr_dtec": 5.2
+            },
+            {
+              "time": "2012-10-28T10:17:30+00:00",
+              "post_h": 7.22,
+              "dtec_max_tecu_min": 0.117,
+              "noise_std": 0.02256,
+              "snr_dtec": 5.2
+            },
+            {
+              "time": "2012-10-28T10:35:30+00:00",
+              "post_h": 7.52,
+              "dtec_max_tecu_min": 0.2336,
+              "noise_std": 0.02256,
+              "snr_dtec": 10.4
+            },
+            {
+              "time": "2012-10-28T10:43:00+00:00",
+              "post_h": 7.65,
+              "dtec_max_tecu_min": 0.1009,
+              "noise_std": 0.02256,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2012-10-28T11:01:00+00:00",
+              "post_h": 7.95,
+              "dtec_max_tecu_min": 0.109,
+              "noise_std": 0.02256,
+              "snr_dtec": 4.8
+            },
+            {
+              "time": "2012-10-28T11:06:30+00:00",
+              "post_h": 8.04,
+              "dtec_max_tecu_min": 0.1981,
+              "noise_std": 0.02256,
+              "snr_dtec": 8.8
+            },
+            {
+              "time": "2012-10-28T11:12:30+00:00",
+              "post_h": 8.14,
+              "dtec_max_tecu_min": 0.2061,
+              "noise_std": 0.02256,
+              "snr_dtec": 9.1
+            },
+            {
+              "time": "2012-10-28T11:19:30+00:00",
+              "post_h": 8.26,
+              "dtec_max_tecu_min": 0.1319,
+              "noise_std": 0.02256,
+              "snr_dtec": 5.8
+            },
+            {
+              "time": "2012-10-28T11:35:30+00:00",
+              "post_h": 8.52,
+              "dtec_max_tecu_min": 0.1918,
+              "noise_std": 0.02256,
+              "snr_dtec": 8.5
+            },
+            {
+              "time": "2012-10-28T11:43:00+00:00",
+              "post_h": 8.65,
+              "dtec_max_tecu_min": 0.1735,
+              "noise_std": 0.02256,
+              "snr_dtec": 7.7
+            },
+            {
+              "time": "2012-10-28T11:52:00+00:00",
+              "post_h": 8.8,
+              "dtec_max_tecu_min": 0.228,
+              "noise_std": 0.02256,
+              "snr_dtec": 10.1
+            },
+            {
+              "time": "2012-10-28T11:58:30+00:00",
+              "post_h": 8.91,
+              "dtec_max_tecu_min": 0.414,
+              "noise_std": 0.02256,
+              "snr_dtec": 18.3
+            },
+            {
+              "time": "2012-10-28T12:07:00+00:00",
+              "post_h": 9.05,
+              "dtec_max_tecu_min": 0.1042,
+              "noise_std": 0.02256,
+              "snr_dtec": 4.6
+            },
+            {
+              "time": "2012-10-28T12:13:30+00:00",
+              "post_h": 9.16,
+              "dtec_max_tecu_min": 0.2658,
+              "noise_std": 0.02256,
+              "snr_dtec": 11.8
+            },
+            {
+              "time": "2012-10-28T12:23:30+00:00",
+              "post_h": 9.32,
+              "dtec_max_tecu_min": 0.136,
+              "noise_std": 0.02256,
+              "snr_dtec": 6.0
+            },
+            {
+              "time": "2012-10-28T12:43:30+00:00",
+              "post_h": 9.66,
+              "dtec_max_tecu_min": 0.122,
+              "noise_std": 0.02256,
+              "snr_dtec": 5.4
+            },
+            {
+              "time": "2012-10-28T13:07:30+00:00",
+              "post_h": 10.06,
+              "dtec_max_tecu_min": 0.1544,
+              "noise_std": 0.02256,
+              "snr_dtec": 6.8
+            },
+            {
+              "time": "2012-10-28T13:24:00+00:00",
+              "post_h": 10.33,
+              "dtec_max_tecu_min": 0.1506,
+              "noise_std": 0.02256,
+              "snr_dtec": 6.7
+            },
+            {
+              "time": "2012-10-28T13:35:30+00:00",
+              "post_h": 10.52,
+              "dtec_max_tecu_min": 0.1548,
+              "noise_std": 0.02256,
+              "snr_dtec": 6.9
+            },
+            {
+              "time": "2012-10-28T13:44:30+00:00",
+              "post_h": 10.67,
+              "dtec_max_tecu_min": 0.082,
+              "noise_std": 0.02256,
+              "snr_dtec": 3.6
+            },
+            {
+              "time": "2012-10-28T14:56:00+00:00",
+              "post_h": 11.86,
+              "dtec_max_tecu_min": 0.0982,
+              "noise_std": 0.02256,
+              "snr_dtec": 4.4
+            },
+            {
+              "time": "2012-10-28T20:23:30+00:00",
+              "post_h": 17.32,
+              "dtec_max_tecu_min": 0.068,
+              "noise_std": 0.02256,
+              "snr_dtec": 3.0
+            },
+            {
+              "time": "2012-10-28T21:15:30+00:00",
+              "post_h": 18.19,
+              "dtec_max_tecu_min": 0.0789,
+              "noise_std": 0.02256,
+              "snr_dtec": 3.5
+            },
+            {
+              "time": "2012-10-28T22:34:00+00:00",
+              "post_h": 19.5,
+              "dtec_max_tecu_min": 0.0693,
+              "noise_std": 0.02256,
+              "snr_dtec": 3.1
+            }
+          ]
+        },
+        "dtec_corroborates": true,
+        "dtec_corroboration": [
+          {
+            "station": "hnlc",
+            "dtec_post_h": 1.51,
+            "amp_post_h": 1.52,
+            "lead_min": 1.0,
+            "snr_dtec": 7.7
+          },
+          {
+            "station": "guam",
+            "dtec_post_h": 1.61,
+            "amp_post_h": 1.52,
+            "lead_min": -5.5,
+            "snr_dtec": 3.2
+          }
+        ],
+        "constellation_agreement": {
+          "constellations": {
+            "G": {
+              "available": true,
+              "anomaly": true,
+              "n_stations": 4
+            },
+            "R": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            },
+            "E": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            }
+          },
+          "n_available": 1,
+          "n_detecting": 1,
+          "detecting": [
+            "G"
+          ],
+          "agreement_score": 0.5,
+          "agreement_label": "single_constellation"
+        },
+        "ionosonde_result": {
+          "stations_checked": 0,
+          "stations_with_data": 0,
+          "ionosonde_detected": false,
+          "confirming_stations": 0,
+          "results": {}
+        },
+        "ionosonde_confirmed": false,
+        "dart_result": {
+          "buoys_checked": 8,
+          "buoys_with_data": 4,
+          "tsunami_detected": false,
+          "confirming_buoys": 0,
+          "nearest_buoy_km": 110,
+          "results": {
+            "46410": {
+              "desc": "N Pacific \u2014 Haida Gwaii",
+              "dist_km": 110,
+              "lat": 53.4,
+              "lon": -133.4,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "46404": {
+              "desc": "N Pacific \u2014 BC",
+              "dist_km": 445,
+              "lat": 50.0,
+              "lon": -136.7,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "46419": {
+              "desc": "N Pacific \u2014 Washington",
+              "dist_km": 514,
+              "lat": 48.5,
+              "lon": -129.4,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "46408": {
+              "desc": "Gulf of Alaska \u2014 E",
+              "dist_km": 1103,
+              "lat": 56.6,
+              "lon": -148.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "46403": {
+              "desc": "N Pacific \u2014 SE Alaska",
+              "dist_km": 1364,
+              "lat": 53.6,
+              "lon": -152.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "46411": {
+              "desc": "N Pacific \u2014 offshore CA",
+              "dist_km": 1385,
+              "lat": 40.7,
+              "lon": -136.5,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "46412": {
+              "desc": "N Pacific \u2014 central CA",
+              "dist_km": 1726,
+              "lat": 37.4,
+              "lon": -129.2,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "46414": {
+              "desc": "N Pacific \u2014 CA offshore",
+              "dist_km": 1817,
+              "lat": 36.7,
+              "lon": -128.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "dart_score": 0.0,
+        "dart_status": "negative",
+        "combined_confidence": 0.52,
+        "space_weather_score": 0.0
+      }
+    },
+    {
+      "usgs_id": "usp000fjta",
+      "place": "Samoa - no anchor geometry V1",
+      "mw": 8.1,
+      "quake_utc": "2009-09-29T17:48:10Z",
+      "known_outcome": "ABSTAIN",
+      "bt_outcome": "CORRECT_ABSTENTION",
+      "correct": true,
+      "detected": false,
+      "confidence": 0.0,
+      "dart_status": "negative",
+      "iono_confirmed": false,
+      "dtec_corroborates": false,
+      "const_label": "single_constellation",
+      "reason": "no_coherent_pairs",
+      "prediction": {
+        "run_utc": "2026-04-26T20:25:51.593325+00:00",
+        "param_freeze_date": "2025-04-22",
+        "stations_processed": [
+          "mkea",
+          "kokb",
+          "hnlc",
+          "guam"
+        ],
+        "onset_summary": {
+          "mkea": {
+            "n_triggers": 0,
+            "noise_tecu": 0.248,
+            "triggers": []
+          },
+          "kokb": {
+            "n_triggers": 2,
+            "noise_tecu": 0.2153,
+            "triggers": [
+              {
+                "time": "2009-09-29T02:39:00+00:00",
+                "dur_min": 4.5,
+                "snr": 2.4981181528208083
+              },
+              {
+                "time": "2009-09-29T10:18:00+00:00",
+                "dur_min": 7.0,
+                "snr": 3.0341412917983903
+              }
+            ]
+          },
+          "hnlc": {
+            "n_triggers": 5,
+            "noise_tecu": 0.1548,
+            "triggers": [
+              {
+                "time": "2009-09-29T03:04:00+00:00",
+                "dur_min": 11.0,
+                "snr": 3.4118901634765555
+              },
+              {
+                "time": "2009-09-29T12:55:30+00:00",
+                "dur_min": 5.0,
+                "snr": 2.274470501917263
+              },
+              {
+                "time": "2009-09-29T13:24:00+00:00",
+                "dur_min": 6.0,
+                "snr": 2.5429731395273083
+              },
+              {
+                "time": "2009-09-29T15:08:00+00:00",
+                "dur_min": 8.0,
+                "snr": 2.242100052125924
+              },
+              {
+                "time": "2009-09-29T16:05:00+00:00",
+                "dur_min": 5.0,
+                "snr": 2.408994656002446
+              }
+            ]
+          },
+          "guam": {
+            "n_triggers": 25,
+            "noise_tecu": 0.1158,
+            "triggers": [
+              {
+                "time": "2009-09-29T01:27:00+00:00",
+                "dur_min": 5.0,
+                "snr": 2.947748800431224
+              },
+              {
+                "time": "2009-09-29T03:57:00+00:00",
+                "dur_min": 20.5,
+                "snr": 3.3477790697232233
+              },
+              {
+                "time": "2009-09-29T04:47:00+00:00",
+                "dur_min": 11.0,
+                "snr": 2.782370489860294
+              },
+              {
+                "time": "2009-09-29T05:35:30+00:00",
+                "dur_min": 7.5,
+                "snr": 2.2476234229180343
+              },
+              {
+                "time": "2009-09-29T06:05:00+00:00",
+                "dur_min": 8.0,
+                "snr": 3.7268142783937126
+              }
+            ]
+          }
+        },
+        "lb_pairs_total": 0,
+        "lb_pairs_in_window": 0,
+        "kp": 0.0,
+        "kp_disturbed": false,
+        "detected": false,
+        "detection": null,
+        "wave_forecast": null,
+        "reason": "no_coherent_pairs",
+        "plot_path": "rinex_live\\usp000fjta\\tec_plot.png",
+        "dtec_onsets": {
+          "mkea": [
+            {
+              "time": "2009-09-29T20:57:30+00:00",
+              "post_h": 3.16,
+              "dtec_max_tecu_min": 0.047,
+              "noise_std": 0.01338,
+              "snr_dtec": 3.5
+            },
+            {
+              "time": "2009-09-29T21:03:30+00:00",
+              "post_h": 3.26,
+              "dtec_max_tecu_min": 0.0601,
+              "noise_std": 0.01338,
+              "snr_dtec": 4.5
+            }
+          ],
+          "kokb": [
+            {
+              "time": "2009-09-29T21:16:30+00:00",
+              "post_h": 3.47,
+              "dtec_max_tecu_min": 0.0734,
+              "noise_std": 0.02301,
+              "snr_dtec": 3.2
+            }
+          ],
+          "hnlc": [
+            {
+              "time": "2009-09-29T19:29:00+00:00",
+              "post_h": 1.68,
+              "dtec_max_tecu_min": 0.0852,
+              "noise_std": 0.01665,
+              "snr_dtec": 5.1
+            },
+            {
+              "time": "2009-09-29T19:53:00+00:00",
+              "post_h": 2.08,
+              "dtec_max_tecu_min": 0.0667,
+              "noise_std": 0.01665,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2009-09-29T20:10:00+00:00",
+              "post_h": 2.36,
+              "dtec_max_tecu_min": 0.0533,
+              "noise_std": 0.01665,
+              "snr_dtec": 3.2
+            }
+          ],
+          "guam": []
+        },
+        "dtec_corroborates": false,
+        "dtec_corroboration": [],
+        "constellation_agreement": {
+          "constellations": {
+            "G": {
+              "available": true,
+              "anomaly": true,
+              "n_stations": 4
+            },
+            "R": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            },
+            "E": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            }
+          },
+          "n_available": 1,
+          "n_detecting": 1,
+          "detecting": [
+            "G"
+          ],
+          "agreement_score": 0.5,
+          "agreement_label": "single_constellation"
+        },
+        "ionosonde_result": {
+          "stations_checked": 5,
+          "stations_with_data": 0,
+          "ionosonde_detected": false,
+          "confirming_stations": 0,
+          "nearest_station_km": 3188,
+          "results": {
+            "CH853": {
+              "name": "Chatham Is.",
+              "dist_km": 3188,
+              "lat": -43.9,
+              "lon": -176.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "KJ609": {
+              "name": "Kwajalein",
+              "dist_km": 3517,
+              "lat": 9.0,
+              "lon": 167.7,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "AT138": {
+              "name": "Townsville",
+              "dist_km": 4371,
+              "lat": -19.6,
+              "lon": 146.8,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "WP937": {
+              "name": "Wake Island",
+              "dist_km": 4516,
+              "lat": 19.3,
+              "lon": 166.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "GU513": {
+              "name": "Guam",
+              "dist_km": 5729,
+              "lat": 13.6,
+              "lon": 144.9,
+              "data": false,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "ionosonde_confirmed": false,
+        "dart_result": {
+          "buoys_checked": 8,
+          "buoys_with_data": 6,
+          "tsunami_detected": false,
+          "confirming_buoys": 0,
+          "nearest_buoy_km": 645,
+          "results": {
+            "55012": {
+              "desc": "SW Pacific \u2014 Tonga",
+              "dist_km": 645,
+              "lat": -21.0,
+              "lon": -174.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "55023": {
+              "desc": "SW Pacific \u2014 Kermadec",
+              "dist_km": 1207,
+              "lat": -26.0,
+              "lon": -175.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "51407": {
+              "desc": "Central Pacific \u2014 Hawaii",
+              "dist_km": 4299,
+              "lat": 19.6,
+              "lon": -155.6,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21414": {
+              "desc": "W Pacific \u2014 Central",
+              "dist_km": 4435,
+              "lat": 15.1,
+              "lon": 162.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "51406": {
+              "desc": "Central Pacific \u2014 NW Hawaii",
+              "dist_km": 4547,
+              "lat": 22.9,
+              "lon": -157.7,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "21413": {
+              "desc": "W Pacific \u2014 Mariana",
+              "dist_km": 5200,
+              "lat": 15.1,
+              "lon": 152.1,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21415": {
+              "desc": "W Pacific \u2014 West Mariana",
+              "dist_km": 5201,
+              "lat": 15.0,
+              "lon": 152.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "32403": {
+              "desc": "SE Pacific \u2014 W Peru",
+              "dist_km": 6874,
+              "lat": -19.8,
+              "lon": -107.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "dart_score": 0.0,
+        "dart_status": "negative",
+        "combined_confidence": 0.0,
+        "space_weather_score": 0.0
+      }
+    },
+    {
+      "usgs_id": "usp000jadn",
+      "place": "Sumatra strike-slip - ShakeMap should gate",
+      "mw": 8.6,
+      "quake_utc": "2012-04-11T08:38:36Z",
+      "known_outcome": "NO_TSUNAMI",
+      "bt_outcome": "TRUE_NEGATIVE",
+      "correct": true,
+      "detected": false,
+      "confidence": 0.0,
+      "dart_status": "negative",
+      "iono_confirmed": false,
+      "dtec_corroborates": false,
+      "const_label": "single_constellation",
+      "reason": "no_coherent_pairs",
+      "prediction": {
+        "run_utc": "2026-04-26T20:26:22.314755+00:00",
+        "param_freeze_date": "2025-04-22",
+        "stations_processed": [
+          "mkea",
+          "kokb",
+          "hnlc",
+          "guam"
+        ],
+        "onset_summary": {
+          "mkea": {
+            "n_triggers": 7,
+            "noise_tecu": 0.2937,
+            "triggers": [
+              {
+                "time": "2012-04-11T02:32:00+00:00",
+                "dur_min": 9.0,
+                "snr": 2.6601499504707364
+              },
+              {
+                "time": "2012-04-11T03:01:00+00:00",
+                "dur_min": 9.0,
+                "snr": 3.5831648190315875
+              },
+              {
+                "time": "2012-04-11T03:52:30+00:00",
+                "dur_min": 4.0,
+                "snr": 2.2316050948532977
+              },
+              {
+                "time": "2012-04-11T04:37:30+00:00",
+                "dur_min": 3.5,
+                "snr": 2.1910368295799114
+              },
+              {
+                "time": "2012-04-11T04:56:30+00:00",
+                "dur_min": 7.0,
+                "snr": 2.7432639699635133
+              }
+            ]
+          },
+          "kokb": {
+            "n_triggers": 5,
+            "noise_tecu": 0.3918,
+            "triggers": [
+              {
+                "time": "2012-04-11T01:55:30+00:00",
+                "dur_min": 8.5,
+                "snr": 2.593080022303309
+              },
+              {
+                "time": "2012-04-11T02:08:00+00:00",
+                "dur_min": 4.0,
+                "snr": 2.192035992199644
+              },
+              {
+                "time": "2012-04-11T05:48:00+00:00",
+                "dur_min": 8.0,
+                "snr": 3.2452476318172554
+              },
+              {
+                "time": "2012-04-11T06:41:00+00:00",
+                "dur_min": 8.5,
+                "snr": 2.3570697868537516
+              },
+              {
+                "time": "2012-04-11T08:33:30+00:00",
+                "dur_min": 8.5,
+                "snr": 2.709082169362394
+              }
+            ]
+          },
+          "hnlc": {
+            "n_triggers": 17,
+            "noise_tecu": 0.25,
+            "triggers": [
+              {
+                "time": "2012-04-11T01:59:00+00:00",
+                "dur_min": 8.5,
+                "snr": 2.1640300624965003
+              },
+              {
+                "time": "2012-04-11T03:12:00+00:00",
+                "dur_min": 6.5,
+                "snr": 2.7258971920397745
+              },
+              {
+                "time": "2012-04-11T03:44:00+00:00",
+                "dur_min": 7.0,
+                "snr": 2.9323777417184353
+              },
+              {
+                "time": "2012-04-11T04:02:30+00:00",
+                "dur_min": 4.0,
+                "snr": 2.745271265316103
+              },
+              {
+                "time": "2012-04-11T04:53:00+00:00",
+                "dur_min": 9.5,
+                "snr": 5.749326496197836
+              }
+            ]
+          },
+          "guam": {
+            "n_triggers": 10,
+            "noise_tecu": 0.2745,
+            "triggers": [
+              {
+                "time": "2012-04-11T02:55:00+00:00",
+                "dur_min": 6.0,
+                "snr": 2.481606575382286
+              },
+              {
+                "time": "2012-04-11T03:16:30+00:00",
+                "dur_min": 3.0,
+                "snr": 2.2107132021855556
+              },
+              {
+                "time": "2012-04-11T03:27:30+00:00",
+                "dur_min": 5.5,
+                "snr": 2.4097160195380702
+              },
+              {
+                "time": "2012-04-11T04:12:00+00:00",
+                "dur_min": 5.0,
+                "snr": 2.5103819245525036
+              },
+              {
+                "time": "2012-04-11T06:47:30+00:00",
+                "dur_min": 4.0,
+                "snr": 2.2445888187961214
+              }
+            ]
+          }
+        },
+        "lb_pairs_total": 0,
+        "lb_pairs_in_window": 0,
+        "kp": 0.0,
+        "kp_disturbed": false,
+        "detected": false,
+        "detection": null,
+        "wave_forecast": null,
+        "reason": "no_coherent_pairs",
+        "plot_path": "rinex_live\\usp000jadn\\tec_plot.png",
+        "dtec_onsets": {
+          "mkea": [
+            {
+              "time": "2012-04-11T17:39:00+00:00",
+              "post_h": 9.01,
+              "dtec_max_tecu_min": 0.1525,
+              "noise_std": 0.0334,
+              "snr_dtec": 4.6
+            },
+            {
+              "time": "2012-04-11T21:35:00+00:00",
+              "post_h": 12.94,
+              "dtec_max_tecu_min": 0.108,
+              "noise_std": 0.0334,
+              "snr_dtec": 3.2
+            }
+          ],
+          "kokb": [],
+          "hnlc": [],
+          "guam": [
+            {
+              "time": "2012-04-11T10:14:30+00:00",
+              "post_h": 1.6,
+              "dtec_max_tecu_min": 0.1074,
+              "noise_std": 0.03205,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2012-04-11T12:47:30+00:00",
+              "post_h": 4.15,
+              "dtec_max_tecu_min": 0.1253,
+              "noise_std": 0.03205,
+              "snr_dtec": 3.9
+            },
+            {
+              "time": "2012-04-11T14:50:30+00:00",
+              "post_h": 6.2,
+              "dtec_max_tecu_min": 0.1236,
+              "noise_std": 0.03205,
+              "snr_dtec": 3.9
+            },
+            {
+              "time": "2012-04-11T15:33:00+00:00",
+              "post_h": 6.91,
+              "dtec_max_tecu_min": 0.1183,
+              "noise_std": 0.03205,
+              "snr_dtec": 3.7
+            },
+            {
+              "time": "2012-04-11T16:12:30+00:00",
+              "post_h": 7.57,
+              "dtec_max_tecu_min": 0.1055,
+              "noise_std": 0.03205,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2012-04-11T16:36:00+00:00",
+              "post_h": 7.96,
+              "dtec_max_tecu_min": 0.1514,
+              "noise_std": 0.03205,
+              "snr_dtec": 4.7
+            },
+            {
+              "time": "2012-04-11T16:45:30+00:00",
+              "post_h": 8.12,
+              "dtec_max_tecu_min": 0.1015,
+              "noise_std": 0.03205,
+              "snr_dtec": 3.2
+            }
+          ]
+        },
+        "dtec_corroborates": false,
+        "dtec_corroboration": [],
+        "constellation_agreement": {
+          "constellations": {
+            "G": {
+              "available": true,
+              "anomaly": true,
+              "n_stations": 4
+            },
+            "R": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            },
+            "E": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            }
+          },
+          "n_available": 1,
+          "n_detecting": 1,
+          "detecting": [
+            "G"
+          ],
+          "agreement_score": 0.5,
+          "agreement_label": "single_constellation"
+        },
+        "ionosonde_result": {
+          "stations_checked": 3,
+          "stations_with_data": 0,
+          "ionosonde_detected": false,
+          "confirming_stations": 0,
+          "nearest_station_km": 3930,
+          "results": {
+            "TW637": {
+              "name": "Zhongli",
+              "dist_km": 3930,
+              "lat": 25.0,
+              "lon": 121.2,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "RP536": {
+              "name": "Okinawa",
+              "dist_km": 4622,
+              "lat": 26.7,
+              "lon": 128.2,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "GU513": {
+              "name": "Guam",
+              "dist_km": 5831,
+              "lat": 13.6,
+              "lon": 144.9,
+              "data": false,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "ionosonde_confirmed": false,
+        "dart_result": {
+          "buoys_checked": 5,
+          "buoys_with_data": 3,
+          "tsunami_detected": false,
+          "confirming_buoys": 0,
+          "nearest_buoy_km": 1545,
+          "results": {
+            "23227": {
+              "desc": "Indian Ocean \u2014 Sumatra",
+              "dist_km": 1545,
+              "lat": -11.0,
+              "lon": 97.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "21416": {
+              "desc": "W Pacific \u2014 Philippine Sea",
+              "dist_km": 4880,
+              "lat": 19.2,
+              "lon": 134.5,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21415": {
+              "desc": "W Pacific \u2014 West Mariana",
+              "dist_km": 6609,
+              "lat": 15.0,
+              "lon": 152.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21413": {
+              "desc": "W Pacific \u2014 Mariana",
+              "dist_km": 6621,
+              "lat": 15.1,
+              "lon": 152.1,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21414": {
+              "desc": "W Pacific \u2014 Central",
+              "dist_km": 7680,
+              "lat": 15.1,
+              "lon": 162.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "dart_score": 0.0,
+        "dart_status": "negative",
+        "combined_confidence": 0.0,
+        "space_weather_score": 0.0
+      }
+    },
+    {
+      "usgs_id": "usp000jhe9",
+      "place": "Okhotsk deep 609km - depth gate",
+      "mw": 8.3,
+      "quake_utc": "2013-05-24T05:44:48Z",
+      "known_outcome": "NO_TSUNAMI",
+      "bt_outcome": "FALSE_POSITIVE",
+      "correct": false,
+      "detected": true,
+      "confidence": 0.52,
+      "dart_status": "negative",
+      "iono_confirmed": false,
+      "dtec_corroborates": true,
+      "const_label": "single_constellation",
+      "reason": "",
+      "prediction": {
+        "run_utc": "2026-04-26T20:27:10.696639+00:00",
+        "param_freeze_date": "2025-04-22",
+        "stations_processed": [
+          "mkea",
+          "kokb",
+          "hnlc",
+          "guam"
+        ],
+        "onset_summary": {
+          "mkea": {
+            "n_triggers": 1,
+            "noise_tecu": 0.5314,
+            "triggers": [
+              {
+                "time": "2013-05-24T01:13:00+00:00",
+                "dur_min": 6.0,
+                "snr": 2.160278797691106
+              }
+            ]
+          },
+          "kokb": {
+            "n_triggers": 17,
+            "noise_tecu": 0.295,
+            "triggers": [
+              {
+                "time": "2013-05-24T02:25:00+00:00",
+                "dur_min": 6.0,
+                "snr": 3.2694679672473477
+              },
+              {
+                "time": "2013-05-24T02:38:00+00:00",
+                "dur_min": 5.5,
+                "snr": 2.379173902071807
+              },
+              {
+                "time": "2013-05-24T02:59:30+00:00",
+                "dur_min": 9.5,
+                "snr": 2.727209062043471
+              },
+              {
+                "time": "2013-05-24T03:14:30+00:00",
+                "dur_min": 10.0,
+                "snr": 3.295781892137368
+              },
+              {
+                "time": "2013-05-24T04:13:30+00:00",
+                "dur_min": 8.5,
+                "snr": 3.224386093121749
+              }
+            ]
+          },
+          "hnlc": {
+            "n_triggers": 13,
+            "noise_tecu": 0.2701,
+            "triggers": [
+              {
+                "time": "2013-05-24T01:09:00+00:00",
+                "dur_min": 6.0,
+                "snr": 2.809340749106277
+              },
+              {
+                "time": "2013-05-24T02:09:00+00:00",
+                "dur_min": 4.0,
+                "snr": 2.214994980005893
+              },
+              {
+                "time": "2013-05-24T04:21:00+00:00",
+                "dur_min": 5.5,
+                "snr": 2.7334207420774304
+              },
+              {
+                "time": "2013-05-24T05:21:30+00:00",
+                "dur_min": 7.0,
+                "snr": 2.8759801820145037
+              },
+              {
+                "time": "2013-05-24T06:45:30+00:00",
+                "dur_min": 6.5,
+                "snr": 2.9477149611936535
+              }
+            ]
+          },
+          "guam": {
+            "n_triggers": 39,
+            "noise_tecu": 0.1296,
+            "triggers": [
+              {
+                "time": "2013-05-24T02:30:30+00:00",
+                "dur_min": 4.5,
+                "snr": 2.6391553118942355
+              },
+              {
+                "time": "2013-05-24T02:40:30+00:00",
+                "dur_min": 5.0,
+                "snr": 2.682013696050712
+              },
+              {
+                "time": "2013-05-24T03:26:00+00:00",
+                "dur_min": 5.0,
+                "snr": 2.1278158707827326
+              },
+              {
+                "time": "2013-05-24T04:06:30+00:00",
+                "dur_min": 7.0,
+                "snr": 3.442712042119514
+              },
+              {
+                "time": "2013-05-24T04:28:00+00:00",
+                "dur_min": 4.5,
+                "snr": 2.774130529649389
+              }
+            ]
+          }
+        },
+        "lb_pairs_total": 15,
+        "lb_pairs_in_window": 15,
+        "kp": 0.0,
+        "kp_disturbed": false,
+        "detected": true,
+        "detection": {
+          "pair": "hnlc-guam",
+          "onset_utc": "2013-05-24T19:11:00+00:00",
+          "post_h": 13.44,
+          "speed_ms": 154.8,
+          "delay_min": 91.0,
+          "snr_near": 6.71,
+          "snr_far": 4.29,
+          "baseline_km": 6113
+        },
+        "wave_forecast": {
+          "tec_amp_tecu": 1.1599,
+          "detecting_station": "hnlc",
+          "dist_hilo_km": 5809,
+          "predicted_wave_m": 0.962,
+          "predicted_arrival_h": 8.1,
+          "estimated_lead_min": -322,
+          "model": "w=2283.839*TEC*10^(0.771*Mw)/d^2.614",
+          "note": "calibrated on Hawaii-corridor stations; CHAT/GUAM may have higher error"
+        },
+        "plot_path": "rinex_live\\usp000jhe9\\tec_plot.png",
+        "dtec_onsets": {
+          "mkea": [
+            {
+              "time": "2013-05-24T07:15:00+00:00",
+              "post_h": 1.5,
+              "dtec_max_tecu_min": 0.1218,
+              "noise_std": 0.0366,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2013-05-24T22:37:00+00:00",
+              "post_h": 16.87,
+              "dtec_max_tecu_min": 0.1168,
+              "noise_std": 0.0366,
+              "snr_dtec": 3.2
+            }
+          ],
+          "kokb": [
+            {
+              "time": "2013-05-24T10:00:30+00:00",
+              "post_h": 4.26,
+              "dtec_max_tecu_min": 0.1974,
+              "noise_std": 0.05322,
+              "snr_dtec": 3.7
+            },
+            {
+              "time": "2013-05-24T11:42:00+00:00",
+              "post_h": 5.95,
+              "dtec_max_tecu_min": 0.1717,
+              "noise_std": 0.05322,
+              "snr_dtec": 3.2
+            }
+          ],
+          "hnlc": [
+            {
+              "time": "2013-05-24T11:08:30+00:00",
+              "post_h": 5.39,
+              "dtec_max_tecu_min": 0.1216,
+              "noise_std": 0.03754,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2013-05-24T16:35:30+00:00",
+              "post_h": 10.85,
+              "dtec_max_tecu_min": 0.1914,
+              "noise_std": 0.03754,
+              "snr_dtec": 5.1
+            },
+            {
+              "time": "2013-05-24T20:59:30+00:00",
+              "post_h": 15.24,
+              "dtec_max_tecu_min": 0.1584,
+              "noise_std": 0.03754,
+              "snr_dtec": 4.2
+            },
+            {
+              "time": "2013-05-24T21:43:00+00:00",
+              "post_h": 15.97,
+              "dtec_max_tecu_min": 0.1289,
+              "noise_std": 0.03754,
+              "snr_dtec": 3.4
+            },
+            {
+              "time": "2013-05-24T22:15:00+00:00",
+              "post_h": 16.5,
+              "dtec_max_tecu_min": 0.1227,
+              "noise_std": 0.03754,
+              "snr_dtec": 3.3
+            }
+          ],
+          "guam": [
+            {
+              "time": "2013-05-24T07:21:30+00:00",
+              "post_h": 1.61,
+              "dtec_max_tecu_min": 0.0931,
+              "noise_std": 0.02296,
+              "snr_dtec": 4.1
+            },
+            {
+              "time": "2013-05-24T07:28:00+00:00",
+              "post_h": 1.72,
+              "dtec_max_tecu_min": 0.115,
+              "noise_std": 0.02296,
+              "snr_dtec": 5.0
+            },
+            {
+              "time": "2013-05-24T08:33:00+00:00",
+              "post_h": 2.8,
+              "dtec_max_tecu_min": 0.0757,
+              "noise_std": 0.02296,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2013-05-24T08:57:30+00:00",
+              "post_h": 3.21,
+              "dtec_max_tecu_min": 0.0715,
+              "noise_std": 0.02296,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2013-05-24T09:07:30+00:00",
+              "post_h": 3.38,
+              "dtec_max_tecu_min": 0.0864,
+              "noise_std": 0.02296,
+              "snr_dtec": 3.8
+            },
+            {
+              "time": "2013-05-24T09:39:30+00:00",
+              "post_h": 3.91,
+              "dtec_max_tecu_min": 0.1018,
+              "noise_std": 0.02296,
+              "snr_dtec": 4.4
+            },
+            {
+              "time": "2013-05-24T09:45:30+00:00",
+              "post_h": 4.01,
+              "dtec_max_tecu_min": 0.1903,
+              "noise_std": 0.02296,
+              "snr_dtec": 8.3
+            },
+            {
+              "time": "2013-05-24T09:57:00+00:00",
+              "post_h": 4.2,
+              "dtec_max_tecu_min": 0.3296,
+              "noise_std": 0.02296,
+              "snr_dtec": 14.4
+            },
+            {
+              "time": "2013-05-24T10:11:30+00:00",
+              "post_h": 4.45,
+              "dtec_max_tecu_min": 0.1161,
+              "noise_std": 0.02296,
+              "snr_dtec": 5.1
+            },
+            {
+              "time": "2013-05-24T10:34:00+00:00",
+              "post_h": 4.82,
+              "dtec_max_tecu_min": 0.2467,
+              "noise_std": 0.02296,
+              "snr_dtec": 10.7
+            },
+            {
+              "time": "2013-05-24T11:05:00+00:00",
+              "post_h": 5.34,
+              "dtec_max_tecu_min": 0.1357,
+              "noise_std": 0.02296,
+              "snr_dtec": 5.9
+            },
+            {
+              "time": "2013-05-24T11:30:30+00:00",
+              "post_h": 5.76,
+              "dtec_max_tecu_min": 0.1355,
+              "noise_std": 0.02296,
+              "snr_dtec": 5.9
+            },
+            {
+              "time": "2013-05-24T11:40:00+00:00",
+              "post_h": 5.92,
+              "dtec_max_tecu_min": 0.1097,
+              "noise_std": 0.02296,
+              "snr_dtec": 4.8
+            },
+            {
+              "time": "2013-05-24T12:06:30+00:00",
+              "post_h": 6.36,
+              "dtec_max_tecu_min": 0.1719,
+              "noise_std": 0.02296,
+              "snr_dtec": 7.5
+            },
+            {
+              "time": "2013-05-24T12:16:30+00:00",
+              "post_h": 6.53,
+              "dtec_max_tecu_min": 0.1339,
+              "noise_std": 0.02296,
+              "snr_dtec": 5.8
+            },
+            {
+              "time": "2013-05-24T12:31:00+00:00",
+              "post_h": 6.77,
+              "dtec_max_tecu_min": 0.0731,
+              "noise_std": 0.02296,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2013-05-24T12:53:00+00:00",
+              "post_h": 7.14,
+              "dtec_max_tecu_min": 0.0694,
+              "noise_std": 0.02296,
+              "snr_dtec": 3.0
+            },
+            {
+              "time": "2013-05-24T13:10:00+00:00",
+              "post_h": 7.42,
+              "dtec_max_tecu_min": 0.1061,
+              "noise_std": 0.02296,
+              "snr_dtec": 4.6
+            },
+            {
+              "time": "2013-05-24T13:29:00+00:00",
+              "post_h": 7.74,
+              "dtec_max_tecu_min": 0.0994,
+              "noise_std": 0.02296,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2013-05-24T13:37:00+00:00",
+              "post_h": 7.87,
+              "dtec_max_tecu_min": 0.0783,
+              "noise_std": 0.02296,
+              "snr_dtec": 3.4
+            },
+            {
+              "time": "2013-05-24T14:34:00+00:00",
+              "post_h": 8.82,
+              "dtec_max_tecu_min": 0.0982,
+              "noise_std": 0.02296,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2013-05-24T14:54:00+00:00",
+              "post_h": 9.15,
+              "dtec_max_tecu_min": 0.0895,
+              "noise_std": 0.02296,
+              "snr_dtec": 3.9
+            },
+            {
+              "time": "2013-05-24T15:33:00+00:00",
+              "post_h": 9.8,
+              "dtec_max_tecu_min": 0.114,
+              "noise_std": 0.02296,
+              "snr_dtec": 5.0
+            },
+            {
+              "time": "2013-05-24T15:53:30+00:00",
+              "post_h": 10.14,
+              "dtec_max_tecu_min": 0.1157,
+              "noise_std": 0.02296,
+              "snr_dtec": 5.0
+            },
+            {
+              "time": "2013-05-24T16:59:00+00:00",
+              "post_h": 11.24,
+              "dtec_max_tecu_min": 0.1203,
+              "noise_std": 0.02296,
+              "snr_dtec": 5.2
+            },
+            {
+              "time": "2013-05-24T17:15:00+00:00",
+              "post_h": 11.5,
+              "dtec_max_tecu_min": 0.0894,
+              "noise_std": 0.02296,
+              "snr_dtec": 3.9
+            },
+            {
+              "time": "2013-05-24T17:26:30+00:00",
+              "post_h": 11.7,
+              "dtec_max_tecu_min": 0.103,
+              "noise_std": 0.02296,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2013-05-24T18:14:00+00:00",
+              "post_h": 12.49,
+              "dtec_max_tecu_min": 0.0825,
+              "noise_std": 0.02296,
+              "snr_dtec": 3.6
+            },
+            {
+              "time": "2013-05-24T19:02:00+00:00",
+              "post_h": 13.29,
+              "dtec_max_tecu_min": 0.0895,
+              "noise_std": 0.02296,
+              "snr_dtec": 3.9
+            },
+            {
+              "time": "2013-05-24T20:19:00+00:00",
+              "post_h": 14.57,
+              "dtec_max_tecu_min": 0.0726,
+              "noise_std": 0.02296,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2013-05-24T22:03:30+00:00",
+              "post_h": 16.31,
+              "dtec_max_tecu_min": 0.082,
+              "noise_std": 0.02296,
+              "snr_dtec": 3.6
+            }
+          ]
+        },
+        "dtec_corroborates": true,
+        "dtec_corroboration": [
+          {
+            "station": "guam",
+            "dtec_post_h": 12.49,
+            "amp_post_h": 13.44,
+            "lead_min": 57.0,
+            "snr_dtec": 3.6
+          }
+        ],
+        "constellation_agreement": {
+          "constellations": {
+            "G": {
+              "available": true,
+              "anomaly": true,
+              "n_stations": 4
+            },
+            "R": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            },
+            "E": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            }
+          },
+          "n_available": 1,
+          "n_detecting": 1,
+          "detecting": [
+            "G"
+          ],
+          "agreement_score": 0.5,
+          "agreement_label": "single_constellation"
+        },
+        "ionosonde_result": {
+          "stations_checked": 5,
+          "stations_with_data": 0,
+          "ionosonde_detected": false,
+          "confirming_stations": 0,
+          "nearest_station_km": 3734,
+          "results": {
+            "RP536": {
+              "name": "Okinawa",
+              "dist_km": 3734,
+              "lat": 26.7,
+              "lon": 128.2,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "WP937": {
+              "name": "Wake Island",
+              "dist_km": 4113,
+              "lat": 19.3,
+              "lon": 166.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "TW637": {
+              "name": "Zhongli",
+              "dist_km": 4230,
+              "lat": 25.0,
+              "lon": 121.2,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "GU513": {
+              "name": "Guam",
+              "dist_km": 4646,
+              "lat": 13.6,
+              "lon": 144.9,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "KJ609": {
+              "name": "Kwajalein",
+              "dist_km": 5258,
+              "lat": 9.0,
+              "lon": 167.7,
+              "data": false,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "ionosonde_confirmed": false,
+        "dart_result": {
+          "buoys_checked": 8,
+          "buoys_with_data": 5,
+          "tsunami_detected": false,
+          "confirming_buoys": 0,
+          "nearest_buoy_km": 2558,
+          "results": {
+            "46409": {
+              "desc": "Unimak Pass \u2014 Aleutian",
+              "dist_km": 2558,
+              "lat": 53.9,
+              "lon": -166.7,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "46407": {
+              "desc": "Alaska Peninsula",
+              "dist_km": 2844,
+              "lat": 54.0,
+              "lon": -162.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "46402": {
+              "desc": "Gulf of Alaska",
+              "dist_km": 2849,
+              "lat": 51.0,
+              "lon": -164.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "46403": {
+              "desc": "N Pacific \u2014 SE Alaska",
+              "dist_km": 3432,
+              "lat": 53.6,
+              "lon": -152.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "46408": {
+              "desc": "Gulf of Alaska \u2014 E",
+              "dist_km": 3568,
+              "lat": 56.6,
+              "lon": -148.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "21416": {
+              "desc": "W Pacific \u2014 Philippine Sea",
+              "dist_km": 4272,
+              "lat": 19.2,
+              "lon": 134.5,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21413": {
+              "desc": "W Pacific \u2014 Mariana",
+              "dist_km": 4423,
+              "lat": 15.1,
+              "lon": 152.1,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21415": {
+              "desc": "W Pacific \u2014 West Mariana",
+              "dist_km": 4435,
+              "lat": 15.0,
+              "lon": 152.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "dart_score": 0.0,
+        "dart_status": "negative",
+        "combined_confidence": 0.52,
+        "space_weather_score": 0.0
+      }
+    },
+    {
+      "usgs_id": "usp000hvtm",
+      "place": "Kermadec Mw7.4 - below sensitivity",
+      "mw": 7.4,
+      "quake_utc": "2011-10-21T17:57:16Z",
+      "known_outcome": "NO_TSUNAMI",
+      "bt_outcome": "TRUE_NEGATIVE",
+      "correct": true,
+      "detected": false,
+      "confidence": 0.0,
+      "dart_status": "negative",
+      "iono_confirmed": false,
+      "dtec_corroborates": false,
+      "const_label": "single_constellation",
+      "reason": "no_coherent_pairs",
+      "prediction": {
+        "run_utc": "2026-04-26T20:27:41.800722+00:00",
+        "param_freeze_date": "2025-04-22",
+        "stations_processed": [
+          "mkea",
+          "kokb",
+          "hnlc",
+          "guam"
+        ],
+        "onset_summary": {
+          "mkea": {
+            "n_triggers": 4,
+            "noise_tecu": 0.5462,
+            "triggers": [
+              {
+                "time": "2011-10-21T03:32:30+00:00",
+                "dur_min": 3.0,
+                "snr": 2.108221430583262
+              },
+              {
+                "time": "2011-10-21T04:21:30+00:00",
+                "dur_min": 6.0,
+                "snr": 3.374121227678537
+              },
+              {
+                "time": "2011-10-21T07:03:00+00:00",
+                "dur_min": 6.5,
+                "snr": 2.3996605850207793
+              },
+              {
+                "time": "2011-10-21T07:52:30+00:00",
+                "dur_min": 4.0,
+                "snr": 2.142722153635835
+              }
+            ]
+          },
+          "kokb": {
+            "n_triggers": 12,
+            "noise_tecu": 0.4342,
+            "triggers": [
+              {
+                "time": "2011-10-21T00:18:00+00:00",
+                "dur_min": 4.0,
+                "snr": 2.101116681880358
+              },
+              {
+                "time": "2011-10-21T02:43:30+00:00",
+                "dur_min": 5.0,
+                "snr": 2.4599191078621523
+              },
+              {
+                "time": "2011-10-21T03:25:00+00:00",
+                "dur_min": 7.5,
+                "snr": 3.2322292073018257
+              },
+              {
+                "time": "2011-10-21T04:41:30+00:00",
+                "dur_min": 16.5,
+                "snr": 3.3885105803442337
+              },
+              {
+                "time": "2011-10-21T05:15:30+00:00",
+                "dur_min": 14.0,
+                "snr": 2.4880858166934217
+              }
+            ]
+          },
+          "hnlc": {
+            "n_triggers": 7,
+            "noise_tecu": 0.6903,
+            "triggers": [
+              {
+                "time": "2011-10-21T00:07:00+00:00",
+                "dur_min": 9.0,
+                "snr": 2.5485656770680225
+              },
+              {
+                "time": "2011-10-21T00:24:00+00:00",
+                "dur_min": 3.0,
+                "snr": 2.104074425462514
+              },
+              {
+                "time": "2011-10-21T02:53:00+00:00",
+                "dur_min": 3.0,
+                "snr": 2.434239309794088
+              },
+              {
+                "time": "2011-10-21T04:38:30+00:00",
+                "dur_min": 5.5,
+                "snr": 2.4299551037390743
+              },
+              {
+                "time": "2011-10-21T04:51:30+00:00",
+                "dur_min": 4.5,
+                "snr": 2.1711710653725897
+              }
+            ]
+          },
+          "guam": {
+            "n_triggers": 37,
+            "noise_tecu": 0.1443,
+            "triggers": [
+              {
+                "time": "2011-10-21T02:32:30+00:00",
+                "dur_min": 8.5,
+                "snr": 3.657767097217
+              },
+              {
+                "time": "2011-10-21T02:59:30+00:00",
+                "dur_min": 18.0,
+                "snr": 3.7737398834971794
+              },
+              {
+                "time": "2011-10-21T04:12:30+00:00",
+                "dur_min": 7.5,
+                "snr": 2.917512019091162
+              },
+              {
+                "time": "2011-10-21T04:57:00+00:00",
+                "dur_min": 18.5,
+                "snr": 3.301958429882447
+              },
+              {
+                "time": "2011-10-21T05:47:00+00:00",
+                "dur_min": 23.0,
+                "snr": 5.573460122499686
+              }
+            ]
+          }
+        },
+        "lb_pairs_total": 0,
+        "lb_pairs_in_window": 0,
+        "kp": 0.0,
+        "kp_disturbed": false,
+        "detected": false,
+        "detection": null,
+        "wave_forecast": null,
+        "reason": "no_coherent_pairs",
+        "plot_path": "rinex_live\\usp000hvtm\\tec_plot.png",
+        "dtec_onsets": {
+          "mkea": [],
+          "kokb": [],
+          "hnlc": [
+            {
+              "time": "2011-10-21T21:20:30+00:00",
+              "post_h": 3.39,
+              "dtec_max_tecu_min": 0.2589,
+              "noise_std": 0.0764,
+              "snr_dtec": 3.4
+            }
+          ],
+          "guam": []
+        },
+        "dtec_corroborates": false,
+        "dtec_corroboration": [],
+        "constellation_agreement": {
+          "constellations": {
+            "G": {
+              "available": true,
+              "anomaly": false,
+              "n_stations": 4
+            },
+            "R": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            },
+            "E": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            }
+          },
+          "n_available": 1,
+          "n_detecting": 0,
+          "detecting": [],
+          "agreement_score": 0.5,
+          "agreement_label": "single_constellation"
+        },
+        "ionosonde_result": {
+          "stations_checked": 4,
+          "stations_with_data": 0,
+          "ionosonde_detected": false,
+          "confirming_stations": 0,
+          "nearest_station_km": 1659,
+          "results": {
+            "CH853": {
+              "name": "Chatham Is.",
+              "dist_km": 1659,
+              "lat": -43.9,
+              "lon": -176.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "AT138": {
+              "name": "Townsville",
+              "dist_km": 3871,
+              "lat": -19.6,
+              "lon": 146.8,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "KJ609": {
+              "name": "Kwajalein",
+              "dist_km": 4561,
+              "lat": 9.0,
+              "lon": 167.7,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "WP937": {
+              "name": "Wake Island",
+              "dist_km": 5676,
+              "lat": 19.3,
+              "lon": 166.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "ionosonde_confirmed": false,
+        "dart_result": {
+          "buoys_checked": 8,
+          "buoys_with_data": 6,
+          "tsunami_detected": false,
+          "confirming_buoys": 0,
+          "nearest_buoy_km": 353,
+          "results": {
+            "55023": {
+              "desc": "SW Pacific \u2014 Kermadec",
+              "dist_km": 353,
+              "lat": -26.0,
+              "lon": -175.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "55012": {
+              "desc": "SW Pacific \u2014 Tonga",
+              "dist_km": 916,
+              "lat": -21.0,
+              "lon": -174.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21414": {
+              "desc": "W Pacific \u2014 Central",
+              "dist_km": 5431,
+              "lat": 15.1,
+              "lon": 162.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "51407": {
+              "desc": "Central Pacific \u2014 Hawaii",
+              "dist_km": 5838,
+              "lat": 19.6,
+              "lon": -155.6,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21415": {
+              "desc": "W Pacific \u2014 West Mariana",
+              "dist_km": 5963,
+              "lat": 15.0,
+              "lon": 152.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21413": {
+              "desc": "W Pacific \u2014 Mariana",
+              "dist_km": 5966,
+              "lat": 15.1,
+              "lon": 152.1,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "51406": {
+              "desc": "Central Pacific \u2014 NW Hawaii",
+              "dist_km": 6101,
+              "lat": 22.9,
+              "lon": -157.7,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "32403": {
+              "desc": "SE Pacific \u2014 W Peru",
+              "dist_km": 6992,
+              "lat": -19.8,
+              "lon": -107.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "dart_score": 0.0,
+        "dart_status": "negative",
+        "combined_confidence": 0.0,
+        "space_weather_score": 0.0
+      }
+    },
+    {
+      "usgs_id": "usp000hpgz",
+      "place": "Tohoku foreshock Mw7.2 - below threshold",
+      "mw": 7.2,
+      "quake_utc": "2011-03-09T02:45:20Z",
+      "known_outcome": "NO_TSUNAMI",
+      "bt_outcome": "TRUE_NEGATIVE",
+      "correct": true,
+      "detected": false,
+      "confidence": 0.0,
+      "dart_status": "negative",
+      "iono_confirmed": false,
+      "dtec_corroborates": false,
+      "const_label": "single_constellation",
+      "reason": "no_coherent_pairs",
+      "prediction": {
+        "run_utc": "2026-04-26T20:28:10.398265+00:00",
+        "param_freeze_date": "2025-04-22",
+        "stations_processed": [
+          "mkea",
+          "kokb",
+          "hnlc",
+          "guam"
+        ],
+        "onset_summary": {
+          "mkea": {
+            "n_triggers": 1,
+            "noise_tecu": 0.5941,
+            "triggers": [
+              {
+                "time": "2011-03-09T01:54:00+00:00",
+                "dur_min": 6.0,
+                "snr": 2.5614441753899544
+              }
+            ]
+          },
+          "kokb": {
+            "n_triggers": 2,
+            "noise_tecu": 0.4927,
+            "triggers": [
+              {
+                "time": "2011-03-09T02:13:00+00:00",
+                "dur_min": 7.0,
+                "snr": 3.5659103900445084
+              },
+              {
+                "time": "2011-03-09T05:33:00+00:00",
+                "dur_min": 5.5,
+                "snr": 2.4560488528504383
+              }
+            ]
+          },
+          "hnlc": {
+            "n_triggers": 5,
+            "noise_tecu": 0.3835,
+            "triggers": [
+              {
+                "time": "2011-03-09T02:37:00+00:00",
+                "dur_min": 13.5,
+                "snr": 2.3655398088537027
+              },
+              {
+                "time": "2011-03-09T02:59:30+00:00",
+                "dur_min": 3.5,
+                "snr": 2.211633154246159
+              },
+              {
+                "time": "2011-03-09T03:47:00+00:00",
+                "dur_min": 4.5,
+                "snr": 2.775777410743112
+              },
+              {
+                "time": "2011-03-09T04:49:30+00:00",
+                "dur_min": 12.0,
+                "snr": 3.690973537673649
+              },
+              {
+                "time": "2011-03-09T05:05:00+00:00",
+                "dur_min": 11.0,
+                "snr": 3.764325552572726
+              }
+            ]
+          },
+          "guam": {
+            "n_triggers": 41,
+            "noise_tecu": 0.1199,
+            "triggers": [
+              {
+                "time": "2011-03-09T02:50:00+00:00",
+                "dur_min": 3.5,
+                "snr": 2.27203511738285
+              },
+              {
+                "time": "2011-03-09T02:58:30+00:00",
+                "dur_min": 7.0,
+                "snr": 3.1461083214434997
+              },
+              {
+                "time": "2011-03-09T04:18:30+00:00",
+                "dur_min": 3.0,
+                "snr": 2.3637652696489573
+              },
+              {
+                "time": "2011-03-09T04:26:00+00:00",
+                "dur_min": 7.5,
+                "snr": 3.4443712141959817
+              },
+              {
+                "time": "2011-03-09T05:18:30+00:00",
+                "dur_min": 15.5,
+                "snr": 7.508865504148393
+              }
+            ]
+          }
+        },
+        "lb_pairs_total": 0,
+        "lb_pairs_in_window": 0,
+        "kp": 0.0,
+        "kp_disturbed": false,
+        "detected": false,
+        "detection": null,
+        "wave_forecast": null,
+        "reason": "no_coherent_pairs",
+        "plot_path": "rinex_live\\usp000hpgz\\tec_plot.png",
+        "dtec_onsets": {
+          "mkea": [
+            {
+              "time": "2011-03-09T23:20:30+00:00",
+              "post_h": 20.59,
+              "dtec_max_tecu_min": 0.2426,
+              "noise_std": 0.07343,
+              "snr_dtec": 3.3
+            }
+          ],
+          "kokb": [
+            {
+              "time": "2011-03-09T23:19:30+00:00",
+              "post_h": 20.57,
+              "dtec_max_tecu_min": 0.2478,
+              "noise_std": 0.06822,
+              "snr_dtec": 3.6
+            }
+          ],
+          "hnlc": [
+            {
+              "time": "2011-03-09T04:44:00+00:00",
+              "post_h": 1.98,
+              "dtec_max_tecu_min": 0.1224,
+              "noise_std": 0.03106,
+              "snr_dtec": 3.9
+            },
+            {
+              "time": "2011-03-09T04:59:30+00:00",
+              "post_h": 2.24,
+              "dtec_max_tecu_min": 0.4473,
+              "noise_std": 0.03106,
+              "snr_dtec": 14.4
+            },
+            {
+              "time": "2011-03-09T05:13:00+00:00",
+              "post_h": 2.46,
+              "dtec_max_tecu_min": 0.1999,
+              "noise_std": 0.03106,
+              "snr_dtec": 6.4
+            },
+            {
+              "time": "2011-03-09T05:26:30+00:00",
+              "post_h": 2.69,
+              "dtec_max_tecu_min": 0.1246,
+              "noise_std": 0.03106,
+              "snr_dtec": 4.0
+            },
+            {
+              "time": "2011-03-09T05:37:00+00:00",
+              "post_h": 2.86,
+              "dtec_max_tecu_min": 0.1303,
+              "noise_std": 0.03106,
+              "snr_dtec": 4.2
+            },
+            {
+              "time": "2011-03-09T05:47:00+00:00",
+              "post_h": 3.03,
+              "dtec_max_tecu_min": 0.1613,
+              "noise_std": 0.03106,
+              "snr_dtec": 5.2
+            },
+            {
+              "time": "2011-03-09T06:34:30+00:00",
+              "post_h": 3.82,
+              "dtec_max_tecu_min": 0.1294,
+              "noise_std": 0.03106,
+              "snr_dtec": 4.2
+            },
+            {
+              "time": "2011-03-09T06:52:00+00:00",
+              "post_h": 4.11,
+              "dtec_max_tecu_min": 0.0936,
+              "noise_std": 0.03106,
+              "snr_dtec": 3.0
+            },
+            {
+              "time": "2011-03-09T07:47:00+00:00",
+              "post_h": 5.03,
+              "dtec_max_tecu_min": 0.1346,
+              "noise_std": 0.03106,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2011-03-09T08:04:00+00:00",
+              "post_h": 5.31,
+              "dtec_max_tecu_min": 0.0935,
+              "noise_std": 0.03106,
+              "snr_dtec": 3.0
+            },
+            {
+              "time": "2011-03-09T09:03:00+00:00",
+              "post_h": 6.29,
+              "dtec_max_tecu_min": 0.1087,
+              "noise_std": 0.03106,
+              "snr_dtec": 3.5
+            },
+            {
+              "time": "2011-03-09T11:14:30+00:00",
+              "post_h": 8.49,
+              "dtec_max_tecu_min": 0.0973,
+              "noise_std": 0.03106,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2011-03-09T13:09:00+00:00",
+              "post_h": 10.39,
+              "dtec_max_tecu_min": 0.1375,
+              "noise_std": 0.03106,
+              "snr_dtec": 4.4
+            },
+            {
+              "time": "2011-03-09T18:49:00+00:00",
+              "post_h": 16.06,
+              "dtec_max_tecu_min": 0.0948,
+              "noise_std": 0.03106,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2011-03-09T19:41:00+00:00",
+              "post_h": 16.93,
+              "dtec_max_tecu_min": 0.0952,
+              "noise_std": 0.03106,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2011-03-09T20:28:00+00:00",
+              "post_h": 17.71,
+              "dtec_max_tecu_min": 0.1132,
+              "noise_std": 0.03106,
+              "snr_dtec": 3.6
+            },
+            {
+              "time": "2011-03-09T22:58:00+00:00",
+              "post_h": 20.21,
+              "dtec_max_tecu_min": 0.1044,
+              "noise_std": 0.03106,
+              "snr_dtec": 3.4
+            },
+            {
+              "time": "2011-03-09T23:08:00+00:00",
+              "post_h": 20.38,
+              "dtec_max_tecu_min": 0.1541,
+              "noise_std": 0.03106,
+              "snr_dtec": 5.0
+            },
+            {
+              "time": "2011-03-09T23:17:30+00:00",
+              "post_h": 20.54,
+              "dtec_max_tecu_min": 0.2507,
+              "noise_std": 0.03106,
+              "snr_dtec": 8.1
+            }
+          ],
+          "guam": [
+            {
+              "time": "2011-03-09T04:15:30+00:00",
+              "post_h": 1.5,
+              "dtec_max_tecu_min": 0.0727,
+              "noise_std": 0.01101,
+              "snr_dtec": 6.6
+            },
+            {
+              "time": "2011-03-09T04:21:00+00:00",
+              "post_h": 1.59,
+              "dtec_max_tecu_min": 0.12,
+              "noise_std": 0.01101,
+              "snr_dtec": 10.9
+            },
+            {
+              "time": "2011-03-09T04:31:00+00:00",
+              "post_h": 1.76,
+              "dtec_max_tecu_min": 0.0577,
+              "noise_std": 0.01101,
+              "snr_dtec": 5.2
+            },
+            {
+              "time": "2011-03-09T05:03:00+00:00",
+              "post_h": 2.29,
+              "dtec_max_tecu_min": 0.0494,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2011-03-09T05:15:30+00:00",
+              "post_h": 2.5,
+              "dtec_max_tecu_min": 0.1311,
+              "noise_std": 0.01101,
+              "snr_dtec": 11.9
+            },
+            {
+              "time": "2011-03-09T05:26:30+00:00",
+              "post_h": 2.69,
+              "dtec_max_tecu_min": 0.1129,
+              "noise_std": 0.01101,
+              "snr_dtec": 10.3
+            },
+            {
+              "time": "2011-03-09T05:46:30+00:00",
+              "post_h": 3.02,
+              "dtec_max_tecu_min": 0.0362,
+              "noise_std": 0.01101,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2011-03-09T06:16:30+00:00",
+              "post_h": 3.52,
+              "dtec_max_tecu_min": 0.0937,
+              "noise_std": 0.01101,
+              "snr_dtec": 8.5
+            },
+            {
+              "time": "2011-03-09T06:34:30+00:00",
+              "post_h": 3.82,
+              "dtec_max_tecu_min": 0.0705,
+              "noise_std": 0.01101,
+              "snr_dtec": 6.4
+            },
+            {
+              "time": "2011-03-09T06:44:00+00:00",
+              "post_h": 3.98,
+              "dtec_max_tecu_min": 0.0708,
+              "noise_std": 0.01101,
+              "snr_dtec": 6.4
+            },
+            {
+              "time": "2011-03-09T06:54:00+00:00",
+              "post_h": 4.14,
+              "dtec_max_tecu_min": 0.0411,
+              "noise_std": 0.01101,
+              "snr_dtec": 3.7
+            },
+            {
+              "time": "2011-03-09T07:23:30+00:00",
+              "post_h": 4.64,
+              "dtec_max_tecu_min": 0.0644,
+              "noise_std": 0.01101,
+              "snr_dtec": 5.9
+            },
+            {
+              "time": "2011-03-09T07:36:30+00:00",
+              "post_h": 4.85,
+              "dtec_max_tecu_min": 0.0568,
+              "noise_std": 0.01101,
+              "snr_dtec": 5.2
+            },
+            {
+              "time": "2011-03-09T07:42:00+00:00",
+              "post_h": 4.94,
+              "dtec_max_tecu_min": 0.1108,
+              "noise_std": 0.01101,
+              "snr_dtec": 10.1
+            },
+            {
+              "time": "2011-03-09T07:54:00+00:00",
+              "post_h": 5.14,
+              "dtec_max_tecu_min": 0.057,
+              "noise_std": 0.01101,
+              "snr_dtec": 5.2
+            },
+            {
+              "time": "2011-03-09T07:59:30+00:00",
+              "post_h": 5.24,
+              "dtec_max_tecu_min": 0.1094,
+              "noise_std": 0.01101,
+              "snr_dtec": 9.9
+            },
+            {
+              "time": "2011-03-09T08:19:00+00:00",
+              "post_h": 5.56,
+              "dtec_max_tecu_min": 0.0492,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2011-03-09T08:27:30+00:00",
+              "post_h": 5.7,
+              "dtec_max_tecu_min": 0.1659,
+              "noise_std": 0.01101,
+              "snr_dtec": 15.1
+            },
+            {
+              "time": "2011-03-09T08:49:00+00:00",
+              "post_h": 6.06,
+              "dtec_max_tecu_min": 0.0647,
+              "noise_std": 0.01101,
+              "snr_dtec": 5.9
+            },
+            {
+              "time": "2011-03-09T09:03:30+00:00",
+              "post_h": 6.3,
+              "dtec_max_tecu_min": 0.0609,
+              "noise_std": 0.01101,
+              "snr_dtec": 5.5
+            },
+            {
+              "time": "2011-03-09T09:19:30+00:00",
+              "post_h": 6.57,
+              "dtec_max_tecu_min": 0.0478,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2011-03-09T09:35:00+00:00",
+              "post_h": 6.83,
+              "dtec_max_tecu_min": 0.0533,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.8
+            },
+            {
+              "time": "2011-03-09T09:59:30+00:00",
+              "post_h": 7.24,
+              "dtec_max_tecu_min": 0.1365,
+              "noise_std": 0.01101,
+              "snr_dtec": 12.4
+            },
+            {
+              "time": "2011-03-09T10:19:00+00:00",
+              "post_h": 7.56,
+              "dtec_max_tecu_min": 0.1937,
+              "noise_std": 0.01101,
+              "snr_dtec": 17.6
+            },
+            {
+              "time": "2011-03-09T10:26:30+00:00",
+              "post_h": 7.69,
+              "dtec_max_tecu_min": 0.2278,
+              "noise_std": 0.01101,
+              "snr_dtec": 20.7
+            },
+            {
+              "time": "2011-03-09T10:39:30+00:00",
+              "post_h": 7.9,
+              "dtec_max_tecu_min": 0.0469,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2011-03-09T10:57:30+00:00",
+              "post_h": 8.2,
+              "dtec_max_tecu_min": 0.0486,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.4
+            },
+            {
+              "time": "2011-03-09T11:20:30+00:00",
+              "post_h": 8.59,
+              "dtec_max_tecu_min": 0.0968,
+              "noise_std": 0.01101,
+              "snr_dtec": 8.8
+            },
+            {
+              "time": "2011-03-09T11:35:00+00:00",
+              "post_h": 8.83,
+              "dtec_max_tecu_min": 0.0753,
+              "noise_std": 0.01101,
+              "snr_dtec": 6.8
+            },
+            {
+              "time": "2011-03-09T11:56:30+00:00",
+              "post_h": 9.19,
+              "dtec_max_tecu_min": 0.0493,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2011-03-09T12:01:00+00:00",
+              "post_h": 9.26,
+              "dtec_max_tecu_min": 0.101,
+              "noise_std": 0.01101,
+              "snr_dtec": 9.2
+            },
+            {
+              "time": "2011-03-09T12:08:00+00:00",
+              "post_h": 9.38,
+              "dtec_max_tecu_min": 0.0763,
+              "noise_std": 0.01101,
+              "snr_dtec": 6.9
+            },
+            {
+              "time": "2011-03-09T12:18:00+00:00",
+              "post_h": 9.54,
+              "dtec_max_tecu_min": 0.0714,
+              "noise_std": 0.01101,
+              "snr_dtec": 6.5
+            },
+            {
+              "time": "2011-03-09T12:27:30+00:00",
+              "post_h": 9.7,
+              "dtec_max_tecu_min": 0.0664,
+              "noise_std": 0.01101,
+              "snr_dtec": 6.0
+            },
+            {
+              "time": "2011-03-09T12:34:00+00:00",
+              "post_h": 9.81,
+              "dtec_max_tecu_min": 0.1097,
+              "noise_std": 0.01101,
+              "snr_dtec": 10.0
+            },
+            {
+              "time": "2011-03-09T12:47:00+00:00",
+              "post_h": 10.03,
+              "dtec_max_tecu_min": 0.0901,
+              "noise_std": 0.01101,
+              "snr_dtec": 8.2
+            },
+            {
+              "time": "2011-03-09T13:01:00+00:00",
+              "post_h": 10.26,
+              "dtec_max_tecu_min": 0.071,
+              "noise_std": 0.01101,
+              "snr_dtec": 6.5
+            },
+            {
+              "time": "2011-03-09T13:10:30+00:00",
+              "post_h": 10.42,
+              "dtec_max_tecu_min": 0.0447,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.1
+            },
+            {
+              "time": "2011-03-09T13:27:00+00:00",
+              "post_h": 10.69,
+              "dtec_max_tecu_min": 0.0892,
+              "noise_std": 0.01101,
+              "snr_dtec": 8.1
+            },
+            {
+              "time": "2011-03-09T13:34:30+00:00",
+              "post_h": 10.82,
+              "dtec_max_tecu_min": 0.0687,
+              "noise_std": 0.01101,
+              "snr_dtec": 6.2
+            },
+            {
+              "time": "2011-03-09T13:56:30+00:00",
+              "post_h": 11.19,
+              "dtec_max_tecu_min": 0.123,
+              "noise_std": 0.01101,
+              "snr_dtec": 11.2
+            },
+            {
+              "time": "2011-03-09T14:04:30+00:00",
+              "post_h": 11.32,
+              "dtec_max_tecu_min": 0.1443,
+              "noise_std": 0.01101,
+              "snr_dtec": 13.1
+            },
+            {
+              "time": "2011-03-09T14:29:30+00:00",
+              "post_h": 11.74,
+              "dtec_max_tecu_min": 0.0362,
+              "noise_std": 0.01101,
+              "snr_dtec": 3.3
+            },
+            {
+              "time": "2011-03-09T14:42:30+00:00",
+              "post_h": 11.95,
+              "dtec_max_tecu_min": 0.0726,
+              "noise_std": 0.01101,
+              "snr_dtec": 6.6
+            },
+            {
+              "time": "2011-03-09T14:55:00+00:00",
+              "post_h": 12.16,
+              "dtec_max_tecu_min": 0.0343,
+              "noise_std": 0.01101,
+              "snr_dtec": 3.1
+            },
+            {
+              "time": "2011-03-09T15:01:00+00:00",
+              "post_h": 12.26,
+              "dtec_max_tecu_min": 0.0811,
+              "noise_std": 0.01101,
+              "snr_dtec": 7.4
+            },
+            {
+              "time": "2011-03-09T15:17:00+00:00",
+              "post_h": 12.53,
+              "dtec_max_tecu_min": 0.0751,
+              "noise_std": 0.01101,
+              "snr_dtec": 6.8
+            },
+            {
+              "time": "2011-03-09T15:50:00+00:00",
+              "post_h": 13.08,
+              "dtec_max_tecu_min": 0.0542,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.9
+            },
+            {
+              "time": "2011-03-09T16:07:30+00:00",
+              "post_h": 13.37,
+              "dtec_max_tecu_min": 0.0516,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.7
+            },
+            {
+              "time": "2011-03-09T16:22:00+00:00",
+              "post_h": 13.61,
+              "dtec_max_tecu_min": 0.0331,
+              "noise_std": 0.01101,
+              "snr_dtec": 3.0
+            },
+            {
+              "time": "2011-03-09T16:26:30+00:00",
+              "post_h": 13.69,
+              "dtec_max_tecu_min": 0.0693,
+              "noise_std": 0.01101,
+              "snr_dtec": 6.3
+            },
+            {
+              "time": "2011-03-09T16:47:00+00:00",
+              "post_h": 14.03,
+              "dtec_max_tecu_min": 0.0684,
+              "noise_std": 0.01101,
+              "snr_dtec": 6.2
+            },
+            {
+              "time": "2011-03-09T17:14:00+00:00",
+              "post_h": 14.48,
+              "dtec_max_tecu_min": 0.0648,
+              "noise_std": 0.01101,
+              "snr_dtec": 5.9
+            },
+            {
+              "time": "2011-03-09T17:43:00+00:00",
+              "post_h": 14.96,
+              "dtec_max_tecu_min": 0.0402,
+              "noise_std": 0.01101,
+              "snr_dtec": 3.7
+            },
+            {
+              "time": "2011-03-09T18:15:00+00:00",
+              "post_h": 15.49,
+              "dtec_max_tecu_min": 0.0945,
+              "noise_std": 0.01101,
+              "snr_dtec": 8.6
+            },
+            {
+              "time": "2011-03-09T18:25:00+00:00",
+              "post_h": 15.66,
+              "dtec_max_tecu_min": 0.0516,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.7
+            },
+            {
+              "time": "2011-03-09T19:04:30+00:00",
+              "post_h": 16.32,
+              "dtec_max_tecu_min": 0.0369,
+              "noise_std": 0.01101,
+              "snr_dtec": 3.4
+            },
+            {
+              "time": "2011-03-09T19:11:30+00:00",
+              "post_h": 16.44,
+              "dtec_max_tecu_min": 0.056,
+              "noise_std": 0.01101,
+              "snr_dtec": 5.1
+            },
+            {
+              "time": "2011-03-09T19:36:00+00:00",
+              "post_h": 16.84,
+              "dtec_max_tecu_min": 0.0473,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.3
+            },
+            {
+              "time": "2011-03-09T19:48:00+00:00",
+              "post_h": 17.04,
+              "dtec_max_tecu_min": 0.0856,
+              "noise_std": 0.01101,
+              "snr_dtec": 7.8
+            },
+            {
+              "time": "2011-03-09T19:59:00+00:00",
+              "post_h": 17.23,
+              "dtec_max_tecu_min": 0.0428,
+              "noise_std": 0.01101,
+              "snr_dtec": 3.9
+            },
+            {
+              "time": "2011-03-09T20:23:00+00:00",
+              "post_h": 17.63,
+              "dtec_max_tecu_min": 0.0401,
+              "noise_std": 0.01101,
+              "snr_dtec": 3.6
+            },
+            {
+              "time": "2011-03-09T20:34:00+00:00",
+              "post_h": 17.81,
+              "dtec_max_tecu_min": 0.0934,
+              "noise_std": 0.01101,
+              "snr_dtec": 8.5
+            },
+            {
+              "time": "2011-03-09T20:49:30+00:00",
+              "post_h": 18.07,
+              "dtec_max_tecu_min": 0.0532,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.8
+            },
+            {
+              "time": "2011-03-09T21:22:30+00:00",
+              "post_h": 18.62,
+              "dtec_max_tecu_min": 0.0373,
+              "noise_std": 0.01101,
+              "snr_dtec": 3.4
+            },
+            {
+              "time": "2011-03-09T21:35:00+00:00",
+              "post_h": 18.83,
+              "dtec_max_tecu_min": 0.0353,
+              "noise_std": 0.01101,
+              "snr_dtec": 3.2
+            },
+            {
+              "time": "2011-03-09T22:08:30+00:00",
+              "post_h": 19.39,
+              "dtec_max_tecu_min": 0.0422,
+              "noise_std": 0.01101,
+              "snr_dtec": 3.8
+            },
+            {
+              "time": "2011-03-09T22:16:30+00:00",
+              "post_h": 19.52,
+              "dtec_max_tecu_min": 0.0491,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.5
+            },
+            {
+              "time": "2011-03-09T22:33:00+00:00",
+              "post_h": 19.79,
+              "dtec_max_tecu_min": 0.0535,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.9
+            },
+            {
+              "time": "2011-03-09T23:10:00+00:00",
+              "post_h": 20.41,
+              "dtec_max_tecu_min": 0.0552,
+              "noise_std": 0.01101,
+              "snr_dtec": 5.0
+            },
+            {
+              "time": "2011-03-09T23:17:00+00:00",
+              "post_h": 20.53,
+              "dtec_max_tecu_min": 0.1596,
+              "noise_std": 0.01101,
+              "snr_dtec": 14.5
+            },
+            {
+              "time": "2011-03-09T23:27:30+00:00",
+              "post_h": 20.7,
+              "dtec_max_tecu_min": 0.0541,
+              "noise_std": 0.01101,
+              "snr_dtec": 4.9
+            },
+            {
+              "time": "2011-03-09T23:47:30+00:00",
+              "post_h": 21.04,
+              "dtec_max_tecu_min": 0.0399,
+              "noise_std": 0.01101,
+              "snr_dtec": 3.6
+            }
+          ]
+        },
+        "dtec_corroborates": false,
+        "dtec_corroboration": [],
+        "constellation_agreement": {
+          "constellations": {
+            "G": {
+              "available": true,
+              "anomaly": true,
+              "n_stations": 4
+            },
+            "R": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            },
+            "E": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            }
+          },
+          "n_available": 1,
+          "n_detecting": 1,
+          "detecting": [
+            "G"
+          ],
+          "agreement_score": 0.5,
+          "agreement_label": "single_constellation"
+        },
+        "ionosonde_result": {
+          "stations_checked": 5,
+          "stations_with_data": 0,
+          "ionosonde_detected": false,
+          "confirming_stations": 0,
+          "nearest_station_km": 1889,
+          "results": {
+            "RP536": {
+              "name": "Okinawa",
+              "dist_km": 1889,
+              "lat": 26.7,
+              "lon": 128.2,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "TW637": {
+              "name": "Zhongli",
+              "dist_km": 2523,
+              "lat": 25.0,
+              "lon": 121.2,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "GU513": {
+              "name": "Guam",
+              "dist_km": 2770,
+              "lat": 13.6,
+              "lon": 144.9,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "WP937": {
+              "name": "Wake Island",
+              "dist_km": 3125,
+              "lat": 19.3,
+              "lon": 166.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "KJ609": {
+              "name": "Kwajalein",
+              "dist_km": 4108,
+              "lat": 9.0,
+              "lon": 167.7,
+              "data": false,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "ionosonde_confirmed": false,
+        "dart_result": {
+          "buoys_checked": 8,
+          "buoys_with_data": 5,
+          "tsunami_detected": false,
+          "confirming_buoys": 0,
+          "nearest_buoy_km": 2286,
+          "results": {
+            "21416": {
+              "desc": "W Pacific \u2014 Philippine Sea",
+              "dist_km": 2286,
+              "lat": 19.2,
+              "lon": 134.5,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21413": {
+              "desc": "W Pacific \u2014 Mariana",
+              "dist_km": 2749,
+              "lat": 15.1,
+              "lon": 152.1,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21415": {
+              "desc": "W Pacific \u2014 West Mariana",
+              "dist_km": 2757,
+              "lat": 15.0,
+              "lon": 152.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "21414": {
+              "desc": "W Pacific \u2014 Central",
+              "dist_km": 3203,
+              "lat": 15.1,
+              "lon": 162.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "46409": {
+              "desc": "Unimak Pass \u2014 Aleutian",
+              "dist_km": 4141,
+              "lat": 53.9,
+              "lon": -166.7,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "46402": {
+              "desc": "Gulf of Alaska",
+              "dist_km": 4321,
+              "lat": 51.0,
+              "lon": -164.0,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "46407": {
+              "desc": "Alaska Peninsula",
+              "dist_km": 4448,
+              "lat": 54.0,
+              "lon": -162.0,
+              "data": true,
+              "detected": false,
+              "detection": null
+            },
+            "46403": {
+              "desc": "N Pacific \u2014 SE Alaska",
+              "dist_km": 5067,
+              "lat": 53.6,
+              "lon": -152.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "dart_score": 0.0,
+        "dart_status": "negative",
+        "combined_confidence": 0.0,
+        "space_weather_score": 0.0
+      }
+    }
+  ],
+  "skipped": []
+}

@@ -1,0 +1,56 @@
+============================================================
+GPS TSUNAMI V2 -- BACKTEST RESULTS
+Run: 2026-04-26T20:28:15 UTC
+Processed: 9  Skipped: 0
+============================================================
+
+PER-EVENT RESULTS
+------------------------------------------------------------
+[OK ] TRUE_POSITIVE                conf=0.52  Mw9.1  2011-03-11
+       Tohoku - KOKB-GUAM in V1
+       dart=negative  iono=False  const=single_constellation
+
+[OK ] TRUE_POSITIVE                conf=0.52  Mw8.8  2010-02-27
+       Chile - 108 min lead V1
+       dart=negative  iono=False  const=single_constellation
+
+[OK ] TRUE_POSITIVE                conf=0.52  Mw8.3  2006-11-15
+       Kuril - MKEA-GUAM V1
+       dart=negative  iono=False  const=single_constellation
+
+[OK ] TRUE_POSITIVE                conf=0.52  Mw7.7  2012-10-28
+       Haida Gwaii - HNLC-GUAM V1
+       dart=negative  iono=False  const=single_constellation
+
+[OK ] CORRECT_ABSTENTION           conf=0.0  Mw8.1  2009-09-29
+       Samoa - no anchor geometry V1
+       dart=negative  iono=False  const=single_constellation
+
+[OK ] TRUE_NEGATIVE                conf=0.0  Mw8.6  2012-04-11
+       Sumatra strike-slip - ShakeMap should gate
+       dart=negative  iono=False  const=single_constellation
+
+[ERR] FALSE_POSITIVE               conf=0.52  Mw8.3  2013-05-24
+       Okhotsk deep 609km - depth gate
+       dart=negative  iono=False  const=single_constellation
+
+[OK ] TRUE_NEGATIVE                conf=0.0  Mw7.4  2011-10-21
+       Kermadec Mw7.4 - below sensitivity
+       dart=negative  iono=False  const=single_constellation
+
+[OK ] TRUE_NEGATIVE                conf=0.0  Mw7.2  2011-03-09
+       Tohoku foreshock Mw7.2 - below threshold
+       dart=negative  iono=False  const=single_constellation
+
+
+SUMMARY
+------------------------------------------------------------
+  TP=4 TN=4 FP=1 FN=0 GL=0
+  TPR=1.0  FPR=0.2
+
+CALIBRATION
+------------------------------------------------------------
+  Bucket     N   Hit%
+  0.0-0.2    4   0%   
+  0.4-0.6    5   80%   ################
+============================================================
