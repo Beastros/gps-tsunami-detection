@@ -4,674 +4,1199 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GPS Tsunami Detection — Live Monitor</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=JetBrains+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #040c14; --surface: #071520; --surface2: #0a1e2e;
-    --border: #0e2a3f; --accent: #00d4ff; --accent2: #00ff9d;
-    --warn: #ff6b35; --danger: #ff3358; --text: #c8dde8;
-    --text-dim: #4a7a94; --text-bright: #eef7ff;
-    --mono: 'Space Mono', monospace; --sans: 'Syne', sans-serif;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--bg); color:var(--text); font-family:var(--mono); min-height:100vh; overflow-x:hidden; }
-  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; z-index:0; }
-  body::after { content:''; position:fixed; top:-20%; left:50%; transform:translateX(-50%); width:800px; height:600px; background:radial-gradient(ellipse,rgba(0,212,255,0.06) 0%,transparent 70%); pointer-events:none; z-index:0; }
-  .container { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:0 24px 80px; }
+:root {
+  --bg:        #060d18;
+  --surface:   #0c1829;
+  --surface2:  #112236;
+  --surface3:  #162d47;
+  --border:    #1e3a5f;
+  --border2:   #2a5080;
+  --accent:    #00c8ff;
+  --accent2:   #00ff9d;
+  --warn:      #ffa726;
+  --danger:    #ff4a4a;
+  --dim:       #6a9cc0;
+  --text:      #cce4ff;
+  --text-hi:   #eaf5ff;
+  --font-d:    'Orbitron', monospace;
+  --font-m:    'JetBrains Mono', monospace;
+  --font-b:    'IBM Plex Sans', sans-serif;
+}
 
-  header { padding:40px 0 32px; border-bottom:1px solid var(--border); margin-bottom:32px; display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; }
-  .header-left h1 { font-family:var(--sans); font-size:clamp(1.4rem,3vw,2rem); font-weight:800; color:var(--text-bright); letter-spacing:-0.02em; }
-  .header-left h1 span { color:var(--accent); }
-  .header-left .subtitle { margin-top:8px; font-size:0.72rem; color:var(--text-dim); letter-spacing:0.08em; text-transform:uppercase; }
-  .live-badge { display:flex; align-items:center; gap:8px; background:rgba(0,255,157,0.08); border:1px solid rgba(0,255,157,0.25); border-radius:4px; padding:8px 14px; font-size:0.72rem; color:var(--accent2); letter-spacing:0.1em; text-transform:uppercase; white-space:nowrap; }
-  .live-dot { width:7px; height:7px; border-radius:50%; background:var(--accent2); animation:pulse 2s infinite; flex-shrink:0; }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:32px; }
-  .tab { padding:10px 20px; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-dim); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:all 0.15s; }
-  .tab:hover { color:var(--text); }
-  .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
-  .tab-panel { display:none; }
-  .tab-panel.active { display:block; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-b);
+  font-size: 14px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-  .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; margin-bottom:40px; }
-  .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:20px 16px; position:relative; overflow:hidden; }
-  .stat-card::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; background:var(--accent); opacity:0.4; }
-  .stat-card.green::before { background:var(--accent2); }
-  .stat-card.orange::before { background:var(--warn); }
-  .stat-card.red::before { background:var(--danger); }
-  .stat-label { font-size:0.62rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .stat-value { font-family:var(--sans); font-size:clamp(1.6rem,3vw,2.4rem); font-weight:800; color:var(--text-bright); line-height:1; word-break:break-all; }
-  .stat-value.cyan { color:var(--accent); } .stat-value.green { color:var(--accent2); }
-  .stat-value.orange { color:var(--warn); } .stat-value.red { color:var(--danger); }
-  .stat-sub { margin-top:8px; font-size:0.65rem; color:var(--text-dim); line-height:1.4; }
+/* ── Scanline texture ─────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,200,255,0.015) 2px,
+    rgba(0,200,255,0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
 
-  .section-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
-  .section-title { font-family:var(--sans); font-size:0.75rem; font-weight:600; color:var(--text-dim); letter-spacing:0.15em; text-transform:uppercase; white-space:nowrap; }
-  .section-line { flex:1; height:1px; background:var(--border); }
+/* ── Header ───────────────────────────────────────── */
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, #091422 0%, var(--bg) 100%);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
 
-  .events-panel { background:var(--surface); border:1px solid var(--border); border-radius:6px; margin-bottom:40px; overflow:hidden; }
-  .events-panel-header { padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
-  .events-panel-header span { font-size:0.7rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; }
-  .event-count { background:var(--surface2); border:1px solid var(--border); border-radius:3px; padding:2px 8px; font-size:0.65rem; color:var(--accent); }
+.header-left h1 {
+  font-family: var(--font-d);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-hi);
+}
 
-  table { width:100%; border-collapse:collapse; }
-  th { padding:10px 16px; text-align:left; font-size:0.6rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; border-bottom:1px solid var(--border); background:var(--surface2); font-weight:400; }
-  td { padding:12px 16px; font-size:0.7rem; border-bottom:1px solid rgba(14,42,63,0.5); vertical-align:middle; }
-  tr:last-child td { border-bottom:none; }
-  tr:hover td { background:rgba(0,212,255,0.02); }
+.header-left p {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--dim);
+  letter-spacing: 0.05em;
+  margin-top: 3px;
+}
 
-  .outcome-badge { display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:3px; font-size:0.6rem; letter-spacing:0.08em; text-transform:uppercase; font-weight:700; white-space:nowrap; }
-  .outcome-badge.tp { background:rgba(0,255,157,0.1); color:var(--accent2); border:1px solid rgba(0,255,157,0.2); }
-  .outcome-badge.tn { background:rgba(0,212,255,0.08); color:var(--accent); border:1px solid rgba(0,212,255,0.15); }
-  .outcome-badge.fp { background:rgba(255,51,88,0.1); color:var(--danger); border:1px solid rgba(255,51,88,0.2); }
-  .outcome-badge.fn { background:rgba(255,107,53,0.1); color:var(--warn); border:1px solid rgba(255,107,53,0.2); }
-  .outcome-badge.geo { background:rgba(74,122,148,0.15); color:var(--text-dim); border:1px solid rgba(74,122,148,0.2); }
-  .mw-pill { font-family:var(--sans); font-weight:700; font-size:0.8rem; min-width:40px; display:inline-block; text-align:center; }
-  .mw-high{color:var(--danger)} .mw-mid{color:var(--warn)} .mw-low{color:var(--accent)}
-  .lead-time { font-family:var(--sans); font-weight:700; color:var(--accent2); }
-  .lead-time.neg { color:var(--text-dim); }
-  .place-text { color:var(--text); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .time-text { color:var(--text-dim); font-size:0.63rem; white-space:nowrap; }
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-m);
+  font-size: 11px;
+  color: var(--accent2);
+  letter-spacing: 0.1em;
+}
 
-  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:40px; }
-  @media(max-width:700px){.two-col{grid-template-columns:1fr}}
+.pulse {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent2);
+  box-shadow: 0 0 8px var(--accent2);
+  animation: pulse 2s ease-in-out infinite;
+}
 
-  .accuracy-panel { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:20px; }
-  .accuracy-row { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); font-size:0.72rem; gap:12px; }
-  .accuracy-row:last-child { border-bottom:none; }
-  .accuracy-label { color:var(--text-dim); }
-  .accuracy-val { font-family:var(--sans); font-weight:700; font-size:0.85rem; color:var(--text-bright); text-align:right; }
-  .accuracy-val.good { color:var(--accent2); }
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
 
-  .bar-chart { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:20px; }
-  .bar-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; font-size:0.68rem; }
-  .bar-row:last-child { margin-bottom:0; }
-  .bar-label { color:var(--text-dim); width:36px; flex-shrink:0; text-align:right; font-size:0.65rem; }
-  .bar-track { flex:1; height:10px; background:var(--surface2); border-radius:4px; overflow:hidden; }
-  .bar-fill { height:100%; border-radius:4px; transition:width 1s ease; }
-  .bar-val { color:var(--text); width:28px; flex-shrink:0; font-family:var(--sans); font-weight:700; font-size:0.75rem; text-align:right; }
+/* ── Tabs ─────────────────────────────────────────── */
+.tab-nav {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  background: var(--surface);
+}
 
-  /* Poll log */
-  .poll-summary { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
-  .poll-stat { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:16px 20px; }
-  .poll-stat .label { font-size:0.60rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
-  .poll-stat .value { font-family:var(--sans); font-size:clamp(1.2rem,2.5vw,1.6rem); font-weight:800; color:var(--accent); line-height:1; }
-  .poll-stat .value.green { color:var(--accent2); }
-  .poll-stat .sub { margin-top:5px; font-size:0.60rem; color:var(--text-dim); }
+.tab-btn {
+  font-family: var(--font-m);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  padding: 12px 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
 
-  /* Scrollable poll history box */
-  .poll-history-wrap { background:var(--surface); border:1px solid var(--border); border-radius:6px; overflow:hidden; margin-bottom:28px; }
-  .poll-history-scroll { max-height:220px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
-  .poll-row { display:grid; grid-template-columns:1.4fr 55px 65px 65px 80px; gap:0; padding:8px 16px; border-bottom:1px solid rgba(14,42,63,0.4); font-size:0.65rem; align-items:center; }
-  .poll-row:last-child { border-bottom:none; }
-  .poll-row:hover { background:rgba(0,212,255,0.02); }
-  .poll-header { background:var(--surface2); font-size:0.56rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; border-bottom:1px solid var(--border); padding:8px 16px; }
-  .poll-ts { color:var(--text-dim); font-size:0.62rem; }
-  .poll-new-0 { color:var(--text-dim); }
-  .poll-new-pos { color:var(--accent2); font-family:var(--sans); font-weight:700; }
-  .poll-clean { color:var(--accent2); }
-  .poll-cand { color:var(--warn); font-weight:700; }
+.tab-btn:hover { color: var(--text); }
 
-  /* Recent seismicity feed */
-  .seis-feed { background:var(--surface); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
-  .seis-scroll { max-height:340px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
-  .seis-row { display:grid; grid-template-columns:1.2fr 60px 1.6fr 1fr 80px; gap:0; padding:10px 16px; border-bottom:1px solid rgba(14,42,63,0.4); font-size:0.65rem; align-items:center; }
-  .seis-row:last-child { border-bottom:none; }
-  .seis-row:hover { background:rgba(0,212,255,0.02); }
-  .seis-header { background:var(--surface2); font-size:0.56rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; border-bottom:1px solid var(--border); padding:8px 16px; display:grid; grid-template-columns:1.2fr 60px 1.6fr 1fr 80px; gap:0; }
-  .seis-mag-high { color:#ff6b35; font-weight:700; font-family:var(--sans); }
-  .seis-mag-mid  { color:#ffaa00; font-weight:700; font-family:var(--sans); }
-  .seis-mag-low  { color:var(--text-dim); font-family:var(--sans); }
-  .seis-reason-zone   { color:var(--text-dim); font-size:0.60rem; }
-  .seis-reason-depth  { color:#7b5ea7; font-size:0.60rem; }
-  .seis-reason-thresh { color:#3a7a5a; font-size:0.60rem; }
-  .seis-reason-other  { color:var(--text-dim); font-size:0.60rem; }
-  .seis-delta-neg { color:#3a7a5a; font-size:0.62rem; }
-  .seis-place { color:var(--text); font-size:0.63rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
 
-  .map-panel { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:20px; margin-bottom:40px; overflow:hidden; }
-  .map-svg { width:100%; height:auto; opacity:1; }
-  .station-dot { animation:station-pulse 3s infinite; }
-  @keyframes station-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
 
-  .empty-state { padding:48px 20px; text-align:center; }
-  .empty-state .empty-icon { font-size:2.5rem; margin-bottom:12px; opacity:0.4; }
-  .empty-state p { font-size:0.75rem; color:var(--text-dim); line-height:1.7; }
-  .empty-state .waiting { display:inline-flex; align-items:center; gap:6px; margin-top:16px; font-size:0.65rem; color:var(--accent); letter-spacing:0.1em; text-transform:uppercase; }
+/* ── Main layout ──────────────────────────────────── */
+.main {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px 32px;
+}
 
-  footer { border-top:1px solid var(--border); padding:24px 0; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
-  footer a { color:var(--accent); text-decoration:none; font-size:0.68rem; }
-  footer span { color:var(--text-dim); font-size:0.65rem; }
-  .footer-center { font-size:0.65rem; color:var(--text-dim); text-align:center; }
-  .spinner { width:16px; height:16px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; display:inline-block; }
-  @keyframes spin{to{transform:rotate(360deg)}}
+/* ── Grid helpers ─────────────────────────────────── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+/* ── Cards ────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface2);
+}
+
+.card-title {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.card-body { padding: 18px; }
+
+/* ── Space weather panel ──────────────────────────── */
+.sw-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.sw-header {
+  padding: 14px 20px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sw-title {
+  font-family: var(--font-d);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--text-hi);
+}
+
+.sw-badge {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  padding: 4px 12px;
+  border-radius: 2px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+.sw-badge.clear  { background: rgba(0,255,157,0.15); color: var(--accent2); border: 1px solid rgba(0,255,157,0.3); }
+.sw-badge.active { background: rgba(255,167,38,0.15); color: var(--warn); border: 1px solid rgba(255,167,38,0.3); }
+.sw-badge.gated  { background: rgba(255,74,74,0.15); color: var(--danger); border: 1px solid rgba(255,74,74,0.4); }
+
+.sw-body {
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.sw-score-block {}
+
+.sw-score-label {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.sw-score-value {
+  font-family: var(--font-d);
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 10px;
+  transition: color 0.5s;
+}
+
+.sw-bar-track {
+  width: 100%;
+  height: 6px;
+  background: var(--surface3);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.sw-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.8s ease, background 0.5s;
+  min-width: 2px;
+}
+
+.sw-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-m);
+  font-size: 9px;
+  color: var(--dim);
+}
+
+.sw-channels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.sw-channel {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 12px 14px;
+  transition: border-color 0.3s;
+}
+
+.sw-channel.contributing { border-color: var(--warn); }
+
+.sw-ch-name {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 6px;
+}
+
+.sw-ch-value {
+  font-family: var(--font-m);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-hi);
+  margin-bottom: 6px;
+  line-height: 1;
+}
+
+.sw-ch-unit {
+  font-size: 11px;
+  color: var(--dim);
+  font-weight: 300;
+}
+
+.sw-ch-bar {
+  height: 3px;
+  background: var(--surface3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.sw-ch-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  transition: width 0.6s ease, background 0.3s;
+}
+
+.sw-ch-status {
+  font-family: var(--font-m);
+  font-size: 9px;
+  margin-top: 5px;
+  letter-spacing: 0.05em;
+}
+.sw-ch-status.ok   { color: var(--accent2); }
+.sw-ch-status.warn { color: var(--warn); }
+.sw-ch-status.bad  { color: var(--danger); }
+
+.sw-updated {
+  padding: 6px 20px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-m);
+  font-size: 9px;
+  color: var(--dim);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ── Stat cards ───────────────────────────────────── */
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 18px;
+}
+
+.stat-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-family: var(--font-m);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-sub {
+  font-size: 11px;
+  color: var(--dim);
+}
+
+/* ── Map ──────────────────────────────────────────── */
+.map-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.map-card svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Performance grid ─────────────────────────────── */
+.perf-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.perf-cell {
+  padding: 14px 16px;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+}
+.perf-cell:last-child { border-right: none; }
+
+.perf-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+  margin-bottom: 6px;
+}
+
+.perf-value {
+  font-family: var(--font-m);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text-hi);
+}
+
+.perf-unit {
+  font-size: 11px;
+  color: var(--dim);
+}
+
+/* ── Tables ───────────────────────────────────────── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-m);
+  font-size: 12px;
+}
+
+.data-table th {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+  font-weight: 400;
+}
+
+.data-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background: var(--surface2); }
+
+/* ── SW score cell ────────────────────────────────── */
+.sw-score-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-m);
+  font-size: 11px;
+}
+
+.sw-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Empty state ──────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--dim);
+}
+
+.empty-icon { font-size: 32px; margin-bottom: 12px; }
+.empty-title { font-family: var(--font-m); font-size: 13px; margin-bottom: 6px; color: var(--text); }
+.empty-sub { font-size: 12px; }
+
+/* ── Detection badge ──────────────────────────────── */
+.det-badge {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+.det-badge.detected  { background: rgba(0,255,157,0.12); color: var(--accent2); border: 1px solid rgba(0,255,157,0.25); }
+.det-badge.silent    { background: rgba(106,156,192,0.1); color: var(--dim); border: 1px solid var(--border); }
+.det-badge.gated     { background: rgba(255,74,74,0.1); color: var(--danger); border: 1px solid rgba(255,74,74,0.2); }
+.det-badge.abstain   { background: rgba(255,167,38,0.1); color: var(--warn); border: 1px solid rgba(255,167,38,0.2); }
+
+/* ── Outcome chips ────────────────────────────────── */
+.outcome-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.outcome-chip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 10px 18px;
+  text-align: center;
+  min-width: 70px;
+}
+
+.outcome-chip .val {
+  font-family: var(--font-m);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.outcome-chip .lbl {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.outcome-chip.tp .val { color: var(--accent2); }
+.outcome-chip.tn .val { color: var(--accent); }
+.outcome-chip.fp .val { color: var(--danger); }
+.outcome-chip.fn .val { color: var(--warn); }
+.outcome-chip.geo .val { color: var(--dim); }
+
+/* ── Section spacing ──────────────────────────────── */
+.section-title {
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.mb-20 { margin-bottom: 20px; }
+.mb-28 { margin-bottom: 28px; }
+
+/* ── Poll log ─────────────────────────────────────── */
+.poll-status {
+  font-family: var(--font-m);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+.poll-status.ok  { color: var(--accent2); }
+.poll-status.err { color: var(--danger); }
+
+/* ── Near miss ────────────────────────────────────── */
+.reason-tag {
+  font-family: var(--font-m);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--dim);
+}
+
+/* ── Animations ───────────────────────────────────── */
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fadein { animation: fadein 0.4s ease forwards; }
+
 </style>
 </head>
 <body>
-<div class="container">
 
-  <header>
-    <div class="header-left">
-      <h1>GPS <span>Tsunami</span> Detection</h1>
-      <div class="subtitle">Ionospheric TEC coherence monitor · Pacific basin · parameters frozen 2025-04-22</div>
-    </div>
-    <div class="live-badge"><div class="live-dot"></div>Live · 15min poll</div>
-  </header>
-
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab('dashboard')">Dashboard</div>
-    <div class="tab" onclick="switchTab('events')">Events</div>
-    <div class="tab" onclick="switchTab('log')">Poll Log</div>
+<header>
+  <div class="header-left">
+    <h1>GPS TSUNAMI DETECTION</h1>
+    <p>Ionospheric TEC coherence monitor &middot; Pacific basin &middot; parameters frozen 2025-04-22</p>
   </div>
+  <div class="live-badge">
+    <div class="pulse"></div>
+    LIVE &middot; 15 MIN POLL
+  </div>
+</header>
 
-  <!-- DASHBOARD -->
-  <div class="tab-panel active" id="tab-dashboard">
-    <div class="stats-grid" id="statsGrid"><div style="padding:40px;color:var(--text-dim);font-size:0.72rem"><span class="spinner"></span> loading…</div></div>
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('dashboard')">Dashboard</button>
+  <button class="tab-btn" onclick="showTab('events')">Events</button>
+  <button class="tab-btn" onclick="showTab('polllog')">Poll Log</button>
+</nav>
 
-    <div class="section-header"><span class="section-title">Station Network · Pacific Basin Monitor</span><div class="section-line"></div></div>
-    <div class="map-panel">
-      <svg class="map-svg" viewBox="0 0 960 522" xmlns="http://www.w3.org/2000/svg">
-<defs>
-  <linearGradient id="ocean" x1="0%" y1="0%" x2="0%" y2="100%">
-    <stop offset="0%" stop-color="#04182e"/>
-    <stop offset="60%" stop-color="#031220"/>
-    <stop offset="100%" stop-color="#020c18"/>
-  </linearGradient>
-  <linearGradient id="land_grad" x1="0%" y1="0%" x2="0%" y2="100%">
-    <stop offset="0%" stop-color="#1e3828"/>
-    <stop offset="100%" stop-color="#152a1e"/>
-  </linearGradient>
-  <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
-    <feGaussianBlur stdDeviation="5" result="blur"/>
-    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-  <filter id="softglow" x="-60%" y="-60%" width="220%" height="220%">
-    <feGaussianBlur stdDeviation="2.5" result="blur"/>
-    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-  <filter id="landglow" x="-10%" y="-10%" width="120%" height="120%">
-    <feGaussianBlur stdDeviation="1.5" result="blur"/>
-    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-</defs>
-<rect width="960" height="490" fill="url(#ocean)"/>
-<g stroke="#0a2035" stroke-width="0.5" opacity="0.6">
-  <line x1="120.0" y1="0" x2="120.0" y2="490"/>
-  <line x1="264.0" y1="0" x2="264.0" y2="490"/>
-  <line x1="408.0" y1="0" x2="408.0" y2="490"/>
-  <line x1="552.0" y1="0" x2="552.0" y2="490"/>
-  <line x1="696.0" y1="0" x2="696.0" y2="490"/>
-  <line x1="840.0" y1="0" x2="840.0" y2="490"/>
-  <line x1="0" y1="31.1" x2="960" y2="31.1"/>
-  <line x1="0" y1="147.8" x2="960" y2="147.8"/>
-  <line x1="0" y1="264.4" x2="960" y2="264.4"/>
-  <line x1="0" y1="381.1" x2="960" y2="381.1"/>
-</g>
-<line x1="0" y1="264.4" x2="960" y2="264.4" stroke="#0d2e48" stroke-width="1.2" opacity="0.8"/>
-<g fill="#1e4a6a" font-size="8" font-family="Space Mono">
-  <text x="122.0" y="12">120°E</text>
-  <text x="266.0" y="12">150°E</text>
-  <text x="410.0" y="12">180°</text>
-  <text x="554.0" y="12">150°W</text>
-  <text x="698.0" y="12">120°W</text>
-  <text x="842.0" y="12">90°W</text>
-  <text x="3" y="28.1">60°N</text>
-  <text x="3" y="144.8">30°N</text>
-  <text x="3" y="261.4">EQ</text>
-  <text x="3" y="378.1">30°S</text>
-</g>
-<path d="M 0.0,0.0 L 408.0,0.0 L 465.6,7.8 L 456.0,19.4 L 432.0,27.2 L 417.6,27.2 L 384.0,23.3 L 360.0,35.0 L 336.0,38.9 L 326.4,35.0 L 321.6,46.7 L 312.0,58.3 L 302.4,58.3 L 297.6,50.6 L 302.4,38.9 L 312.0,27.2 L 268.8,38.9 L 254.4,50.6 L 240.0,58.3 L 230.4,66.1 L 220.8,77.8 L 220.8,85.6 L 177.6,97.2 L 172.8,101.1 L 168.0,108.9 L 168.0,116.7 L 168.0,120.6 L 177.6,128.3 L 172.8,136.1 L 120.0,140.0 L 129.6,143.9 L 124.8,155.6 L 120.0,163.3 L 115.2,167.2 L 105.6,171.1 L 96.0,178.9 L 91.2,175.0 L 76.8,182.8 L 67.2,182.8 L 62.4,178.9 L 57.6,186.7 L 52.8,194.4 L 48.0,202.2 L 43.2,210.0 L 38.4,213.9 L 33.6,221.7 L 24.0,233.3 L 24.0,241.1 L 28.8,248.9 L 38.4,256.7 L 43.2,260.6 L 43.2,256.7 L 38.4,248.9 L 24.0,241.1 L 24.0,233.3 L 19.2,229.4 L 14.4,225.6 L 14.4,210.0 L 19.2,198.3 L 24.0,194.4 L 28.8,186.7 L 0.0,186.7 L 0.0,0.0 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.9"/>
-<path d="M 465.6,11.7 L 480.0,15.6 L 489.6,31.1 L 494.4,35.0 L 504.0,35.0 L 513.6,38.9 L 528.0,42.8 L 537.6,38.9 L 542.4,38.9 L 552.0,35.0 L 556.8,31.1 L 566.4,27.2 L 571.2,31.1 L 585.6,31.1 L 600.0,35.0 L 609.6,38.9 L 619.2,42.8 L 624.0,46.7 L 628.8,50.6 L 638.4,54.4 L 648.0,54.4 L 657.6,62.2 L 667.2,66.1 L 676.8,73.9 L 676.8,81.7 L 676.8,89.4 L 676.8,97.2 L 676.8,105.0 L 691.2,116.7 L 705.6,132.2 L 710.4,136.1 L 710.4,143.9 L 715.2,147.8 L 734.4,155.6 L 744.0,163.3 L 748.8,171.1 L 758.4,178.9 L 768.0,182.8 L 772.8,190.6 L 777.6,198.3 L 840.0,225.6 L 849.6,206.1 L 868.8,225.6 L 873.6,229.4 L 902.4,233.3 L 960.0,233.3 L 960.0,0.0 L 465.6,0.0 L 465.6,11.7 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.9"/>
-<path d="M 902.4,233.3 L 897.6,245.0 L 897.6,256.7 L 897.6,264.4 L 892.8,272.2 L 888.0,276.1 L 888.0,283.9 L 888.0,295.6 L 892.8,303.3 L 897.6,311.1 L 902.4,318.9 L 907.2,326.7 L 912.0,334.4 L 912.0,342.2 L 936.0,350.0 L 945.6,361.7 L 945.6,373.3 L 945.6,381.1 L 940.8,392.8 L 936.0,400.6 L 931.2,408.3 L 926.4,416.1 L 921.6,423.9 L 916.8,431.7 L 912.0,439.4 L 916.8,447.2 L 916.8,455.0 L 921.6,462.8 L 926.4,470.6 L 936.0,478.3 L 945.6,482.2 L 960.0,490.0 L 960.0,233.3 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.9"/>
-<path d="M 91.2,350.0 L 91.2,365.6 L 91.2,388.9 L 100.8,400.6 L 110.4,404.4 L 129.6,396.7 L 139.2,396.7 L 148.8,396.7 L 158.4,396.7 L 168.0,392.8 L 172.8,388.9 L 182.4,392.8 L 187.2,392.8 L 196.8,396.7 L 201.6,404.4 L 206.4,404.4 L 211.2,404.4 L 216.0,404.4 L 220.8,412.2 L 230.4,416.1 L 240.0,412.2 L 249.6,412.2 L 254.4,408.3 L 264.0,404.4 L 268.8,396.7 L 273.6,388.9 L 278.4,377.2 L 278.4,369.4 L 273.6,361.7 L 268.8,357.8 L 268.8,350.0 L 264.0,346.1 L 259.2,342.2 L 254.4,338.3 L 249.6,334.4 L 244.8,330.6 L 240.0,322.8 L 240.0,318.9 L 235.2,318.9 L 230.4,315.0 L 225.6,307.2 L 220.8,303.3 L 211.2,307.2 L 201.6,311.1 L 196.8,311.1 L 187.2,311.1 L 177.6,307.2 L 172.8,307.2 L 168.0,311.1 L 163.2,315.0 L 153.6,318.9 L 148.8,318.9 L 139.2,326.7 L 129.6,334.4 L 124.8,338.3 L 120.0,342.2 L 110.4,346.1 L 100.8,346.1 L 91.2,350.0 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.9"/>
-<path d="M 220.8,66.1 L 230.4,73.9 L 230.4,81.7 L 225.6,85.6 L 220.8,81.7 L 216.0,73.9 L 220.8,66.1 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 216.0,93.3 L 220.8,97.2 L 230.4,97.2 L 240.0,93.3 L 240.0,97.2 L 230.4,101.1 L 220.8,101.1 L 216.0,93.3 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 168.0,143.9 L 172.8,140.0 L 177.6,136.1 L 182.4,132.2 L 192.0,128.3 L 196.8,124.4 L 201.6,120.6 L 206.4,120.6 L 216.0,124.4 L 220.8,120.6 L 220.8,116.7 L 220.8,112.8 L 216.0,105.0 L 220.8,105.0 L 220.8,97.2 L 216.0,97.2 L 211.2,101.1 L 206.4,108.9 L 196.8,116.7 L 192.0,124.4 L 187.2,128.3 L 172.8,132.2 L 168.0,136.1 L 168.0,143.9 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 163.2,143.9 L 168.0,143.9 L 172.8,140.0 L 172.8,136.1 L 168.0,136.1 L 163.2,136.1 L 158.4,140.0 L 163.2,143.9 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 177.6,132.2 L 182.4,132.2 L 187.2,132.2 L 187.2,136.1 L 177.6,136.1 L 177.6,132.2 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 120.0,167.2 L 129.6,171.1 L 129.6,178.9 L 124.8,178.9 L 120.0,175.0 L 120.0,167.2 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 110.4,194.4 L 129.6,194.4 L 139.2,198.3 L 129.6,202.2 L 129.6,210.0 L 124.8,213.9 L 120.0,217.8 L 110.4,210.0 L 110.4,202.2 L 110.4,194.4 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 129.6,217.8 L 139.2,221.7 L 144.0,225.6 L 139.2,229.4 L 129.6,229.4 L 124.8,225.6 L 124.8,221.7 L 129.6,217.8 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 129.6,229.4 L 144.0,233.3 L 148.8,237.2 L 144.0,241.1 L 129.6,241.1 L 120.0,237.2 L 120.0,233.3 L 129.6,229.4 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 67.2,237.2 L 105.6,237.2 L 115.2,245.0 L 110.4,252.8 L 105.6,260.6 L 96.0,264.4 L 81.6,268.3 L 67.2,272.2 L 62.4,268.3 L 62.4,260.6 L 62.4,248.9 L 62.4,241.1 L 67.2,237.2 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 120.0,260.6 L 139.2,260.6 L 144.0,264.4 L 139.2,272.2 L 129.6,276.1 L 120.0,276.1 L 115.2,272.2 L 115.2,264.4 L 120.0,260.6 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 52.8,287.8 L 62.4,291.7 L 76.8,291.7 L 91.2,295.6 L 96.0,295.6 L 96.0,291.7 L 81.6,287.8 L 62.4,287.8 L 52.8,287.8 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 96.0,295.6 L 100.8,295.6 L 100.8,299.4 L 96.0,299.4 L 96.0,295.6 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 172.8,272.2 L 196.8,280.0 L 220.8,283.9 L 249.6,287.8 L 264.0,287.8 L 264.0,295.6 L 249.6,295.6 L 235.2,295.6 L 220.8,295.6 L 206.4,291.7 L 192.0,287.8 L 177.6,280.0 L 172.8,272.2 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 292.8,295.6 L 297.6,295.6 L 302.4,295.6 L 302.4,299.4 L 297.6,299.4 L 292.8,295.6 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 312.0,299.4 L 321.6,303.3 L 326.4,307.2 L 321.6,307.2 L 312.0,303.3 L 312.0,299.4 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 350.4,322.8 L 355.2,326.7 L 360.0,330.6 L 360.0,334.4 L 355.2,334.4 L 350.4,330.6 L 350.4,322.8 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 393.6,330.6 L 398.4,334.4 L 403.2,334.4 L 403.2,330.6 L 398.4,326.7 L 393.6,330.6 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 432.0,346.1 L 436.8,350.0 L 436.8,353.9 L 432.0,350.0 L 432.0,346.1 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 326.4,346.1 L 345.6,350.0 L 345.6,350.0 L 336.0,346.1 L 326.4,346.1 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 235.2,420.0 L 240.0,423.9 L 249.6,423.9 L 254.4,431.7 L 249.6,431.7 L 240.0,431.7 L 235.2,423.9 L 235.2,420.0 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 369.6,408.3 L 379.2,408.3 L 388.8,412.2 L 398.4,412.2 L 398.4,416.1 L 393.6,420.0 L 384.0,423.9 L 379.2,423.9 L 374.4,420.0 L 369.6,416.1 L 369.6,408.3 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<path d="M 340.8,439.4 L 350.4,439.4 L 360.0,435.6 L 369.6,435.6 L 374.4,431.7 L 374.4,427.8 L 364.8,427.8 L 355.2,435.6 L 345.6,443.3 L 340.8,443.3 L 340.8,439.4 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<polyline points="489.6,50.6 480.0,54.4 470.4,58.3 456.0,58.3 446.4,58.3 432.0,62.2 398.4,62.2 384.0,62.2 369.6,58.3 360.0,58.3 350.4,58.3 336.0,54.4" fill="none" stroke="#3a6a45" stroke-width="5" opacity="0.9" stroke-linecap="round"/>
-<circle cx="504.0" cy="179.3" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<circle cx="506.4" cy="179.3" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<circle cx="513.6" cy="181.6" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<circle cx="515.0" cy="181.6" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<circle cx="520.8" cy="183.6" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<circle cx="523.2" cy="183.9" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<circle cx="525.6" cy="187.8" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
-<text x="168.0" y="62.2" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">RUSSIA</text>
-<text x="600.0" y="31.1" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">ALASKA</text>
-<text x="144.0" y="120.6" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">JAPAN</text>
-<text x="96.0" y="147.8" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">CHINA</text>
-<text x="144.0" y="213.9" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">PHILIPPINES</text>
-<text x="182.4" y="361.7" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">AUSTRALIA</text>
-<text x="360.0" y="427.8" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">NZ</text>
-<text x="696.0" y="89.4" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">N. AMERICA</text>
-<text x="912.0" y="342.2" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">S. AMERICA</text>
-<polyline points="230.4,101.1 225.6,108.9 225.6,120.6 220.8,128.3 220.8,136.1 220.8,143.9" fill="none" stroke="#00aaff" stroke-width="2.5" stroke-dasharray="8,5" opacity="0.85" stroke-linecap="round"/>
-<polyline points="254.4,89.4 249.6,97.2 244.8,89.4 240.0,97.2 254.4,89.4 259.2,85.6 264.0,81.7 268.8,77.8 273.6,77.8 278.4,73.9" fill="none" stroke="#00aaff" stroke-width="2" stroke-dasharray="7,5" opacity="0.75" stroke-linecap="round"/>
-<polyline points="465.6,54.4 489.6,54.4 513.6,54.4 537.6,50.6 561.6,50.6 576.0,46.7 600.0,46.7 624.0,42.8" fill="none" stroke="#00aaff" stroke-width="2.5" stroke-dasharray="8,5" opacity="0.85" stroke-linecap="round"/>
-<polyline points="676.8,73.9 676.8,85.6 676.8,97.2 676.8,105.0 676.8,112.8" fill="none" stroke="#00ff9d" stroke-width="2.5" stroke-dasharray="8,5" opacity="0.85" stroke-linecap="round"/>
-<polyline points="772.8,190.6 792.0,202.2 816.0,210.0 840.0,217.8 859.2,221.7 873.6,225.6" fill="none" stroke="#00ff9d" stroke-width="2" stroke-dasharray="6,5" opacity="0.75" stroke-linecap="round"/>
-<polyline points="897.6,272.2 897.6,295.6 902.4,318.9 912.0,342.2 926.4,381.1 936.0,412.2 926.4,439.4 921.6,470.6" fill="none" stroke="#00ff9d" stroke-width="2.5" stroke-dasharray="8,5" opacity="0.85" stroke-linecap="round"/>
-<polyline points="446.4,361.7 441.6,373.3 436.8,388.9 436.8,404.4 432.0,420.0" fill="none" stroke="#ffaa00" stroke-width="2.5" stroke-dasharray="8,5" opacity="0.85" stroke-linecap="round"/>
-<polyline points="336.0,318.9 345.6,330.6 350.4,342.2 355.2,350.0" fill="none" stroke="#00aaff" stroke-width="1.8" stroke-dasharray="6,5" opacity="0.7" stroke-linecap="round"/>
-<polyline points="139.2,171.1 148.8,171.1 158.4,167.2 168.0,155.6 172.8,147.8" fill="none" stroke="#00aaff" stroke-width="1.5" stroke-dasharray="6,5" opacity="0.6" stroke-linecap="round"/>
-<rect x="158.4" y="77.8" width="115.20000000000002" height="77.8" rx="5" fill="rgba(0,170,255,0.05)" stroke="rgba(0,170,255,0.4)" stroke-width="1.2" stroke-dasharray="8,5"/>
-<text x="168.0" y="85.6" fill="rgba(0,170,255,0.85)" font-size="8" font-family="Space Mono" font-weight="bold" letter-spacing="0.5">JAPAN/KURIL</text>
-<rect x="432.0" y="11.7" width="206.39999999999998" height="58.3" rx="5" fill="rgba(0,170,255,0.05)" stroke="rgba(0,170,255,0.4)" stroke-width="1.2" stroke-dasharray="8,5"/>
-<text x="441.6" y="19.4" fill="rgba(0,170,255,0.85)" font-size="8" font-family="Space Mono" font-weight="bold" letter-spacing="0.5">ALASKA/ALEUTIAN</text>
-<rect x="657.6" y="62.2" width="38.39999999999998" height="54.5" rx="5" fill="rgba(0,255,157,0.05)" stroke="rgba(0,255,157,0.4)" stroke-width="1.2" stroke-dasharray="8,5"/>
-<text x="657.6" y="70.0" fill="rgba(0,255,157,0.85)" font-size="8" font-family="Space Mono" font-weight="bold" letter-spacing="0.5">CASCADIA</text>
-<rect x="878.4" y="256.7" width="81.60000000000002" height="233.3" rx="5" fill="rgba(0,255,157,0.05)" stroke="rgba(0,255,157,0.4)" stroke-width="1.2" stroke-dasharray="8,5"/>
-<text x="878.4" y="264.4" fill="rgba(0,255,157,0.85)" font-size="8" font-family="Space Mono" font-weight="bold" letter-spacing="0.5">S. AMERICA</text>
-<rect x="408.0" y="334.4" width="57.60000000000002" height="93.40000000000003" rx="5" fill="rgba(255,170,0,0.05)" stroke="rgba(255,170,0,0.4)" stroke-width="1.2" stroke-dasharray="8,5"/>
-<text x="412.8" y="342.2" fill="rgba(255,170,0,0.85)" font-size="8" font-family="Space Mono" font-weight="bold" letter-spacing="0.5">TONGA</text>
-<rect x="326.4" y="303.3" width="57.60000000000002" height="54.5" rx="5" fill="rgba(0,170,255,0.05)" stroke="rgba(0,170,255,0.4)" stroke-width="1.2" stroke-dasharray="8,5"/>
-<text x="331.2" y="311.1" fill="rgba(0,170,255,0.85)" font-size="8" font-family="Space Mono" font-weight="bold" letter-spacing="0.5">VANUATU</text>
-<polyline points="240.0,213.9 514.6,187.4" fill="none" stroke="#00d4ff" stroke-width="1.2" stroke-dasharray="6,8" opacity="0.3" stroke-linecap="round"/>
-<polyline points="424.3,435.6 514.6,187.4" fill="none" stroke="#00ff9d" stroke-width="1.2" stroke-dasharray="6,8" opacity="0.3" stroke-linecap="round"/>
-<polyline points="553.9,332.9 514.6,187.4" fill="none" stroke="#ffaa00" stroke-width="1.2" stroke-dasharray="6,8" opacity="0.3" stroke-linecap="round"/>
-<circle cx="239.4" cy="212.0" r="16" fill="rgba(0,212,255,0.12)" stroke="none" class="station-dot"/>
-<circle cx="239.4" cy="212.0" r="8" fill="#00d4ff" filter="url(#glow)"/>
-<circle cx="239.4" cy="212.0" r="3.5" fill="#eef7ff"/>
-<rect x="250.4" y="203.0" width="26.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="#00d4ff" stroke-width="0.8"/>
-<text x="253.4" y="216.0" fill="#00d4ff" font-size="10" font-family="Space Mono" font-weight="bold">GUAM</text>
-<circle cx="424.5" cy="435.4" r="16" fill="rgba(0,255,157,0.12)" stroke="none" class="station-dot" style="animation-delay:0.8s"/>
-<circle cx="424.5" cy="435.4" r="8" fill="#00ff9d" filter="url(#glow)"/>
-<circle cx="424.5" cy="435.4" r="3.5" fill="#eef7ff"/>
-<rect x="435.5" y="426.4" width="26.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="#00ff9d" stroke-width="0.8"/>
-<text x="438.5" y="439.4" fill="#00ff9d" font-size="10" font-family="Space Mono" font-weight="bold">CHAT</text>
-<circle cx="553.9" cy="332.8" r="16" fill="rgba(255,170,0,0.12)" stroke="none" class="station-dot" style="animation-delay:1.6s"/>
-<circle cx="553.9" cy="332.8" r="8" fill="#ffaa00" filter="url(#glow)"/>
-<circle cx="553.9" cy="332.8" r="3.5" fill="#eef7ff"/>
-<rect x="564.9" y="323.8" width="26.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="#ffaa00" stroke-width="0.8"/>
-<text x="567.9" y="336.8" fill="#ffaa00" font-size="10" font-family="Space Mono" font-weight="bold">THTI</text>
-<circle cx="525.8" cy="187.4" r="18" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
-<circle cx="525.8" cy="187.4" r="11" fill="#ffffff" filter="url(#glow)"/>
-<circle cx="525.8" cy="187.4" r="5" fill="#00d4ff"/>
-<rect x="538.8" y="178.4" width="52" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="rgba(255,255,255,0.25)" stroke-width="0.8"/>
-<text x="541.8" y="191.4" fill="#eef7ff" font-size="10" font-family="Space Mono" font-weight="bold">MKEA</text>
-<polygon points="527.6,178.7 536.6,187.7 527.6,196.7 518.6,187.7" fill="#ff3358" filter="url(#softglow)"/>
-<rect x="536.6" y="177.7" width="26.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="rgba(255,51,88,0.4)" stroke-width="0.8"/>
-<text x="539.6" y="190.7" fill="#ff3358" font-size="10" font-family="Space Mono" font-weight="bold">HILO</text>
-<polygon points="420.7,145.7 429.7,154.7 420.7,163.7 411.7,154.7" fill="#ff3358" filter="url(#softglow)"/>
-<rect x="429.7" y="144.7" width="39.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="rgba(255,51,88,0.4)" stroke-width="0.8"/>
-<text x="432.7" y="157.7" fill="#ff3358" font-size="10" font-family="Space Mono" font-weight="bold">MIDWAY</text>
-<polygon points="458.3,190.4 467.3,199.4 458.3,208.4 449.3,199.4" fill="#ff3358" filter="url(#softglow)"/>
-<rect x="467.3" y="189.4" width="52.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="rgba(255,51,88,0.4)" stroke-width="0.8"/>
-<text x="470.3" y="202.4" fill="#ff3358" font-size="10" font-family="Space Mono" font-weight="bold">JOHNSTON</text>
-<polygon points="452.7,311.0 461.7,320.0 452.7,329.0 443.7,320.0" fill="#ff3358" filter="url(#softglow)"/>
-<rect x="461.7" y="310.0" width="26.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="rgba(255,51,88,0.4)" stroke-width="0.8"/>
-<text x="464.7" y="323.0" fill="#ff3358" font-size="10" font-family="Space Mono" font-weight="bold">PAGO</text>
+<!-- ══════════════════════════════════════════════════════ DASHBOARD TAB -->
+<div id="tab-dashboard" class="tab-pane active">
+<div class="main">
 
-<!-- ══ DART BUOYS ══ -->
-<polygon points="274.1,199.7 280.1,211.7 268.1,211.7" fill="#00aaff" opacity="0.8" stroke="#004488" stroke-width="0.6"/>
-<polygon points="321.6,199.7 327.6,211.7 315.6,211.7" fill="#00aaff" opacity="0.8" stroke="#004488" stroke-width="0.6"/>
-<polygon points="484.8,60.099999999999994 490.8,72.1 478.8,72.1" fill="#00aaff" opacity="0.8" stroke="#004488" stroke-width="0.6"/>
-<polygon points="539.5,50.0 545.5,62.0 533.5,62.0" fill="#00aaff" opacity="0.8" stroke="#004488" stroke-width="0.6"/>
-<polygon points="615.8,64.0 621.8,76.0 609.8,76.0" fill="#00aaff" opacity="0.8" stroke="#004488" stroke-width="0.6"/>
-<polygon points="631.7,48.8 637.7,60.8 625.7,60.8" fill="#00aaff" opacity="0.8" stroke="#004488" stroke-width="0.6"/>
-<polygon points="525.1,182.2 531.1,194.2 519.1,194.2" fill="#00aaff" opacity="0.8" stroke="#004488" stroke-width="0.6"/>
-<polygon points="863.5,328.4 869.5,340.4 857.5,340.4" fill="#00aaff" opacity="0.8" stroke="#004488" stroke-width="0.6"/>
-<polygon points="787.2,324.6 793.2,336.6 781.2,336.6" fill="#00aaff" opacity="0.8" stroke="#004488" stroke-width="0.6"/>
-<polygon points="871.2,353.7 877.2,365.7 865.2,365.7" fill="#00aaff" opacity="0.8" stroke="#004488" stroke-width="0.6"/>
-<polygon points="436.8,340.1 442.8,352.1 430.8,352.1" fill="#00aaff" opacity="0.8" stroke="#004488" stroke-width="0.6"/>
-<polygon points="432.0,359.6 438.0,371.6 426.0,371.6" fill="#00aaff" opacity="0.8" stroke="#004488" stroke-width="0.6"/>
-<polygon points="816.0,289.6 822.0,301.6 810.0,301.6" fill="#00aaff" opacity="0.8" stroke="#004488" stroke-width="0.6"/>
-<rect x="0" y="490" width="960" height="32" fill="rgba(2,10,20,0.97)"/>
-<line x1="0" y1="490" x2="960" y2="490" stroke="#0e2a3f" stroke-width="1"/>
-<circle cx="19" cy="506" r="6" fill="#00d4ff" filter="url(#softglow)"/>
-<circle cx="19" cy="506" r="2.5" fill="#eef7ff"/>
-<text x="29" y="510" fill="#4a8aaa" font-size="8" font-family="Space Mono">GPS Anchor</text>
-<circle cx="125" cy="506" r="7" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-<circle cx="125" cy="506" r="4" fill="#ffffff"/>
-<circle cx="125" cy="506" r="2" fill="#00d4ff"/>
-<text x="136" y="510" fill="#4a8aaa" font-size="8" font-family="Space Mono">GPS Target</text>
-<polygon points="233,497 241,506 233,515 225,506" fill="#ff3358"/>
-<text x="245" y="510" fill="#4a8aaa" font-size="8" font-family="Space Mono">Tide Gauge (×4)</text>
-<line x1="368" y1="506" x2="396" y2="506" stroke="#00aaff" stroke-width="2.5" stroke-dasharray="7,4"/>
-<text x="400" y="510" fill="#4a8aaa" font-size="8" font-family="Space Mono">Subduction Zone</text>
-<rect x="524" y="499" width="15" height="12" rx="2" fill="rgba(0,170,255,0.07)" stroke="rgba(0,170,255,0.45)" stroke-width="1" stroke-dasharray="4,3"/>
-<text x="543" y="510" fill="#4a8aaa" font-size="8" font-family="Space Mono">Monitor Zone</text>
-<line x1="654" y1="506" x2="680" y2="506" stroke="#00d4ff" stroke-width="1" stroke-dasharray="5,5" opacity="0.55"/>
-<text x="684" y="510" fill="#4a8aaa" font-size="8" font-family="Space Mono">TEC Signal Path</text>
-<polygon points="820,499 827,513 813,513" fill="#00aaff" opacity="0.85" stroke="#004488" stroke-width="0.6"/>
-<text x="832" y="510" fill="#4a8aaa" font-size="8" font-family="Space Mono">DART Buoy</text>
-      </svg>
+  <!-- Space Weather Panel -->
+  <div class="sw-panel fadein" id="sw-panel">
+    <div class="sw-header">
+      <span class="sw-title">SPACE WEATHER QUALITY</span>
+      <span class="sw-badge" id="sw-badge">LOADING…</span>
     </div>
-
-    <div class="two-col">
-      <div>
-        <div class="section-header"><span class="section-title">Performance Metrics</span><div class="section-line"></div></div>
-        <div class="accuracy-panel">
-          <div class="accuracy-row"><span class="accuracy-label">True positive rate</span><span class="accuracy-val good" id="metTPR">–</span></div>
-          <div class="accuracy-row"><span class="accuracy-label">False alarm rate</span><span class="accuracy-val good" id="metFPR">–</span></div>
-          <div class="accuracy-row"><span class="accuracy-label">Mean lead time</span><span class="accuracy-val" id="metLead">–</span></div>
-          <div class="accuracy-row"><span class="accuracy-label">Median lead time</span><span class="accuracy-val" id="metLeadMed">–</span></div>
-          <div class="accuracy-row"><span class="accuracy-label">Amplitude error</span><span class="accuracy-val" id="metAmpErr">–</span></div>
-          <div class="accuracy-row"><span class="accuracy-label">Events scored</span><span class="accuracy-val" id="metTotal">0</span></div>
+    <div class="sw-body">
+      <div class="sw-score-block">
+        <div class="sw-score-label">Ionospheric contamination score</div>
+        <div class="sw-score-value" id="sw-score-val">—</div>
+        <div class="sw-bar-track">
+          <div class="sw-bar-fill" id="sw-bar" style="width:0%"></div>
         </div>
+        <div class="sw-bar-labels"><span>0.0 clean</span><span>0.5 gate</span><span>1.0 max</span></div>
       </div>
-      <div>
-        <div class="section-header"><span class="section-title">Outcome Breakdown</span><div class="section-line"></div></div>
-        <div class="bar-chart">
-          <div class="bar-row"><span class="bar-label">TP</span><div class="bar-track"><div class="bar-fill" id="barTP" style="width:0%;background:#00ff9d"></div></div><span class="bar-val" id="barTPVal">0</span></div>
-          <div class="bar-row"><span class="bar-label">TN</span><div class="bar-track"><div class="bar-fill" id="barTN" style="width:0%;background:#00d4ff"></div></div><span class="bar-val" id="barTNVal">0</span></div>
-          <div class="bar-row"><span class="bar-label">FP</span><div class="bar-track"><div class="bar-fill" id="barFP" style="width:0%;background:#ff3358"></div></div><span class="bar-val" id="barFPVal">0</span></div>
-          <div class="bar-row"><span class="bar-label">FN</span><div class="bar-track"><div class="bar-fill" id="barFN" style="width:0%;background:#ff6b35"></div></div><span class="bar-val" id="barFNVal">0</span></div>
-          <div class="bar-row"><span class="bar-label">Geo</span><div class="bar-track"><div class="bar-fill" id="barGeo" style="width:0%;background:#4a7a94"></div></div><span class="bar-val" id="barGeoVal">0</span></div>
+      <div class="sw-channels">
+        <!-- Kp -->
+        <div class="sw-channel" id="sw-ch-kp">
+          <div class="sw-ch-name">Kp Index</div>
+          <div class="sw-ch-value" id="sw-kp-val">—</div>
+          <div class="sw-ch-bar"><div class="sw-ch-fill" id="sw-kp-bar" style="width:0%"></div></div>
+          <div class="sw-ch-status" id="sw-kp-status">loading</div>
+        </div>
+        <!-- IMF Bz -->
+        <div class="sw-channel" id="sw-ch-bz">
+          <div class="sw-ch-name">IMF Bz</div>
+          <div class="sw-ch-value" id="sw-bz-val">—</div>
+          <div class="sw-ch-bar"><div class="sw-ch-fill" id="sw-bz-bar" style="width:0%"></div></div>
+          <div class="sw-ch-status" id="sw-bz-status">loading</div>
+        </div>
+        <!-- SW Speed -->
+        <div class="sw-channel" id="sw-ch-speed">
+          <div class="sw-ch-name">Solar Wind</div>
+          <div class="sw-ch-value" id="sw-speed-val">—</div>
+          <div class="sw-ch-bar"><div class="sw-ch-fill" id="sw-speed-bar" style="width:0%"></div></div>
+          <div class="sw-ch-status" id="sw-speed-status">loading</div>
+        </div>
+        <!-- X-ray -->
+        <div class="sw-channel" id="sw-ch-xray">
+          <div class="sw-ch-name">GOES X-Ray</div>
+          <div class="sw-ch-value" id="sw-xray-val">—</div>
+          <div class="sw-ch-bar"><div class="sw-ch-fill" id="sw-xray-bar" style="width:0%"></div></div>
+          <div class="sw-ch-status" id="sw-xray-status">loading</div>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- EVENTS -->
-  <div class="tab-panel" id="tab-events">
-    <div class="events-panel">
-      <div class="events-panel-header">
-        <span>Scored events — prediction vs actual</span>
-        <span class="event-count" id="eventCountBadge">0 events</span>
-      </div>
-      <div id="eventsTable">
-        <div class="empty-state">
-          <div class="empty-icon">🌊</div>
-          <p>No scored events yet.<br>Pipeline is active and monitoring the Pacific basin.</p>
-          <div class="waiting"><div class="live-dot"></div>Awaiting qualifying event</div>
-        </div>
-      </div>
+    <div class="sw-updated">
+      <span id="sw-flags-line">Fetching NOAA SWPC feeds…</span>
+      <span id="sw-fetch-time"></span>
     </div>
   </div>
 
-  <!-- POLL LOG -->
-  <div class="tab-panel" id="tab-log">
-
-    <!-- Stats strip -->
-    <div class="poll-summary">
-      <div class="poll-stat">
-        <div class="label">Total Polls</div>
-        <div class="value" id="totalPolls">–</div>
-        <div class="sub">USGS API calls since launch</div>
-      </div>
-      <div class="poll-stat">
-        <div class="label">Candidates Queued</div>
-        <div class="value green" id="totalCandidates">–</div>
-        <div class="sub">Pacific Mw6.5+ qualifying events</div>
-      </div>
-      <div class="poll-stat">
-        <div class="label">Seismic Events Seen</div>
-        <div class="value" id="totalSeen">–</div>
-        <div class="sub">Mw5.5+ tracked, did not qualify</div>
-      </div>
-      <div class="poll-stat">
-        <div class="label">Last Poll</div>
-        <div class="value" id="lastPoll" style="font-size:0.9rem;color:var(--text);line-height:1.3">–</div>
-        <div class="sub" id="lastPollAge">–</div>
-      </div>
+  <!-- Stats row -->
+  <p class="section-title mb-20">Pipeline Status</p>
+  <div class="grid-4 mb-28">
+    <div class="stat-card">
+      <div class="stat-label">Total Polls</div>
+      <div class="stat-value" id="stat-polls">—</div>
+      <div class="stat-sub">USGS API calls since launch</div>
     </div>
-
-    <!-- Poll history — scrollable, last 50 -->
-    <div class="section-header"><span class="section-title">Poll History</span><div class="section-line"></div></div>
-    <div class="poll-history-wrap">
-      <div class="poll-row poll-header">
-        <span>Time (Eastern)</span>
-        <span>New</span>
-        <span>Queued</span>
-        <span>Scored</span>
-        <span>Status</span>
-      </div>
-      <div class="poll-history-scroll" id="pollRows">
-        <div class="empty-state"><div class="empty-icon">📡</div><p>No poll data yet.</p></div>
-      </div>
+    <div class="stat-card">
+      <div class="stat-label">Candidates Queued</div>
+      <div class="stat-value" id="stat-queued">—</div>
+      <div class="stat-sub">Pacific Mw6.5+ qualifying events</div>
     </div>
-
-    <!-- Recent seismicity feed -->
-    <div class="section-header" style="margin-top:28px"><span class="section-title">Recent Seismic Activity · Did Not Qualify</span><div class="section-line"></div></div>
-    <div class="seis-feed">
-      <div class="seis-header">
-        <span>Time (Eastern)</span>
-        <span>Mag</span>
-        <span>Location</span>
-        <span>Reason</span>
-        <span>vs Threshold</span>
-      </div>
-      <div class="seis-scroll" id="seisRows">
-        <div class="empty-state"><div class="empty-icon">🌍</div><p>Seismic activity will appear here once the pipeline processes new events.</p></div>
-      </div>
+    <div class="stat-card">
+      <div class="stat-label">Events Scored</div>
+      <div class="stat-value" id="stat-scored">—</div>
+      <div class="stat-sub">Predictions vs ground truth</div>
     </div>
-
+    <div class="stat-card">
+      <div class="stat-label">Last Poll</div>
+      <div class="stat-value" style="font-size:16px;padding-top:4px" id="stat-last">—</div>
+      <div class="stat-sub" id="stat-last-sub">—</div>
+    </div>
   </div>
 
-  <footer>
-    <a href="https://github.com/Beastros/gps-tsunami-detection" target="_blank">github.com/Beastros/gps-tsunami-detection</a>
-    <div class="footer-center" id="footerStatus">–</div>
-    <span>Research monitoring · not an operational warning system</span>
-  </footer>
+  <!-- Map + Performance -->
+  <p class="section-title mb-20">Station Network &middot; Pacific Basin</p>
+  <div class="map-card mb-28">
+    <svg viewBox="0 0 960 440" xmlns="http://www.w3.org/2000/svg" style="background:#060d18">
+      <!-- Ocean -->
+      <rect width="960" height="440" fill="#060d18"/>
+      <!-- Subtle grid -->
+      <line x1="0" y1="220" x2="960" y2="220" stroke="#1e3a5f" stroke-width="0.5" stroke-dasharray="4,6"/>
+      <line x1="480" y1="0" x2="480" y2="440" stroke="#1e3a5f" stroke-width="0.5" stroke-dasharray="4,6"/>
+      <line x1="0" y1="110" x2="960" y2="110" stroke="#1a3050" stroke-width="0.3" stroke-dasharray="2,8"/>
+      <line x1="0" y1="330" x2="960" y2="330" stroke="#1a3050" stroke-width="0.3" stroke-dasharray="2,8"/>
+      <line x1="240" y1="0" x2="240" y2="440" stroke="#1a3050" stroke-width="0.3" stroke-dasharray="2,8"/>
+      <line x1="720" y1="0" x2="720" y2="440" stroke="#1a3050" stroke-width="0.3" stroke-dasharray="2,8"/>
 
+      <!-- Axis labels -->
+      <text x="8" y="215" fill="#2a5080" font-size="8" font-family="JetBrains Mono,monospace">EQ</text>
+      <text x="8" y="115" fill="#2a5080" font-size="8" font-family="JetBrains Mono,monospace">30°N</text>
+      <text x="8" y="55"  fill="#2a5080" font-size="8" font-family="JetBrains Mono,monospace">60°N</text>
+      <text x="8" y="335" fill="#2a5080" font-size="8" font-family="JetBrains Mono,monospace">30°S</text>
+
+      <!-- Subduction zones -->
+      <!-- Japan/Kuril -->
+      <path d="M 530 20 Q 545 50 540 90 Q 535 130 530 160" stroke="#ff4a4a" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+      <!-- Alaska/Aleutian -->
+      <path d="M 200 60 Q 280 50 360 70 Q 430 80 490 100" stroke="#ff4a4a" stroke-width="3.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+      <!-- Cascadia -->
+      <path d="M 760 90 Q 770 120 775 155" stroke="#ff4a4a" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.45"/>
+      <!-- S America -->
+      <path d="M 855 200 Q 860 240 858 280 Q 856 310 852 340" stroke="#ff4a4a" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.45"/>
+      <!-- Tonga -->
+      <path d="M 600 290 Q 608 310 612 330 Q 616 350 618 370" stroke="#ff4a4a" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.4"/>
+      <!-- Vanuatu -->
+      <path d="M 570 255 Q 575 270 578 290" stroke="#ff4a4a" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.35"/>
+
+      <!-- Coastline approximations (very simple) -->
+      <!-- Alaska -->
+      <path d="M 160 40 Q 220 30 300 45 Q 370 55 420 80 Q 460 95 490 100" stroke="#1e3a5f" stroke-width="1" fill="none"/>
+      <!-- Japan -->
+      <path d="M 520 30 Q 535 50 540 80 Q 538 100 535 120" stroke="#1e3a5f" stroke-width="1" fill="none"/>
+      <!-- California/Mexico west coast -->
+      <path d="M 770 90 Q 775 150 780 200 Q 790 250 800 290" stroke="#1e3a5f" stroke-width="1" fill="none"/>
+      <!-- Chile -->
+      <path d="M 850 200 Q 855 260 852 330 Q 850 370 848 400" stroke="#1e3a5f" stroke-width="1" fill="none"/>
+      <!-- Australia approx -->
+      <path d="M 480 290 Q 520 280 560 290 Q 580 310 575 340 Q 555 360 520 365 Q 490 360 475 340 Q 470 315 480 290" stroke="#1e3a5f" stroke-width="1" fill="none"/>
+
+      <!-- TEC signal paths (thin dotted lines between stations) -->
+      <!-- GUAM to MKEA -->
+      <line x1="540" y1="195" x2="695" y2="210" stroke="#00c8ff" stroke-width="0.8" stroke-dasharray="5,4" opacity="0.3"/>
+      <!-- CHAT to THTI -->
+      <line x1="720" y1="355" x2="680" y2="295" stroke="#00c8ff" stroke-width="0.8" stroke-dasharray="5,4" opacity="0.3"/>
+      <!-- MKEA to HILO -->
+      <line x1="695" y1="210" x2="703" y2="220" stroke="#00c8ff" stroke-width="0.8" opacity="0.3"/>
+
+      <!-- DART buoys (small dots) -->
+      <circle cx="540" cy="155" r="3" fill="none" stroke="#ffa726" stroke-width="1" opacity="0.6"/>
+      <circle cx="510" cy="130" r="3" fill="none" stroke="#ffa726" stroke-width="1" opacity="0.6"/>
+      <circle cx="440" cy="115" r="3" fill="none" stroke="#ffa726" stroke-width="1" opacity="0.6"/>
+      <circle cx="360" cy="100" r="3" fill="none" stroke="#ffa726" stroke-width="1" opacity="0.6"/>
+      <circle cx="300" cy="95"  r="3" fill="none" stroke="#ffa726" stroke-width="1" opacity="0.6"/>
+      <circle cx="680" cy="240" r="3" fill="none" stroke="#ffa726" stroke-width="1" opacity="0.6"/>
+      <circle cx="720" cy="220" r="3" fill="none" stroke="#ffa726" stroke-width="1" opacity="0.6"/>
+      <circle cx="750" cy="185" r="3" fill="none" stroke="#ffa726" stroke-width="1" opacity="0.6"/>
+      <circle cx="810" cy="210" r="3" fill="none" stroke="#ffa726" stroke-width="1" opacity="0.6"/>
+      <circle cx="840" cy="260" r="3" fill="none" stroke="#ffa726" stroke-width="1" opacity="0.6"/>
+      <circle cx="820" cy="300" r="3" fill="none" stroke="#ffa726" stroke-width="1" opacity="0.6"/>
+      <circle cx="648" cy="330" r="3" fill="none" stroke="#ffa726" stroke-width="1" opacity="0.6"/>
+
+      <!-- GPS Anchor stations -->
+      <g id="sta-guam">
+        <circle cx="540" cy="195" r="7" fill="#00c8ff" opacity="0.15"/>
+        <circle cx="540" cy="195" r="4" fill="#00c8ff" opacity="0.9"/>
+        <text x="550" y="193" fill="#00c8ff" font-size="9" font-family="JetBrains Mono,monospace" font-weight="500">GUAM</text>
+      </g>
+      <g id="sta-chat">
+        <circle cx="720" cy="360" r="7" fill="#00c8ff" opacity="0.15"/>
+        <circle cx="720" cy="360" r="4" fill="#00c8ff" opacity="0.9"/>
+        <text x="730" y="358" fill="#00c8ff" font-size="9" font-family="JetBrains Mono,monospace" font-weight="500">CHAT</text>
+      </g>
+      <g id="sta-thti">
+        <circle cx="680" cy="295" r="7" fill="#00c8ff" opacity="0.15"/>
+        <circle cx="680" cy="295" r="4" fill="#00c8ff" opacity="0.9"/>
+        <text x="690" y="293" fill="#00c8ff" font-size="9" font-family="JetBrains Mono,monospace" font-weight="500">THTI</text>
+      </g>
+      <g id="sta-mkea">
+        <circle cx="695" cy="210" r="7" fill="#00c8ff" opacity="0.15"/>
+        <circle cx="695" cy="210" r="4" fill="#00c8ff" opacity="0.9"/>
+        <text x="705" y="208" fill="#00c8ff" font-size="9" font-family="JetBrains Mono,monospace" font-weight="500">MKEA</text>
+      </g>
+
+      <!-- GPS Target stations -->
+      <g id="sta-hilo">
+        <circle cx="706" cy="222" r="6" fill="none" stroke="#00ff9d" stroke-width="1.5"/>
+        <circle cx="706" cy="222" r="2.5" fill="#00ff9d"/>
+        <text x="716" y="220" fill="#00ff9d" font-size="9" font-family="JetBrains Mono,monospace">HILO</text>
+      </g>
+
+      <!-- Tide gauges -->
+      <g>
+        <rect x="700" y="215" width="5" height="5" fill="#00ff9d" opacity="0.7" transform="rotate(45,702,217)"/>
+        <text x="710" y="230" fill="#00ff9d" font-size="8" font-family="JetBrains Mono,monospace" opacity="0.8">MIDWAY</text>
+      </g>
+      <g>
+        <rect x="748" y="245" width="5" height="5" fill="#00ff9d" opacity="0.7" transform="rotate(45,750,247)"/>
+        <text x="757" y="250" fill="#00ff9d" font-size="8" font-family="JetBrains Mono,monospace" opacity="0.8">JOHNSTON</text>
+      </g>
+      <g>
+        <rect x="648" y="290" width="5" height="5" fill="#00ff9d" opacity="0.7" transform="rotate(45,650,292)"/>
+        <text x="657" y="305" fill="#00ff9d" font-size="8" font-family="JetBrains Mono,monospace" opacity="0.8">PAGO PAGO</text>
+      </g>
+
+      <!-- Legend -->
+      <rect x="20" y="360" width="180" height="72" fill="#0c1829" stroke="#1e3a5f" stroke-width="1" rx="2"/>
+      <circle cx="36" cy="376" r="4" fill="#00c8ff" opacity="0.9"/>
+      <text x="46" y="379" fill="#6a9cc0" font-size="8" font-family="JetBrains Mono,monospace">GPS Anchor Station</text>
+      <circle cx="36" cy="392" r="4" fill="none" stroke="#00ff9d" stroke-width="1.5"/>
+      <circle cx="36" cy="392" r="2" fill="#00ff9d"/>
+      <text x="46" y="395" fill="#6a9cc0" font-size="8" font-family="JetBrains Mono,monospace">GPS Target / Tide Gauge</text>
+      <circle cx="36" cy="408" r="3" fill="none" stroke="#ffa726" stroke-width="1"/>
+      <text x="46" y="411" fill="#6a9cc0" font-size="8" font-family="JetBrains Mono,monospace">DART Buoy (28 total)</text>
+      <line x1="28" y1="424" x2="44" y2="424" stroke="#ff4a4a" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+      <text x="46" y="427" fill="#6a9cc0" font-size="8" font-family="JetBrains Mono,monospace">Subduction Zone</text>
+    </svg>
+  </div>
+
+  <!-- Performance -->
+  <p class="section-title mb-20">Performance Metrics</p>
+  <div class="perf-grid mb-28">
+    <div class="perf-cell">
+      <div class="perf-label">True Positive Rate</div>
+      <div class="perf-value" id="perf-tpr">—</div>
+    </div>
+    <div class="perf-cell">
+      <div class="perf-label">False Alarm Rate</div>
+      <div class="perf-value" id="perf-fpr">—</div>
+    </div>
+    <div class="perf-cell">
+      <div class="perf-label">Mean Lead Time</div>
+      <div class="perf-value" id="perf-lead">— <span class="perf-unit">min</span></div>
+    </div>
+    <div class="perf-cell">
+      <div class="perf-label">Median Lead Time</div>
+      <div class="perf-value" id="perf-med">— <span class="perf-unit">min</span></div>
+    </div>
+    <div class="perf-cell">
+      <div class="perf-label">Amplitude Error</div>
+      <div class="perf-value" id="perf-amp">—</div>
+    </div>
+  </div>
+
+  <!-- Outcome chips -->
+  <p class="section-title mb-20">Outcome Breakdown</p>
+  <div class="outcome-row mb-28">
+    <div class="outcome-chip tp"><div class="val" id="oc-tp">0</div><div class="lbl">TP</div></div>
+    <div class="outcome-chip tn"><div class="val" id="oc-tn">0</div><div class="lbl">TN</div></div>
+    <div class="outcome-chip fp"><div class="val" id="oc-fp">0</div><div class="lbl">FP</div></div>
+    <div class="outcome-chip fn"><div class="val" id="oc-fn">0</div><div class="lbl">FN</div></div>
+    <div class="outcome-chip geo"><div class="val" id="oc-geo">0</div><div class="lbl">GEO</div></div>
+    <div class="outcome-chip geo"><div class="val" id="oc-total">0</div><div class="lbl">Scored</div></div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /tab-dashboard -->
+
+<!-- ══════════════════════════════════════════════════════ EVENTS TAB -->
+<div id="tab-events" class="tab-pane">
+<div class="main">
+  <p class="section-title mb-20">Scored Events — Prediction vs Actual</p>
+  <div class="card">
+    <div id="events-body">
+      <div class="empty-state">
+        <div class="empty-icon">🌊</div>
+        <div class="empty-title">No scored events yet</div>
+        <div class="empty-sub">Pipeline active · monitoring Pacific basin · awaiting qualifying event</div>
+      </div>
+    </div>
+  </div>
+</div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════ POLL LOG TAB -->
+<div id="tab-polllog" class="tab-pane">
+<div class="main">
+
+  <p class="section-title mb-20">Poll History</p>
+  <div class="card mb-28">
+    <div id="poll-history-body">
+      <div class="empty-state">
+        <div class="empty-icon">📡</div>
+        <div class="empty-title">No poll data yet</div>
+        <div class="empty-sub">—</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title mb-20">Recent Seismic Activity — Did Not Qualify</p>
+  <div class="card">
+    <div id="near-miss-body">
+      <div class="empty-state">
+        <div class="empty-icon">🌍</div>
+        <div class="empty-title">No near-miss events</div>
+        <div class="empty-sub">Seismic activity tracked below qualifying threshold will appear here</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ── Footer ────────────────────────────────────────────────────── -->
+<footer style="border-top:1px solid var(--border);padding:16px 32px;display:flex;justify-content:space-between;align-items:center;margin-top:40px">
+  <a href="https://github.com/Beastros/gps-tsunami-detection" style="font-family:var(--font-m);font-size:10px;color:var(--dim);text-decoration:none">github.com/Beastros/gps-tsunami-detection</a>
+  <span style="font-family:var(--font-m);font-size:10px;color:var(--dim)">Research monitoring · not an operational warning system</span>
+</footer>
+
 <script>
-const RUNNING_LOG = 'https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/running_log.json';
-const POLL_LOG    = 'https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/poll_log.json';
-const REFRESH_MS  = 5 * 60 * 1000;
-
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach((t,i) => {
-    t.classList.toggle('active', ['dashboard','events','log'][i] === name);
-  });
-  document.querySelectorAll('.tab-panel').forEach(p => {
-    p.classList.toggle('active', p.id === 'tab-'+name);
-  });
+// ── Tab switching ────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
 }
 
-// Eastern offset: DST = 2nd Sun Mar 2AM → 1st Sun Nov 2AM
-function getEtOffset(d) {
-  const y = d.getUTCFullYear();
-  const march1Day = new Date(Date.UTC(y, 2, 1)).getUTCDay();
-  const dstStart = new Date(Date.UTC(y, 2, 8 + (7 - march1Day) % 7, 7)); // 2 AM ET
-  const nov1Day = new Date(Date.UTC(y, 10, 1)).getUTCDay();
-  const dstEnd = new Date(Date.UTC(y, 10, 1 + (7 - nov1Day) % 7, 6)); // 2 AM ET
-  return (d >= dstStart && d < dstEnd) ? -4 : -5;
+// ── Helpers ──────────────────────────────────────────────────────
+function fmt(v, digits=2) { return v != null ? v.toFixed(digits) : '—'; }
+function el(id) { return document.getElementById(id); }
+
+function setColor(elem, score) {
+  if (score >= 0.5)      elem.style.color = 'var(--danger)';
+  else if (score >= 0.3) elem.style.color = 'var(--warn)';
+  else                   elem.style.color = 'var(--accent2)';
 }
 
-// Convert UTC ISO string to Eastern time display — no Intl API (avoids CSP eval)
-function toEastern(iso) {
-  if(!iso) return '–';
-  const d = new Date(iso);
-  const off = getEtOffset(d);
-  const et = new Date(d.getTime() + off * 3600000);
-  const mo = et.getUTCMonth()+1, dy = et.getUTCDate();
-  let hr = et.getUTCHours(); const mn = String(et.getUTCMinutes()).padStart(2,'0');
-  const ampm = hr >= 12 ? 'PM' : 'AM'; hr = hr % 12 || 12;
-  return `${mo}/${dy}, ${hr}:${mn} ${ampm} ${off===-4?'EDT':'EST'}`;
+function barColor(score) {
+  if (score >= 0.5) return 'var(--danger)';
+  if (score >= 0.3) return 'var(--warn)';
+  return 'var(--accent2)';
 }
 
-function toEasternDate(iso) {
-  if(!iso) return '–';
-  const d = new Date(iso);
-  const off = getEtOffset(d);
-  const et = new Date(d.getTime() + off * 3600000);
-  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  return `${months[et.getUTCMonth()]} ${et.getUTCDate()}, ${et.getUTCFullYear()}`;
-}
-
-function timeAgo(iso) {
-  if(!iso) return '–';
-  const mins = Math.round((Date.now() - new Date(iso)) / 60000);
-  if(mins < 1) return 'just now';
-  if(mins < 60) return `${mins} min ago`;
-  const hrs = Math.round(mins/60);
-  if(hrs < 24) return `${hrs}h ago`;
-  return `${Math.round(hrs/24)}d ago`;
-}
-
-function mwClass(mw) { return mw>=8?'mw-high':mw>=7?'mw-mid':'mw-low'; }
-function ocClass(o) {
-  if(!o) return 'geo';
-  if(o==='TRUE_POSITIVE') return 'tp';
-  if(o.includes('NEGATIVE')||o.includes('ABSTENTION')) return 'tn';
-  if(o==='FALSE_POSITIVE') return 'fp';
-  if(o==='FALSE_NEGATIVE') return 'fn';
-  return 'geo';
-}
-function ocLabel(o) {
-  const m={'TRUE_POSITIVE':'✓ Hit','TRUE_NEGATIVE':'○ Quiet','CORRECT_ABSTENTION_NO_ANCHOR':'○ No anchor','FALSE_POSITIVE':'✗ False alarm','FALSE_NEGATIVE':'✗ Miss','GEOMETRY_LIMITED_MISS':'△ Geo limit'};
-  return m[o]||o||'–';
-}
-
-function renderDashboard(data) {
-  const events = data.scored_events||[];
-  const s = data.summary||{};
-  const tp=s.true_positives||0, tn=s.true_negatives||0, fp=s.false_positives||0, fn=s.false_negatives||0, total=s.total_scored||0;
-
-  document.getElementById('statsGrid').innerHTML = `
-    <div class="stat-card"><div class="stat-label">Events Monitored</div><div class="stat-value cyan">${total}</div><div class="stat-sub">Pacific Mw≥6.5 since launch</div></div>
-    <div class="stat-card green"><div class="stat-label">Detections</div><div class="stat-value green">${tp}</div><div class="stat-sub">Tsunamis gauge-confirmed</div></div>
-    <div class="stat-card red"><div class="stat-label">False Alarms</div><div class="stat-value ${fp>0?'red':'green'}">${fp}</div><div class="stat-sub">Target: 0</div></div>
-    <div class="stat-card orange"><div class="stat-label">Mean Lead Time</div><div class="stat-value ${s.mean_lead_time_min?'orange':''}">${s.mean_lead_time_min?s.mean_lead_time_min+'m':'–'}</div><div class="stat-sub">Warning before wave</div></div>
-    <div class="stat-card"><div class="stat-label">TPR</div><div class="stat-value ${s.tpr!=null?'green':''}">${s.tpr!=null?(s.tpr*100).toFixed(0)+'%':'–'}</div><div class="stat-sub">Detection rate</div></div>
-    <div class="stat-card"><div class="stat-label">Amp Error</div><div class="stat-value">${s.mean_amplitude_error_pct!=null?s.mean_amplitude_error_pct.toFixed(1)+'%':'–'}</div><div class="stat-sub">Wave height forecast</div></div>`;
-
-  document.getElementById('metTPR').textContent = s.tpr!=null?(s.tpr*100).toFixed(1)+'%':'–';
-  document.getElementById('metFPR').textContent = s.fpr!=null?(s.fpr*100).toFixed(1)+'%':'–';
-  document.getElementById('metLead').textContent = s.mean_lead_time_min!=null?s.mean_lead_time_min+' min':'–';
-  document.getElementById('metLeadMed').textContent = s.median_lead_time_min!=null?s.median_lead_time_min+' min':'–';
-  document.getElementById('metAmpErr').textContent = s.mean_amplitude_error_pct!=null?s.mean_amplitude_error_pct.toFixed(1)+'%':'–';
-  document.getElementById('metTotal').textContent = total;
-
-  const mx = Math.max(tp,tn,fp,fn,1);
-  const sp = (id,n) => { document.getElementById(id).style.width=(n/mx*100)+'%'; };
-  sp('barTP',tp); document.getElementById('barTPVal').textContent=tp;
-  sp('barTN',tn); document.getElementById('barTNVal').textContent=tn;
-  sp('barFP',fp); document.getElementById('barFPVal').textContent=fp;
-  sp('barFN',fn); document.getElementById('barFNVal').textContent=fn;
-  const geo=events.filter(e=>e.outcome&&e.outcome.includes('GEO')).length;
-  sp('barGeo',geo); document.getElementById('barGeoVal').textContent=geo;
-}
-
-function renderEvents(data) {
-  const events = data.scored_events||[];
-  document.getElementById('eventCountBadge').textContent = events.length+' event'+(events.length!==1?'s':'');
-  if(!events.length) return;
-  const rows = [...events].reverse().slice(0,50).map(e => {
-    const oc=ocClass(e.outcome), mwc=mwClass(e.magnitude||0);
-    const lead = e.lead_time_min!=null
-      ? `<span class="lead-time ${e.lead_time_min<0?'neg':''}">${e.lead_time_min>0?'+':''}${e.lead_time_min}m</span>`
-      : '<span style="color:var(--text-dim)">–</span>';
-    const amp = e.amplitude_predicted_m!=null
-      ? `${e.amplitude_predicted_m}m → ${e.amplitude_actual_m||'?'}m` : '–';
-    return `<tr>
-      <td class="time-text">${toEasternDate(e.quake_utc)}</td>
-      <td><span class="mw-pill ${mwc}">${e.magnitude||'?'}</span></td>
-      <td><div class="place-text" title="${e.place||''}">${e.place||'–'}</div></td>
-      <td><span class="outcome-badge ${oc}">${ocLabel(e.outcome)}</span></td>
-      <td>${lead}</td>
-      <td style="font-size:0.63rem;color:var(--text-dim)">${amp}</td>
-      <td style="font-size:0.63rem;color:var(--text-dim)">${e.anchor||'–'}</td>
-    </tr>`;
-  }).join('');
-  document.getElementById('eventsTable').innerHTML = `
-    <table><thead><tr>
-      <th>Date</th><th>Mw</th><th>Location</th><th>Outcome</th><th>Lead</th><th>Amplitude</th><th>Anchor</th>
-    </tr></thead><tbody>${rows}</tbody></table>`;
-}
-
-function renderPollLog(data) {
-  const polls = (data.polls||[]).slice().reverse();
-  const total = data.total_polls||0;
-  const withCandidates = polls.filter(p=>p.new_candidates>0).length;
-  const seismicity = (data.recent_seismicity||[]).slice().reverse();
-  const last = polls[0];
-
-  document.getElementById('totalPolls').textContent = total;
-  document.getElementById('totalCandidates').textContent = withCandidates;
-  document.getElementById('totalSeen').textContent = seismicity.length;
-
-  if(last) {
-    document.getElementById('lastPoll').textContent = toEastern(last.ts);
-    document.getElementById('lastPollAge').textContent = timeAgo(last.ts);
-    const age = Math.round((Date.now()-new Date(last.ts))/60000);
-    const statusEl = document.getElementById('footerStatus');
-    if(age < 20) {
-      statusEl.innerHTML = `<span style="color:var(--accent2)">●</span> ${total} polls · last ${timeAgo(last.ts)}`;
-    } else {
-      statusEl.innerHTML = `<span style="color:var(--warn)">●</span> ${total} polls · last ${timeAgo(last.ts)} — may be delayed`;
-    }
-  }
-
-  // Poll history — last 50, scrollable
-  if(polls.length) {
-    const rows = polls.slice(0,50).map(p => {
-      const isNew = p.new_candidates > 0;
-      return `<div class="poll-row">
-        <span class="poll-ts">${toEastern(p.ts)}</span>
-        <span class="${isNew?'poll-new-pos':'poll-new-0'}">${isNew?'+'+p.new_candidates:'–'}</span>
-        <span style="color:var(--text-dim)">${p.total_queued||0}</span>
-        <span style="color:var(--text-dim)">${p.scored||0}</span>
-        <span class="${isNew?'poll-cand':'poll-clean'}">${isNew?'CANDIDATE':'clean'}</span>
-      </div>`;
-    }).join('');
-    document.getElementById('pollRows').innerHTML = rows;
-  }
-
-  // Seismic activity feed
-  if(seismicity.length) {
-    const srows = seismicity.slice(0,100).map(e => {
-      const mag = e.mag||0;
-      const magClass = mag >= 6.5 ? 'seis-mag-high' : mag >= 6.0 ? 'seis-mag-mid' : 'seis-mag-low';
-      const reason = e.reason||'filtered';
-      const reasonClass = reason.includes('zone') ? 'seis-reason-zone'
-                        : reason.includes('deep') ? 'seis-reason-depth'
-                        : reason.includes('thresh') ? 'seis-reason-thresh'
-                        : 'seis-reason-other';
-      const delta = e.delta !== null && e.delta !== undefined
-        ? `<span class="seis-delta-neg">${e.delta.toFixed(1)} below</span>`
-        : '<span style="color:var(--text-dim)">—</span>';
-      return `<div class="seis-row">
-        <span class="poll-ts">${toEastern(e.ts)}</span>
-        <span class="${magClass}">Mw${mag.toFixed(1)}</span>
-        <span class="seis-place" title="${e.place||''}">${e.place||'–'}</span>
-        <span class="${reasonClass}">${reason}</span>
-        <span>${delta}</span>
-      </div>`;
-    }).join('');
-    document.getElementById('seisRows').innerHTML = srows;
-  }
-}
-
-async function fetchAll() {
+// ── Space Weather (live NOAA fetch) ──────────────────────────────
+async function fetchLatest(url, col, dictKey) {
   try {
-    const [r1, r2] = await Promise.all([
-      fetch(RUNNING_LOG+'?t='+Date.now()),
-      fetch(POLL_LOG+'?t='+Date.now()),
+    const r = await fetch(url);
+    const d = await r.json();
+    if (!Array.isArray(d)) return null;
+    for (let i = d.length - 1; i >= 0; i--) {
+      const row = d[i];
+      try {
+        let v;
+        if (row && typeof row === 'object' && !Array.isArray(row)) {
+          v = row[dictKey];
+        } else if (Array.isArray(row) && row.length > col) {
+          v = row[col];
+        }
+        if (v != null && v !== '' && isNaN(+v) === false) return +v;
+      } catch(e) { continue; }
+    }
+  } catch(e) {}
+  return null;
+}
+
+async function fetchXray() {
+  try {
+    const r = await fetch('https://services.swpc.noaa.gov/json/goes/primary/xrays-7-day.json');
+    const d = await r.json();
+    for (let i = d.length - 1; i >= 0; i--) {
+      if (d[i].energy === '0.1-0.8nm' && d[i].flux != null) return +d[i].flux;
+    }
+  } catch(e) {}
+  return null;
+}
+
+function xrayClass(flux) {
+  if (flux === null) return ['—', 'n/a', 'ok'];
+  if (flux >= 1e-4) return [flux.toExponential(1), 'X-class', 'bad'];
+  if (flux >= 1e-5) return [flux.toExponential(1), 'M-class', 'warn'];
+  if (flux >= 1e-6) return [flux.toExponential(1), 'C-class', 'ok'];
+  return [flux.toExponential(1), 'B-class', 'ok'];
+}
+
+async function loadSpaceWeather() {
+  const KP_URL     = 'https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json';
+  const PLASMA_URL = 'https://services.swpc.noaa.gov/products/solar-wind/plasma-7-day.json';
+  const MAG_URL    = 'https://services.swpc.noaa.gov/products/solar-wind/mag-7-day.json';
+
+  const [kp, speed, bz, xray] = await Promise.all([
+    fetchLatest(KP_URL,     null, 'Kp'),
+    fetchLatest(PLASMA_URL, 2,    'speed'),
+    fetchLatest(MAG_URL,    3,    'bz_gsm'),
+    fetchXray()
+  ]);
+
+  // Score
+  let score = 0, flags = [];
+  if (kp  >= 6.0) { score += 0.6; flags.push('Kp='+kp.toFixed(1)+' (strong storm)'); }
+  else if (kp >= 4.0) { score += 0.4; flags.push('Kp='+kp.toFixed(1)+' (active)'); }
+  if (bz !== null && bz < -10) { score += 0.3; flags.push('IMF Bz='+bz.toFixed(1)+'nT (southward)'); }
+  if (speed !== null && speed > 600) { score += 0.2; flags.push('SW='+speed.toFixed(0)+'km/s (fast)'); }
+  if (xray !== null && xray >= 1e-5) { score += 0.2; flags.push('X-ray='+xray.toExponential(1)+' (M+)'); }
+  score = Math.min(score, 1.0);
+  const gated = score >= 0.5;
+
+  // Score display
+  el('sw-score-val').textContent = score.toFixed(2);
+  setColor(el('sw-score-val'), score);
+  el('sw-bar').style.width       = (score * 100) + '%';
+  el('sw-bar').style.background  = barColor(score);
+
+  // Badge
+  const badge = el('sw-badge');
+  if (gated) { badge.textContent = 'GATED'; badge.className = 'sw-badge gated'; }
+  else if (score >= 0.3) { badge.textContent = 'ACTIVE'; badge.className = 'sw-badge active'; }
+  else { badge.textContent = 'CLEAR ✓'; badge.className = 'sw-badge clear'; }
+
+  // Kp channel
+  el('sw-kp-val').innerHTML = kp != null ? kp.toFixed(1) : '—';
+  el('sw-kp-bar').style.width = kp != null ? Math.min(kp/9*100, 100)+'%' : '0%';
+  el('sw-kp-bar').style.background = kp >= 6 ? 'var(--danger)' : kp >= 4 ? 'var(--warn)' : 'var(--accent)';
+  const kpSt = kp >= 6 ? ['bad','storm'] : kp >= 4 ? ['warn','active'] : ['ok','quiet'];
+  el('sw-kp-status').textContent = kp != null ? kpSt[1] : 'unavailable';
+  el('sw-kp-status').className   = 'sw-ch-status ' + kpSt[0];
+  if (kp >= 4) el('sw-ch-kp').classList.add('contributing');
+
+  // Bz channel
+  el('sw-bz-val').innerHTML = bz != null ? bz.toFixed(1)+'<span class="sw-ch-unit"> nT</span>' : '—';
+  const bzPct = bz != null ? Math.min(Math.abs(bz)/30*100, 100) : 0;
+  el('sw-bz-bar').style.width      = bzPct+'%';
+  el('sw-bz-bar').style.background = bz < -10 ? 'var(--danger)' : bz < -5 ? 'var(--warn)' : 'var(--accent)';
+  const bzSt = bz < -10 ? ['bad','southward'] : bz < 0 ? ['warn','slightly south'] : ['ok','northward'];
+  el('sw-bz-status').textContent = bz != null ? bzSt[1] : 'unavailable';
+  el('sw-bz-status').className   = 'sw-ch-status ' + bzSt[0];
+  if (bz < -10) el('sw-ch-bz').classList.add('contributing');
+
+  // SW Speed channel
+  el('sw-speed-val').innerHTML = speed != null ? speed.toFixed(0)+'<span class="sw-ch-unit"> km/s</span>' : '—';
+  const spPct = speed != null ? Math.min(speed/900*100, 100) : 0;
+  el('sw-speed-bar').style.width      = spPct+'%';
+  el('sw-speed-bar').style.background = speed > 600 ? 'var(--danger)' : speed > 450 ? 'var(--warn)' : 'var(--accent)';
+  const spSt = speed > 600 ? ['bad','fast'] : speed > 450 ? ['warn','elevated'] : ['ok','nominal'];
+  el('sw-speed-status').textContent = speed != null ? spSt[1] : 'unavailable';
+  el('sw-speed-status').className   = 'sw-ch-status ' + spSt[0];
+  if (speed > 600) el('sw-ch-speed').classList.add('contributing');
+
+  // X-ray channel
+  const [xLabel, xClass, xSt] = xrayClass(xray);
+  el('sw-xray-val').textContent = xLabel;
+  const xPct = xray != null ? Math.min(Math.log10(xray/1e-8)/4*100, 100) : 0;
+  el('sw-xray-bar').style.width      = Math.max(xPct,0)+'%';
+  el('sw-xray-bar').style.background = xSt === 'bad' ? 'var(--danger)' : xSt === 'warn' ? 'var(--warn)' : 'var(--accent)';
+  el('sw-xray-status').textContent   = xClass;
+  el('sw-xray-status').className     = 'sw-ch-status ' + xSt;
+  if (xray >= 1e-5) el('sw-ch-xray').classList.add('contributing');
+
+  // Flags line
+  el('sw-flags-line').textContent = flags.length
+    ? 'Contributing factors: ' + flags.join('  ·  ')
+    : 'No contamination factors active';
+  el('sw-fetch-time').textContent = 'Updated ' + new Date().toUTCString();
+}
+
+// ── Pipeline data from GitHub ────────────────────────────────────
+const BASE = 'https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/';
+
+async function loadPipelineData() {
+  try {
+    const [pollRes, logRes] = await Promise.all([
+      fetch(BASE + 'poll_log.json'),
+      fetch(BASE + 'running_log.json')
     ]);
-    if(r1.ok) { const d=await r1.json(); renderDashboard(d); renderEvents(d); }
-    if(r2.ok) { const d=await r2.json(); renderPollLog(d); }
+
+    const pollData = pollRes.ok ? await pollRes.json() : null;
+    const logData  = logRes.ok  ? await logRes.json()  : null;
+
+    if (pollData) renderPollData(pollData);
+    if (logData)  renderLogData(logData);
   } catch(e) {
-    console.error('[GPS-TEC] fetchAll error:', e);
-    renderDashboard({scored_events:[],summary:{}});
+    console.error('Pipeline data fetch failed:', e);
   }
 }
 
-fetchAll();
-setInterval(fetchAll, REFRESH_MS);
+function renderPollData(d) {
+  // Stats
+  const polls   = d.total_polls || (d.polls ? d.polls.length : 0);
+  const queued  = d.total_queued  ?? '—';
+  const seismic = d.total_near_misses ?? '—';
+  el('stat-polls').textContent   = polls;
+  el('stat-queued').textContent  = queued;
+
+  if (d.polls && d.polls.length) {
+    const last = d.polls[d.polls.length - 1];
+    const t = new Date(last.time || last.poll_utc);
+    el('stat-last').textContent = t.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
+    el('stat-last-sub').textContent = t.toLocaleDateString('en-US', {month:'short', day:'numeric'});
+
+    // Poll table
+    const rows = d.polls.slice(-50).reverse().map(p => {
+      const pt = new Date(p.time || p.poll_utc);
+      const status = p.error ? '<span class="poll-status err">ERR</span>' : '<span class="poll-status ok">OK</span>';
+      return `<tr>
+        <td>${pt.toLocaleString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</td>
+        <td>${p.new_events ?? 0}</td>
+        <td>${p.queued_total ?? '—'}</td>
+        <td>${p.scored_total ?? '—'}</td>
+        <td>${status}</td>
+      </tr>`;
+    }).join('');
+
+    el('poll-history-body').innerHTML = `<table class="data-table">
+      <thead><tr><th>Time</th><th>New</th><th>Queued</th><th>Scored</th><th>Status</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
+  // Near misses
+  const nm = d.near_misses || [];
+  el('stat-queued').textContent  = queued;
+  if (nm.length) {
+    const nmRows = nm.slice(-50).reverse().map(e => {
+      const t = new Date(e.time || e.quake_utc);
+      return `<tr>
+        <td>${t.toLocaleString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</td>
+        <td style="font-family:var(--font-m)">Mw${e.magnitude?.toFixed(1) ?? '—'}</td>
+        <td>${e.place || '—'}</td>
+        <td><span class="reason-tag">${e.reason || '—'}</span></td>
+        <td style="font-family:var(--font-m);color:var(--dim)">${e.vs_threshold || '—'}</td>
+      </tr>`;
+    }).join('');
+    el('near-miss-body').innerHTML = `<table class="data-table">
+      <thead><tr><th>Time</th><th>Mag</th><th>Location</th><th>Reason</th><th>vs Threshold</th></tr></thead>
+      <tbody>${nmRows}</tbody>
+    </table>`;
+  }
+}
+
+function swScoreCell(pred) {
+  if (!pred || pred.space_weather_score == null) return '<td>—</td>';
+  const s = pred.space_weather_score;
+  const color = s >= 0.5 ? 'var(--danger)' : s >= 0.3 ? 'var(--warn)' : 'var(--accent2)';
+  const flags = (pred.space_weather_flags || []).join('; ') || 'clean';
+  const raw = pred.space_weather_raw || {};
+  const tip = `Score: ${s.toFixed(2)} | Kp: ${raw.kp?.toFixed(1) ?? 'n/a'} | Bz: ${raw.imf_bz?.toFixed(1) ?? 'n/a'} nT | SW: ${raw.sw_speed?.toFixed(0) ?? 'n/a'} km/s | ${flags}`;
+  return `<td title="${tip}" style="font-family:var(--font-m);color:${color};cursor:help">${s.toFixed(2)}</td>`;
+}
+
+function renderLogData(d) {
+  const events = d.events || [];
+  el('stat-scored').textContent = events.length;
+
+  // Performance metrics
+  if (events.length > 0) {
+    let tp=0, tn=0, fp=0, fn=0, geo=0;
+    let leads = [], amps = [];
+    events.forEach(e => {
+      const o = (e.outcome || '').toLowerCase();
+      if (o === 'tp') tp++;
+      else if (o === 'tn') tn++;
+      else if (o === 'fp') fp++;
+      else if (o === 'fn') fn++;
+      else geo++;
+      if (e.lead_min != null) leads.push(e.lead_min);
+      if (e.amplitude_error != null) amps.push(Math.abs(e.amplitude_error));
+    });
+    const total = tp + tn + fp + fn;
+    el('perf-tpr').textContent = total ? (tp / Math.max(tp+fn,1)).toFixed(2) : '—';
+    el('perf-fpr').textContent = total ? (fp / Math.max(fp+tn,1)).toFixed(2) : '—';
+    el('perf-lead').innerHTML  = leads.length ? (leads.reduce((a,b)=>a+b,0)/leads.length).toFixed(0)+'<span class="perf-unit"> min</span>' : '—';
+    el('perf-med').innerHTML   = leads.length ? leads.slice().sort((a,b)=>a-b)[Math.floor(leads.length/2)].toFixed(0)+'<span class="perf-unit"> min</span>' : '—';
+    el('perf-amp').textContent = amps.length ? (amps.reduce((a,b)=>a+b,0)/amps.length).toFixed(1)+'%' : '—';
+    el('oc-tp').textContent = tp; el('oc-tn').textContent = tn;
+    el('oc-fp').textContent = fp; el('oc-fn').textContent = fn;
+    el('oc-geo').textContent = geo; el('oc-total').textContent = events.length;
+
+    // Events table
+    const rows = events.slice().reverse().map(e => {
+      const t = new Date(e.quake_utc || e.time);
+      const pred = e.prediction || {};
+      const det = pred.detected;
+      const outcome = (e.outcome || '').toUpperCase();
+      let badgeCls = 'silent';
+      if (det === true) badgeCls = 'detected';
+      else if (pred.result === 'GATED') badgeCls = 'gated';
+      else if (e.outcome === 'abstain') badgeCls = 'abstain';
+
+      return `<tr>
+        <td style="font-family:var(--font-m)">${t.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</td>
+        <td style="font-family:var(--font-m)">${e.place || '—'}</td>
+        <td style="font-family:var(--font-m)">Mw${e.magnitude?.toFixed(1) ?? '—'}</td>
+        <td><span class="det-badge ${badgeCls}">${det ? 'DETECTED' : pred.result === 'GATED' ? 'GATED' : 'SILENT'}</span></td>
+        <td style="font-family:var(--font-m);color:var(--accent2)">${outcome || '—'}</td>
+        ${swScoreCell(pred)}
+        <td style="font-family:var(--font-m);color:var(--dim)">${pred.detection?.speed_ms != null ? pred.detection.speed_ms.toFixed(0)+' m/s' : '—'}</td>
+        <td style="font-family:var(--font-m)">${pred.wave_forecast?.predicted_wave_m != null ? pred.wave_forecast.predicted_wave_m.toFixed(3)+' m' : '—'}</td>
+      </tr>`;
+    }).join('');
+
+    el('events-body').innerHTML = `<table class="data-table">
+      <thead><tr>
+        <th>Date</th><th>Location</th><th>Mw</th>
+        <th>Detection</th><th>Outcome</th>
+        <th title="Space weather contamination score (0=clean, 1=max)">Space Wx ▲</th>
+        <th>Speed</th><th>Forecast</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+}
+
+// ── Init ─────────────────────────────────────────────────────────
+loadSpaceWeather();
+loadPipelineData();
+// Refresh space weather every 5 min
+setInterval(loadSpaceWeather, 5 * 60 * 1000);
 </script>
 </body>
 </html>
