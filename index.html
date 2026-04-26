@@ -93,23 +93,42 @@
   .bar-val { color:var(--text); width:28px; flex-shrink:0; font-family:var(--sans); font-weight:700; font-size:0.75rem; text-align:right; }
 
   /* Poll log */
-  .poll-summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:32px; }
-  .poll-stat { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:20px; }
-  .poll-stat .label { font-size:0.62rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:12px; }
-  .poll-stat .value { font-family:var(--sans); font-size:clamp(1.4rem,3vw,2rem); font-weight:800; color:var(--accent); line-height:1; }
+  .poll-summary { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
+  .poll-stat { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:16px 20px; }
+  .poll-stat .label { font-size:0.60rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:8px; }
+  .poll-stat .value { font-family:var(--sans); font-size:clamp(1.2rem,2.5vw,1.6rem); font-weight:800; color:var(--accent); line-height:1; }
   .poll-stat .value.green { color:var(--accent2); }
-  .poll-stat .sub { margin-top:6px; font-size:0.63rem; color:var(--text-dim); }
+  .poll-stat .sub { margin-top:5px; font-size:0.60rem; color:var(--text-dim); }
 
-  .poll-log-table { background:var(--surface); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
-  .poll-row { display:grid; grid-template-columns:1fr 60px 70px 70px 90px; gap:0; padding:11px 20px; border-bottom:1px solid rgba(14,42,63,0.5); font-size:0.68rem; align-items:center; }
+  /* Scrollable poll history box */
+  .poll-history-wrap { background:var(--surface); border:1px solid var(--border); border-radius:6px; overflow:hidden; margin-bottom:28px; }
+  .poll-history-scroll { max-height:220px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+  .poll-row { display:grid; grid-template-columns:1.4fr 55px 65px 65px 80px; gap:0; padding:8px 16px; border-bottom:1px solid rgba(14,42,63,0.4); font-size:0.65rem; align-items:center; }
   .poll-row:last-child { border-bottom:none; }
   .poll-row:hover { background:rgba(0,212,255,0.02); }
-  .poll-header { background:var(--surface2); font-size:0.58rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; border-bottom:1px solid var(--border); padding:9px 20px; }
-  .poll-ts { color:var(--text-dim); font-size:0.65rem; }
+  .poll-header { background:var(--surface2); font-size:0.56rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; border-bottom:1px solid var(--border); padding:8px 16px; }
+  .poll-ts { color:var(--text-dim); font-size:0.62rem; }
   .poll-new-0 { color:var(--text-dim); }
   .poll-new-pos { color:var(--accent2); font-family:var(--sans); font-weight:700; }
   .poll-clean { color:var(--accent2); }
   .poll-cand { color:var(--warn); font-weight:700; }
+
+  /* Recent seismicity feed */
+  .seis-feed { background:var(--surface); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+  .seis-scroll { max-height:340px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+  .seis-row { display:grid; grid-template-columns:1.2fr 60px 1.6fr 1fr 80px; gap:0; padding:10px 16px; border-bottom:1px solid rgba(14,42,63,0.4); font-size:0.65rem; align-items:center; }
+  .seis-row:last-child { border-bottom:none; }
+  .seis-row:hover { background:rgba(0,212,255,0.02); }
+  .seis-header { background:var(--surface2); font-size:0.56rem; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; border-bottom:1px solid var(--border); padding:8px 16px; display:grid; grid-template-columns:1.2fr 60px 1.6fr 1fr 80px; gap:0; }
+  .seis-mag-high { color:#ff6b35; font-weight:700; font-family:var(--sans); }
+  .seis-mag-mid  { color:#ffaa00; font-weight:700; font-family:var(--sans); }
+  .seis-mag-low  { color:var(--text-dim); font-family:var(--sans); }
+  .seis-reason-zone   { color:var(--text-dim); font-size:0.60rem; }
+  .seis-reason-depth  { color:#7b5ea7; font-size:0.60rem; }
+  .seis-reason-thresh { color:#3a7a5a; font-size:0.60rem; }
+  .seis-reason-other  { color:var(--text-dim); font-size:0.60rem; }
+  .seis-delta-neg { color:#3a7a5a; font-size:0.62rem; }
+  .seis-place { color:var(--text); font-size:0.63rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
   .map-panel { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:20px; margin-bottom:40px; overflow:hidden; }
   .map-svg { width:100%; height:auto; opacity:1; }
@@ -366,31 +385,34 @@
 
   <!-- POLL LOG -->
   <div class="tab-panel" id="tab-log">
+
+    <!-- Stats strip -->
     <div class="poll-summary">
       <div class="poll-stat">
-        <div class="label">Total Fetches</div>
+        <div class="label">Total Polls</div>
         <div class="value" id="totalPolls">–</div>
         <div class="sub">USGS API calls since launch</div>
       </div>
       <div class="poll-stat">
-        <div class="label">Candidates Found</div>
+        <div class="label">Candidates Queued</div>
         <div class="value green" id="totalCandidates">–</div>
-        <div class="sub">Pacific Mw6.5+ events queued</div>
+        <div class="sub">Pacific Mw6.5+ qualifying events</div>
       </div>
       <div class="poll-stat">
-        <div class="label">Clean Fetches</div>
-        <div class="value" id="cleanPolls">–</div>
-        <div class="sub">No qualifying events detected</div>
+        <div class="label">Seismic Events Seen</div>
+        <div class="value" id="totalSeen">–</div>
+        <div class="sub">Mw5.5+ tracked, did not qualify</div>
       </div>
       <div class="poll-stat">
-        <div class="label">Last Fetch</div>
-        <div class="value" id="lastPoll" style="font-size:1rem;color:var(--text);line-height:1.3">–</div>
+        <div class="label">Last Poll</div>
+        <div class="value" id="lastPoll" style="font-size:0.9rem;color:var(--text);line-height:1.3">–</div>
         <div class="sub" id="lastPollAge">–</div>
       </div>
     </div>
 
-    <div class="section-header"><span class="section-title">Recent Fetch Activity</span><div class="section-line"></div></div>
-    <div class="poll-log-table">
+    <!-- Poll history — scrollable, last 50 -->
+    <div class="section-header"><span class="section-title">Poll History</span><div class="section-line"></div></div>
+    <div class="poll-history-wrap">
       <div class="poll-row poll-header">
         <span>Time (Eastern)</span>
         <span>New</span>
@@ -398,13 +420,26 @@
         <span>Scored</span>
         <span>Status</span>
       </div>
-      <div id="pollRows">
-        <div class="empty-state">
-          <div class="empty-icon">📡</div>
-          <p>No fetch data yet.</p>
-        </div>
+      <div class="poll-history-scroll" id="pollRows">
+        <div class="empty-state"><div class="empty-icon">📡</div><p>No poll data yet.</p></div>
       </div>
     </div>
+
+    <!-- Recent seismicity feed -->
+    <div class="section-header" style="margin-top:28px"><span class="section-title">Recent Seismic Activity · Did Not Qualify</span><div class="section-line"></div></div>
+    <div class="seis-feed">
+      <div class="seis-header">
+        <span>Time (Eastern)</span>
+        <span>Mag</span>
+        <span>Location</span>
+        <span>Reason</span>
+        <span>vs Threshold</span>
+      </div>
+      <div class="seis-scroll" id="seisRows">
+        <div class="empty-state"><div class="empty-icon">🌍</div><p>Seismic activity will appear here once the pipeline processes new events.</p></div>
+      </div>
+    </div>
+
   </div>
 
   <footer>
@@ -545,40 +580,63 @@ function renderPollLog(data) {
   const polls = (data.polls||[]).slice().reverse();
   const total = data.total_polls||0;
   const withCandidates = polls.filter(p=>p.new_candidates>0).length;
-  const clean = polls.filter(p=>p.new_candidates===0).length;
+  const seismicity = (data.recent_seismicity||[]).slice().reverse();
   const last = polls[0];
 
   document.getElementById('totalPolls').textContent = total;
   document.getElementById('totalCandidates').textContent = withCandidates;
-  document.getElementById('cleanPolls').textContent = clean;
+  document.getElementById('totalSeen').textContent = seismicity.length;
 
   if(last) {
     document.getElementById('lastPoll').textContent = toEastern(last.ts);
     document.getElementById('lastPollAge').textContent = timeAgo(last.ts);
-
-    // Footer status
     const age = Math.round((Date.now()-new Date(last.ts))/60000);
     const statusEl = document.getElementById('footerStatus');
     if(age < 20) {
-      statusEl.innerHTML = `<span style="color:var(--accent2)">●</span> ${total} fetches · last ${timeAgo(last.ts)}`;
+      statusEl.innerHTML = `<span style="color:var(--accent2)">●</span> ${total} polls · last ${timeAgo(last.ts)}`;
     } else {
-      statusEl.innerHTML = `<span style="color:var(--warn)">●</span> ${total} fetches · last fetch ${timeAgo(last.ts)} — may be delayed`;
+      statusEl.innerHTML = `<span style="color:var(--warn)">●</span> ${total} polls · last ${timeAgo(last.ts)} — may be delayed`;
     }
   }
 
-  if(!polls.length) return;
+  // Poll history — last 50, scrollable
+  if(polls.length) {
+    const rows = polls.slice(0,50).map(p => {
+      const isNew = p.new_candidates > 0;
+      return `<div class="poll-row">
+        <span class="poll-ts">${toEastern(p.ts)}</span>
+        <span class="${isNew?'poll-new-pos':'poll-new-0'}">${isNew?'+'+p.new_candidates:'–'}</span>
+        <span style="color:var(--text-dim)">${p.total_queued||0}</span>
+        <span style="color:var(--text-dim)">${p.scored||0}</span>
+        <span class="${isNew?'poll-cand':'poll-clean'}">${isNew?'CANDIDATE':'clean'}</span>
+      </div>`;
+    }).join('');
+    document.getElementById('pollRows').innerHTML = rows;
+  }
 
-  const rows = polls.slice(0,100).map(p => {
-    const isNew = p.new_candidates > 0;
-    return `<div class="poll-row">
-      <span class="poll-ts">${toEastern(p.ts)}</span>
-      <span class="${isNew?'poll-new-pos':'poll-new-0'}">${isNew?'+'+p.new_candidates:'–'}</span>
-      <span style="color:var(--text-dim)">${p.total_queued||0}</span>
-      <span style="color:var(--text-dim)">${p.scored||0}</span>
-      <span class="${isNew?'poll-cand':'poll-clean'}">${isNew?'candidate':'clean'}</span>
-    </div>`;
-  }).join('');
-  document.getElementById('pollRows').innerHTML = rows;
+  // Seismic activity feed
+  if(seismicity.length) {
+    const srows = seismicity.slice(0,100).map(e => {
+      const mag = e.mag||0;
+      const magClass = mag >= 6.5 ? 'seis-mag-high' : mag >= 6.0 ? 'seis-mag-mid' : 'seis-mag-low';
+      const reason = e.reason||'filtered';
+      const reasonClass = reason.includes('zone') ? 'seis-reason-zone'
+                        : reason.includes('deep') ? 'seis-reason-depth'
+                        : reason.includes('thresh') ? 'seis-reason-thresh'
+                        : 'seis-reason-other';
+      const delta = e.delta !== null && e.delta !== undefined
+        ? `<span class="seis-delta-neg">${e.delta.toFixed(1)} below</span>`
+        : '<span style="color:var(--text-dim)">—</span>';
+      return `<div class="seis-row">
+        <span class="poll-ts">${toEastern(e.ts)}</span>
+        <span class="${magClass}">Mw${mag.toFixed(1)}</span>
+        <span class="seis-place" title="${e.place||''}">${e.place||'–'}</span>
+        <span class="${reasonClass}">${reason}</span>
+        <span>${delta}</span>
+      </div>`;
+    }).join('');
+    document.getElementById('seisRows').innerHTML = srows;
+  }
 }
 
 async function fetchAll() {
