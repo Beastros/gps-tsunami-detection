@@ -63,13 +63,22 @@ def predict_wave(tec, mw, dist_km):
     return CALIB_A * tec * (10**(CALIB_B*mw)) / (dist_km**CALIB_C)
 
 STATIONS = {
+    # Hawaii anchor network (original)
     "mkea": {"lat": 19.801,  "lon": -155.456, "alt": 3763},
     "kokb": {"lat": 22.127,  "lon": -159.665, "alt": 1167},
     "hnlc": {"lat": 21.297,  "lon": -157.816, "alt":    5},
+    # Western Pacific
     "guam": {"lat": 13.489,  "lon":  144.868, "alt":   83},
+    "kwj1": {"lat":  8.722,  "lon":  167.730, "alt":   39},  # Kwajalein -- Central Pacific relay
+    "noum": {"lat": -22.270, "lon":  166.413, "alt":   69},  # Noumea NC -- SW Pacific
+    # South Pacific
     "chat": {"lat": -43.956, "lon": -176.566, "alt":   63},
+    "auck": {"lat": -36.602, "lon":  174.834, "alt":  106},  # Auckland NZ -- South Pacific
+    # Tahiti
     "thti": {"lat": -17.577, "lon": -149.606, "alt":   87},
     "thtg": {"lat": -17.577, "lon": -149.606, "alt":   87},
+    # West Coast -- Cascadia upstream
+    "holb": {"lat":  50.640, "lon": -128.133, "alt":  180},  # Holberg BC -- Cascadia anchor
 }
 
 HILO = {"lat": 19.730, "lon": -155.087}  # tide gauge target

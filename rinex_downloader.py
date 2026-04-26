@@ -41,9 +41,9 @@ CDDIS_BASE       = "https://cddis.nasa.gov/archive/gps/data/daily"
 
 # Stations to attempt per corridor
 CORRIDOR_STATIONS = {
-    "guam": ["guam", "mkea", "kokb", "hnlc"],
-    "chat": ["chat", "mkea", "kokb", "hnlc"],
-    "thti": ["thti", "thtg", "mkea", "kokb"],
+    "guam": ["guam", "kwj1", "noum", "holb", "mkea", "kokb", "hnlc"],
+    "chat": ["chat", "auck", "mkea", "kokb", "hnlc"],
+    "thti": ["thti", "thtg", "auck", "noum", "mkea", "kokb"],
     None:   ["mkea", "kokb", "hnlc", "guam"],
 }
 
