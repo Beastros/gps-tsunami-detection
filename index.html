@@ -560,6 +560,7 @@ function renderLog(d){
       +'<td>'+confCell+'</td>'
       +'<td><span class="det-badge '+bc+'">'+(det?'DETECTED':gated?'GATED':'SILENT')+'</span></td>'
       +'<td style="font-family:var(--font-m);color:'+outCol+'">'+outLabel+'</td>'
+      +'<td title="Constellation: '+(e.constellation_agreement?e.constellation_agreement.agreement_label:'n/a')+'" style="font-family:var(--font-m);color:var(--dim);text-align:center">'+(e.constellation_agreement?(e.constellation_agreement.n_detecting+'/'+e.constellation_agreement.n_available):'--')+'</td>'
       +'<td title="'+dTip+'" style="font-family:var(--font-m);color:'+dc+';text-align:center">'+di+'</td>'
       +'<td style="font-family:var(--font-m);color:'+swCol+'">'+swTxt+'</td>'
       +'</tr>';
