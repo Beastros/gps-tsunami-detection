@@ -143,7 +143,7 @@ def compute_dart_score(dart_result):
     return min(round(base + sigma_boost, 3), 1.0)
 
 
-def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score, const_agreement=None, dtec_corroborates=False, ionosonde_confirmed=False):
+def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score, const_agreement=None, dtec_corroborates=False, ionosonde_confirmed=False, tsunamigenic_weight=0.5):
     """
     Multi-sensor fusion confidence score (0-1).
 
@@ -153,7 +153,7 @@ def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score,
     dart_status: 'pending' | 'no_buoys' | 'negative' | 'confirmed'
     """
     tec_reliability = max(1.0 - sw_score * 0.6, 0.2)
-    tec_contrib = 0.55 * tec_reliability if tec_detected else 0.0
+    tec_contrib = 0.55 * tec_reliability * tsunamigenic_weight if tec_detected else 0.0
     if dart_status in ("pending", "no_buoys"):
         dart_contrib = 0.0
     elif dart_status == "negative":
@@ -772,10 +772,13 @@ def run_event(event, kp_override=None):
 
     _tec  = prediction.get("detected", False)
     _sw   = prediction.get("space_weather_score", 0.0)
+    _ti = event.get("tsunamigenic_index")
+    _tw = _ti if _ti is not None else 0.5
     combined_confidence = compute_combined_confidence(
         _tec, dart_score, dart_status, _sw, const_agreement,
         dtec_corroborates=dtec_corroborates,
-        ionosonde_confirmed=ionosonde_confirmed
+        ionosonde_confirmed=ionosonde_confirmed,
+        tsunamigenic_weight=_tw
     )
     prediction["constellation_agreement"] = const_agreement
     prediction["ionosonde_result"]         = ionosonde_result

@@ -47,17 +47,36 @@ usp000hvtm,2011-10-21T17:57:16Z,-28.98,-176.24,7.4,26,NO_TSUNAMI,Kermadec Mw7.4 
 usp000hpgz,2011-03-09T02:45:20Z,38.44,142.84,7.2,32,NO_TSUNAMI,Tohoku foreshock Mw7.2 - below threshold
 """
 
+# tsunamigenic_index: computed from rake + depth per usgs_listener.py logic
+# primary_anchor: drives corridor station selection in rinex_downloader.py
+BACKTEST_METADATA = {
+    "official20110311054624120_30": {"tsunamigenic_index": 1.0,  "primary_anchor": "guam"},
+    "official20100227063411530_30": {"tsunamigenic_index": 1.0,  "primary_anchor": "guam"},
+    "usp000f1s0":                   {"tsunamigenic_index": 1.0,  "primary_anchor": "guam"},
+    "usp000jrsf":                   {"tsunamigenic_index": 1.0,  "primary_anchor": "guam"},
+    "usp000fjta":                   {"tsunamigenic_index": 0.4,  "primary_anchor": None},
+    "usp000jadn":                   {"tsunamigenic_index": 0.05, "primary_anchor": None},
+    "usp000jhe9":                   {"tsunamigenic_index": 0.4,  "primary_anchor": "guam"},
+    "usp000hvtm":                   {"tsunamigenic_index": 1.0,  "primary_anchor": "guam"},
+    "usp000hpgz":                   {"tsunamigenic_index": 1.0,  "primary_anchor": "guam"},
+}
+
 def build_event_dict(row):
+    uid  = row["usgs_id"]
+    meta = BACKTEST_METADATA.get(uid, {})
     return {
-        "usgs_id":   row["usgs_id"],
-        "quake_utc": row["quake_utc"],
-        "lat":       float(row["lat"]),
-        "lon":       float(row["lon"]),
-        "magnitude": float(row["mw"]),
-        "depth_km":  float(row.get("depth_km", 50)),
-        "place":     row.get("notes", row["usgs_id"]),
-        "status":    "rinex_ready",
-        "rinex_dir": "rinex_live/" + row["usgs_id"],
+        "usgs_id":            uid,
+        "quake_utc":          row["quake_utc"],
+        "lat":                float(row["lat"]),
+        "lon":                float(row["lon"]),
+        "magnitude":          float(row["mw"]),
+        "depth_km":           float(row.get("depth_km", 50)),
+        "place":              row.get("notes", uid),
+        "status":             "rinex_ready",
+        "rinex_dir":          "rinex_live/" + uid,
+        "tsunamigenic_index": meta.get("tsunamigenic_index"),
+        "primary_anchor":     meta.get("primary_anchor"),
+        "zones":              [],
     }
 
 def score_against_known(prediction, known_outcome, event):
