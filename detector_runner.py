@@ -24,6 +24,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from scipy.signal import butter, filtfilt
 from itertools import combinations
+from space_weather import get_space_weather_quality
 
 EVENT_QUEUE_FILE = "event_queue.json"
 LOG_FILE = "runner.log"
@@ -116,6 +117,7 @@ def fetch_kp(quake_utc_str):
 
 
 
+def haversine_km(la1, lo1, la2, lo2):
     import math
     R=6371.0; la1,lo1,la2,lo2=map(math.radians,[la1,lo1,la2,lo2])
     dlat=la2-la1; dlon=lo2-lo1
@@ -141,7 +143,7 @@ def compute_dart_score(dart_result):
     return min(round(base + sigma_boost, 3), 1.0)
 
 
-def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score):
+def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score, const_agreement=None):
     """
     Multi-sensor fusion confidence score (0-1).
 
@@ -158,7 +160,108 @@ def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score)
         dart_contrib = -0.08 if tec_detected else 0.0
     else:
         dart_contrib = dart_score * 0.45
-    return min(round(max(tec_contrib + dart_contrib, 0.0), 3), 1.0)
+    # Constellation agreement bonus/penalty (0 if only GPS available)
+    const_contrib = 0.0
+    if const_agreement is not None and tec_detected:
+        lbl = const_agreement.get('agreement_label', 'single_constellation')
+        if const_agreement.get('n_available', 1) >= 2:
+            if lbl == 'agreement':     const_contrib =  0.10
+            elif lbl == 'disagreement': const_contrib = -0.10
+            elif lbl == 'partial':      const_contrib =  0.03
+    confidence = max(tec_contrib + dart_contrib + const_contrib, 0.0)
+    return min(round(confidence, 3), 1.0)
+
+
+CONST_FREQ = {
+    'G': (1575.42e6, 1227.60e6),
+    'R': (1602.00e6, 1246.00e6),
+    'E': (1575.42e6, 1207.14e6),
+}
+CONST_K   = {c: 40.3e16*(1/f2**2-1/f1**2) for c,(f1,f2) in CONST_FREQ.items()}
+CONST_LAM = {c: (2.998e8/f1, 2.998e8/f2)  for c,(f1,f2) in CONST_FREQ.items()}
+
+
+def compute_tec_for_constellation(obs_path, constellation, lat, lon, alt):
+    if constellation not in CONST_FREQ:
+        return None
+    lam1, lam2 = CONST_LAM[constellation]
+    k_val = CONST_K[constellation]
+    try:
+        import georinex as gr
+        obs = gr.load(str(obs_path), use=constellation)
+    except Exception as exc:
+        log.debug(f'  [{constellation}] RINEX load failed: {exc}')
+        return None
+    avail = list(obs.data_vars)
+    l1v = next((v for v in avail if v.startswith('L1')), None)
+    l2v = next((v for v in avail if v.startswith('L2') or v.startswith('L7') or v.startswith('L5')), None)
+    if not l1v or not l2v:
+        return None
+    l1d = obs[l1v]; l2d = obs[l2v]; arcs = []
+    for sv in obs.sv.values:
+        try:
+            a = l1d.sel(sv=sv); b = l2d.sel(sv=sv)
+            if a.ndim > 1: a = a.isel({d: 0 for d in a.dims if d != 'time'})
+            if b.ndim > 1: b = b.isel({d: 0 for d in b.dims if d != 'time'})
+            mask = (~np.isnan(a.values)) & (~np.isnan(b.values))
+            times = a.time.values[mask]
+            if len(times) < MIN_ARC_EPOCHS: continue
+            l4 = a.values[mask] * lam1 - b.values[mask] * lam2
+            sl_ = np.where(np.abs(np.diff(l4)) > 0.5)[0] + 1
+            bds = [0] + list(sl_) + [len(l4)]
+            for s, e in zip(bds[:-1], bds[1:]):
+                if e - s < MIN_ARC_EPOCHS: continue
+                tn = np.linspace(0, 1, e - s)
+                try:
+                    c = np.polyfit(tn, l4[s:e], POLYNOMIAL_ORDER)
+                    r = (l4[s:e] - np.polyval(c, tn)) / k_val
+                    ts = [pd.Timestamp(t).tz_localize('UTC') for t in times[s:e]]
+                    arcs.append(pd.Series(r, index=ts))
+                except: continue
+        except: continue
+    if not arcs: return None
+    combined = pd.concat([s.resample(f'{RESAMPLE_SEC}s').mean() for s in arcs], axis=1)
+    stacked = combined.median(axis=1).interpolate(limit=10)
+    try:
+        return bandpass(stacked, 1 / float(RESAMPLE_SEC))
+    except Exception:
+        return None
+
+
+def compute_constellation_agreement(filts_by_const, quake_utc):
+    qu = pd.Timestamp(quake_utc)
+    window_start = qu + pd.Timedelta(hours=MIN_POST_QUAKE_H)
+    window_end   = qu + pd.Timedelta(hours=MAX_POST_QUAKE_H)
+    const_results = {}
+    for const, filts in filts_by_const.items():
+        if not filts:
+            const_results[const] = {'available': False, 'anomaly': False, 'n_stations': 0}
+            continue
+        has_anomaly = False
+        for sid, filt in filts.items():
+            try:
+                win = filt[(filt.index >= window_start) & (filt.index <= window_end)]
+                pre = filt[filt.index < qu]
+                if win.empty or pre.empty: continue
+                noise = max(float(pre.std()), 1e-4)
+                if float(win.abs().max()) > SNR_THRESHOLD * noise:
+                    has_anomaly = True; break
+            except Exception: continue
+        const_results[const] = {'available': True, 'anomaly': has_anomaly, 'n_stations': len(filts)}
+    available = [c for c, v in const_results.items() if v['available']]
+    detecting = [c for c, v in const_results.items() if v.get('anomaly')]
+    n_avail = len(available); n_detect = len(detecting)
+    if n_avail == 0:       label, score = 'no_data', 0.0
+    elif n_avail == 1:     label, score = 'single_constellation', 0.5
+    else:
+        frac = n_detect / n_avail
+        if frac >= 0.67:   label, score = 'agreement', round(0.8 + 0.2*frac, 2)
+        elif frac <= 0.34: label, score = 'disagreement', 0.2
+        else:              label, score = 'partial', 0.5
+    return {'constellations': const_results, 'n_available': n_avail,
+            'n_detecting': n_detect, 'detecting': detecting,
+            'agreement_score': score, 'agreement_label': label}
+
 
 
 
@@ -373,6 +476,21 @@ def run_event(event, kp_override=None):
             filts[sid] = filt
             log.info(f"    → {sid.upper()} OK")
 
+
+    # Multi-constellation TEC (GLONASS + Galileo cross-check)
+    filts_by_const = {'G': filts}
+    for _const in ('R', 'E'):
+        _cfilts = {}
+        for _sid in STATIONS:
+            _og = rinex_dir / f"{_sid}{doy:03d}0.{yr2}o.Z"
+            if not _og.exists(): continue
+            _op = decompress(_og)
+            if not _op: continue
+            _scfg = STATIONS[_sid]
+            _cf = compute_tec_for_constellation(_op, _const, _scfg['lat'], _scfg['lon'], _scfg['alt'])
+            if _cf is not None: _cfilts[_sid] = _cf
+        if _cfilts: log.info(f"  [{_const}] {len(_cfilts)} station(s) with data")
+        filts_by_const[_const] = _cfilts
     if len(filts) < 2:
         log.warning(f"  Insufficient stations ({len(filts)})")
         return {"detected": False, "reason": "insufficient_stations",
@@ -489,6 +607,11 @@ def run_event(event, kp_override=None):
         log.warning(f"  Plot failed: {e}")
 
 
+    # Constellation agreement
+    const_agreement = compute_constellation_agreement(filts_by_const, quake_utc)
+    log.info(f"  CONSTELLATION: {const_agreement['n_detecting']}/{const_agreement['n_available']} "
+             f"detecting  label={const_agreement['agreement_label']}  score={const_agreement['agreement_score']}")
+
     # DART buoy check (runs after TEC; skipped if wave hasn't had time to arrive)
     from datetime import datetime as _dt
     _now      = _dt.now(timezone.utc)
@@ -526,9 +649,10 @@ def run_event(event, kp_override=None):
         dart_status = "no_buoys"
 
     _tec  = prediction.get("detected", False)
-    _sw   = prediction.get("space_weather_score", sw_score if "sw_score" in dir() else 0.0)
-    combined_confidence = compute_combined_confidence(_tec, dart_score, dart_status, _sw)
-    prediction["dart_result"]         = dart_result
+    _sw   = prediction.get("space_weather_score", 0.0)
+    combined_confidence = compute_combined_confidence(_tec, dart_score, dart_status, _sw, const_agreement)
+    prediction["constellation_agreement"] = const_agreement
+    prediction["dart_result"]              = dart_result
     prediction["dart_score"]          = dart_score
     prediction["dart_status"]         = dart_status
     prediction["combined_confidence"] = combined_confidence
