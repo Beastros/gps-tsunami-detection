@@ -122,6 +122,46 @@ def fetch_kp(quake_utc_str):
     a=math.sin(dlat/2)**2+math.cos(la1)*math.cos(la2)*math.sin(dlon/2)**2
     return R*2*math.asin(math.sqrt(a))
 
+def compute_dart_score(dart_result):
+    """
+    Convert check_dart_network() result to 0-1 score.
+    0.0 = no data or no signal.  1.0 = strong multi-buoy confirmation.
+    """
+    if not dart_result or dart_result.get("buoys_with_data", 0) == 0:
+        return 0.0
+    confirming = dart_result.get("confirming_buoys", 0)
+    if confirming == 0:
+        return 0.0
+    base = {1: 0.45, 2: 0.72}.get(confirming, 0.90)
+    max_sigma = 0.0
+    for b in dart_result.get("results", {}).values():
+        if b.get("detected") and b.get("detection"):
+            max_sigma = max(max_sigma, b["detection"].get("sigma_score", 0))
+    sigma_boost = min((max_sigma - 3.0) / 10.0, 0.10) if max_sigma > 3 else 0.0
+    return min(round(base + sigma_boost, 3), 1.0)
+
+
+def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score):
+    """
+    Multi-sensor fusion confidence score (0-1).
+
+    TEC coherence (GPS):  up to 0.55  — reliability reduced by space weather
+    DART ocean pressure:  up to 0.45  — independent of ionosphere
+
+    dart_status: 'pending' | 'no_buoys' | 'negative' | 'confirmed'
+    """
+    tec_reliability = max(1.0 - sw_score * 0.6, 0.2)
+    tec_contrib = 0.55 * tec_reliability if tec_detected else 0.0
+    if dart_status in ("pending", "no_buoys"):
+        dart_contrib = 0.0
+    elif dart_status == "negative":
+        dart_contrib = -0.08 if tec_detected else 0.0
+    else:
+        dart_contrib = dart_score * 0.45
+    return min(round(max(tec_contrib + dart_contrib, 0.0), 3), 1.0)
+
+
+
 def bandpass(s,fs):
     nyq=0.5*fs; b,a=butter(4,[max(1/(120*60)/nyq,1e-6),min(1/(10*60)/nyq,0.999)],btype="band")
     return pd.Series(filtfilt(b,a,s.values),index=s.index)
@@ -447,6 +487,54 @@ def run_event(event, kp_override=None):
         log.info(f"  Saved plot: {plot_path}")
     except Exception as e:
         log.warning(f"  Plot failed: {e}")
+
+
+    # DART buoy check (runs after TEC; skipped if wave hasn't had time to arrive)
+    from datetime import datetime as _dt
+    _now      = _dt.now(timezone.utc)
+    _qdt2     = _dt.fromisoformat(quake_utc.replace("Z", "+00:00"))
+    _post_h   = (_now - _qdt2).total_seconds() / 3600
+    dart_result = None
+    dart_score  = 0.0
+    dart_status = "no_buoys"
+    try:
+        from dart_checker import check_dart_network
+        _elat = event.get("lat") or event.get("latitude")
+        _elon = event.get("lon") or event.get("longitude")
+        if _elat is not None and _elon is not None:
+            if _post_h < 1.5:
+                dart_status = "pending"
+                log.info(f"  DART: too early ({_post_h:.1f}h post-quake) — skipping")
+            else:
+                dart_result = check_dart_network(quake_utc, _elat, _elon)
+                dart_score  = compute_dart_score(dart_result)
+                if dart_result["buoys_checked"] == 0:
+                    dart_status = "no_buoys"
+                elif dart_result["tsunami_detected"]:
+                    dart_status = "confirmed"
+                else:
+                    dart_status = "negative"
+                log.info(
+                    f"  DART: {dart_status}  score={dart_score:.2f}  "
+                    f"confirming={dart_result['confirming_buoys']}/"
+                    f"{dart_result['buoys_with_data']}"
+                )
+        else:
+            log.warning("  DART: no epicenter coords in event — skipping")
+    except Exception as _e:
+        log.warning(f"  DART check failed: {_e}")
+        dart_status = "no_buoys"
+
+    _tec  = prediction.get("detected", False)
+    _sw   = prediction.get("space_weather_score", sw_score if "sw_score" in dir() else 0.0)
+    combined_confidence = compute_combined_confidence(_tec, dart_score, dart_status, _sw)
+    prediction["dart_result"]         = dart_result
+    prediction["dart_score"]          = dart_score
+    prediction["dart_status"]         = dart_status
+    prediction["combined_confidence"] = combined_confidence
+    log.info(f"  CONFIDENCE: TEC={'yes' if _tec else 'no'}  "
+             f"DART={dart_status}({dart_score:.2f})  sw={_sw:.2f}  "
+             f"combined={combined_confidence:.3f}")
 
     return prediction
 
