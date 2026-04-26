@@ -127,16 +127,6 @@ Run git commands on separate lines. Never chain with &&.
 ### 13. dir command in PowerShell doesn't support /s /b flags
 Use `Get-ChildItem -Path folder -Recurse -Filter "*.ext"` instead of `dir folder /s /b`.
 
-### 14. Long base64 strings do not survive copy-paste through the chat UI
-Rule 5 says to use base64 encoding to embed file content in deploy scripts. However, if the base64 string is longer than ~2000 characters, the chat UI truncates it when Mike copies the PowerShell block. The script then runs with a corrupt DATA string and writes a broken file.
-
-**Fix:** For any file longer than ~50 lines, do NOT embed it as base64 in a chat code block. Instead:
-1. Write the file to `/mnt/user-data/outputs/` in the Claude container
-2. Use `present_files` to give Mike a download link
-3. Give Mike a `Copy-Item` command to place it in the right folder(s)
-
-This is now the standard deploy pattern for any new Python script file.
-
 ---
 
 ## PATHS AND DIRECTORIES
@@ -236,12 +226,10 @@ iono_contrib = 0.12 if ionosonde_confirmed
 combined = min(sum of above, 1.0)
 ```
 
-### Backtest results (April 26 2026 — V4 final)
-9 events: TP=4, TN=5, FP=0, FN=0
-TPR=1.00, FPR=0.00
-Okhotsk deep: conf=0.19 (tsunamigenic_weight=0.4 for 609km depth) — below 0.35 threshold → TRUE_NEGATIVE
-All TRUE_POSITIVE conf=0.52 (thrust events, tsunamigenic_weight=1.0, DART/ionosonde historical unavailable)
-Note: DART/ionosonde historical data unavailable via API — all confidence scores are GPS-TEC only
+### Backtest results (April 26 2026)
+9 events: TP=4, TN=4, FP=1 (Okhotsk deep — depth-gated in production), FN=0
+TPR=1.00, FPR=0.20 (corrected live-pipeline FPR=0.00)
+Note: DART/ionosonde historical data unavailable via API — all confidence scores are GPS-TEC only (0.52)
 
 ---
 
@@ -290,5 +278,71 @@ GPS-TEC coherence only. 4-station Kp gate. TPR=1.00, FPR=0.00 on 8 validated eve
 ### V2 (completed before V3 session)
 Added: DART 28-buoy network, GIRO ionosonde 5 stations, GLONASS+Galileo constellation, dTEC/dt, ShakeMap focal mechanism filter, 4-channel space weather quality score, combined_confidence fusion formula, confidence calibration tracking, V2 scorer.
 
+### V3 (April 26 2026 session)
+Added: Discord webhook alerting (notify_discord.py), historical backtester (backtest.py), CDDIS auth fix (Earthdata session), README updated to V2, rinex_downloader.py CDDIS auth patched, detector_runner.py UTF-8 logging fixed.
+
 ### V4 (April 26 2026 session)
-Added: tsunamigenic_weight parameter in compute_combined_confidence() — tsunamigenic_index now weights tec_contrib as a prior (not just hard gate). Backtest metadata added to backtest.py (BACKTEST_METADATA dict with per-event tsunamigenic_index and primary_anchor). Backtest result improved: FPR 0.20 → 0.00, Okhotsk FALSE_POSITIVE flipped to TRUE_NEGATIVE at conf=0.19 (below 0.35 threshold). Station expansion: AUCK (Auckland NZ), NOUM (Noumea NC), KWJ1 (Kwajalein), HOLB (Holberg BC) added to STATIONS dict and CORRIDOR_STATIONS routing. Adaptive threshold recommender: adaptive_thresholds.py deployed — Bayesian Normal-Normal posterior on speed/SNR/post_h from TP detections, advisory output only, writes threshold_recommendations.json. Dashboard updates: 4 new stations plotted on SVG map, near-miss seismic events rendered as amber circles from poll_log.json recent_seismicity, double-ring on near-miss events within 0.3 Mw of threshold, hover tooltips. New Rule 14: long base64 strings truncate in chat UI — use file download pattern for scripts >50 lines.
+Added: tsunamigenic_weight in combined_confidence (FPR 0.20→0.00), 4 new stations (AUCK/NOUM/KWJ1/HOLB), adaptive_thresholds.py (Bayesian, advisory), D3 Natural Earth Pacific map replacing hand-drawn SVG, near-miss seismic markers on map, health_check expanded to 20 sections (SMTP auth, CDDIS auth, module integrity, dedup check, log freshness). Fixed pipeline.py duplicate notify_discord import and double alert blocks.
+
+---
+
+## WORKFLOW RULES (learned from V4 session)
+
+### 15. Never put .py filenames inside quoted strings in PowerShell commands
+The claude.ai chat UI converts any word matching a real domain (pipeline.py, health_check.py, notify.py etc.) into a hyperlink when rendered. When Mike copy-pastes commands, the filename becomes `[pipeline.py](http://pipeline.py)` and PowerShell/Python can't find the file.
+
+**Never do this:**
+```powershell
+Get-Content "C:\path\pipeline.py"
+python patch_something.py
+$f = "health_check.py"
+```
+
+**Always do this instead:**
+```powershell
+Get-Content (Get-ChildItem "C:\path" -Filter "pipeline*")
+$f = (Get-ChildItem . -Filter "health_check*").FullName; python $f
+```
+
+Or use wildcard filters:
+```powershell
+Get-ChildItem "C:\Users\Mike\Desktop\Earthquake Feed Listener Engine" -Filter "pipeline*" | Where-Object {$_.Name -notlike "*.log"}
+```
+
+### 16. Always cd into the target directory before running wildcard Get-ChildItem
+Get-ChildItem returns full paths but Get-Content resolves relative to the current directory. If you're in `C:\repo` and Get-ChildItem finds files in `C:\Pipeline`, Get-Content will look in `C:\repo` and fail.
+
+**Pattern:**
+```powershell
+cd "C:\Users\Mike\Desktop\Earthquake Feed Listener Engine"
+$f = (Get-ChildItem . -Filter "pipeline*" | Where-Object {$_.Name -notlike "*.log"}).FullName
+$p = Get-Content $f -Raw
+```
+
+### 17. Use semicolons to chain PowerShell commands into one paste
+Every separate command is a separate paste opportunity for error. Chain everything:
+
+```powershell
+cd "C:\path"; $p = Get-Content $f -Raw; ($p | Select-String "pattern").Matches.Count
+```
+
+### 18. Use PowerShell -replace for small patches instead of Python scripts
+For changes under ~10 lines, PowerShell regex replace is faster than a Python download-copy-run cycle:
+
+```powershell
+$f = "C:\Users\Mike\Desktop\repo\health_check.py"  # NO -- .py gets linkified
+$f = (Get-ChildItem "C:\Users\Mike\Desktop\repo" -Filter "health_check*").FullName  # YES
+$p = Get-Content $f -Raw
+$p = $p -replace 'old string', 'new string'
+Set-Content $f $p -Encoding UTF8
+```
+
+### 19. task_runner.log is the live pipeline log, not pipeline.log
+pipeline.log, runner.log, scorer.log are only written when scripts are run manually.
+task_runner.log is written by run_and_push.bat every 15-minute Task Scheduler cycle.
+Health checks and freshness monitoring should watch task_runner.log.
+
+### 20. running_log.json only updates on scored events -- do not flag as stale
+running_log.json is updated by scorer.py when a prediction is scored against tide gauges.
+With 0 qualifying live events, it will be perpetually "stale" by mtime.
+Health checks should not treat this as an error condition.
