@@ -1,4 +1,4 @@
-"""
+﻿"""
 Pipeline Health Check
 ======================
 Comprehensive verification of all pipeline components.
@@ -29,7 +29,7 @@ issues = []
 PIPELINE_DIR = Path(r"C:\Users\Mike\Desktop\Earthquake Feed Listener Engine")
 REPO_DIR     = Path(r"C:\Users\Mike\Desktop\repo")
 
-# ── Load .env ──────────────────────────────────────────────────────
+# â”€â”€ Load .env â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 env_lines = {}
 env_path = PIPELINE_DIR / ".env"
 if env_path.exists():
@@ -38,7 +38,7 @@ if env_path.exists():
     env_lines = {l.split("=")[0].strip(): l.split("=",1)[1].strip()
                  for l in content.splitlines() if "=" in l and not l.strip().startswith("#")}
 
-# ── 1. Required files ──────────────────────────────────────────────
+# â”€â”€ 1. Required files â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 1 ] Required files")
 REQUIRED = [
     "pipeline.py","usgs_listener.py","rinex_downloader.py","detector_runner.py",
@@ -51,7 +51,7 @@ for f in REQUIRED:
     if p.exists(): ok(f)
     else: fail(f"{f} -- MISSING"); issues.append(f"Missing: {f}")
 
-# ── 2. Credentials (.env) ──────────────────────────────────────────
+# â”€â”€ 2. Credentials (.env) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 2 ] Credentials (.env)")
 if not env_path.exists():
     fail(".env not found"); issues.append("No .env file")
@@ -76,7 +76,7 @@ else:
     bad = [l for l in content.splitlines() if "Out-File" in l or "Add-Content" in l]
     if bad: fail(".env contains PowerShell commands -- recreate it"); issues.append(".env corrupted")
 
-# ── 3. Python module imports ───────────────────────────────────────
+# â”€â”€ 3. Python module imports â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 3 ] Python module imports")
 MODULES = ["numpy","scipy","pandas","matplotlib","georinex","ncompress","requests",
            "dart_checker","space_weather","ionosonde_checker","notify","notify_discord"]
@@ -88,7 +88,7 @@ for mod in MODULES:
     except ImportError as e:
         fail(f"{mod} -- {e}"); issues.append(f"Import failed: {mod}")
 
-# ── 4. Pipeline module integrity ───────────────────────────────────
+# â”€â”€ 4. Pipeline module integrity â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 4 ] Pipeline module integrity")
 try:
     import notify_discord as nd
@@ -101,7 +101,7 @@ except Exception as e:
 
 try:
     import space_weather as sw
-    has_fetch = hasattr(sw, "fetch_space_weather") or hasattr(sw, "get_space_weather_score")
+    has_fetch = hasattr(sw, "get_space_weather_quality")
     ok("space_weather module loaded") if has_fetch else warn("space_weather loaded but expected functions not found")
 except Exception as e:
     fail(f"space_weather check failed: {e}"); issues.append("space_weather integrity check failed")
@@ -120,7 +120,7 @@ try:
 except Exception as e:
     fail(f"ionosonde_checker check failed: {e}"); issues.append("ionosonde_checker integrity check failed")
 
-# ── 5. Pipeline dedup check ────────────────────────────────────────
+# â”€â”€ 5. Pipeline dedup check â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 5 ] Pipeline dedup check")
 pl = (PIPELINE_DIR / "pipeline.py").read_text(encoding="utf-8")
 nd_imports = pl.count("import notify_discord\n")
@@ -130,7 +130,7 @@ ok(f"notify_discord imported once ({nd_imports})") if nd_imports == 1 else (fail
 ok(f"discord_alerted blocks: {da_blocks} (expected 2)") if da_blocks == 2 else warn(f"discord_alerted count={da_blocks} unexpected")
 ok(f"send_pipeline_error called once ({err_calls})") if err_calls == 1 else (fail(f"send_pipeline_error called {err_calls}x -- duplicate"), issues.append("Duplicate send_pipeline_error"))
 
-# ── 6. USGS feed ───────────────────────────────────────────────────
+# â”€â”€ 6. USGS feed â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 6 ] USGS Earthquake Feed")
 try:
     req = urllib.request.Request(
@@ -142,7 +142,7 @@ try:
 except Exception as e:
     fail(f"USGS feed: {e}"); issues.append("USGS feed unreachable")
 
-# ── 7. NASA CDDIS auth ─────────────────────────────────────────────
+# â”€â”€ 7. NASA CDDIS auth â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 7 ] NASA CDDIS Auth (real credential test)")
 user = env_lines.get("EARTHDATA_USER","")
 pwd  = env_lines.get("EARTHDATA_PASS","")
@@ -172,7 +172,7 @@ else:
     except Exception as e:
         warn(f"CDDIS auth test error: {e}")
 
-# ── 8. NOAA SWPC space weather ─────────────────────────────────────
+# â”€â”€ 8. NOAA SWPC space weather â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 8 ] NOAA SWPC Space Weather Feeds")
 SWPC = [
     ("Kp index",  "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"),
@@ -188,7 +188,7 @@ for name, url in SWPC:
     except Exception as e:
         fail(f"SWPC {name}: {e}"); issues.append(f"SWPC {name} unreachable")
 
-# ── 9. NOAA NDBC DART buoys ────────────────────────────────────────
+# â”€â”€ 9. NOAA NDBC DART buoys â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 9 ] NOAA NDBC / DART Buoy API")
 for buoy_id, label in [("51407","Hawaii"),("46409","Aleutian"),("55012","Tonga")]:
     try:
@@ -202,7 +202,7 @@ for buoy_id, label in [("51407","Hawaii"),("46409","Aleutian"),("55012","Tonga")
     except Exception as e:
         fail(f"DART {buoy_id}: {e}"); issues.append(f"NDBC API unreachable (buoy {buoy_id})")
 
-# ── 10. GIRO ionosonde API ─────────────────────────────────────────
+# â”€â”€ 10. GIRO ionosonde API â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 10 ] GIRO Digisonde API")
 giro_ok = 0
 for sid, label in [("GU513","Guam"),("WP937","Wake Island"),("KJ609","Kwajalein")]:
@@ -219,7 +219,7 @@ for sid, label in [("GU513","Guam"),("WP937","Wake Island"),("KJ609","Kwajalein"
 if giro_ok == 0:
     fail("No GIRO stations responding"); issues.append("GIRO API unreachable")
 
-# ── 11. NOAA tide gauge (scoring endpoint) ─────────────────────────
+# â”€â”€ 11. NOAA tide gauge (scoring endpoint) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 11 ] NOAA Tide Gauge (scoring endpoint)")
 try:
     url = ("https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
@@ -235,7 +235,7 @@ try:
 except Exception as e:
     fail(f"NOAA tide gauge: {e}"); issues.append("NOAA tide gauge API unreachable")
 
-# ── 12. Gmail SMTP connectivity ────────────────────────────────────
+# â”€â”€ 12. Gmail SMTP connectivity â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 12 ] Gmail SMTP (email alerts)")
 email = env_lines.get("NOTIFY_EMAIL","")
 apwd  = env_lines.get("NOTIFY_APP_PASSWORD","")
@@ -252,7 +252,7 @@ else:
     except Exception as e:
         warn(f"Gmail SMTP test error: {e}")
 
-# ── 13. Discord webhook ────────────────────────────────────────────
+# â”€â”€ 13. Discord webhook â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 13 ] Discord Webhook")
 webhook = env_lines.get("DISCORD_WEBHOOK_URL","")
 if not webhook:
@@ -273,7 +273,7 @@ else:
     except Exception as e:
         warn(f"Discord webhook error: {e}")
 
-# ── 14. GitHub repo + dashboard ────────────────────────────────────
+# â”€â”€ 14. GitHub repo + dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 14 ] GitHub Repository & Dashboard")
 BASE = "https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/"
 for fname, label in [("running_log.json","running_log"),("poll_log.json","poll_log")]:
@@ -293,7 +293,7 @@ try:
 except Exception as e:
     fail(f"Dashboard: {e}"); issues.append("Dashboard not loading")
 
-# ── 15. Git repo health ────────────────────────────────────────────
+# â”€â”€ 15. Git repo health â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 15 ] Git Repo / Push Health")
 if REPO_DIR.exists():
     ok("Repo folder found")
@@ -310,7 +310,7 @@ if REPO_DIR.exists():
 else:
     fail(f"Repo folder not found"); issues.append("Repo folder missing")
 
-# ── 16. Station network integrity ─────────────────────────────────
+# â”€â”€ 16. Station network integrity â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 16 ] GPS Station Network (V4)")
 det = (PIPELINE_DIR / "detector_runner.py").read_text(encoding="utf-8") if (PIPELINE_DIR / "detector_runner.py").exists() else ""
 rin = (PIPELINE_DIR / "rinex_downloader.py").read_text(encoding="utf-8") if (PIPELINE_DIR / "rinex_downloader.py").exists() else ""
@@ -321,15 +321,15 @@ for sid in ["auck","noum","kwj1","holb"]:
     if f'"{sid}"' in rin: ok(f"{sid.upper()} in CORRIDOR_STATIONS")
     else: fail(f"{sid.upper()} MISSING from rinex_downloader.py"); issues.append(f"Missing corridor: {sid.upper()}")
 
-# ── 17. Log files freshness ────────────────────────────────────────
+# â”€â”€ 17. Log files freshness â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 17 ] Log File Freshness")
-for lf in ["poll_log.json","running_log.json","pipeline.log"]:
+for lf in ["poll_log.json","running_log.json","task_runner.log"]:
     p = PIPELINE_DIR / lf
     if not p.exists():
         warn(f"{lf} not found locally")
         continue
     age_min = (datetime.now(timezone.utc).timestamp() - p.stat().st_mtime) / 60
-    if lf == "pipeline.log":
+    if lf == "task_runner.log":
         if age_min < 20:   ok(f"{lf} -- last written {age_min:.0f} min ago")
         elif age_min < 60: warn(f"{lf} -- {age_min:.0f} min ago (missed a cycle?)"); issues.append(f"{lf} stale")
         else:              fail(f"{lf} -- {age_min:.0f} min ago (pipeline may be down)"); issues.append("Pipeline log stale")
@@ -338,7 +338,7 @@ for lf in ["poll_log.json","running_log.json","pipeline.log"]:
         elif age_min < 60: warn(f"{lf} -- {age_min:.0f} min ago")
         else:              fail(f"{lf} -- {age_min:.0f} min ago"); issues.append(f"{lf} stale")
 
-# ── 18. Event queue ────────────────────────────────────────────────
+# â”€â”€ 18. Event queue â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 18 ] Event Queue")
 qf = PIPELINE_DIR / "event_queue.json"
 if qf.exists():
@@ -354,7 +354,7 @@ if qf.exists():
 else:
     warn("event_queue.json not found"); issues.append("No event queue")
 
-# ── 19. Adaptive thresholds ────────────────────────────────────────
+# â”€â”€ 19. Adaptive thresholds â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 19 ] Adaptive Thresholds")
 rf = PIPELINE_DIR / "threshold_recommendations.json"
 if rf.exists():
@@ -368,7 +368,7 @@ if rf.exists():
 else:
     warn("threshold_recommendations.json not found -- run adaptive_thresholds.py"); issues.append("Run adaptive_thresholds.py")
 
-# ── 20. Task Scheduler ─────────────────────────────────────────────
+# â”€â”€ 20. Task Scheduler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 20 ] Windows Task Scheduler")
 bat = PIPELINE_DIR / "run_and_push.bat"
 ok("run_and_push.bat found") if bat.exists() else (fail("run_and_push.bat missing"), issues.append("run_and_push.bat missing"))
@@ -389,7 +389,7 @@ try:
 except Exception as e:
     warn(f"Task Scheduler check error: {e}")
 
-# ── Summary ────────────────────────────────────────────────────────
+# â”€â”€ Summary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 print(f"\n{'='*55}")
 if not issues:
     print(f"{GREEN}{BOLD}  ALL SYSTEMS OPERATIONAL{RESET}")
@@ -399,3 +399,4 @@ else:
     for i, issue in enumerate(issues,1):
         print(f"  {RED}{i}.{RESET} {issue}")
 print(f"{'='*55}\n")
+
