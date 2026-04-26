@@ -488,36 +488,90 @@ function renderPoll(d){
 }
 
 function renderLog(d){
-  const events=d.events||[];
-  el('st-scored').textContent=events.length;
-  if(!events.length)return;
-  let tp=0,tn=0,fp=0,fn=0,geo=0,leads=[],amps=[];
-  events.forEach(e=>{
-    const o=(e.outcome||'').toLowerCase();
-    if(o==='tp')tp++;else if(o==='tn')tn++;else if(o==='fp')fp++;else if(o==='fn')fn++;else geo++;
-    if(e.lead_min!=null)leads.push(e.lead_min);
-    if(e.amplitude_error!=null)amps.push(Math.abs(e.amplitude_error));
-  });
-  el('oc-tp').textContent=tp;el('oc-tn').textContent=tn;el('oc-fp').textContent=fp;
-  el('oc-fn').textContent=fn;el('oc-geo').textContent=geo;el('oc-total').textContent=events.length;
-  const total=tp+tn+fp+fn;
-  el('perf-tpr').textContent=total?(tp/Math.max(tp+fn,1)).toFixed(2):'--';
-  el('perf-fpr').textContent=total?(fp/Math.max(fp+tn,1)).toFixed(2):'--';
-  el('perf-lead').innerHTML=leads.length?(leads.reduce((a,b)=>a+b,0)/leads.length).toFixed(0)+'<span class="perf-unit"> min</span>':'--';
-  el('perf-med').innerHTML=leads.length?[...leads].sort((a,b)=>a-b)[Math.floor(leads.length/2)].toFixed(0)+'<span class="perf-unit"> min</span>':'--';
-  el('perf-amp').textContent=amps.length?(amps.reduce((a,b)=>a+b,0)/amps.length).toFixed(1)+'%':'--';
-  const rows=events.slice().reverse().map(e=>{
-    const pred=e.prediction||{};
-    const det=pred.detected;
-    const bc=det?'detected':pred.result==='GATED'?'gated':'silent';
-    const sw=pred.space_weather_score;
-    const swTxt=sw!=null?sw.toFixed(2):'--';
-    const swCol=sw>=0.5?'var(--danger)':sw>=0.3?'var(--warn)':'var(--accent2)';
-    const raw=pred.space_weather_raw||{};
-    const tip='Kp:'+(raw.kp!=null?raw.kp.toFixed(1):'n/a')+' Bz:'+(raw.imf_bz!=null?raw.imf_bz.toFixed(1):'n/a')+'nT SW:'+(raw.sw_speed!=null?raw.sw_speed.toFixed(0):'n/a')+'km/s';
-    return '<tr><td>'+fmtDate(e.quake_utc||e.time)+'</td><td>'+(e.place||'--')+'</td><td style="font-family:var(--font-m)">Mw '+(e.magnitude!=null?e.magnitude.toFixed(1):'--')+'</td><td><span class="det-badge '+bc+'">'+(det?'DETECTED':pred.result==='GATED'?'GATED':'SILENT')+'</span></td><td style="font-family:var(--font-m);color:var(--accent2)">'+(e.outcome||'--').toUpperCase()+'</td><td style="font-family:var(--font-m);color:'+swCol+';cursor:help" title="'+tip+'">'+swTxt+'</td><td style="font-family:var(--font-m);color:var(--dim)">'+(pred.detection&&pred.detection.speed_ms!=null?pred.detection.speed_ms.toFixed(0)+' m/s':'--')+'</td><td style="font-family:var(--font-m)">'+(pred.wave_forecast&&pred.wave_forecast.predicted_wave_m!=null?pred.wave_forecast.predicted_wave_m.toFixed(3)+' m':'--')+'</td></tr>';
+  // running_log.json uses scored_events key
+  const events = d.scored_events || d.events || [];
+  const summary = d.summary || {};
+  el('st-scored').textContent = events.length;
+  if(!events.length) return;
+
+  // Outcome counts — scorer uses TRUE_POSITIVE etc.
+  const tp  = summary.true_positives  ?? events.filter(e=>e.outcome==='TRUE_POSITIVE').length;
+  const tn  = summary.true_negatives  ?? events.filter(e=>['TRUE_NEGATIVE','CORRECT_ABSTENTION_NO_ANCHOR'].includes(e.outcome)).length;
+  const fp  = summary.false_positives ?? events.filter(e=>e.outcome==='FALSE_POSITIVE').length;
+  const fn  = summary.false_negatives ?? events.filter(e=>['FALSE_NEGATIVE','GEOMETRY_LIMITED_MISS'].includes(e.outcome)).length;
+  const geo = events.filter(e=>e.outcome==='GEOMETRY_LIMITED_MISS').length;
+
+  el('oc-tp').textContent=tp; el('oc-tn').textContent=tn;
+  el('oc-fp').textContent=fp; el('oc-fn').textContent=fn;
+  el('oc-geo').textContent=geo; el('oc-total').textContent=events.length;
+
+  // Performance — prefer summary fields
+  el('perf-tpr').textContent = summary.tpr!=null ? summary.tpr.toFixed(2) : (tp+fn>0?(tp/(tp+fn)).toFixed(2):'--');
+  el('perf-fpr').textContent = summary.fpr!=null ? summary.fpr.toFixed(2) : (fp+tn>0?(fp/(fp+tn)).toFixed(2):'--');
+  if(summary.mean_lead_time_min!=null){
+    el('perf-lead').innerHTML = summary.mean_lead_time_min.toFixed(0)+'<span class="perf-unit"> min</span>';
+    el('perf-med').innerHTML  = (summary.median_lead_time_min||'--')+'<span class="perf-unit"> min</span>';
+  }
+  if(summary.mean_amplitude_error_pct!=null)
+    el('perf-amp').textContent = summary.mean_amplitude_error_pct.toFixed(1)+'%';
+
+  // Events table
+  const rows = events.slice().reverse().map(e=>{
+    // scored events have fields at top level (from scorer.py)
+    const det = e.algo_detected ?? false;
+    const gated = e.space_weather_gated ?? false;
+    const bc  = det ? 'detected' : gated ? 'gated' : 'silent';
+
+    // Confidence bar
+    const conf = e.combined_confidence;
+    let confCell = '<span style="color:var(--dim)">--</span>';
+    if(conf!=null){
+      const pct = Math.round(conf*100);
+      const col = conf>=0.7?'var(--accent2)':conf>=0.35?'var(--warn)':'var(--dim)';
+      confCell = '<div style="display:flex;align-items:center;gap:5px">'
+        +'<div style="width:52px;height:5px;background:var(--surface3);border-radius:3px;overflow:hidden">'
+        +'<div style="width:'+pct+'%;height:100%;background:'+col+';border-radius:3px"></div></div>'
+        +'<span style="font-family:var(--font-m);font-size:11px;color:'+col+'">'+conf.toFixed(2)+'</span></div>';
+    }
+
+    // DART status
+    const ds = e.dart_status_prediction;
+    const di = ds==='confirmed'?'\u25CF':ds==='negative'?'\u25CB':ds==='pending'?'~':'\u2014';
+    const dc = ds==='confirmed'?'var(--accent)':ds==='negative'?'var(--dim)':'var(--dim)';
+    const dScore = e.dart_score_prediction;
+    const dTip = 'DART: '+(ds||'n/a')+(dScore!=null?' ('+dScore.toFixed(2)+')':'');
+
+    // Space weather
+    const sw = e.space_weather_score;
+    const swTxt = sw!=null?sw.toFixed(2):'--';
+    const swCol = sw>=0.5?'var(--danger)':sw>=0.3?'var(--warn)':'var(--accent2)';
+
+    // Outcome label
+    const outMap = {'TRUE_POSITIVE':'TP','TRUE_NEGATIVE':'TN','FALSE_POSITIVE':'FP',
+      'FALSE_NEGATIVE':'FN','GEOMETRY_LIMITED_MISS':'GEO','CORRECT_ABSTENTION_NO_ANCHOR':'TN'};
+    const outLabel = outMap[e.outcome] || (e.outcome||'--');
+    const outCol = outLabel==='TP'?'var(--accent2)':outLabel==='FP'?'var(--danger)':
+                   outLabel==='FN'?'var(--warn)':'var(--dim)';
+
+    return '<tr>'
+      +'<td>'+fmtDate(e.quake_utc)+'</td>'
+      +'<td>'+( e.place||'--')+'</td>'
+      +'<td style="font-family:var(--font-m)">Mw '+(e.magnitude!=null?e.magnitude.toFixed(1):'--')+'</td>'
+      +'<td>'+confCell+'</td>'
+      +'<td><span class="det-badge '+bc+'">'+(det?'DETECTED':gated?'GATED':'SILENT')+'</span></td>'
+      +'<td style="font-family:var(--font-m);color:'+outCol+'">'+outLabel+'</td>'
+      +'<td title="'+dTip+'" style="font-family:var(--font-m);color:'+dc+';text-align:center">'+di+'</td>'
+      +'<td style="font-family:var(--font-m);color:'+swCol+'">'+swTxt+'</td>'
+      +'</tr>';
   }).join('');
-  el('events-body').innerHTML='<table class="data-table"><thead><tr><th>Date (UTC)</th><th>Location</th><th>Mw</th><th>Detection</th><th>Outcome</th><th title="Space weather contamination (hover for detail)">Space Wx</th><th>Speed</th><th>Forecast</th></tr></thead><tbody>'+rows+'</tbody></table>';
+
+  el('events-body').innerHTML='<table class="data-table"><thead><tr>'
+    +'<th>Date (UTC)</th><th>Location</th><th>Mw</th>'
+    +'<th title="Multi-sensor fusion confidence (0=low, 1=high)">Confidence</th>'
+    +'<th>TEC</th><th>Outcome</th>'
+    +'<th title="DART buoy: \u25CF confirmed \u25CB negative ~ pending">DART</th>'
+    +'<th title="Space weather contamination score">Space Wx</th>'
+    +'</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 loadSW();
