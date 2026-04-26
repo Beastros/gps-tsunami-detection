@@ -1176,10 +1176,16 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-04-26T20:47:28.462112+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-04-26T20:32:36.857475+00:00",
-  "total_polls": 195,
+  "last_updated": "2026-04-26T20:47:28.462112+00:00",
+  "total_polls": 196,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -1190,6 +1196,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.6
+    },
+    {
+      "ts": "2026-04-26T20:23:55.561000+00:00",
+      "mag": 6.1,
+      "place": "18 km W of Sarabetsu, Japan",
+      "lat": 42.63,
+      "lon": 142.96,
+      "depth": 81,
+      "reason": "below threshold",
+      "delta": -0.4
     }
   ]
 }
