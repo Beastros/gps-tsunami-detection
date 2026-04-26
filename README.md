@@ -4,11 +4,13 @@ A Kp-gated multi-station coherence detector for Pacific tsunami early warning us
 
 **Independent research project.** All data sourced from free public archives. All code open source.
 
+🌊 **Live Dashboard**: [beastros.github.io/gps-tsunami-detection](https://beastros.github.io/gps-tsunami-detection/)
+
 ---
 
 ## What This Does
 
-When a tsunami travels across the open ocean, it generates an atmospheric gravity wave that propagates upward to the ionosphere (~300 km altitude) and disturbs the electron density. GPS satellites broadcast signals through this region — by comparing two frequencies from the same satellite, a receiver can measure the disturbance as a TEC (Total Electron Content) perturbation.
+When a tsunami travels across the open ocean, it generates an atmospheric gravity wave (AGW) that propagates upward to the ionosphere (~300 km altitude) and disturbs the electron density. GPS satellites broadcast signals through this region — by comparing two frequencies from the same satellite, a receiver can measure the disturbance as a TEC (Total Electron Content) perturbation.
 
 The detector identifies tsunami signals by requiring that the perturbation propagates **coherently between two or more GPS stations** separated by ≥1,000 km, at a speed consistent with open-ocean tsunami propagation (150–350 m/s), in the direction consistent with the known epicenter, beginning 1.5–22 hours post-earthquake, on a geomagnetically quiet day (Kp < 4.0).
 
@@ -56,35 +58,106 @@ Parameters frozen 2025-04-22. The distance exponent (2.614) reflects geometric s
 | Minimum wave height | ~0.3m at Hawaii |
 | Maximum epicentral range | ~10,000–11,000 km |
 | Upstream anchor required | ≥1,000 km baseline pair |
-| Kp gate | < 4.0 |
+| Kp gate | < 4.0 (real-time NOAA SWPC fetch) |
 | Time-of-day sensitivity | Late UTC quakes (>18:00) reduced probability |
 
 ---
 
-## Requirements
+## Live Pipeline
+
+The operational pipeline monitors USGS in real time, downloads GPS data, runs the frozen detector, and scores predictions against a network of NOAA tide gauges automatically every 15 minutes.
+
+### Pipeline Stages
 
 ```
-python >= 3.8
-numpy scipy pandas matplotlib georinex ncompress
+[1] USGS listener    — polls Mw6.5+ Pacific earthquakes every 15 min
+[2] RINEX downloader — fetches GPS observation files from NASA CDDIS
+[3] Detector runner  — runs frozen coherence detector, fetches real-time Kp
+[4] Scorer           — checks 4 tide gauges 24h post-event, writes score
 ```
+
+### Scoring — Tide Gauge Network
+
+Predictions are verified against four NOAA CO-OPS stations:
+
+| Station | ID | Location | Role |
+|---------|-----|----------|------|
+| Hilo, HI | 1617760 | 19.73°N 155.09°W | Primary |
+| Midway Atoll | 1619910 | 28.21°N 177.36°W | Secondary |
+| Johnston Atoll | 1619543 | 16.74°N 169.53°W | Secondary |
+| Pago Pago, AS | 1770000 | 14.28°S 170.69°W | Secondary |
+
+Secondary gauges rescue geometry-limited misses — if Hilo shows no signal but a secondary gauge confirms a wave and the algorithm detected, the event scores as TRUE_POSITIVE rather than FALSE_POSITIVE.
+
+### Outcome Classification
+
+| Outcome | Meaning |
+|---------|---------|
+| TRUE_POSITIVE | Algorithm detected, gauge confirmed wave |
+| TRUE_NEGATIVE | Algorithm quiet, no wave at any gauge |
+| FALSE_POSITIVE | Algorithm detected, no wave at any gauge |
+| FALSE_NEGATIVE | Algorithm missed, wave confirmed at gauge |
+| GEOMETRY_LIMITED_MISS | No anchor station geometry — abstention correct |
+| CORRECT_ABSTENTION_NO_ANCHOR | No anchor available, correctly abstained |
+
+### Kp Contamination Filter
+
+At runtime, the detector fetches the current planetary K-index from NOAA Space Weather (SWPC). If Kp ≥ 4.0 at the time of the event, the detection window is flagged as potentially geomagnetically contaminated and the event is gated — no detection is issued regardless of TEC signal strength. This prevents false positives during geomagnetic storms, which produce ionospheric perturbations visually indistinguishable from tsunami AGW signals.
+
+### Email Alerts
+
+The pipeline sends an email alert to the configured address when a qualifying event enters the queue, including magnitude, location, TEC detection window, estimated lead time, and anchor station geometry.
+
+### Running the Pipeline
 
 ```bash
-pip install numpy scipy pandas matplotlib georinex ncompress
+# Run one cycle manually:
+python pipeline.py --once
+
+# Run continuously (every 15 min — normally handled by Task Scheduler):
+python pipeline.py
+
+# Verify all components are healthy:
+python health_check.py
 ```
 
----
+### Environment Setup
 
-## Data Sources (all free)
+Requires a `.env` file in the pipeline directory (never committed to git):
 
-- **RINEX GPS observations**: [NASA CDDIS](https://cddis.nasa.gov/archive/gps/data/daily/) — requires free Earthdata login
-- **Kp geomagnetic index**: [GFZ Potsdam](https://kp.gfz.de)
-- **Tide gauge data**: [NOAA CO-OPS API](https://api.tidesandcurrents.noaa.gov)
+```
+EARTHDATA_USER=your_nasa_earthdata_username
+EARTHDATA_PASS=your_nasa_earthdata_password
+NOTIFY_EMAIL=your_email@gmail.com
+NOTIFY_APP_PASSWORD=xxxx xxxx xxxx xxxx
+```
+
+`EARTHDATA_*` credentials are for NASA CDDIS RINEX access (free account at urs.earthdata.nasa.gov).
+`NOTIFY_APP_PASSWORD` is a Gmail App Password (not your Gmail password) — generate at myaccount.google.com/apppasswords.
 
 ---
 
 ## Repository Structure
 
 ```
+# Live operational pipeline
+pipeline.py               # Master orchestrator — runs all 4 stages
+usgs_listener.py          # Polls USGS every 15 min, catches Pacific Mw6.5+ events
+rinex_downloader.py       # Downloads RINEX from NASA CDDIS when event queued
+detector_runner.py        # Runs frozen detector, fetches real-time Kp from NOAA SWPC
+scorer.py                 # Scores prediction vs 4-gauge NOAA tide gauge network
+notify.py                 # Email alerts on qualifying event detection
+health_check.py           # Verifies all pipeline components are online
+
+# Live data (auto-updated every 15 min by pipeline)
+running_log.json          # Append-only scored event log — read by dashboard
+poll_log.json             # USGS poll history — read by dashboard
+event_queue.json          # Internal event state tracker
+
+# Dashboard
+index.html                # Live dashboard — hosted on GitHub Pages
+
+# Historical validation scripts
 scripts/
   detector_params.py        # FROZEN parameters — do not modify
   coherence_kpgated.py      # Primary detector (main pipeline)
@@ -97,14 +170,6 @@ scripts/
   pierce_point_weighted.py  # PPW vs equal-weight stacking comparison
   control_day_batch.py      # False alarm characterization on quiet days
 
-  # Live operational pipeline
-  pipeline.py               # Master orchestrator — runs all 4 stages
-  usgs_listener.py          # Polls USGS every 15 min, catches Pacific Mw6.5+ events
-  rinex_downloader.py       # Downloads RINEX from CDDIS when event queued
-  detector_runner.py        # Runs frozen detector on downloaded data
-  scorer.py                 # Scores prediction vs NOAA tide gauge 24h later
-  health_check.py           # Verifies all pipeline components are online
-
 figures/
   blind_validation.png
   cascading_demo.png
@@ -116,52 +181,53 @@ figures/
 
 ---
 
-## Running
+## Requirements
+
+```
+python >= 3.8
+numpy scipy pandas matplotlib georinex ncompress requests
+```
 
 ```bash
-# Primary detector (Tōhoku, Chile, Haida Gwaii + 11 controls):
-python scripts/coherence_kpgated.py
-
-# Blind validation (frozen parameters, held-out events):
-python scripts/blind_validation.py
-
-# Cascading prediction demo:
-python scripts/cascading_demo.py
-
-# Full calibration analysis:
-python scripts/calibration_updated.py
+pip install numpy scipy pandas matplotlib georinex ncompress requests
 ```
 
-RINEX files are not included. Each script documents the exact CDDIS URLs for its required files.
+---
 
-## Live Pipeline
+## Data Sources (all free)
 
-The live operational pipeline monitors USGS in real time and scores predictions against NOAA tide gauges automatically.
+| Source | Data | URL |
+|--------|------|-----|
+| NASA CDDIS | RINEX GPS observations | cddis.nasa.gov/archive/gps/data/daily/ |
+| NOAA CO-OPS | Tide gauge water level | api.tidesandcurrents.noaa.gov |
+| NOAA SWPC | Real-time Kp index | services.swpc.noaa.gov |
+| USGS | Real-time earthquake feed | earthquake.usgs.gov/earthquakes/feed |
 
-```bash
-# Run one cycle manually:
-python scripts/pipeline.py --once
+---
 
-# Run continuously (every 15 min):
-python scripts/pipeline.py
+## Health Check
 
-# Verify all components are healthy:
-python scripts/health_check.py
+The `health_check.py` script verifies all pipeline components in one run:
+
 ```
-
-Requires a `.env` file in the pipeline directory (never committed):
+[ 1 ] Required files present
+[ 2 ] Credentials (.env) loaded
+[ 3 ] USGS earthquake feed reachable
+[ 4 ] NASA CDDIS archive reachable
+[ 5 ] NOAA tide gauge API responding
+[ 6 ] GitHub repository and dashboard accessible
+[6b ] Git repo push health and credential check
+[ 7 ] Event queue status
+[ 8 ] Poll log freshness (flags if >20 min since last run)
+[ 9 ] Windows Task Scheduler task status
+[10 ] Python dependencies installed
 ```
-EARTHDATA_USER=your_nasa_earthdata_username
-EARTHDATA_PASS=your_nasa_earthdata_password
-```
-
-The health check verifies: pipeline scripts present, credentials loaded, USGS feed reachable, CDDIS archive reachable, NOAA API responding, GitHub logs accessible, dashboard live, event queue status, poll log freshness, and all Python dependencies installed. Run it any time to confirm the system is operational.
 
 ---
 
 ## Key Findings
 
-1. **Long-baseline coherence eliminates 94–98% of false alarms.** Single-station processing produces 29–131 false triggers per day; the coherence requirement reduces this to zero.
+1. **Long-baseline coherence eliminates 94–98% of false alarms.** Single-station processing produces 29–131 false triggers per day; the coherence requirement reduces this to zero across all tested control days.
 
 2. **Network geometry is the primary detection variable.** Each Pacific source zone requires a specific upstream station. Station placement matters more than signal processing sophistication.
 
@@ -170,6 +236,8 @@ The health check verifies: pipeline scripts present, credentials loaded, USGS fe
 4. **Detection range limit ~10,000–11,000 km at 2.0σ.** Sumatra 2004 (Mw 9.1) produced strong GUAM signals but Hawaii was silent at 11,800 km.
 
 5. **Method extends to volcanic eruptions.** Tonga 2022 detected via atmospheric Lamb wave at 292 m/s, +1.7 hours post-eruption.
+
+6. **Multi-gauge ground truth improves scoring reliability.** Four-station tide gauge network reduces geometry-limited misclassifications and provides corroborating evidence for borderline detections.
 
 ---
 
@@ -180,10 +248,15 @@ The health check verifies: pipeline scripts present, credentials loaded, USGS fe
 - [x] Blind validation on held-out events
 - [x] Detection envelope characterized
 - [x] Cascading prediction demonstrated
-- [x] Live operational pipeline running
+- [x] Live operational pipeline running (15-min poll cycle)
+- [x] Real-time Kp contamination gate (NOAA SWPC)
+- [x] Multi-gauge scoring network (Hilo, Midway, Johnston, Pago Pago)
+- [x] Email alerts on qualifying events
 - [x] Public dashboard with live scoring log
 - [ ] Paper submission (target: NHESS Technical Note)
 - [ ] Station-specific calibration for upstream anchors (CHAT, GUAM)
+- [ ] Multi-station TEC coherence (v2)
+- [ ] Tsunamigenicity classifier (v2, requires ~30 scored events)
 
 ---
 
