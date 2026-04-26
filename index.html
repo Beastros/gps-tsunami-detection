@@ -97,7 +97,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 <header>
   <div class="header-left">
     <h1>GPS TSUNAMI DETECTION</h1>
-    <p>Ionospheric TEC coherence monitor &middot; Pacific basin &middot; parameters frozen 2025-04-22</p>
+    <p>GPS/GLONASS/Galileo &middot; DART &middot; Digisonde foF2 &middot; Space weather &middot; 7-channel fusion &middot; Pacific basin</p>
   </div>
   <div class="live-badge"><div class="pulse"></div>LIVE &middot; 15 MIN POLL</div>
 </header>
@@ -152,6 +152,45 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
     <div class="sw-footer">
       <span id="sw-flags">Fetching NOAA SWPC feeds...</span>
       <span id="sw-time"></span>
+    </div>
+  </div>
+
+  <!-- Sensor Stack Summary -->
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:20px">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">GPS TEC</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">L1/L2 carrier</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">GLONASS/GAL</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">Multi-constellation</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">dTEC/dt</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">Wave-front rate</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Space Wx</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● LIVE</div>
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">4 NOAA feeds</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">DART</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">28 buoys</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Ionosonde</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">GIRO foF2 5-sta</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">ShakeMap</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">Focal mechanism</div>
     </div>
   </div>
 
@@ -271,6 +310,24 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       <line x1="205" y1="209" x2="478" y2="185" stroke="#00c8ff" stroke-width="0.7" stroke-dasharray="5,5" opacity="0.2"/>
       <line x1="478" y1="185" x2="505" y2="323" stroke="#00c8ff" stroke-width="0.7" stroke-dasharray="5,5" opacity="0.2"/>
       <line x1="505" y1="323" x2="384" y2="421" stroke="#00c8ff" stroke-width="0.7" stroke-dasharray="5,5" opacity="0.2"/>
+
+      <!-- GIRO Digisonde ionosonde stations -->
+      <g opacity="0.85">
+        <!-- RP536 Okinawa -->
+        <rect x="126" y="157" width="6" height="6" fill="none" stroke="#ff9f43" stroke-width="1.2" transform="rotate(45,129,160)"/>
+        <text x="136" y="158" fill="#ff9f43" font-family="JetBrains Mono,monospace" font-size="7" opacity="0.8">OKINAWA</text>
+        <!-- TW637 Zhongli -->
+        <rect x="94" y="163" width="6" height="6" fill="none" stroke="#ff9f43" stroke-width="1.2" transform="rotate(45,97,166)"/>
+        <text x="104" y="164" fill="#ff9f43" font-family="JetBrains Mono,monospace" font-size="7" opacity="0.8">ZHONGLI</text>
+        <!-- GU513 Guam (co-located) -->
+        <rect x="202" y="205" width="6" height="6" fill="none" stroke="#ff9f43" stroke-width="1.5" transform="rotate(45,205,208)"/>
+        <!-- WP937 Wake Island -->
+        <rect x="301" y="184" width="6" height="6" fill="none" stroke="#ff9f43" stroke-width="1.2" transform="rotate(45,304,187)"/>
+        <text x="313" y="185" fill="#ff9f43" font-family="JetBrains Mono,monospace" font-size="7" opacity="0.8">WAKE</text>
+        <!-- KJ609 Kwajalein -->
+        <rect x="306" y="222" width="6" height="6" fill="none" stroke="#ff9f43" stroke-width="1.2" transform="rotate(45,309,225)"/>
+        <text x="318" y="223" fill="#ff9f43" font-family="JetBrains Mono,monospace" font-size="7" opacity="0.8">KWAJALEIN</text>
+      </g>
       <!-- GPS Anchors -->
       <circle cx="205" cy="209" r="8"   fill="#00c8ff" opacity="0.12"/>
       <circle cx="205" cy="209" r="4.5" fill="#00c8ff"/>
@@ -307,6 +364,8 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       <text x="41" y="435" fill="#4a7a94" font-family="JetBrains Mono,monospace" font-size="8">Subduction Zone</text>
       <line x1="22" y1="448" x2="38" y2="448" stroke="#00c8ff" stroke-width="0.8" stroke-dasharray="4,4" opacity="0.4"/>
       <text x="41" y="451" fill="#4a7a94" font-family="JetBrains Mono,monospace" font-size="8">TEC Signal Path</text>
+      <rect x="27" y="459" width="5" height="5" fill="none" stroke="#ff9f43" stroke-width="1" transform="rotate(45,30,462)"/>
+      <text x="41" y="465" fill="#4a7a94" font-family="JetBrains Mono,monospace" font-size="8">GIRO Ionosonde</text>
     </svg>
   </div>
 
@@ -561,6 +620,8 @@ function renderLog(d){
       +'<td><span class="det-badge '+bc+'">'+(det?'DETECTED':gated?'GATED':'SILENT')+'</span></td>'
       +'<td style="font-family:var(--font-m);color:'+outCol+'">'+outLabel+'</td>'
       +'<td title="Constellation: '+(e.constellation_agreement?e.constellation_agreement.agreement_label:'n/a')+'" style="font-family:var(--font-m);color:var(--dim);text-align:center">'+(e.constellation_agreement?(e.constellation_agreement.n_detecting+'/'+e.constellation_agreement.n_available):'--')+'</td>'
+      +'<td style="text-align:center;color:'+(e.dtec_corroborates?'var(--accent2)':'var(--dim)')+'" title="dTEC/dt corroboration">'+(e.dtec_corroborates?'\u25CF':'\u25CB')+'</td>'
+      +'<td style="text-align:center;color:'+(e.ionosonde_confirmed?'var(--accent2)':'var(--dim)')+'" title="Ionosonde foF2 confirmed">'+(e.ionosonde_confirmed?'\u25CF':'\u25CB')+'</td>'
       +'<td title="'+dTip+'" style="font-family:var(--font-m);color:'+dc+';text-align:center">'+di+'</td>'
       +'<td style="font-family:var(--font-m);color:'+swCol+'">'+swTxt+'</td>'
       +'</tr>';
