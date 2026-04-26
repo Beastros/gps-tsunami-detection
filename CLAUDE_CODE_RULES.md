@@ -127,6 +127,16 @@ Run git commands on separate lines. Never chain with &&.
 ### 13. dir command in PowerShell doesn't support /s /b flags
 Use `Get-ChildItem -Path folder -Recurse -Filter "*.ext"` instead of `dir folder /s /b`.
 
+### 14. Long base64 strings do not survive copy-paste through the chat UI
+Rule 5 says to use base64 encoding to embed file content in deploy scripts. However, if the base64 string is longer than ~2000 characters, the chat UI truncates it when Mike copies the PowerShell block. The script then runs with a corrupt DATA string and writes a broken file.
+
+**Fix:** For any file longer than ~50 lines, do NOT embed it as base64 in a chat code block. Instead:
+1. Write the file to `/mnt/user-data/outputs/` in the Claude container
+2. Use `present_files` to give Mike a download link
+3. Give Mike a `Copy-Item` command to place it in the right folder(s)
+
+This is now the standard deploy pattern for any new Python script file.
+
 ---
 
 ## PATHS AND DIRECTORIES
@@ -226,10 +236,12 @@ iono_contrib = 0.12 if ionosonde_confirmed
 combined = min(sum of above, 1.0)
 ```
 
-### Backtest results (April 26 2026)
-9 events: TP=4, TN=4, FP=1 (Okhotsk deep — depth-gated in production), FN=0
-TPR=1.00, FPR=0.20 (corrected live-pipeline FPR=0.00)
-Note: DART/ionosonde historical data unavailable via API — all confidence scores are GPS-TEC only (0.52)
+### Backtest results (April 26 2026 — V4 final)
+9 events: TP=4, TN=5, FP=0, FN=0
+TPR=1.00, FPR=0.00
+Okhotsk deep: conf=0.19 (tsunamigenic_weight=0.4 for 609km depth) — below 0.35 threshold → TRUE_NEGATIVE
+All TRUE_POSITIVE conf=0.52 (thrust events, tsunamigenic_weight=1.0, DART/ionosonde historical unavailable)
+Note: DART/ionosonde historical data unavailable via API — all confidence scores are GPS-TEC only
 
 ---
 
@@ -278,5 +290,5 @@ GPS-TEC coherence only. 4-station Kp gate. TPR=1.00, FPR=0.00 on 8 validated eve
 ### V2 (completed before V3 session)
 Added: DART 28-buoy network, GIRO ionosonde 5 stations, GLONASS+Galileo constellation, dTEC/dt, ShakeMap focal mechanism filter, 4-channel space weather quality score, combined_confidence fusion formula, confidence calibration tracking, V2 scorer.
 
-### V3 (April 26 2026 session)
-Added: Discord webhook alerting (notify_discord.py), historical backtester (backtest.py), CDDIS auth fix (Earthdata session), README updated to V2, rinex_downloader.py CDDIS auth patched, detector_runner.py UTF-8 logging fixed.
+### V4 (April 26 2026 session)
+Added: tsunamigenic_weight parameter in compute_combined_confidence() — tsunamigenic_index now weights tec_contrib as a prior (not just hard gate). Backtest metadata added to backtest.py (BACKTEST_METADATA dict with per-event tsunamigenic_index and primary_anchor). Backtest result improved: FPR 0.20 → 0.00, Okhotsk FALSE_POSITIVE flipped to TRUE_NEGATIVE at conf=0.19 (below 0.35 threshold). Station expansion: AUCK (Auckland NZ), NOUM (Noumea NC), KWJ1 (Kwajalein), HOLB (Holberg BC) added to STATIONS dict and CORRIDOR_STATIONS routing. Adaptive threshold recommender: adaptive_thresholds.py deployed — Bayesian Normal-Normal posterior on speed/SNR/post_h from TP detections, advisory output only, writes threshold_recommendations.json. Dashboard updates: 4 new stations plotted on SVG map, near-miss seismic events rendered as amber circles from poll_log.json recent_seismicity, double-ring on near-miss events within 0.3 Mw of threshold, hover tooltips. New Rule 14: long base64 strings truncate in chat UI — use file download pattern for scripts >50 lines.
