@@ -323,7 +323,7 @@ for sid in ["auck","noum","kwj1","holb"]:
 
 # â”€â”€ 17. Log files freshness â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 17 ] Log File Freshness")
-for lf in ["poll_log.json","running_log.json","task_runner.log"]:
+for lf in ["poll_log.json","task_runner.log"]:
     p = PIPELINE_DIR / lf
     if not p.exists():
         warn(f"{lf} not found locally")
@@ -399,6 +399,7 @@ else:
     for i, issue in enumerate(issues,1):
         print(f"  {RED}{i}.{RESET} {issue}")
 print(f"{'='*55}\n")
+
 
 
 
