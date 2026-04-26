@@ -152,324 +152,173 @@
 
     <div class="section-header"><span class="section-title">Station Network · Pacific Basin Monitor</span><div class="section-line"></div></div>
     <div class="map-panel">
-      <svg class="map-svg" viewBox="0 0 960 520" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <!-- Ocean gradient - deep blue -->
-          <linearGradient id="ocean" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#041828"/>
-            <stop offset="100%" stop-color="#020e18"/>
-          </linearGradient>
-          <!-- Land gradient - visible warm gray-green -->
-          <linearGradient id="land" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#1a2e22"/>
-            <stop offset="100%" stop-color="#111e18"/>
-          </linearGradient>
-          <!-- Glow filter for stations -->
-          <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
-            <feGaussianBlur stdDeviation="4" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="softglow" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="2" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-
-        <!-- ═══════════════ OCEAN BASE ═══════════════ -->
-        <rect width="960" height="520" fill="url(#ocean)"/>
-
-        <!-- Subtle grid -->
-        <g stroke="#0a2030" stroke-width="0.6" fill="none" opacity="0.7">
-          <line x1="0" y1="30" x2="960" y2="30"/>
-          <line x1="0" y1="145" x2="960" y2="145"/>
-          <line x1="0" y1="260" x2="960" y2="260"/>
-          <line x1="0" y1="375" x2="960" y2="375"/>
-          <line x1="160" y1="0" x2="160" y2="490"/>
-          <line x1="298" y1="0" x2="298" y2="490"/>
-          <line x1="434" y1="0" x2="434" y2="490"/>
-          <line x1="570" y1="0" x2="570" y2="490"/>
-          <line x1="706" y1="0" x2="706" y2="490"/>
-          <line x1="842" y1="0" x2="842" y2="490"/>
-        </g>
-        <!-- Grid labels -->
-        <g fill="#1a4060" font-size="8" font-family="Space Mono">
-          <text x="300" y="12">150°E</text>
-          <text x="436" y="12">180°</text>
-          <text x="572" y="12">150°W</text>
-          <text x="708" y="12">120°W</text>
-          <text x="844" y="12">90°W</text>
-          <text x="3" y="33">60N</text>
-          <text x="3" y="148">30N</text>
-          <text x="3" y="263">EQ</text>
-          <text x="3" y="378">30S</text>
-        </g>
-
-        <!-- ═══════════════ LANDMASSES ═══════════════ -->
-        <!-- All landmasses use fill="url(#land)" with bright border for visibility -->
-
-        <!-- ASIA + Kamchatka + Russian Far East (left edge bleed) -->
-        <path d="M 0,0 L 388,0
-          L 418,12 L 400,20 L 380,27 L 368,27
-          L 359,35 L 353,47 L 344,59 L 324,67
-          L 315,59 L 320,42 L 298,35
-          L 278,51 L 260,51 L 242,78
-          L 214,96 L 202,116 L 194,128
-          L 185,141 L 172,161 L 158,178
-          L 143,195 L 128,215 L 116,234
-          L 104,252 L 93,269 L 84,280
-          L 68,287 L 42,287 L 0,287 Z"
-          fill="url(#land)" stroke="#2a5a3a" stroke-width="1.2"/>
-
-        <!-- Sakhalin -->
-        <path d="M 242,74 L 247,63 L 254,56 L 261,58 L 259,70 L 253,80 L 242,78 Z"
-              fill="url(#land)" stroke="#2a5a3a" stroke-width="0.9"/>
-
-        <!-- Kuril chain -->
-        <g fill="url(#land)" stroke="#2a5a3a" stroke-width="0.8">
-          <ellipse cx="318" cy="68" rx="4" ry="5"/>
-          <ellipse cx="308" cy="74" rx="3.5" ry="4.5"/>
-          <ellipse cx="299" cy="80" rx="3" ry="4"/>
-          <ellipse cx="290" cy="86" rx="3" ry="4"/>
-          <ellipse cx="281" cy="91" rx="2.5" ry="3.5"/>
-          <ellipse cx="272" cy="95" rx="2" ry="3"/>
-        </g>
-
-        <!-- Japan Hokkaido -->
-        <path d="M 268,91 L 277,84 L 289,82 L 296,88 L 291,97 L 279,99 L 268,95 Z"
-              fill="url(#land)" stroke="#2a5a3a" stroke-width="1"/>
-        <!-- Japan Honshu -->
-        <path d="M 268,95 L 276,101 L 279,112 L 275,125
-          L 268,135 L 258,141 L 248,141 L 237,137
-          L 228,130 L 222,121 L 222,112
-          L 228,103 L 238,97 L 250,93 Z"
-              fill="url(#land)" stroke="#2a5a3a" stroke-width="1"/>
-        <!-- Kyushu -->
-        <path d="M 216,123 L 224,121 L 230,130 L 224,139 L 215,140 L 211,131 Z"
-              fill="url(#land)" stroke="#2a5a3a" stroke-width="0.9"/>
-        <!-- Shikoku -->
-        <ellipse cx="243" cy="140" rx="8" ry="3.5" fill="url(#land)" stroke="#2a5a3a" stroke-width="0.8"/>
-
-        <!-- Taiwan -->
-        <ellipse cx="188" cy="174" rx="3.5" ry="7" fill="url(#land)" stroke="#2a5a3a" stroke-width="0.8"/>
-
-        <!-- Philippines -->
-        <ellipse cx="208" cy="208" rx="5" ry="14" fill="url(#land)" stroke="#2a5a3a" stroke-width="0.9"/>
-        <ellipse cx="213" cy="228" rx="4" ry="8" fill="url(#land)" stroke="#2a5a3a" stroke-width="0.8"/>
-
-        <!-- Indonesia arc -->
-        <path d="M 113,278 L 138,273 L 165,271 L 190,270 L 215,272 L 238,275 L 262,275 L 280,272 L 302,267 L 318,263"
-              stroke="#2a5a3a" stroke-width="5" fill="none" stroke-linecap="round"/>
-
-        <!-- PNG + Solomons -->
-        <ellipse cx="333" cy="265" rx="12" ry="6" fill="url(#land)" stroke="#2a5a3a" stroke-width="0.9"/>
-        <ellipse cx="352" cy="260" rx="6" ry="3.5" fill="url(#land)" stroke="#2a5a3a" stroke-width="0.8"/>
-
-        <!-- AUSTRALIA -->
-        <path d="M 163,308 L 208,296 L 254,290 L 280,297
-          L 298,317 L 307,343 L 304,369
-          L 291,386 L 271,400 L 249,406
-          L 226,406 L 207,399 L 190,386
-          L 175,369 L 164,345 L 158,320 Z"
-              fill="url(#land)" stroke="#2a5a3a" stroke-width="1.2"/>
-        <!-- Tasmania -->
-        <ellipse cx="273" cy="412" rx="6" ry="8" fill="url(#land)" stroke="#2a5a3a" stroke-width="0.9"/>
-
-        <!-- New Zealand North -->
-        <path d="M 386,388 L 395,377 L 403,384 L 401,397 L 394,405 L 386,399 Z"
-              fill="url(#land)" stroke="#2a5a3a" stroke-width="0.9"/>
-        <!-- New Zealand South -->
-        <path d="M 381,403 L 391,400 L 399,408 L 395,422 L 385,429 L 376,422 L 375,410 Z"
-              fill="url(#land)" stroke="#2a5a3a" stroke-width="0.9"/>
-
-        <!-- NORTH + CENTRAL + SOUTH AMERICA (right side fill) -->
-        <path d="M 516,0 L 960,0 L 960,520
-          L 940,498 L 925,456 L 916,428 L 927,410 L 932,372
-          L 902,333 L 888,294 L 895,275
-          L 886,256 L 838,233 L 806,223
-          L 772,209 L 748,197
-          L 714,162 L 690,140 L 687,111
-          L 684,104 L 655,79 L 633,67
-          L 610,63 L 586,59 L 566,59
-          L 549,63 L 531,73 L 516,72
-          L 505,76 L 498,67 L 493,50
-          L 498,38 L 505,28 L 514,18 L 516,0 Z"
-              fill="url(#land)" stroke="#2a5a3a" stroke-width="1.2"/>
-
-        <!-- Aleutian chain -->
-        <path d="M 517,76 L 502,82 L 486,86 L 469,88 L 452,88 L 436,88 L 422,87 L 407,86"
-              stroke="#2a5a3a" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-
-        <!-- Hawaii islands -->
-        <g fill="url(#land)" stroke="#2a5a3a" stroke-width="0.8">
-          <circle cx="543" cy="193" r="3.5"/>
-          <circle cx="551" cy="191" r="2"/>
-          <circle cx="558" cy="189" r="2"/>
-          <circle cx="565" cy="187" r="1.8"/>
-          <circle cx="571" cy="185" r="1.5"/>
-        </g>
-
-        <!-- ═══════════════ SUBDUCTION ZONES ═══════════════ -->
-        <!-- Bright, clearly visible fault lines -->
-
-        <!-- Japan Trench -->
-        <path d="M 279,83 L 280,92 L 280,104 L 277,117 L 272,130 L 265,139 L 255,145"
-              stroke="#00aaff" stroke-width="2.5" fill="none" stroke-dasharray="8,5" opacity="0.8"/>
-        <!-- Kuril Trench -->
-        <path d="M 322,67 L 312,73 L 301,80 L 290,86 L 279,91"
-              stroke="#00aaff" stroke-width="2" fill="none" stroke-dasharray="7,5" opacity="0.7"/>
-        <!-- Kamchatka -->
-        <path d="M 330,66 L 339,59 L 345,50 L 349,40"
-              stroke="#00aaff" stroke-width="2" fill="none" stroke-dasharray="6,5" opacity="0.65"/>
-        <!-- Alaska/Aleutian Trench -->
-        <path d="M 434,92 L 453,90 L 474,87 L 499,81 L 521,75 L 544,69 L 566,65 L 590,62 L 610,62"
-              stroke="#00aaff" stroke-width="2.5" fill="none" stroke-dasharray="8,5" opacity="0.8"/>
-        <!-- Cascadia -->
-        <path d="M 518,73 L 516,86 L 514,101 L 513,117 L 512,133"
-              stroke="#00ff9d" stroke-width="2.5" fill="none" stroke-dasharray="8,5" opacity="0.8"/>
-        <!-- Middle America Trench -->
-        <path d="M 806,224 L 824,235 L 840,249 L 857,264 L 872,279"
-              stroke="#00ff9d" stroke-width="2" fill="none" stroke-dasharray="6,5" opacity="0.7"/>
-        <!-- Peru-Chile Trench -->
-        <path d="M 893,281 L 897,300 L 901,325 L 906,353 L 910,383 L 913,413 L 910,442 L 904,468"
-              stroke="#00ff9d" stroke-width="2.5" fill="none" stroke-dasharray="8,5" opacity="0.8"/>
-        <!-- Tonga-Kermadec -->
-        <path d="M 436,356 L 439,377 L 441,399 L 440,421 L 436,443"
-              stroke="#ffaa00" stroke-width="2.5" fill="none" stroke-dasharray="8,5" opacity="0.8"/>
-        <!-- Vanuatu -->
-        <path d="M 357,299 L 371,289 L 386,280 L 400,273 L 413,268"
-              stroke="#00aaff" stroke-width="1.8" fill="none" stroke-dasharray="6,5" opacity="0.6"/>
-
-        <!-- ═══════════════ MONITOR ZONES ═══════════════ -->
-        <!-- Clearly visible colored overlays -->
-
-        <!-- Japan/Kuril zone -->
-        <rect x="205" y="50" width="168" height="105" rx="6"
-              fill="rgba(0,170,255,0.06)" stroke="rgba(0,170,255,0.35)" stroke-width="1.2" stroke-dasharray="8,5"/>
-        <text x="210" y="63" fill="#00aaff" font-size="7.5" font-family="Space Mono" opacity="0.75" font-weight="bold">JAPAN / KURIL</text>
-
-        <!-- Alaska/Aleutian zone -->
-        <rect x="434" y="18" width="185" height="58" rx="6"
-              fill="rgba(0,170,255,0.06)" stroke="rgba(0,170,255,0.35)" stroke-width="1.2" stroke-dasharray="8,5"/>
-        <text x="440" y="31" fill="#00aaff" font-size="7.5" font-family="Space Mono" opacity="0.75" font-weight="bold">ALASKA / ALEUTIAN</text>
-
-        <!-- Cascadia zone -->
-        <rect x="508" y="60" width="78" height="82" rx="6"
-              fill="rgba(0,255,157,0.06)" stroke="rgba(0,255,157,0.35)" stroke-width="1.2" stroke-dasharray="8,5"/>
-        <text x="513" y="73" fill="#00ff9d" font-size="7.5" font-family="Space Mono" opacity="0.75" font-weight="bold">CASCADIA</text>
-
-        <!-- S. America zone -->
-        <rect x="874" y="270" width="86" height="210" rx="6"
-              fill="rgba(0,255,157,0.06)" stroke="rgba(0,255,157,0.35)" stroke-width="1.2" stroke-dasharray="8,5"/>
-        <text x="879" y="283" fill="#00ff9d" font-size="7.5" font-family="Space Mono" opacity="0.75" font-weight="bold">S. AMERICA</text>
-
-        <!-- Tonga zone -->
-        <rect x="408" y="325" width="64" height="135" rx="6"
-              fill="rgba(255,170,0,0.06)" stroke="rgba(255,170,0,0.35)" stroke-width="1.2" stroke-dasharray="8,5"/>
-        <text x="413" y="338" fill="#ffaa00" font-size="7.5" font-family="Space Mono" opacity="0.75" font-weight="bold">TONGA</text>
-
-        <!-- Vanuatu zone -->
-        <rect x="337" y="260" width="108" height="66" rx="6"
-              fill="rgba(0,170,255,0.05)" stroke="rgba(0,170,255,0.28)" stroke-width="1" stroke-dasharray="6,5"/>
-        <text x="342" y="273" fill="#00aaff" font-size="7" font-family="Space Mono" opacity="0.65" font-weight="bold">VANUATU</text>
-
-        <!-- ═══════════════ TEC SIGNAL PATHS ═══════════════ -->
-        <!-- GUAM → MKEA -->
-        <path d="M 271,215 Q 390,185 544,195"
-              stroke="#00d4ff" stroke-width="1.2" fill="none" stroke-dasharray="6,7" opacity="0.35"/>
-        <!-- CHAT → MKEA -->
-        <path d="M 446,432 Q 468,340 544,198"
-              stroke="#00ff9d" stroke-width="1.2" fill="none" stroke-dasharray="6,7" opacity="0.35"/>
-        <!-- THTI → MKEA -->
-        <path d="M 570,333 Q 562,270 546,200"
-              stroke="#ffaa00" stroke-width="1.2" fill="none" stroke-dasharray="6,7" opacity="0.35"/>
-
-        <!-- ═══════════════ GPS ANCHOR STATIONS ═══════════════ -->
-
-        <!-- GUAM: 13.5N 144.9E → (271, 215) -->
-        <circle cx="271" cy="215" r="14" fill="rgba(0,212,255,0.1)" stroke="rgba(0,212,255,0.3)" stroke-width="1" class="station-dot"/>
-        <circle cx="271" cy="215" r="7" fill="#00d4ff" filter="url(#glow)"/>
-        <circle cx="271" cy="215" r="3.5" fill="#eef7ff"/>
-        <rect x="281" y="205" width="48" height="18" rx="3" fill="#020e18" fill-opacity="0.9" stroke="rgba(0,212,255,0.3)" stroke-width="0.8"/>
-        <text x="285" y="218" fill="#00d4ff" font-size="10" font-family="Space Mono" font-weight="bold">GUAM</text>
-
-        <!-- CHAT: Chatham Is -43.9N 183.4E → (446, 432) -->
-        <circle cx="446" cy="432" r="14" fill="rgba(0,255,157,0.1)" stroke="rgba(0,255,157,0.3)" stroke-width="1" class="station-dot" style="animation-delay:0.8s"/>
-        <circle cx="446" cy="432" r="7" fill="#00ff9d" filter="url(#glow)"/>
-        <circle cx="446" cy="432" r="3.5" fill="#eef7ff"/>
-        <rect x="456" y="422" width="42" height="18" rx="3" fill="#020e18" fill-opacity="0.9" stroke="rgba(0,255,157,0.3)" stroke-width="0.8"/>
-        <text x="460" y="435" fill="#00ff9d" font-size="10" font-family="Space Mono" font-weight="bold">CHAT</text>
-
-        <!-- THTI: Tahiti -17.6N 210.4E → (570, 333) -->
-        <circle cx="570" cy="333" r="14" fill="rgba(255,170,0,0.1)" stroke="rgba(255,170,0,0.3)" stroke-width="1" class="station-dot" style="animation-delay:1.6s"/>
-        <circle cx="570" cy="333" r="7" fill="#ffaa00" filter="url(#glow)"/>
-        <circle cx="570" cy="333" r="3.5" fill="#eef7ff"/>
-        <rect x="580" y="323" width="38" height="18" rx="3" fill="#020e18" fill-opacity="0.9" stroke="rgba(255,170,0,0.3)" stroke-width="0.8"/>
-        <text x="584" y="336" fill="#ffaa00" font-size="10" font-family="Space Mono" font-weight="bold">THTI</text>
-
-        <!-- ═══════════════ GPS TARGET STATION ═══════════════ -->
-
-        <!-- MKEA: Mauna Kea 19.8N 204.5E → (544, 195) -->
-        <circle cx="544" cy="195" r="16" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-        <circle cx="544" cy="195" r="10" fill="#ffffff" filter="url(#glow)"/>
-        <circle cx="544" cy="195" r="5" fill="#00d4ff"/>
-        <rect x="557" y="183" width="52" height="18" rx="3" fill="#020e18" fill-opacity="0.9" stroke="rgba(255,255,255,0.25)" stroke-width="0.8"/>
-        <text x="561" y="196" fill="#eef7ff" font-size="10" font-family="Space Mono" font-weight="bold">MKEA</text>
-
-        <!-- ═══════════════ TIDE GAUGE NETWORK ═══════════════ -->
-        <!-- All tide gauges: red diamond shape for clear distinction -->
-
-        <!-- HILO: 19.73N 155.09W → (555, 209) slight offset from MKEA -->
-        <polygon points="555,200 562,209 555,218 548,209" fill="#ff3358" filter="url(#softglow)" opacity="0.95"/>
-        <rect x="565" y="200" width="32" height="18" rx="3" fill="#020e18" fill-opacity="0.9" stroke="rgba(255,51,88,0.4)" stroke-width="0.8"/>
-        <text x="569" y="213" fill="#ff3358" font-size="10" font-family="Space Mono" font-weight="bold">HILO</text>
-
-        <!-- MIDWAY: 28.21N 177.36W → (480, 172) -->
-        <polygon points="480,163 487,172 480,181 473,172" fill="#ff3358" filter="url(#softglow)" opacity="0.95"/>
-        <rect x="490" y="163" width="57" height="18" rx="3" fill="#020e18" fill-opacity="0.9" stroke="rgba(255,51,88,0.4)" stroke-width="0.8"/>
-        <text x="494" y="176" fill="#ff3358" font-size="10" font-family="Space Mono" font-weight="bold">MIDWAY</text>
-
-        <!-- JOHNSTON: 16.74N 169.53W → (509, 219) -->
-        <polygon points="509,210 516,219 509,228 502,219" fill="#ff3358" filter="url(#softglow)" opacity="0.95"/>
-        <rect x="519" y="210" width="65" height="18" rx="3" fill="#020e18" fill-opacity="0.9" stroke="rgba(255,51,88,0.4)" stroke-width="0.8"/>
-        <text x="523" y="223" fill="#ff3358" font-size="10" font-family="Space Mono" font-weight="bold">JOHNSTON</text>
-
-        <!-- PAGO PAGO: -14.28N 170.69W → (506, 322) -->
-        <polygon points="506,313 513,322 506,331 499,322" fill="#ff3358" filter="url(#softglow)" opacity="0.95"/>
-        <rect x="516" y="313" width="43" height="18" rx="3" fill="#020e18" fill-opacity="0.9" stroke="rgba(255,51,88,0.4)" stroke-width="0.8"/>
-        <text x="520" y="326" fill="#ff3358" font-size="10" font-family="Space Mono" font-weight="bold">PAGO</text>
-
-        <!-- ═══════════════ LEGEND ═══════════════ -->
-        <rect x="0" y="490" width="960" height="30" fill="rgba(2,10,20,0.95)"/>
-        <line x1="0" y1="490" x2="960" y2="490" stroke="#0e2a3f" stroke-width="1"/>
-
-        <!-- GPS Anchor -->
-        <circle cx="18" cy="505" r="6" fill="#00d4ff" filter="url(#softglow)"/>
-        <circle cx="18" cy="505" r="2.5" fill="#eef7ff"/>
-        <text x="28" y="509" fill="#4a8aaa" font-size="8" font-family="Space Mono">GPS Anchor Stn</text>
-
-        <!-- GPS Target -->
-        <circle cx="148" cy="505" r="7" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-        <circle cx="148" cy="505" r="4" fill="#ffffff"/>
-        <circle cx="148" cy="505" r="2" fill="#00d4ff"/>
-        <text x="160" y="509" fill="#4a8aaa" font-size="8" font-family="Space Mono">GPS Target (MKEA)</text>
-
-        <!-- Tide Gauge -->
-        <polygon points="294,499 300,505 294,511 288,505" fill="#ff3358"/>
-        <text x="306" y="509" fill="#4a8aaa" font-size="8" font-family="Space Mono">Tide Gauge (×4)</text>
-
-        <!-- Subduction line -->
-        <line x1="420" y1="505" x2="445" y2="505" stroke="#00aaff" stroke-width="2.5" stroke-dasharray="7,4"/>
-        <text x="450" y="509" fill="#4a8aaa" font-size="8" font-family="Space Mono">Subduction Zone</text>
-
-        <!-- Monitor zone -->
-        <rect x="556" y="499" width="14" height="11" rx="2"
-              fill="rgba(0,170,255,0.06)" stroke="rgba(0,170,255,0.45)" stroke-width="1" stroke-dasharray="4,3"/>
-        <text x="574" y="509" fill="#4a8aaa" font-size="8" font-family="Space Mono">Monitor Zone</text>
-
-        <!-- TEC path -->
-        <line x1="670" y1="505" x2="695" y2="505" stroke="#00d4ff" stroke-width="1" stroke-dasharray="5,5" opacity="0.6"/>
-        <text x="700" y="509" fill="#4a8aaa" font-size="8" font-family="Space Mono">TEC Signal Path</text>
-
+      <svg class="map-svg" viewBox="0 0 960 522" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="ocean" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#04182e"/>
+    <stop offset="60%" stop-color="#031220"/>
+    <stop offset="100%" stop-color="#020c18"/>
+  </linearGradient>
+  <linearGradient id="land_grad" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#1e3828"/>
+    <stop offset="100%" stop-color="#152a1e"/>
+  </linearGradient>
+  <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+    <feGaussianBlur stdDeviation="5" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="softglow" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur stdDeviation="2.5" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="landglow" x="-10%" y="-10%" width="120%" height="120%">
+    <feGaussianBlur stdDeviation="1.5" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+</defs>
+<rect width="960" height="490" fill="url(#ocean)"/>
+<g stroke="#0a2035" stroke-width="0.5" opacity="0.6">
+  <line x1="120.0" y1="0" x2="120.0" y2="490"/>
+  <line x1="264.0" y1="0" x2="264.0" y2="490"/>
+  <line x1="408.0" y1="0" x2="408.0" y2="490"/>
+  <line x1="552.0" y1="0" x2="552.0" y2="490"/>
+  <line x1="696.0" y1="0" x2="696.0" y2="490"/>
+  <line x1="840.0" y1="0" x2="840.0" y2="490"/>
+  <line x1="0" y1="31.1" x2="960" y2="31.1"/>
+  <line x1="0" y1="147.8" x2="960" y2="147.8"/>
+  <line x1="0" y1="264.4" x2="960" y2="264.4"/>
+  <line x1="0" y1="381.1" x2="960" y2="381.1"/>
+</g>
+<line x1="0" y1="264.4" x2="960" y2="264.4" stroke="#0d2e48" stroke-width="1.2" opacity="0.8"/>
+<g fill="#1e4a6a" font-size="8" font-family="Space Mono">
+  <text x="122.0" y="12">120°E</text>
+  <text x="266.0" y="12">150°E</text>
+  <text x="410.0" y="12">180°</text>
+  <text x="554.0" y="12">150°W</text>
+  <text x="698.0" y="12">120°W</text>
+  <text x="842.0" y="12">90°W</text>
+  <text x="3" y="28.1">60°N</text>
+  <text x="3" y="144.8">30°N</text>
+  <text x="3" y="261.4">EQ</text>
+  <text x="3" y="378.1">30°S</text>
+</g>
+<path d="M 0.0,0.0 L 408.0,0.0 L 465.6,7.8 L 456.0,19.4 L 432.0,27.2 L 417.6,27.2 L 384.0,23.3 L 360.0,35.0 L 336.0,38.9 L 326.4,35.0 L 321.6,46.7 L 312.0,58.3 L 302.4,58.3 L 297.6,50.6 L 302.4,38.9 L 312.0,27.2 L 268.8,38.9 L 254.4,50.6 L 240.0,58.3 L 230.4,66.1 L 220.8,77.8 L 220.8,85.6 L 177.6,97.2 L 172.8,101.1 L 168.0,108.9 L 168.0,116.7 L 168.0,120.6 L 177.6,128.3 L 172.8,136.1 L 120.0,140.0 L 129.6,143.9 L 124.8,155.6 L 120.0,163.3 L 115.2,167.2 L 105.6,171.1 L 96.0,178.9 L 91.2,175.0 L 76.8,182.8 L 67.2,182.8 L 62.4,178.9 L 57.6,186.7 L 52.8,194.4 L 48.0,202.2 L 43.2,210.0 L 38.4,213.9 L 33.6,221.7 L 24.0,233.3 L 24.0,241.1 L 28.8,248.9 L 38.4,256.7 L 43.2,260.6 L 43.2,256.7 L 38.4,248.9 L 24.0,241.1 L 24.0,233.3 L 19.2,229.4 L 14.4,225.6 L 14.4,210.0 L 19.2,198.3 L 24.0,194.4 L 28.8,186.7 L 0.0,186.7 L 0.0,0.0 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.9"/>
+<path d="M 465.6,11.7 L 480.0,15.6 L 489.6,31.1 L 494.4,35.0 L 504.0,35.0 L 513.6,38.9 L 528.0,42.8 L 537.6,38.9 L 542.4,38.9 L 552.0,35.0 L 556.8,31.1 L 566.4,27.2 L 571.2,31.1 L 585.6,31.1 L 600.0,35.0 L 609.6,38.9 L 619.2,42.8 L 624.0,46.7 L 628.8,50.6 L 638.4,54.4 L 648.0,54.4 L 657.6,62.2 L 667.2,66.1 L 676.8,73.9 L 676.8,81.7 L 676.8,89.4 L 676.8,97.2 L 676.8,105.0 L 691.2,116.7 L 705.6,132.2 L 710.4,136.1 L 710.4,143.9 L 715.2,147.8 L 734.4,155.6 L 744.0,163.3 L 748.8,171.1 L 758.4,178.9 L 768.0,182.8 L 772.8,190.6 L 777.6,198.3 L 840.0,225.6 L 849.6,206.1 L 868.8,225.6 L 873.6,229.4 L 902.4,233.3 L 960.0,233.3 L 960.0,0.0 L 465.6,0.0 L 465.6,11.7 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.9"/>
+<path d="M 902.4,233.3 L 897.6,245.0 L 897.6,256.7 L 897.6,264.4 L 892.8,272.2 L 888.0,276.1 L 888.0,283.9 L 888.0,295.6 L 892.8,303.3 L 897.6,311.1 L 902.4,318.9 L 907.2,326.7 L 912.0,334.4 L 912.0,342.2 L 936.0,350.0 L 945.6,361.7 L 945.6,373.3 L 945.6,381.1 L 940.8,392.8 L 936.0,400.6 L 931.2,408.3 L 926.4,416.1 L 921.6,423.9 L 916.8,431.7 L 912.0,439.4 L 916.8,447.2 L 916.8,455.0 L 921.6,462.8 L 926.4,470.6 L 936.0,478.3 L 945.6,482.2 L 960.0,490.0 L 960.0,233.3 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.9"/>
+<path d="M 91.2,350.0 L 91.2,365.6 L 91.2,388.9 L 100.8,400.6 L 110.4,404.4 L 129.6,396.7 L 139.2,396.7 L 148.8,396.7 L 158.4,396.7 L 168.0,392.8 L 172.8,388.9 L 182.4,392.8 L 187.2,392.8 L 196.8,396.7 L 201.6,404.4 L 206.4,404.4 L 211.2,404.4 L 216.0,404.4 L 220.8,412.2 L 230.4,416.1 L 240.0,412.2 L 249.6,412.2 L 254.4,408.3 L 264.0,404.4 L 268.8,396.7 L 273.6,388.9 L 278.4,377.2 L 278.4,369.4 L 273.6,361.7 L 268.8,357.8 L 268.8,350.0 L 264.0,346.1 L 259.2,342.2 L 254.4,338.3 L 249.6,334.4 L 244.8,330.6 L 240.0,322.8 L 240.0,318.9 L 235.2,318.9 L 230.4,315.0 L 225.6,307.2 L 220.8,303.3 L 211.2,307.2 L 201.6,311.1 L 196.8,311.1 L 187.2,311.1 L 177.6,307.2 L 172.8,307.2 L 168.0,311.1 L 163.2,315.0 L 153.6,318.9 L 148.8,318.9 L 139.2,326.7 L 129.6,334.4 L 124.8,338.3 L 120.0,342.2 L 110.4,346.1 L 100.8,346.1 L 91.2,350.0 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.9"/>
+<path d="M 220.8,66.1 L 230.4,73.9 L 230.4,81.7 L 225.6,85.6 L 220.8,81.7 L 216.0,73.9 L 220.8,66.1 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 216.0,93.3 L 220.8,97.2 L 230.4,97.2 L 240.0,93.3 L 240.0,97.2 L 230.4,101.1 L 220.8,101.1 L 216.0,93.3 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 168.0,143.9 L 172.8,140.0 L 177.6,136.1 L 182.4,132.2 L 192.0,128.3 L 196.8,124.4 L 201.6,120.6 L 206.4,120.6 L 216.0,124.4 L 220.8,120.6 L 220.8,116.7 L 220.8,112.8 L 216.0,105.0 L 220.8,105.0 L 220.8,97.2 L 216.0,97.2 L 211.2,101.1 L 206.4,108.9 L 196.8,116.7 L 192.0,124.4 L 187.2,128.3 L 172.8,132.2 L 168.0,136.1 L 168.0,143.9 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 163.2,143.9 L 168.0,143.9 L 172.8,140.0 L 172.8,136.1 L 168.0,136.1 L 163.2,136.1 L 158.4,140.0 L 163.2,143.9 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 177.6,132.2 L 182.4,132.2 L 187.2,132.2 L 187.2,136.1 L 177.6,136.1 L 177.6,132.2 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 120.0,167.2 L 129.6,171.1 L 129.6,178.9 L 124.8,178.9 L 120.0,175.0 L 120.0,167.2 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 110.4,194.4 L 129.6,194.4 L 139.2,198.3 L 129.6,202.2 L 129.6,210.0 L 124.8,213.9 L 120.0,217.8 L 110.4,210.0 L 110.4,202.2 L 110.4,194.4 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 129.6,217.8 L 139.2,221.7 L 144.0,225.6 L 139.2,229.4 L 129.6,229.4 L 124.8,225.6 L 124.8,221.7 L 129.6,217.8 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 129.6,229.4 L 144.0,233.3 L 148.8,237.2 L 144.0,241.1 L 129.6,241.1 L 120.0,237.2 L 120.0,233.3 L 129.6,229.4 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 67.2,237.2 L 105.6,237.2 L 115.2,245.0 L 110.4,252.8 L 105.6,260.6 L 96.0,264.4 L 81.6,268.3 L 67.2,272.2 L 62.4,268.3 L 62.4,260.6 L 62.4,248.9 L 62.4,241.1 L 67.2,237.2 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 120.0,260.6 L 139.2,260.6 L 144.0,264.4 L 139.2,272.2 L 129.6,276.1 L 120.0,276.1 L 115.2,272.2 L 115.2,264.4 L 120.0,260.6 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 52.8,287.8 L 62.4,291.7 L 76.8,291.7 L 91.2,295.6 L 96.0,295.6 L 96.0,291.7 L 81.6,287.8 L 62.4,287.8 L 52.8,287.8 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 96.0,295.6 L 100.8,295.6 L 100.8,299.4 L 96.0,299.4 L 96.0,295.6 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 172.8,272.2 L 196.8,280.0 L 220.8,283.9 L 249.6,287.8 L 264.0,287.8 L 264.0,295.6 L 249.6,295.6 L 235.2,295.6 L 220.8,295.6 L 206.4,291.7 L 192.0,287.8 L 177.6,280.0 L 172.8,272.2 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 292.8,295.6 L 297.6,295.6 L 302.4,295.6 L 302.4,299.4 L 297.6,299.4 L 292.8,295.6 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 312.0,299.4 L 321.6,303.3 L 326.4,307.2 L 321.6,307.2 L 312.0,303.3 L 312.0,299.4 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 350.4,322.8 L 355.2,326.7 L 360.0,330.6 L 360.0,334.4 L 355.2,334.4 L 350.4,330.6 L 350.4,322.8 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 393.6,330.6 L 398.4,334.4 L 403.2,334.4 L 403.2,330.6 L 398.4,326.7 L 393.6,330.6 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 432.0,346.1 L 436.8,350.0 L 436.8,353.9 L 432.0,350.0 L 432.0,346.1 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 326.4,346.1 L 345.6,350.0 L 345.6,350.0 L 336.0,346.1 L 326.4,346.1 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 235.2,420.0 L 240.0,423.9 L 249.6,423.9 L 254.4,431.7 L 249.6,431.7 L 240.0,431.7 L 235.2,423.9 L 235.2,420.0 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 369.6,408.3 L 379.2,408.3 L 388.8,412.2 L 398.4,412.2 L 398.4,416.1 L 393.6,420.0 L 384.0,423.9 L 379.2,423.9 L 374.4,420.0 L 369.6,416.1 L 369.6,408.3 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<path d="M 340.8,439.4 L 350.4,439.4 L 360.0,435.6 L 369.6,435.6 L 374.4,431.7 L 374.4,427.8 L 364.8,427.8 L 355.2,435.6 L 345.6,443.3 L 340.8,443.3 L 340.8,439.4 Z" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<polyline points="489.6,50.6 480.0,54.4 470.4,58.3 456.0,58.3 446.4,58.3 432.0,62.2 398.4,62.2 384.0,62.2 369.6,58.3 360.0,58.3 350.4,58.3 336.0,54.4" fill="none" stroke="#3a6a45" stroke-width="5" opacity="0.9" stroke-linecap="round"/>
+<circle cx="504.0" cy="179.3" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<circle cx="506.4" cy="179.3" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<circle cx="513.6" cy="181.6" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<circle cx="515.0" cy="181.6" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<circle cx="520.8" cy="183.6" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<circle cx="523.2" cy="183.9" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<circle cx="525.6" cy="187.8" r="3.5" fill="url(#land_grad)" stroke="#3a6a45" stroke-width="0.8"/>
+<text x="168.0" y="62.2" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">RUSSIA</text>
+<text x="600.0" y="31.1" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">ALASKA</text>
+<text x="144.0" y="120.6" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">JAPAN</text>
+<text x="96.0" y="147.8" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">CHINA</text>
+<text x="144.0" y="213.9" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">PHILIPPINES</text>
+<text x="182.4" y="361.7" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">AUSTRALIA</text>
+<text x="360.0" y="427.8" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">NZ</text>
+<text x="696.0" y="89.4" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">N. AMERICA</text>
+<text x="912.0" y="342.2" fill="#1e4a30" font-size="8" font-family="Space Mono" opacity="0.6" font-weight="bold">S. AMERICA</text>
+<polyline points="230.4,101.1 225.6,108.9 225.6,120.6 220.8,128.3 220.8,136.1 220.8,143.9" fill="none" stroke="#00aaff" stroke-width="2.5" stroke-dasharray="8,5" opacity="0.85" stroke-linecap="round"/>
+<polyline points="254.4,89.4 249.6,97.2 244.8,89.4 240.0,97.2 254.4,89.4 259.2,85.6 264.0,81.7 268.8,77.8 273.6,77.8 278.4,73.9" fill="none" stroke="#00aaff" stroke-width="2" stroke-dasharray="7,5" opacity="0.75" stroke-linecap="round"/>
+<polyline points="465.6,54.4 489.6,54.4 513.6,54.4 537.6,50.6 561.6,50.6 576.0,46.7 600.0,46.7 624.0,42.8" fill="none" stroke="#00aaff" stroke-width="2.5" stroke-dasharray="8,5" opacity="0.85" stroke-linecap="round"/>
+<polyline points="676.8,73.9 676.8,85.6 676.8,97.2 676.8,105.0 676.8,112.8" fill="none" stroke="#00ff9d" stroke-width="2.5" stroke-dasharray="8,5" opacity="0.85" stroke-linecap="round"/>
+<polyline points="772.8,190.6 792.0,202.2 816.0,210.0 840.0,217.8 859.2,221.7 873.6,225.6" fill="none" stroke="#00ff9d" stroke-width="2" stroke-dasharray="6,5" opacity="0.75" stroke-linecap="round"/>
+<polyline points="897.6,272.2 897.6,295.6 902.4,318.9 912.0,342.2 926.4,381.1 936.0,412.2 926.4,439.4 921.6,470.6" fill="none" stroke="#00ff9d" stroke-width="2.5" stroke-dasharray="8,5" opacity="0.85" stroke-linecap="round"/>
+<polyline points="446.4,361.7 441.6,373.3 436.8,388.9 436.8,404.4 432.0,420.0" fill="none" stroke="#ffaa00" stroke-width="2.5" stroke-dasharray="8,5" opacity="0.85" stroke-linecap="round"/>
+<polyline points="336.0,318.9 345.6,330.6 350.4,342.2 355.2,350.0" fill="none" stroke="#00aaff" stroke-width="1.8" stroke-dasharray="6,5" opacity="0.7" stroke-linecap="round"/>
+<polyline points="139.2,171.1 148.8,171.1 158.4,167.2 168.0,155.6 172.8,147.8" fill="none" stroke="#00aaff" stroke-width="1.5" stroke-dasharray="6,5" opacity="0.6" stroke-linecap="round"/>
+<rect x="158.4" y="77.8" width="115.20000000000002" height="77.8" rx="5" fill="rgba(0,170,255,0.05)" stroke="rgba(0,170,255,0.4)" stroke-width="1.2" stroke-dasharray="8,5"/>
+<text x="168.0" y="85.6" fill="rgba(0,170,255,0.85)" font-size="8" font-family="Space Mono" font-weight="bold" letter-spacing="0.5">JAPAN/KURIL</text>
+<rect x="432.0" y="11.7" width="206.39999999999998" height="58.3" rx="5" fill="rgba(0,170,255,0.05)" stroke="rgba(0,170,255,0.4)" stroke-width="1.2" stroke-dasharray="8,5"/>
+<text x="441.6" y="19.4" fill="rgba(0,170,255,0.85)" font-size="8" font-family="Space Mono" font-weight="bold" letter-spacing="0.5">ALASKA/ALEUTIAN</text>
+<rect x="657.6" y="62.2" width="38.39999999999998" height="54.5" rx="5" fill="rgba(0,255,157,0.05)" stroke="rgba(0,255,157,0.4)" stroke-width="1.2" stroke-dasharray="8,5"/>
+<text x="657.6" y="70.0" fill="rgba(0,255,157,0.85)" font-size="8" font-family="Space Mono" font-weight="bold" letter-spacing="0.5">CASCADIA</text>
+<rect x="878.4" y="256.7" width="81.60000000000002" height="233.3" rx="5" fill="rgba(0,255,157,0.05)" stroke="rgba(0,255,157,0.4)" stroke-width="1.2" stroke-dasharray="8,5"/>
+<text x="878.4" y="264.4" fill="rgba(0,255,157,0.85)" font-size="8" font-family="Space Mono" font-weight="bold" letter-spacing="0.5">S. AMERICA</text>
+<rect x="408.0" y="334.4" width="57.60000000000002" height="93.40000000000003" rx="5" fill="rgba(255,170,0,0.05)" stroke="rgba(255,170,0,0.4)" stroke-width="1.2" stroke-dasharray="8,5"/>
+<text x="412.8" y="342.2" fill="rgba(255,170,0,0.85)" font-size="8" font-family="Space Mono" font-weight="bold" letter-spacing="0.5">TONGA</text>
+<rect x="326.4" y="303.3" width="57.60000000000002" height="54.5" rx="5" fill="rgba(0,170,255,0.05)" stroke="rgba(0,170,255,0.4)" stroke-width="1.2" stroke-dasharray="8,5"/>
+<text x="331.2" y="311.1" fill="rgba(0,170,255,0.85)" font-size="8" font-family="Space Mono" font-weight="bold" letter-spacing="0.5">VANUATU</text>
+<polyline points="240.0,213.9 514.6,187.4" fill="none" stroke="#00d4ff" stroke-width="1.2" stroke-dasharray="6,8" opacity="0.3" stroke-linecap="round"/>
+<polyline points="424.3,435.6 514.6,187.4" fill="none" stroke="#00ff9d" stroke-width="1.2" stroke-dasharray="6,8" opacity="0.3" stroke-linecap="round"/>
+<polyline points="553.9,332.9 514.6,187.4" fill="none" stroke="#ffaa00" stroke-width="1.2" stroke-dasharray="6,8" opacity="0.3" stroke-linecap="round"/>
+<circle cx="239.4" cy="212.0" r="16" fill="rgba(0,212,255,0.12)" stroke="none" class="station-dot"/>
+<circle cx="239.4" cy="212.0" r="8" fill="#00d4ff" filter="url(#glow)"/>
+<circle cx="239.4" cy="212.0" r="3.5" fill="#eef7ff"/>
+<rect x="250.4" y="203.0" width="26.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="#00d4ff" stroke-width="0.8"/>
+<text x="253.4" y="216.0" fill="#00d4ff" font-size="10" font-family="Space Mono" font-weight="bold">GUAM</text>
+<circle cx="424.5" cy="435.4" r="16" fill="rgba(0,255,157,0.12)" stroke="none" class="station-dot" style="animation-delay:0.8s"/>
+<circle cx="424.5" cy="435.4" r="8" fill="#00ff9d" filter="url(#glow)"/>
+<circle cx="424.5" cy="435.4" r="3.5" fill="#eef7ff"/>
+<rect x="435.5" y="426.4" width="26.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="#00ff9d" stroke-width="0.8"/>
+<text x="438.5" y="439.4" fill="#00ff9d" font-size="10" font-family="Space Mono" font-weight="bold">CHAT</text>
+<circle cx="553.9" cy="332.8" r="16" fill="rgba(255,170,0,0.12)" stroke="none" class="station-dot" style="animation-delay:1.6s"/>
+<circle cx="553.9" cy="332.8" r="8" fill="#ffaa00" filter="url(#glow)"/>
+<circle cx="553.9" cy="332.8" r="3.5" fill="#eef7ff"/>
+<rect x="564.9" y="323.8" width="26.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="#ffaa00" stroke-width="0.8"/>
+<text x="567.9" y="336.8" fill="#ffaa00" font-size="10" font-family="Space Mono" font-weight="bold">THTI</text>
+<circle cx="525.8" cy="187.4" r="18" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+<circle cx="525.8" cy="187.4" r="11" fill="#ffffff" filter="url(#glow)"/>
+<circle cx="525.8" cy="187.4" r="5" fill="#00d4ff"/>
+<rect x="538.8" y="178.4" width="52" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="rgba(255,255,255,0.25)" stroke-width="0.8"/>
+<text x="541.8" y="191.4" fill="#eef7ff" font-size="10" font-family="Space Mono" font-weight="bold">MKEA</text>
+<polygon points="527.6,178.7 536.6,187.7 527.6,196.7 518.6,187.7" fill="#ff3358" filter="url(#softglow)"/>
+<rect x="536.6" y="177.7" width="26.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="rgba(255,51,88,0.4)" stroke-width="0.8"/>
+<text x="539.6" y="190.7" fill="#ff3358" font-size="10" font-family="Space Mono" font-weight="bold">HILO</text>
+<polygon points="420.7,145.7 429.7,154.7 420.7,163.7 411.7,154.7" fill="#ff3358" filter="url(#softglow)"/>
+<rect x="429.7" y="144.7" width="39.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="rgba(255,51,88,0.4)" stroke-width="0.8"/>
+<text x="432.7" y="157.7" fill="#ff3358" font-size="10" font-family="Space Mono" font-weight="bold">MIDWAY</text>
+<polygon points="458.3,190.4 467.3,199.4 458.3,208.4 449.3,199.4" fill="#ff3358" filter="url(#softglow)"/>
+<rect x="467.3" y="189.4" width="52.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="rgba(255,51,88,0.4)" stroke-width="0.8"/>
+<text x="470.3" y="202.4" fill="#ff3358" font-size="10" font-family="Space Mono" font-weight="bold">JOHNSTON</text>
+<polygon points="452.7,311.0 461.7,320.0 452.7,329.0 443.7,320.0" fill="#ff3358" filter="url(#softglow)"/>
+<rect x="461.7" y="310.0" width="26.0" height="16" rx="3" fill="#020e18" fill-opacity="0.92" stroke="rgba(255,51,88,0.4)" stroke-width="0.8"/>
+<text x="464.7" y="323.0" fill="#ff3358" font-size="10" font-family="Space Mono" font-weight="bold">PAGO</text>
+<rect x="0" y="490" width="960" height="32" fill="rgba(2,10,20,0.97)"/>
+<line x1="0" y1="490" x2="960" y2="490" stroke="#0e2a3f" stroke-width="1"/>
+<circle cx="19" cy="506" r="6" fill="#00d4ff" filter="url(#softglow)"/>
+<circle cx="19" cy="506" r="2.5" fill="#eef7ff"/>
+<text x="29" y="510" fill="#4a8aaa" font-size="8" font-family="Space Mono">GPS Anchor</text>
+<circle cx="125" cy="506" r="7" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+<circle cx="125" cy="506" r="4" fill="#ffffff"/>
+<circle cx="125" cy="506" r="2" fill="#00d4ff"/>
+<text x="136" y="510" fill="#4a8aaa" font-size="8" font-family="Space Mono">GPS Target</text>
+<polygon points="233,497 241,506 233,515 225,506" fill="#ff3358"/>
+<text x="245" y="510" fill="#4a8aaa" font-size="8" font-family="Space Mono">Tide Gauge (×4)</text>
+<line x1="368" y1="506" x2="396" y2="506" stroke="#00aaff" stroke-width="2.5" stroke-dasharray="7,4"/>
+<text x="400" y="510" fill="#4a8aaa" font-size="8" font-family="Space Mono">Subduction Zone</text>
+<rect x="524" y="499" width="15" height="12" rx="2" fill="rgba(0,170,255,0.07)" stroke="rgba(0,170,255,0.45)" stroke-width="1" stroke-dasharray="4,3"/>
+<text x="543" y="510" fill="#4a8aaa" font-size="8" font-family="Space Mono">Monitor Zone</text>
+<line x1="654" y1="506" x2="680" y2="506" stroke="#00d4ff" stroke-width="1" stroke-dasharray="5,5" opacity="0.55"/>
+<text x="684" y="510" fill="#4a8aaa" font-size="8" font-family="Space Mono">TEC Signal Path</text>
       </svg>
     </div>
 
