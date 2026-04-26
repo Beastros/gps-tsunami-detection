@@ -276,7 +276,7 @@ else:
 # â”€â”€ 14. GitHub repo + dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 14 ] GitHub Repository & Dashboard")
 BASE = "https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/"
-for fname, label in [("running_log.json (idle ok -- updates on scored events)","running_log"),("poll_log.json","poll_log")]:
+for fname, label in [("running_log.json","running_log"),("poll_log.json","poll_log")]:
     try:
         with urllib.request.urlopen(BASE+fname, timeout=10) as r:
             data = json.loads(r.read())
@@ -323,7 +323,7 @@ for sid in ["auck","noum","kwj1","holb"]:
 
 # â”€â”€ 17. Log files freshness â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 17 ] Log File Freshness")
-for lf in ["poll_log.json","running_log.json (idle ok -- updates on scored events)","task_runner.log"]:
+for lf in ["poll_log.json","running_log.json","task_runner.log"]:
     p = PIPELINE_DIR / lf
     if not p.exists():
         warn(f"{lf} not found locally")
@@ -399,5 +399,6 @@ else:
     for i, issue in enumerate(issues,1):
         print(f"  {RED}{i}.{RESET} {issue}")
 print(f"{'='*55}\n")
+
 
 
