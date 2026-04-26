@@ -143,7 +143,7 @@ def compute_dart_score(dart_result):
     return min(round(base + sigma_boost, 3), 1.0)
 
 
-def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score, const_agreement=None):
+def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score, const_agreement=None, dtec_corroborates=False):
     """
     Multi-sensor fusion confidence score (0-1).
 
@@ -168,7 +168,9 @@ def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score,
             if lbl == 'agreement':     const_contrib =  0.10
             elif lbl == 'disagreement': const_contrib = -0.10
             elif lbl == 'partial':      const_contrib =  0.03
-    confidence = max(tec_contrib + dart_contrib + const_contrib, 0.0)
+    # dTEC/dt corroboration — small boost (not independent, same GPS data)
+    dtec_contrib = 0.05 if (dtec_corroborates and tec_detected) else 0.0
+    confidence = max(tec_contrib + dart_contrib + const_contrib + dtec_contrib, 0.0)
     return min(round(confidence, 3), 1.0)
 
 
@@ -268,6 +270,59 @@ def compute_constellation_agreement(filts_by_const, quake_utc):
 def bandpass(s,fs):
     nyq=0.5*fs; b,a=butter(4,[max(1/(120*60)/nyq,1e-6),min(1/(10*60)/nyq,0.999)],btype="band")
     return pd.Series(filtfilt(b,a,s.values),index=s.index)
+
+
+def compute_dtec(filt):
+    """
+    Compute rate of change of TEC in TECU/min.
+    Tsunami-driven ionospheric disturbances have a sharp leading-edge
+    dTEC/dt spike at the wave front, distinct from smooth geomagnetic changes.
+    """
+    if filt is None or len(filt) < 5:
+        return None
+    diff = filt.diff().dropna()
+    dtec_per_min = diff * (60.0 / RESAMPLE_SEC)
+    smoothed = dtec_per_min.rolling(window=5, center=True, min_periods=3).mean()
+    return smoothed.dropna()
+
+
+def get_dtec_onsets(dtec, quake_utc):
+    """
+    Detect sharp dTEC/dt spikes in the post-quake detection window.
+    Uses 3-sigma threshold relative to pre-quake baseline.
+    Returns list of onset dicts.
+    """
+    if dtec is None or dtec.empty:
+        return []
+    qu = pd.Timestamp(quake_utc)
+    pre = dtec[dtec.index < qu]
+    if pre.empty or len(pre) < 6:
+        return []
+    noise = max(float(pre.abs().std()), 1e-5)
+    threshold = 3.0 * noise
+    win_start = qu + pd.Timedelta(hours=MIN_POST_QUAKE_H)
+    win_end   = qu + pd.Timedelta(hours=MAX_POST_QUAKE_H)
+    window = dtec[(dtec.index >= win_start) & (dtec.index <= win_end)]
+    if window.empty:
+        return []
+    onsets = []; in_ev = False; ev_start = None; ev_peak = 0.0
+    for t, v in window.items():
+        if abs(v) >= threshold:
+            if not in_ev: in_ev = True; ev_start = t; ev_peak = abs(v)
+            else: ev_peak = max(ev_peak, abs(v))
+        else:
+            if in_ev and ev_peak > threshold:
+                post_h = (ev_start - qu).total_seconds() / 3600
+                onsets.append({
+                    "time":              ev_start.isoformat(),
+                    "post_h":            round(post_h, 2),
+                    "dtec_max_tecu_min": round(ev_peak, 4),
+                    "noise_std":         round(noise, 5),
+                    "snr_dtec":          round(ev_peak / noise, 1),
+                })
+            in_ev = False; ev_peak = 0.0
+    return onsets
+
 
 def decompress(gz):
     out=Path(str(gz).replace('.Z',''))
@@ -496,6 +551,24 @@ def run_event(event, kp_override=None):
         return {"detected": False, "reason": "insufficient_stations",
                 "stations_processed": list(filts.keys())}
 
+
+    # dTEC/dt rate-of-change computation
+    # Tsunami wave fronts create sharp dTEC/dt spikes that precede
+    # the sustained amplitude disturbance the main detector sees.
+    dtec_filts  = {}
+    dtec_onsets_map = {}
+    for _sid, _filt in filts.items():
+        _dtec = compute_dtec(_filt)
+        if _dtec is not None:
+            dtec_filts[_sid]      = _dtec
+            dtec_onsets_map[_sid] = get_dtec_onsets(_dtec, quake_utc)
+            _n = len(dtec_onsets_map[_sid])
+            if _n > 0:
+                _best = max(dtec_onsets_map[_sid], key=lambda x: x['snr_dtec'])
+                log.info(f"  [{_sid.upper()}] dTEC/dt: {_n} onset(s) "
+                         f"peak_snr={_best['snr_dtec']:.1f} "
+                         f"at +{_best['post_h']:.1f}h")
+
     # Get onsets
     onsets = {}
     onset_summary = {}
@@ -612,6 +685,33 @@ def run_event(event, kp_override=None):
     log.info(f"  CONSTELLATION: {const_agreement['n_detecting']}/{const_agreement['n_available']} "
              f"detecting  label={const_agreement['agreement_label']}  score={const_agreement['agreement_score']}")
 
+
+    # dTEC/dt corroboration check
+    # Does dTEC/dt onset precede or coincide with amplitude detection?
+    dtec_corroboration = []
+    if prediction.get('detected') and prediction.get('detection'):
+        _det = prediction['detection']
+        _amp_onset = pd.Timestamp(_det['onset_utc'])
+        for _sid in _det['pair'].split('-'):
+            for _de in dtec_onsets_map.get(_sid, []):
+                _dt_min = (_amp_onset - pd.Timestamp(_de['time'])).total_seconds() / 60
+                if -10 <= _dt_min <= 90:  # dTEC/dt within 90min before amplitude
+                    dtec_corroboration.append({
+                        'station':      _sid,
+                        'dtec_post_h':  _de['post_h'],
+                        'amp_post_h':   _det['post_h'],
+                        'lead_min':     round(_dt_min, 1),
+                        'snr_dtec':     _de['snr_dtec'],
+                    })
+                    break
+    dtec_corroborates = len(dtec_corroboration) > 0
+    prediction['dtec_onsets']        = dtec_onsets_map
+    prediction['dtec_corroborates']  = dtec_corroborates
+    prediction['dtec_corroboration'] = dtec_corroboration
+    if dtec_corroborates:
+        log.info(f"  dTEC/dt CORROBORATES detection — "
+                 f"{len(dtec_corroboration)} station(s)")
+
     # DART buoy check (runs after TEC; skipped if wave hasn't had time to arrive)
     from datetime import datetime as _dt
     _now      = _dt.now(timezone.utc)
@@ -650,7 +750,10 @@ def run_event(event, kp_override=None):
 
     _tec  = prediction.get("detected", False)
     _sw   = prediction.get("space_weather_score", 0.0)
-    combined_confidence = compute_combined_confidence(_tec, dart_score, dart_status, _sw, const_agreement)
+    combined_confidence = compute_combined_confidence(
+        _tec, dart_score, dart_status, _sw, const_agreement,
+        dtec_corroborates=dtec_corroborates
+    )
     prediction["constellation_agreement"] = const_agreement
     prediction["dart_result"]              = dart_result
     prediction["dart_score"]          = dart_score
