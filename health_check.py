@@ -1,4 +1,4 @@
-﻿"""
+"""
 Pipeline Health Check
 ======================
 Comprehensive verification of all pipeline components.
