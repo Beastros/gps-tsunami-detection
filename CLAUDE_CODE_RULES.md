@@ -346,3 +346,68 @@ Health checks and freshness monitoring should watch task_runner.log.
 running_log.json is updated by scorer.py when a prediction is scored against tide gauges.
 With 0 qualifying live events, it will be perpetually "stale" by mtime.
 Health checks should not treat this as an error condition.
+
+---
+
+## V5 SESSION RULES (April 26 2026)
+
+### 21. Never use Set-Content or Out-File to write files containing non-ASCII
+PowerShell's `Set-Content -Encoding utf8` and `Out-File -Encoding utf8` both add a BOM
+and/or mangle emoji and Unicode symbols. Any file that contains non-ASCII (index.html,
+any .md with arrows or emoji) MUST be written with Python or with .NET directly.
+
+**Never:**
+```powershell
+Set-Content $f $content -Encoding utf8
+$content | Out-File $f -Encoding utf8
+```
+
+**Always use Python for file writes:**
+```python
+open(path, "w", encoding="utf-8", newline="\n").write(content)
+```
+
+**Or .NET with explicit no-BOM encoding:**
+```powershell
+[System.IO.File]::WriteAllText($f, $content, (New-Object System.Text.UTF8Encoding $false))
+```
+
+### 22. Pair names in detector_runner.py window_pairs are LOWERCASE
+The `window_pairs` list stores pair dicts where `p['pair']` is a lowercase hyphenated
+string e.g. `'kokb-guam'`, `'guam-holb'`. Any dict keyed on station names (e.g.
+STATION_ZONE_CONSTRAINTS) must use `.upper()` when doing lookups:
+
+```python
+if stn.upper() in STATION_ZONE_CONSTRAINTS:
+    z = STATION_ZONE_CONSTRAINTS[stn.upper()]
+```
+
+Forgetting this means constraints silently never fire -- the backtest will show FPs
+that look like the constraint isn't there at all.
+
+### 23. Always patch index.html with Python, never PowerShell
+index.html contains emoji (🌊 📡 🌍) and Unicode symbols (● ─). Any PowerShell
+write will double-encode these into mojibake (e.g. 🌊 becomes ðŸŒŠ). The charset
+meta tag is correct but the bytes in the file are wrong so the browser still garbles them.
+
+Rule: all index.html modifications must go through Python with:
+```python
+src = open(f, encoding='utf-8').read()
+# ... modifications ...
+open(f, 'w', encoding='utf-8', newline='\n').write(src)
+```
+
+### 24. Fix mojibake with raw byte replacement, not Unicode escape strings
+When fixing double-encoded UTF-8 (mojibake), Unicode escape replacements like
+`src.replace('\u00f0\u0178...')` are unreliable because the escape sequences depend
+on how Python interprets the already-mangled string. Always use raw bytes:
+
+```python
+raw = open(f, 'rb').read()
+raw = raw.replace(b'\xc3\xb0\xc5\xb8\xc5\x92\xc5\xa0', '\U0001f30a'.encode('utf-8'))
+open(f, 'wb').write(raw)
+```
+
+To find the correct byte sequence for a mangled character, read the file in binary
+and search for the known bad prefix `b'\xc3\xb0\xc5\xb8'` (the mojibake for 0xF0 0x9F,
+i.e. the start of any 4-byte emoji).
