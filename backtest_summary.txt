@@ -1,7 +1,7 @@
 ============================================================
 GPS TSUNAMI V2 -- BACKTEST RESULTS
-Run: 2026-04-26T20:28:15 UTC
-Processed: 9  Skipped: 0
+Run: 2026-04-27T00:53:59 UTC
+Processed: 12  Skipped: 1
 ============================================================
 
 PER-EVENT RESULTS
@@ -18,9 +18,9 @@ PER-EVENT RESULTS
        Kuril - MKEA-GUAM V1
        dart=negative  iono=False  const=single_constellation
 
-[OK ] TRUE_POSITIVE                conf=0.52  Mw7.7  2012-10-28
+[OK ] TRUE_POSITIVE                conf=0.62  Mw7.7  2012-10-28
        Haida Gwaii - HNLC-GUAM V1
-       dart=negative  iono=False  const=single_constellation
+       dart=negative  iono=False  const=agreement
 
 [OK ] CORRECT_ABSTENTION           conf=0.0  Mw8.1  2009-09-29
        Samoa - no anchor geometry V1
@@ -30,27 +30,45 @@ PER-EVENT RESULTS
        Sumatra strike-slip - ShakeMap should gate
        dart=negative  iono=False  const=single_constellation
 
-[ERR] FALSE_POSITIVE               conf=0.52  Mw8.3  2013-05-24
+[OK ] TRUE_NEGATIVE                conf=0.29  Mw8.3  2013-05-24
        Okhotsk deep 609km - depth gate
-       dart=negative  iono=False  const=single_constellation
+       dart=negative  iono=False  const=agreement
 
-[OK ] TRUE_NEGATIVE                conf=0.0  Mw7.4  2011-10-21
+[ERR] FALSE_POSITIVE               conf=0.52  Mw7.4  2011-10-21
        Kermadec Mw7.4 - below sensitivity
        dart=negative  iono=False  const=single_constellation
 
-[OK ] TRUE_NEGATIVE                conf=0.0  Mw7.2  2011-03-09
+[ERR] FALSE_POSITIVE               conf=0.52  Mw7.2  2011-03-09
        Tohoku foreshock Mw7.2 - below threshold
+       dart=negative  iono=False  const=single_constellation
+
+[OK ] GEOMETRY_LIMITED_MISS        conf=0.0  Mw8.1  2007-04-01
+       Solomon Islands 2007 - thrust shallow - 52 killed 12m r
+       dart=negative  iono=False  const=single_constellation
+
+[OK ] GEOMETRY_LIMITED_MISS        conf=0.0  Mw8.0  2007-08-15
+       Peru Pisco 2007 - thrust - 10m local runup CHAT corrido
+       dart=negative  iono=False  const=single_constellation
+
+[OK ] GEOMETRY_LIMITED_MISS        conf=0.0  Mw7.7  2010-10-25
+       Mentawai 2010 - tsunami earthquake - 450 killed 9m runu
        dart=negative  iono=False  const=single_constellation
 
 
 SUMMARY
 ------------------------------------------------------------
-  TP=4 TN=4 FP=1 FN=0 GL=0
-  TPR=1.0  FPR=0.2
+  TP=4 TN=3 FP=2 FN=0 GL=3
+  TPR=1.0  FPR=0.4
 
 CALIBRATION
 ------------------------------------------------------------
   Bucket     N   Hit%
-  0.0-0.2    4   0%   
-  0.4-0.6    5   80%   ################
+  0.0-0.2    5   60%   ############
+  0.2-0.4    1   0%   
+  0.4-0.6    5   60%   ############
+  0.6-0.8    1   100%   ####################
+
+SKIPPED
+------------------------------------------------------------
+  us7000gc8r: no_rinex
 ============================================================

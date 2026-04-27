@@ -1,4 +1,4 @@
-import json, logging, argparse, sys, os, csv, io
+﻿import json, logging, argparse, sys, os, csv, io
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -45,6 +45,10 @@ usp000jadn,2012-04-11T08:38:36Z,2.33,93.06,8.6,20,NO_TSUNAMI,Sumatra strike-slip
 usp000jhe9,2013-05-24T05:44:48Z,54.87,153.28,8.3,609,NO_TSUNAMI,Okhotsk deep 609km - depth gate
 usp000hvtm,2011-10-21T17:57:16Z,-28.98,-176.24,7.4,26,NO_TSUNAMI,Kermadec Mw7.4 - below sensitivity
 usp000hpgz,2011-03-09T02:45:20Z,38.44,142.84,7.2,32,NO_TSUNAMI,Tohoku foreshock Mw7.2 - below threshold
+us2007aqbk,2007-04-01T20:39:56Z,-8.481,156.978,8.1,10,TSUNAMI,Solomon Islands 2007 - thrust shallow - 52 killed 12m runup
+us2007gbcv,2007-08-15T23:40:57Z,-13.354,-76.509,8.0,30,TSUNAMI,Peru Pisco 2007 - thrust - 10m local runup CHAT corridor
+usp000hjkp,2010-10-25T14:42:22Z,-3.484,100.114,7.7,20,TSUNAMI,Mentawai 2010 - tsunami earthquake - 450 killed 9m runup Indian Ocean
+us7000gc8r,2022-01-15T04:14:45Z,-20.546,-175.390,5.8,0,TSUNAMI,Tonga volcanic 2022 - MKEA-THTG detected V1 - volcanic AGW source
 """
 
 # tsunamigenic_index: computed from rake + depth per usgs_listener.py logic
@@ -59,6 +63,10 @@ BACKTEST_METADATA = {
     "usp000jhe9":                   {"tsunamigenic_index": 0.4,  "primary_anchor": "guam"},
     "usp000hvtm":                   {"tsunamigenic_index": 1.0,  "primary_anchor": "guam"},
     "usp000hpgz":                   {"tsunamigenic_index": 1.0,  "primary_anchor": "guam"},
+    "us2007aqbk":                   {"tsunamigenic_index": 1.0,  "primary_anchor": "guam"},
+    "us2007gbcv":                   {"tsunamigenic_index": 0.7,  "primary_anchor": "chat"},
+    "usp000hjkp":                   {"tsunamigenic_index": 1.0,  "primary_anchor": None},
+    "us7000gc8r":                   {"tsunamigenic_index": None,  "primary_anchor": "thti"},  # volcanic -- no rake angle
 }
 
 def build_event_dict(row):
@@ -245,3 +253,5 @@ if __name__ == "__main__":
     args = p.parse_args()
     csv_str = Path(args.csv).read_text() if args.csv else None
     run_backtest(events_csv_str=csv_str, single_id=args.event)
+
+
