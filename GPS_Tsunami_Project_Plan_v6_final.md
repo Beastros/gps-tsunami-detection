@@ -261,6 +261,14 @@ BLOCKED until ~10 scored live events.
 - Warn if a new station is added to STATIONS dict without a corresponding zone constraint entry or explicit None
 - Prevents future regressions like the HOLB FP issue
 
+V6 Future Expansion Ideas (from V5 session discussion):
+
+AIS vessel tracking — free via AISHub/MarineTraffic basic tier, potential propagation timing reference
+CTBTO hydroacoustic network — underwater microphones detecting T-waves, requires institutional access, unlocked by publication
+Infrasound networks — atmospheric pressure sensors, some university public access, validated on Tonga 2022 event
+USGS "Did You Feel It" crowdsourced reports — public API, rapid focal mechanism corroboration before ShakeMap available
+Path to premium data sources: publish NHESS Technical Note after first live scored event, use credibility to request data sharing agreements
+
 ---
 
 # Quick Reference: Starting Next Session
