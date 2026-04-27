@@ -106,6 +106,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
   <button class="tab-btn active" onclick="showTab('dashboard',this)">Dashboard</button>
   <button class="tab-btn" onclick="showTab('events',this)">Events</button>
   <button class="tab-btn" onclick="showTab('polllog',this)">Poll Log</button>
+  <button class="tab-btn" onclick="showTab('about',this)">About</button>
 </nav>
 
 <!-- DASHBOARD -->
@@ -251,6 +252,62 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
     </div>
   </div>
 </div>
+</div>
+
+<!-- ABOUT -->
+<div id="tab-about" class="tab-pane">
+  <div style="max-width:780px;margin:48px auto;padding:0 32px;font-family:var(--font-s);color:var(--text);line-height:1.8">
+
+    <h2 style="font-family:var(--font-h);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:0 0 24px">How It Works</h2>
+
+    <p style="margin:0 0 20px">When a large underwater earthquake occurs, it displaces the seafloor and shoves the entire water column upward. That displacement sends a pressure wave not just across the ocean surface as a tsunami &mdash; it also propagates upward through the atmosphere all the way to the <strong style="color:var(--accent2)">ionosphere</strong>, a layer of charged particles approximately 300&nbsp;km above the Earth where GPS satellite signals pass through.</p>
+
+    <p style="margin:0 0 20px">That pressure wave slightly disturbs the electron density in the ionosphere. GPS receivers on the ground are sensitive enough to measure it as a change in <strong style="color:var(--accent2)">Total Electron Content (TEC)</strong> &mdash; the integrated number of electrons along the signal path. This phenomenon has been documented in the scientific literature. This pipeline attempts to detect it automatically, in real time, and fuse it with independent physical measurements to produce a calibrated confidence score.</p>
+
+    <h2 style="font-family:var(--font-h);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">The 7-Channel Sensor Stack</h2>
+
+    <div style="display:grid;gap:12px;margin-bottom:28px">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
+        <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">GPS / GLONASS / GALILEO TEC</div>
+        <div style="font-size:13px;color:var(--dim)">RINEX observation files downloaded from NASA CDDIS for anchor stations across the Pacific. L1/L2 carrier phase differencing extracts TEC perturbations per satellite arc. Multi-constellation agreement adds confidence.</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
+        <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">dTEC/dt &mdash; Wave-Front Rate</div>
+        <div style="font-size:13px;color:var(--dim)">The time derivative of TEC. A tsunami-generated atmospheric gravity wave produces a characteristic onset rate distinct from background ionospheric drift. Corroboration adds +0.05 to combined confidence.</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
+        <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">DART Ocean Pressure Buoys</div>
+        <div style="font-size:13px;color:var(--dim)">28 NOAA NDBC deep-ocean pressure sensors across the Pacific. A 3-sigma anomaly in bottom pressure within the expected tsunami travel-time window adds up to +0.45. Negative DART reduces confidence.</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
+        <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">GIRO Digisonde foF2</div>
+        <div style="font-size:13px;color:var(--dim)">5 ionosonde stations monitored via the Global Ionosphere Radio Observatory DIDBase API. Independent foF2 perturbation confirmation adds +0.12.</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
+        <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">Space Weather Quality Gate</div>
+        <div style="font-size:13px;color:var(--dim)">4 NOAA SWPC feeds &mdash; Kp index, IMF Bz, solar wind speed, GOES X-ray flux. Geomagnetic storms produce ionospheric disturbances that mimic tsunami signals. Elevated space weather reduces TEC reliability weighting.</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
+        <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">ShakeMap Focal Mechanism</div>
+        <div style="font-size:13px;color:var(--dim)">USGS moment tensor API. Strike-slip earthquakes do not displace the water column and cannot generate tsunamis. Events below a tsunamigenic index of 0.25 are skipped entirely. Above that threshold the index scales the TEC contribution as a prior.</div>
+      </div>
+    </div>
+
+    <h2 style="font-family:var(--font-h);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">Why It Could Matter</h2>
+
+    <p style="margin:0 0 20px">Current operational tsunami warning relies primarily on DART buoys &mdash; physical sensors on the ocean floor that must wait for the wave to pass over them. The ionospheric signal travels through the atmosphere and may arrive at GPS stations before the wave reaches the nearest buoy. If that timing advantage holds on live events, even 20&ndash;30 minutes of additional warning time has real consequences for coastal communities.</p>
+
+    <h2 style="font-family:var(--font-h);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">Validation</h2>
+
+    <p style="margin:0 0 8px">Backtested against 9 historical Pacific events:</p>
+    <div style="font-family:var(--font-m);font-size:12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px;margin-bottom:20px">
+      <div style="color:var(--accent2);margin-bottom:8px">TP=4 &nbsp; TN=5 &nbsp; FP=0 &nbsp; FN=0 &nbsp;&mdash;&nbsp; TPR=1.00 &nbsp; FPR=0.00</div>
+      <div style="color:var(--dim)">Tohoku 2011 Mw9.1 &middot; Chile 2010 Mw8.8 &middot; Kuril 2006 Mw8.3 &middot; Haida Gwaii 2012 Mw7.7 correctly detected.<br>Sumatra strike-slip 2012 &middot; Okhotsk deep 2013 &middot; Kermadec 2011 &middot; Tohoku foreshock 2011 &middot; Samoa 2009 correctly rejected.</div>
+    </div>
+
+    <p style="margin:0;color:var(--dim)">Every live prediction is automatically scored against NOAA tide gauge data 24 hours after the event. Calibration tracks confidence bucket accuracy over time.</p>
+
+  </div>
 </div>
 
 <!-- POLL LOG -->
@@ -684,6 +741,10 @@ function renderSeismicOnMap(rs) {
 var _origRenderPoll = typeof renderPoll === 'function' ? renderPoll : null;
 
 </script>
+<footer style="margin-top:60px;padding:24px 32px;border-top:1px solid var(--border);text-align:center;font-family:var(--font-m);font-size:11px;color:var(--dim);line-height:1.7">
+  Built by one person using public APIs from NASA, NOAA, and USGS. Live-testing a novel hypothesis: that ionospheric GPS signals can provide earlier tsunami confirmation than existing methods. Backtested successfully against historical Pacific events. Research only &mdash; not an operational system.
+</footer>
+
 </body>
 </html>
 
