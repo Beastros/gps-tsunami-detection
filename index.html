@@ -160,37 +160,37 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
   <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:20px">
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">GPS TEC</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">L1/L2 carrier</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">GLONASS/GAL</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">Multi-constellation</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">dTEC/dt</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">Wave-front rate</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Space Wx</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— LIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● LIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">4 NOAA feeds</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">DART</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">28 buoys</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Ionosonde</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">GIRO foF2 5-sta</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">ShakeMap</div>
-      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">â— ACTIVE</div>
+      <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">Focal mechanism</div>
     </div>
   </div>
@@ -533,7 +533,7 @@ setInterval(loadSW,5*60*1000);
 initMap();
 initMap();
 
-// â”€â”€ Leaflet Pacific Basin Map â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Leaflet Pacific Basin Map ─────────────────────────────────────
 function initMap() {
   var W=960, H=500;
   var svg=d3.select('#pmap').attr('viewBox','0 0 '+W+' '+H).attr('height',H);
