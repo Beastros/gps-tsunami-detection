@@ -81,6 +81,25 @@ STATIONS = {
     "holb": {"lat":  50.640, "lon": -128.133, "alt":  180},  # Holberg BC -- Cascadia anchor
 }
 
+# V5 -- geographic zone constraints
+# Prevents cross-basin spurious pairs (e.g. HOLB-Hawaii on Japan/Kermadec events).
+# Each entry defines the ONLY epicenter bounding box where that station may contribute.
+STATION_ZONE_CONSTRAINTS = {
+    "HOLB": {"lat_min": 40.0, "lat_max": 52.0, "lon_min": -135.0, "lon_max": -120.0},
+}
+
+def _pair_zone_ok(s1_name, s2_name, event_lat, event_lon):
+    """Return False if either station zone constraint excludes this epicenter."""
+    for stn in (s1_name, s2_name):
+        if stn.upper() in STATION_ZONE_CONSTRAINTS:
+            z = STATION_ZONE_CONSTRAINTS[stn.upper()]
+            if not (z["lat_min"] <= event_lat <= z["lat_max"] and
+                    z["lon_min"] <= event_lon <= z["lon_max"]):
+                return False
+    return True
+
+
+
 HILO = {"lat": 19.730, "lon": -155.087}  # tide gauge target
 
 F1,F2=1575.42e6,1227.60e6; LAM1=2.998e8/F1; LAM2=2.998e8/F2
@@ -602,6 +621,10 @@ def run_event(event, kp_override=None):
 
     # Best detection in window
     window_pairs = [p for p in pairs if MIN_POST_QUAKE_H <= p['post_h'] <= MAX_POST_QUAKE_H]
+    window_pairs = [p for p in window_pairs
+                   if _pair_zone_ok(p['pair'].split('-')[0],
+                                    p['pair'].split('-')[1],
+                                    epi_lat, epi_lon)]
 
     prediction = {
         "run_utc": datetime.now(timezone.utc).isoformat(),
@@ -852,3 +875,4 @@ if __name__ == "__main__":
     parser.add_argument("--event", help="Process specific USGS event ID")
     args = parser.parse_args()
     main(event_id=args.event)
+
