@@ -411,3 +411,26 @@ open(f, 'wb').write(raw)
 To find the correct byte sequence for a mangled character, read the file in binary
 and search for the known bad prefix `b'\xc3\xb0\xc5\xb8'` (the mojibake for 0xF0 0x9F,
 i.e. the start of any 4-byte emoji).
+
+### 25. Always verify health_check.py patches applied before committing
+After patching health_check.py, confirm the section was actually inserted:
+
+```powershell
+$f = (Get-ChildItem "C:\Users\Mike\Desktop\repo" -Filter "health_check*" | Where-Object {$_.Extension -eq ".py"}).FullName
+$p = [System.IO.File]::ReadAllText($f, [System.Text.Encoding]::UTF8)
+$p.Contains("Zone Constraint Integrity")  # or whatever section name
+```
+
+If False, the anchor string didn't match and the patch silently did nothing.
+Use PowerShell direct replacement as fallback, not a Python patcher file.
+
+### 26. Delete stray patch files from repo before final commit each session
+Patch scripts (.py files dropped into the repo folder to run) accumulate and show
+up as untracked files in health check section 15, triggering a warning.
+Always clean up at end of session:
+
+```powershell
+Remove-Item "C:\Users\Mike\Desktop\repo\patch_*.py"
+```
+
+Add this as the last step before the final health check run each session.
