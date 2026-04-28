@@ -85,6 +85,16 @@ STATIONS = {
 # Prevents cross-basin spurious pairs (e.g. HOLB-Hawaii on Japan/Kermadec events).
 # Each entry defines the ONLY epicenter bounding box where that station may contribute.
 STATION_ZONE_CONSTRAINTS = {
+    "MKEA": None,
+    "KOKB": None,
+    "HNLC": None,
+    "GUAM": None,
+    "CHAT": None,
+    "THTI": None,
+    "THTG": None,
+    "AUCK": None,
+    "NOUM": None,
+    "KWJ1": None,
     "HOLB": {"lat_min": 40.0, "lat_max": 52.0, "lon_min": -135.0, "lon_max": -120.0},
 }
 

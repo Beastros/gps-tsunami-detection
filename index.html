@@ -595,6 +595,7 @@ function renderLog(d){
       +'<td title="Constellation: '+(e.constellation_agreement?e.constellation_agreement.agreement_label:'n/a')+'" style="font-family:var(--font-m);color:var(--dim);text-align:center">'+(e.constellation_agreement?(e.constellation_agreement.n_detecting+'/'+e.constellation_agreement.n_available):'--')+'</td>'
       +'<td style="text-align:center;color:'+(e.dtec_corroborates?'var(--accent2)':'var(--dim)')+'" title="dTEC/dt corroboration">'+(e.dtec_corroborates?'\u25CF':'\u25CB')+'</td>'
       +'<td style="text-align:center;color:'+(e.ionosonde_confirmed?'var(--accent2)':'var(--dim)')+'" title="Ionosonde foF2 confirmed">'+(e.ionosonde_confirmed?'\u25CF':'\u25CB')+'</td>'
+        +'<td style="text-align:center;font-size:11px;color:'+(e.dyfi_responses!=null&&e.dyfi_confirmed?'var(--accent2)':'var(--dim)')+'" title="DYFI felt reports'+(e.dyfi_responses!=null?' ('+e.dyfi_responses+' resp, MMI '+e.dyfi_maxmmi+')':' (no data)')+'"> '+(e.dyfi_responses!=null?String(e.dyfi_responses):'\u2014')+'</td>'
       +'<td title="'+dTip+'" style="font-family:var(--font-m);color:'+dc+';text-align:center">'+di+'</td>'
       +'<td style="font-family:var(--font-m);color:'+swCol+'">'+swTxt+'</td>'
       +'</tr>';
@@ -605,6 +606,7 @@ function renderLog(d){
     +'<th title="Multi-sensor fusion confidence (0=low, 1=high)">Confidence</th>'
     +'<th>TEC</th><th>Outcome</th>'
     +'<th title="DART buoy: \u25CF confirmed \u25CB negative ~ pending">DART</th>'
+    +'<th title="DYFI felt report count (crowdsourced, USGS)">DYFI</th>'
     +'<th title="Space weather contamination score">Space Wx</th>'
     +'</tr></thead><tbody>'+rows+'</tbody></table>';
 }

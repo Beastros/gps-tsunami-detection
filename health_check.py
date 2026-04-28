@@ -8,7 +8,7 @@ Run anytime to confirm the system is healthy.
 
 Green = good. Yellow = warning. Red = action needed.
 Last updated: V4 session (April 26 2026)
-Sections: 20
+Sections: 22
 """
 
 import os, json, subprocess, smtplib, importlib
@@ -388,6 +388,34 @@ try:
         fail("Task not found in Task Scheduler"); issues.append("Task Scheduler not configured")
 except Exception as e:
     warn(f"Task Scheduler check error: {e}")
+
+
+# === Section 22: DYFI Checker ===
+print("\n--- Section 22: DYFI Checker ---")
+_dyfi_ok = False
+try:
+    import importlib.util as _ilu
+    _spec = _ilu.spec_from_file_location(
+        "dyfi_checker",
+        os.path.join(PIPELINE_DIR, "dyfi_checker.py"),
+    )
+    _mod = _ilu.module_from_spec(_spec)
+    _spec.loader.exec_module(_mod)
+    ok("dyfi_checker.py loaded OK")
+    _dyfi_ok = True
+except Exception as _e:
+    fail("dyfi_checker.py import failed: " + str(_e))
+    issues.append("dyfi_checker.py import failed")
+
+if _dyfi_ok:
+    try:
+        _contrib, _resp, _mmi, _conf = _mod.get_dyfi_contribution("us7000n7n8")
+        if _resp is not None:
+            ok("DYFI API reachable -- responses=%d maxmmi=%s contrib=%.2f" % (_resp, _mmi, _contrib))
+        else:
+            warn("DYFI API returned no data for test event (may be expired) -- fail-open OK")
+    except Exception as _e:
+        warn("DYFI API test: " + str(_e) + " -- fail-open OK")
 
 # â”€â”€ Summary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 print(f"\n{'='*55}")
