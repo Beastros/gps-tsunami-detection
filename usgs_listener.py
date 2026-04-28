@@ -1,3 +1,4 @@
+import os
 """
 USGS Earthquake Feed Listener
 ==============================
@@ -97,6 +98,18 @@ PACIFIC_ZONES = [
 
 # Known false-positive source types (usually not tsunamigenic)
 SKIP_TYPES = ["nuclear explosion", "quarry blast", "explosion", "mine collapse"]
+
+# ── Fast poll trigger ──────────────────────────────────────────────────────
+FAST_POLL_MW_TRIGGER    = 6.0   # lower than qualify threshold -- catches upgrades
+FAST_POLL_DURATION_MIN  = 120   # minutes of fast polling after trigger
+FAST_POLL_INTERVAL_SEC  = 120   # 2-minute cycles during fast poll
+FAST_POLL_FILE          = "fast_poll.json"
+
+# ── Fast poll trigger ──────────────────────────────────────────────────────
+FAST_POLL_MW_TRIGGER    = 6.0   # lower than qualify threshold -- catches upgrades
+FAST_POLL_DURATION_MIN  = 120   # minutes of fast polling after trigger
+FAST_POLL_INTERVAL_SEC  = 120   # 2-minute cycles during fast poll
+FAST_POLL_FILE          = "fast_poll.json"
 
 # ── Logging ────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -370,6 +383,60 @@ def fetch_focal_mechanism(usgs_id):
             "rake_deg": None, "rake_score": 0.5, "product_type": None}
 
 
+def _activate_fast_poll(usgs_id, mag, place, fp_path):
+    """Write fast_poll.json to signal pipeline to switch to 2-min poll cycle."""
+    import json as _json
+    from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+    now = _dt.now(_tz.utc)
+    # Don't overwrite an active file that was triggered by a larger event
+    if os.path.exists(fp_path):
+        try:
+            existing = _json.loads(open(fp_path, encoding="utf-8").read())
+            exp = _dt.fromisoformat(existing.get("expires_utc", "2000-01-01T00:00:00+00:00"))
+            if exp > now and existing.get("trigger_mag", 0) >= mag:
+                return  # existing trigger is fresher or larger
+        except Exception:
+            pass
+    state = {
+        "active":          True,
+        "trigger_usgs_id": usgs_id,
+        "trigger_mag":     mag,
+        "trigger_place":   place,
+        "activated_utc":   now.isoformat(),
+        "expires_utc":     (now + _td(minutes=FAST_POLL_DURATION_MIN)).isoformat(),
+        "poll_interval_sec": FAST_POLL_INTERVAL_SEC,
+    }
+    open(fp_path, "w", encoding="utf-8").write(_json.dumps(state, indent=2))
+    log.info(f"FAST POLL ACTIVATED: Mw{mag} {place} -- 2-min cycles for {FAST_POLL_DURATION_MIN} min")
+
+
+def _activate_fast_poll(usgs_id, mag, place, fp_path):
+    """Write fast_poll.json to signal pipeline to switch to 2-min poll cycle."""
+    import json as _json
+    from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+    now = _dt.now(_tz.utc)
+    # Don't overwrite an active file that was triggered by a larger event
+    if os.path.exists(fp_path):
+        try:
+            existing = _json.loads(open(fp_path, encoding="utf-8").read())
+            exp = _dt.fromisoformat(existing.get("expires_utc", "2000-01-01T00:00:00+00:00"))
+            if exp > now and existing.get("trigger_mag", 0) >= mag:
+                return  # existing trigger is fresher or larger
+        except Exception:
+            pass
+    state = {
+        "active":          True,
+        "trigger_usgs_id": usgs_id,
+        "trigger_mag":     mag,
+        "trigger_place":   place,
+        "activated_utc":   now.isoformat(),
+        "expires_utc":     (now + _td(minutes=FAST_POLL_DURATION_MIN)).isoformat(),
+        "poll_interval_sec": FAST_POLL_INTERVAL_SEC,
+    }
+    open(fp_path, "w", encoding="utf-8").write(_json.dumps(state, indent=2))
+    log.info(f"FAST POLL ACTIVATED: Mw{mag} {place} -- 2-min cycles for {FAST_POLL_DURATION_MIN} min")
+
+
 def check_feed(queue):
     """Check feed for new qualifying events. Returns (new_count, near_misses)."""
     features = fetch_feed()
@@ -413,6 +480,34 @@ def check_feed(queue):
                 f"TEC_window=+{w.get('tec_onset_window','?')}h "
                 f"expected_lead={w.get('expected_lead_time_min','?')}min"
             )
+        # ── Fast poll trigger ──────────────────────────────────────────────
+        # Fire on Mw >= FAST_POLL_MW_TRIGGER in any Pacific zone (even if
+        # it doesn't qualify at 6.5) so we catch magnitude upgrades early.
+        if mag is not None and mag >= FAST_POLL_MW_TRIGGER:
+            _zones = in_pacific_zone(
+                coords[1] if coords and coords[1] is not None else 0,
+                coords[0] if coords and coords[0] is not None else 0,
+            )
+            if _zones:
+                _activate_fast_poll(
+                    eid, mag, place,
+                    os.path.join(os.path.dirname(os.path.abspath(__file__)), FAST_POLL_FILE)
+                )
+
+        # ── Fast poll trigger ──────────────────────────────────────────────
+        # Fire on Mw >= FAST_POLL_MW_TRIGGER in any Pacific zone (even if
+        # it doesn't qualify at 6.5) so we catch magnitude upgrades early.
+        if mag is not None and mag >= FAST_POLL_MW_TRIGGER:
+            _zones = in_pacific_zone(
+                coords[1] if coords and coords[1] is not None else 0,
+                coords[0] if coords and coords[0] is not None else 0,
+            )
+            if _zones:
+                _activate_fast_poll(
+                    eid, mag, place,
+                    os.path.join(os.path.dirname(os.path.abspath(__file__)), FAST_POLL_FILE)
+                )
+
         else:
             lon = coords[0] if coords and coords[0] is not None else None
             lat = coords[1] if coords and coords[1] is not None else None

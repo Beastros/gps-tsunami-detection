@@ -1,4 +1,4 @@
-﻿"""
+"""
 GPS Tsunami Detector â€” Master Pipeline
 ========================================
 Runs the full automated loop:
@@ -116,6 +116,25 @@ def main(once=False):
             notify_discord.send_pipeline_error("pipeline", str(e))
 
         if once:
+            # ── Fast poll check ────────────────────────────────────────────
+            import json as _json
+            from datetime import datetime as _dt, timezone as _tz
+            _fp = Path("fast_poll.json")
+            _fast = False
+            if _fp.exists():
+                try:
+                    _state = _json.loads(_fp.read_text(encoding="utf-8"))
+                    _exp   = _dt.fromisoformat(_state.get("expires_utc","2000-01-01T00:00:00+00:00"))
+                    _fast  = _state.get("active", False) and _exp > _dt.now(_tz.utc)
+                except Exception:
+                    pass
+            if _fast:
+                _interval = _state.get("poll_interval_sec", 120)
+                _mag      = _state.get("trigger_mag","?")
+                _place    = _state.get("trigger_place","?")
+                log.info(f"FAST POLL MODE: Mw{_mag} {_place} -- next cycle in {_interval}s")
+                time.sleep(_interval)
+                continue   # re-run pipeline cycle
             log.info("--once mode, done.")
             break
 
