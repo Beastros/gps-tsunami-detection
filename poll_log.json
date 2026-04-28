@@ -2310,10 +2310,16 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-04-28T20:02:28.135648+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-04-28T19:47:28.093379+00:00",
-  "total_polls": 384,
+  "last_updated": "2026-04-28T20:02:28.135648+00:00",
+  "total_polls": 385,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
