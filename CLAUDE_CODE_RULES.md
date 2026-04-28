@@ -1,4 +1,4 @@
-# Claude Code Rules — GPS Tsunami Detection Project
+﻿# Claude Code Rules — GPS Tsunami Detection Project
 ## Lessons Learned, Syntax Rules, and Environment Reference
 ### Last updated: 2026-04-28 | Version: V6 session
 
@@ -445,3 +445,10 @@ Fixed: HOLB geographic zone constraint (FPR=0.00). Dashboard: About tab, footer,
 
 ### V6 (April 28 2026)
 Added: Fast poll mode -- 2-min cycles on Mw6.0+ Pacific detection (usgs_listener.py + pipeline.py). Explicit None zone constraints for all unconstrained stations (detector_runner.py). Health check section 21 verified clean. README fully rewritten (7-channel fusion, V5 backtest, 10-station network, 21-section health check). CLAUDE_CODE_RULES.md rules 27-28 added. Pipeline at 315+ polls, 0 scored live events, all systems operational.
+
+### 29. Always end every session with a simple "how to run" block
+Every deploy script delivery must include:
+- A clear "run this" section at the top of the response
+- A single copy-paste PowerShell block using Get-ChildItem wildcard (never quoted .py filenames)
+- Any follow-up commands (git, verify) printed by the script itself at the end
+Keep it as simple as possible -- Mike should never have to hunt for the run command.
