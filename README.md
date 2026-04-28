@@ -274,7 +274,7 @@ pip install numpy scipy pandas matplotlib georinex ncompress requests
 - [x] Adaptive threshold recommender (Bayesian, advisory)
 - [x] Public dashboard — 4 tabs (Dashboard, Events, Poll Log, About)
 - [x] Discord + email alerting
-- [x] 22-section health check
+- [x] 23-section health check
 - [x] Historical backtester
 - [ ] First live scored event (awaiting qualifying Pacific event)
 - [ ] ML classifier (blocked until ~30 scored live events)

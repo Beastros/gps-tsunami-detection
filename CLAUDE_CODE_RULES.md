@@ -457,3 +457,22 @@ Every script delivery must open with a clear PowerShell run block using Get-Chil
 
 ### 30. LF/CRLF git warnings are harmless
 Python writes files with newline="\n" (LF). Git on Windows will warn about LF->CRLF conversion on git add. This is expected and does not affect functionality. Never change the Python write pattern to fix this.
+
+
+### 31. Guard deploy-script checks on function definition, not symbol name
+When checking whether a function has already been injected into a file,
+always check for the DEFINITION (`'function renderX'` or `'def render_x'`),
+NOT just the symbol name (`'renderX'`).
+If a caller like `loadDyfi()` was already injected and it calls `renderX(...)`,
+a bare `'renderX' not in src` guard will silently skip injecting the definition.
+
+**Never:**
+```python
+if 'renderDyfiPings' not in html:   # WRONG -- matches call inside loadDyfi()
+```
+
+**Always:**
+```python
+if 'function renderDyfiPings' not in html:   # matches definition only
+if 'def render_dyfi_pings' not in src:       # Python equivalent
+```
