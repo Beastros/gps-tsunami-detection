@@ -169,6 +169,7 @@ notify_discord.py         # Discord webhook alerting
 backtest.py               # Historical backtester
 health_check.py           # 21-section system verification
 adaptive_thresholds.py    # Bayesian threshold recommender (advisory)
+dyfi_poller.py            # DYFI shake ping map poller -- Mw5.0+ Pacific, writes dyfi_pings.json -- V8
 run_and_push.bat          # Task Scheduler target — runs pipeline + git push
 CLAUDE_CODE_RULES.md      # Environment reference — Windows/deployment pitfalls
 
