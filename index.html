@@ -94,7 +94,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 .map-wrap{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:20px;position:relative}
 #alert-banner{border-bottom:1px solid rgba(255,74,74,0.38);padding:11px 32px;background:rgba(255,40,40,0.1);animation:alert-bg-pulse 3s ease-in-out infinite}
 @keyframes alert-bg-pulse{0%,100%{background:rgba(255,40,40,0.10)}50%{background:rgba(255,40,40,0.20)}}
-@keyframes pulse-red{0%,100%{opacity:1;box-shadow:0 0 12px #ff4a4a}50%{opacity:.3;box-shadow:0 0 3px #ff4a4a}}
+@keyframes pulse-red{0%,100%{opacity:1;box-shadow:0 0 12px #ff4a4a}50%{opacity:.3;box-shadow:0 0 3px #ff4a4a}}@keyframes dyfi-pulse{0%,100%{opacity:0.65}50%{opacity:0.1}}.dyfi-ping-ring{animation:dyfi-pulse 2.5s ease-in-out infinite}
 @keyframes ev-ring-anim{0%,100%{opacity:.55}50%{opacity:.12}}
 .ev-ring{animation:ev-ring-anim 2.2s ease-in-out infinite}
 .ev-ring2{animation:ev-ring-anim 2.2s ease-in-out infinite;animation-delay:.7s}
@@ -236,6 +236,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       <div><svg width="13" height="13" style="vertical-align:middle;margin-right:6px;overflow:visible"><circle cx="6" cy="6" r="5" fill="none" stroke="#ff4a4a" stroke-width="1.2"/><line x1="6" y1="0" x2="6" y2="12" stroke="#ff4a4a" stroke-width="1.5"/><line x1="0" y1="6" x2="12" y2="6" stroke="#ff4a4a" stroke-width="1.5"/></svg>Active detection</div>
       <div><span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:2px solid #0abde3;margin-right:6px;vertical-align:middle"></span>DART buoy</div>
       <div><span style="display:inline-block;width:7px;height:7px;border:2px solid #ffd32a;transform:rotate(45deg);margin-right:7px;vertical-align:middle"></span>Ionosonde</div>
+      <div><span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:2px solid #ff9f43;margin-right:6px;vertical-align:middle"></span>DYFI felt ping</div>
       <div><span style="display:inline-block;width:14px;height:2px;background:#c0392b;margin-right:6px;vertical-align:middle;opacity:0.85"></span>Subduction zone</div>
       <div><span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:1.5px solid #ffa726;margin-right:6px;vertical-align:middle"></span>Near-miss seismic</div>
     </div>
@@ -617,10 +618,38 @@ function renderLog(d){
 
 loadSW();
 loadPipeline();
+async function loadDyfi(){try{const r=await fetch(BASE+'dyfi_pings.json');if(!r.ok)return;const d=await r.json();renderDyfiPings(d.pings||[]);}catch(e){}}
+loadDyfi();
+setInterval(loadDyfi,15*60*1000);
 setInterval(loadSW,5*60*1000);
 initMap();
 
 // ── Leaflet Pacific Basin Map ─────────────────────────────────────
+function renderDyfiPings(pings){
+  if(!svg||!proj)return;
+  svg.selectAll('.dyfi-ping').remove();
+  pings.forEach(function(ping){
+    var pt=proj([ping.lon,ping.lat]);
+    if(!pt)return;
+    var mmi=ping.dyfi_maxmmi||4;
+    var r=Math.max(4,Math.min(14,mmi*1.8));
+    var g=svg.append('g').attr('class','dyfi-ping');
+    g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',r+5)
+      .attr('fill','none').attr('stroke','#ff9f43').attr('stroke-width',0.7)
+      .attr('class','dyfi-ping-ring').attr('opacity',0.45);
+    g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',r)
+      .attr('fill','none').attr('stroke','#ff9f43').attr('stroke-width',1.6)
+      .attr('opacity',0.9);
+    g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',2.5)
+      .attr('fill','#ff9f43').attr('opacity',0.95);
+    g.on('mouseover',function(e){
+      showTip('<b style="color:#ff9f43">DYFI Felt Shaking</b><br>Mw '
+        +ping.mag+' · '+ping.place+'<br>'
+        +(ping.dyfi_responses||0)+' felt reports'
+        +(ping.dyfi_maxmmi?' · MMI '+ping.dyfi_maxmmi.toFixed(1):''),e);
+    }).on('mouseout',hideTip);
+  });
+}
 function initMap() {
   var W=960, H=500;
   var svg=d3.select('#pmap').attr('viewBox','0 0 '+W+' '+H).attr('height',H);

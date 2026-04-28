@@ -39,6 +39,7 @@ import detector_runner
 import scorer
 import notify
 import notify_discord
+import dyfi_poller
 
 LOG_FILE = "pipeline.log"
 POLL_INTERVAL = 900  # 15 minutes
@@ -91,6 +92,10 @@ def run_pipeline():
     # Step 4: Score
     log.info("\n[4/4] Scoring predictions...")
     scorer.main()
+
+    # Step 5: DYFI shake ping map -- V8
+    log.info("\n[DYFI] Updating shake ping map...")
+    dyfi_poller.run()
 
     log.info("\nCycle complete.")
 

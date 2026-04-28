@@ -8,7 +8,7 @@ Run anytime to confirm the system is healthy.
 
 Green = good. Yellow = warning. Red = action needed.
 Last updated: V4 session (April 26 2026)
-Sections: 22
+Sections: 23
 """
 
 import os, json, subprocess, smtplib, importlib
@@ -417,6 +417,29 @@ if _dyfi_ok:
     except Exception as _e:
         warn("DYFI API test: " + str(_e) + " -- fail-open OK")
 
+
+# === Section 23: DYFI Poller ===
+print("\n--- Section 23: DYFI Poller ---")
+_poller_path = os.path.join(PIPELINE_DIR, "dyfi_poller.py")
+_pings_path  = r"C:\Users\Mike\Desktop\repo\dyfi_pings.json"
+if os.path.exists(_poller_path):
+    ok("dyfi_poller.py found")
+else:
+    fail("dyfi_poller.py missing from pipeline folder")
+    issues.append("dyfi_poller.py missing")
+import time as _t23, json as _j23
+if os.path.exists(_pings_path):
+    _age = _t23.time() - os.path.getmtime(_pings_path)
+    try:
+        _pd = _j23.load(open(_pings_path, encoding="utf-8"))
+        if _age < 1800:
+            ok("dyfi_pings.json fresh -- %d pings" % _pd.get("count", 0))
+        else:
+            warn("dyfi_pings.json %d min old -- updates next cycle" % int(_age/60))
+    except Exception as _e:
+        warn("dyfi_pings.json parse error: " + str(_e))
+else:
+    warn("dyfi_pings.json not yet written -- appears after first pipeline cycle")
 # â”€â”€ Summary â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 print(f"\n{'='*55}")
 if not issues:
