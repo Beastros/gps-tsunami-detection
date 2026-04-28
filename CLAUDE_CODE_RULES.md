@@ -452,3 +452,8 @@ Every deploy script delivery must include:
 - A single copy-paste PowerShell block using Get-ChildItem wildcard (never quoted .py filenames)
 - Any follow-up commands (git, verify) printed by the script itself at the end
 Keep it as simple as possible -- Mike should never have to hunt for the run command.
+### 29. Always end every deploy with a simple one-liner run command
+Every script delivery must open with a clear PowerShell run block using Get-ChildItem wildcard. Never put .py filenames in quoted strings. Mike should never hunt for the run command.
+
+### 30. LF/CRLF git warnings are harmless
+Python writes files with newline="\n" (LF). Git on Windows will warn about LF->CRLF conversion on git add. This is expected and does not affect functionality. Never change the Python write pattern to fix this.
