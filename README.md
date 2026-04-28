@@ -18,7 +18,7 @@ This spatiotemporal consistency test eliminates 94–98% of single-station false
 
 ---
 
-## 7-Channel Sensor Stack
+## 8-Channel Sensor Stack
 
 | Channel | Source | Max Contribution |
 |---|---|---|
@@ -28,6 +28,7 @@ This spatiotemporal consistency test eliminates 94–98% of single-station false
 | dTEC/dt | Derived from GPS TEC | +0.05 corroboration bonus |
 | DART ocean pressure | NOAA NDBC — 28 buoys | +0.45 |
 | GIRO ionosonde foF2 | GIRO DIDBase — 5 stations | +0.12 |
+| DYFI felt reports | USGS event detail API | +0.02 / +0.04 | ACTIVE — V7 |
 | ShakeMap focal mechanism | USGS moment tensor API | Hard gate + tsunamigenic prior weight |
 
 **combined_confidence formula:**
@@ -94,7 +95,7 @@ HOLB is restricted to Cascadia-geometry epicenters to prevent cross-basin spurio
 | Kermadec 2011 | 7.4 | TRUE_NEGATIVE | 0.00 | HOLB zone constraint blocked cross-basin pairs |
 | Tohoku foreshock 2011 | 7.2 | TRUE_NEGATIVE | 0.00 | HOLB zone constraint blocked cross-basin pairs |
 
-Backtest confidence scores are TEC-only (DART and ionosonde historical data not available via public API for 2006–2013 events). Live events receive full 7-channel fusion.
+Backtest confidence scores are TEC-only (DART and ionosonde historical data not available via public API for 2006–2013 events). Live events receive full 8-channel fusion.
 
 ---
 
@@ -158,7 +159,7 @@ DISCORD_WEBHOOK_URL=your_discord_webhook_url
 pipeline.py               # Master orchestrator — runs all stages every 15 min
 usgs_listener.py          # Polls USGS, filters focal mechanism via ShakeMap
 rinex_downloader.py       # Downloads RINEX from NASA CDDIS (Earthdata session auth)
-detector_runner.py        # 7-channel fusion detector + zone constraints
+detector_runner.py        # 8-channel fusion detector + zone constraints
 scorer.py                 # Scores predictions vs 4-station tide gauge network
 space_weather.py          # 4-channel NOAA SWPC space weather quality score
 dart_checker.py           # 28-buoy NOAA NDBC DART ocean pressure check
@@ -266,14 +267,14 @@ pip install numpy scipy pandas matplotlib georinex ncompress requests
 ## Status
 
 - [x] Core GPS TEC coherence detector validated (TPR=1.00, FPR=0.00, 9-event backtest)
-- [x] 7-channel sensor fusion (TEC, DART, ionosonde, GLONASS+Galileo, dTEC/dt, ShakeMap, space weather)
+- [x] 8-channel sensor fusion (TEC, DART, ionosonde, GLONASS+Galileo, dTEC/dt, ShakeMap, space weather)
 - [x] Calibration model (wave_m formula, r²=0.988)
 - [x] Live operational pipeline (15-min poll cycle, 223+ polls)
 - [x] HOLB geographic zone constraint (FPR=0.00 restored after V4 station expansion)
 - [x] Adaptive threshold recommender (Bayesian, advisory)
 - [x] Public dashboard — 4 tabs (Dashboard, Events, Poll Log, About)
 - [x] Discord + email alerting
-- [x] 21-section health check
+- [x] 22-section health check
 - [x] Historical backtester
 - [ ] First live scored event (awaiting qualifying Pacific event)
 - [ ] ML classifier (blocked until ~30 scored live events)

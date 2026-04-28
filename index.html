@@ -113,7 +113,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 <header>
   <div class="header-left">
     <h1>GPS TSUNAMI DETECTION</h1>
-    <p>GPS/GLONASS/Galileo &middot; DART &middot; Digisonde foF2 &middot; Space weather &middot; 7-channel fusion &middot; Pacific basin</p>
+    <p>GPS/GLONASS/Galileo &middot; DART &middot; Digisonde foF2 &middot; Space weather &middot; 8-channel fusion &middot; Pacific basin</p>
   </div>
   <div class="live-badge"><div class="pulse"></div>LIVE &middot; 15 MIN POLL</div>
 </header>
@@ -288,7 +288,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 
     <p style="margin:0 0 20px">That pressure wave slightly disturbs the electron density in the ionosphere. GPS receivers on the ground are sensitive enough to measure it as a change in <strong style="color:var(--accent2)">Total Electron Content (TEC)</strong> &mdash; the integrated number of electrons along the signal path. This phenomenon has been documented in the scientific literature. This pipeline attempts to detect it automatically, in real time, and fuse it with independent physical measurements to produce a calibrated confidence score.</p>
 
-    <h2 style="font-family:var(--font-h);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">The 7-Channel Sensor Stack</h2>
+    <h2 style="font-family:var(--font-h);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">The 8-Channel Sensor Stack</h2>
 
     <div style="display:grid;gap:12px;margin-bottom:28px">
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
@@ -306,6 +306,10 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
         <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">GIRO Digisonde foF2</div>
         <div style="font-size:13px;color:var(--dim)">5 ionosonde stations monitored via the Global Ionosphere Radio Observatory DIDBase API. Independent foF2 perturbation confirmation adds +0.12.</div>
+        <div style="margin-bottom:20px">
+          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">DYFI Crowdsourced Felt Reports</div>
+          <div style="font-size:13px;color:var(--dim)">USGS &ldquo;Did You Feel It&rdquo; reports fetched from the event detail API. Available 5&ndash;15 min post-earthquake, before ShakeMap moment tensor is finalized. High response counts with elevated Modified Mercalli Intensity (MMI&nbsp;&ge;&nbsp;6) add +0.04; moderate reports add +0.02. Fail-open: no data = no penalty. Biased toward US/Japan/NZ populations &mdash; abstains below 20 responses.</div>
+        </div>
       </div>
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
         <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">Space Weather Quality Gate</div>
