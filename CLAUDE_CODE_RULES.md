@@ -476,3 +476,16 @@ if 'renderDyfiPings' not in html:   # WRONG -- matches call inside loadDyfi()
 if 'function renderDyfiPings' not in html:   # matches definition only
 if 'def render_dyfi_pings' not in src:       # Python equivalent
 ```
+
+
+### 32. Every run instruction must be a clean copy-paste block
+Never tell Mike to run something without a formatted code block he can copy directly.
+No exceptions -- not for one-liners, not for git commands, not for verification checks.
+Every instruction = one clean fenced code block. If there are multiple steps, each step
+gets its own block in order. Never embed commands in prose sentences.
+
+### 33. Mike is not a developer -- communicate accordingly
+Do not assume Mike knows what a function definition is, what an anchor is, what base64
+means, or any other dev terminology. When something fails or needs explanation, say what
+it does and why it matters in plain language. Technical detail goes in comments inside
+scripts -- not in the chat response. Keep responses short, direct, and action-focused.
