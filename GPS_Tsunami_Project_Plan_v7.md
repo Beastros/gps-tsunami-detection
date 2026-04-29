@@ -1,6 +1,6 @@
 # GPS Ionospheric Tsunami Detection
 ## Project Master Plan & Continuation Document — v7
-Last updated: April 28, 2026 (V6 session)  |  Status: LIVE — 7-channel fusion + fast poll mode  |  github.com/Beastros/gps-tsunami-detection
+Last updated: April 28, 2026 (V7 session)  |  Status: LIVE — 7-channel fusion + fast poll mode  |  github.com/Beastros/gps-tsunami-detection
 
 ---
 
@@ -111,6 +111,7 @@ When a tsunami crosses the open ocean it generates an Atmospheric Gravity Wave (
 | adaptive_thresholds.py | Bayesian threshold recommender | LIVE — V4 |
 | run_and_push.bat | Task Scheduler target | LIVE |
 | fast_poll.json | Fast poll state file (pipeline folder only) | Written by usgs_listener on Mw6.0+ Pacific |
+| check_recent.py | 2-day Pacific activity funnel diagnostic | V7 |
 | CLAUDE_CODE_RULES.md | Environment reference — rules 1-28 | V6 |
 | index.html | Dashboard — 4 tabs, color-coded GPS, alert banner | V6 |
 
@@ -212,6 +213,11 @@ Added: tsunamigenic_weight in combined_confidence, 4 new stations (AUCK/NOUM/KWJ
 
 ## V5 (April 26, 2026)
 Fixed: HOLB geographic zone constraint — FPR restored to 0.00. Dashboard: About tab, footer, UTF-8 mojibake fixed, Google Analytics added. Health check section 21. CLAUDE_CODE_RULES.md rules 1-26.
+
+## V7 (April 28, 2026)
+- **check_recent.py**: 2-day Pacific activity funnel diagnostic. Uses USGS pre-built GeoJSON feed (not FDSNWS query API -- urlencode silently breaks datetime params returning 0 results). Shows qualified / fast-poll-only / too-deep / below-mag / non-Pacific buckets. Tonga-Kermadec zone boundary corrected to -180 to catch antimeridian events. Depth checked before magnitude so deep events always bucket correctly regardless of magnitude.
+- **CLAUDE_CODE_RULES.md rule 34**: never use urlencode for USGS datetime params.
+- Pacific quiet window confirmed: 0 qualifying events in 2-day check, 0 fast-poll triggers. System nominal.
 
 ## V6 (April 28, 2026)
 - **Fast poll mode**: usgs_listener.py writes fast_poll.json on Mw6.0+ Pacific detection; pipeline.py loops at 2-min intervals for 2 hours. Proxy for ShakeAlert (no public API available).
@@ -337,6 +343,6 @@ Copy-paste this to begin:
 
 *This is my GPS ionospheric tsunami detection project. Read this document for full context. Also read CLAUDE_CODE_RULES.md from the repo before writing any code.*
 
-*System is live with a 7-channel sensor fusion pipeline + fast poll mode (2-min cycles on Mw6.0+ Pacific detection). V6 complete: color-coded GPS stations, red alert banner + crosshair on active event, DART/ionosonde/seismic distinct colors, Hawaii cluster leader lines, health check section 21 zone constraint integrity, explicit None zone constraints, README v6, CLAUDE_CODE_RULES v6 rules 1-28. Pipeline at 315+ polls, 0 scored live events, all systems operational.*
+*System is live with a 7-channel sensor fusion pipeline + fast poll mode (2-min cycles on Mw6.0+ Pacific detection). V7 complete: check_recent.py diagnostic tool, CLAUDE_CODE_RULES rule 34. V6: color-coded GPS stations, red alert banner + crosshair on active event, DART/ionosonde/seismic distinct colors, Hawaii cluster leader lines, health check section 21 zone constraint integrity, explicit None zone constraints, README v6, CLAUDE_CODE_RULES v6 rules 1-28. Pipeline at 315+ polls, 0 scored live events, all systems operational.*
 
-*Next task for V7: Implement DYFI (Did You Feel It) integration. Build dyfi_checker.py using the USGS event detail geojson (products.dyfi), add small confidence contribution (+0.02 to +0.04) to combined_confidence in detector_runner.py, surface DYFI response count on dashboard, add to health_check section 22. See V7 Roadmap in this doc for full spec including API fields and proposed contribution weights. ShakeAlert has no public API — fast poll mode is our proxy. DYFI is the next real channel.*
+*Next task for V8: Implement DYFI (Did You Feel It) integration. Build dyfi_checker.py using the USGS event detail geojson (products.dyfi), add small confidence contribution (+0.02 to +0.04) to combined_confidence in detector_runner.py, surface DYFI response count on dashboard, add to health_check section 22. See V7 Roadmap in this doc for full spec including API fields and proposed contribution weights. ShakeAlert has no public API — fast poll mode is our proxy. DYFI is the next real channel.*

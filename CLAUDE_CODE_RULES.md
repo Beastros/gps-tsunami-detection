@@ -426,6 +426,29 @@ After copying, always run `git add` and `git commit` from the repo folder.
 
 ---
 
+
+### 34. Never use urllib.parse.urlencode for USGS API datetime parameters
+urlencode() percent-encodes colons in timestamps (T01:00:00 becomes T01%3A00%3A00).
+The USGS FDSNWS query API silently returns 0 results when datetimes are colon-encoded.
+
+Use the pre-built GeoJSON summary feeds instead -- they always work, no parameters needed:
+  https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson
+  https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson
+
+If the query API is required, build the URL with an f-string -- never pass time fields through urlencode:
+```python
+# Correct -- colons survive intact
+url = (
+    "https://earthquake.usgs.gov/fdsnws/event/1/query"
+    f"?format=geojson&starttime={start}&endtime={end}&minmagnitude=5.5"
+)
+
+# Wrong -- urlencode turns colons into %3A, API returns 0 results silently
+params = urllib.parse.urlencode({"starttime": start, "endtime": end})
+```
+
+---
+
 ## SESSION HISTORY SUMMARY
 
 ### V1 (original)
