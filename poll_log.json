@@ -3312,10 +3312,16 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-04-30T13:47:28.250948+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-04-30T13:32:29.795134+00:00",
-  "total_polls": 551,
+  "last_updated": "2026-04-30T13:47:28.250948+00:00",
+  "total_polls": 552,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -3336,6 +3342,16 @@
       "depth": 81,
       "reason": "below threshold",
       "delta": -0.4
+    },
+    {
+      "ts": "2026-04-30T13:27:01.741000+00:00",
+      "mag": 5.7,
+      "place": "234 km SE of Lorengau, Papua New Guinea",
+      "lat": -3.47,
+      "lon": 148.81,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.8
     }
   ]
 }
