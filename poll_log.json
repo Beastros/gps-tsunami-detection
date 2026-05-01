@@ -3870,10 +3870,16 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-05-01T13:02:28.223286+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-05-01T12:47:28.167083+00:00",
-  "total_polls": 644,
+  "last_updated": "2026-05-01T13:02:28.223286+00:00",
+  "total_polls": 645,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -3904,6 +3910,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.8
+    },
+    {
+      "ts": "2026-05-01T12:39:55.578000+00:00",
+      "mag": 5.8,
+      "place": "29 km ENE of Yilan, Taiwan",
+      "lat": 24.87,
+      "lon": 122.02,
+      "depth": 97.3,
+      "reason": "below threshold",
+      "delta": -0.7
     }
   ]
 }
