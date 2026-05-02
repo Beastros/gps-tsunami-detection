@@ -4368,10 +4368,16 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-05-02T09:47:28.096892+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-05-02T09:32:28.129444+00:00",
-  "total_polls": 727,
+  "last_updated": "2026-05-02T09:47:28.096892+00:00",
+  "total_polls": 728,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -4412,6 +4418,16 @@
       "depth": 97.3,
       "reason": "below threshold",
       "delta": -0.7
+    },
+    {
+      "ts": "2026-05-02T09:28:40.989000+00:00",
+      "mag": 5.7,
+      "place": "17 km SW of K\u014dya, Japan",
+      "lat": 34.11,
+      "lon": 135.49,
+      "depth": 59.1,
+      "reason": "below threshold",
+      "delta": -0.8
     }
   ]
 }
