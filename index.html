@@ -103,16 +103,16 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 .pl-cta{font-family:var(--font-m);font-size:10px;color:var(--dim);margin-bottom:20px;padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
 .pl-cta a{color:var(--accent);text-decoration:none}
 .pl-cta a:hover{text-decoration:underline}
-/* Poll Log: scope to tab so fr columns always get width (min-width:0 fixes grid blowout) */
-#tab-polllog .pl-split{display:grid;width:100%;min-width:0;gap:16px;margin-bottom:20px;align-items:stretch;
-  grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(220px,300px)}
-#tab-polllog .pl-split>.log-panel,#tab-polllog .pl-split>.pl-rail{min-width:0;min-height:0}
+/* Poll Log: flex row — more reliable than grid with wide tables inside fr tracks */
+#tab-polllog .pl-split{display:flex;flex-direction:row;flex-wrap:nowrap;width:100%;min-width:0;gap:16px;margin-bottom:20px;align-items:stretch;box-sizing:border-box}
+#tab-polllog .pl-split>.log-panel{flex:2 1 0;min-width:0;min-height:0}
+#tab-polllog .pl-split>.pl-rail{flex:0 0 clamp(200px,22vw,300px);min-width:0;min-height:0}
 @media(max-width:1200px){
-  #tab-polllog .pl-split{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-  #tab-polllog .pl-rail{display:none!important}
+  #tab-polllog .pl-split>.pl-rail{display:none!important}
 }
 @media(max-width:900px){
-  #tab-polllog .pl-split{grid-template-columns:minmax(0,1fr)}
+  #tab-polllog .pl-split{flex-direction:column;flex-wrap:wrap}
+  #tab-polllog .pl-split>.log-panel{flex:1 1 auto;max-height:none}
 }
 #tab-polllog .pl-rail{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:12px;min-height:120px;width:100%}
 .pl-rail-t{font-family:var(--font-d);font-size:10px;letter-spacing:.12em;color:var(--text-hi);margin-bottom:2px}
@@ -140,7 +140,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 .reason-chip{display:inline-block;font-family:var(--font-m);font-size:9px;padding:3px 8px;border-radius:2px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
 .rc-below{background:rgba(0,200,255,.12);color:var(--accent);border:1px solid rgba(0,200,255,.28)}
 .rc-deep{background:rgba(106,156,192,.12);color:var(--dim);border:1px solid var(--border)}
-.rc-mechanism{background:rgba(255,167,38,.12);color:var(--warn);border:1px solid rgba(255,167,38,.35)}
+.rc-mechanism{background:rgba(255,213,79,.14);color:#ffd54f;border:1px solid rgba(255,213,79,.45)}
 .rc-zone{background:rgba(106,156,192,.08);color:var(--dim);border:1px solid var(--border)}
 .rc-other{background:var(--surface2);color:var(--dim);border:1px solid var(--border)}
 .col-delta{font-variant-numeric:tabular-nums;text-align:right!important}
@@ -398,7 +398,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
     <div class="stat-card"><div class="stat-label">Poll health</div><div class="stat-value stat-ok" id="pl-health" style="font-size:18px">--</div><div class="stat-sub" id="pl-health-sub">Last 50 rows</div></div>
   </div>
   <div class="pl-cta">
-    <span>Bright <strong style="color:#ffc857">amber</strong> rings on the <strong style="color:var(--text-hi)">Dashboard</strong> map match near-miss rows in the middle panel.</span>
+    <span>Bright <strong style="color:#ffd54f;text-shadow:0 0 12px rgba(255,213,79,0.35)">amber</strong> rings on the <strong style="color:var(--text-hi)">Dashboard</strong> map match near-miss rows in the center panel.</span>
     <a href="#" id="pl-link-dashboard">Open Dashboard map</a>
   </div>
   <div class="pl-split">
@@ -422,7 +422,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       <div class="pl-rail-k">Reason chip key</div>
       <ul>
         <li><span style="color:#00c8ff">Cyan</span> — below M6.5 threshold</li>
-        <li><span style="color:#ffa726">Amber</span> — focal / mechanism gate</li>
+        <li><span style="color:#ffd54f;font-weight:600">Amber</span> — focal / mechanism gate</li>
         <li><span style="color:var(--dim)">Muted</span> — deep, zone, or other</li>
       </ul>
       <div class="pl-rail-k">Raw JSON (main)</div>
