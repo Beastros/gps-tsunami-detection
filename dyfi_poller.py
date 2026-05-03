@@ -39,7 +39,8 @@ PACIFIC_BOXES = [
 ]
 
 MIN_FELT     = 10   # minimum felt reports to appear on map
-LOOKBACK_HRS = 12   # hours of history shown
+LOOKBACK_HRS = 24   # USGS query window (slightly wider than display max age)
+MAX_PING_AGE_HRS = 24  # drop pings older than this so they disappear from map/dashboard
 
 
 def run():
@@ -68,6 +69,9 @@ def run():
             except Exception as e:
                 log.warning("DYFI poller %s error: %s", name, e)
 
+        now_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
+        max_age_ms = MAX_PING_AGE_HRS * 3600 * 1000
+
         pings = []
         for feat in seen.values():
             props  = feat.get("properties", {})
@@ -77,7 +81,10 @@ def run():
                 continue
             mag = props.get("mag")
             mmi = props.get("mmi")
+            t_ms = props.get("time") or 0
             if mag is None or len(coords) < 2:
+                continue
+            if t_ms and (now_ms - int(t_ms)) > max_age_ms:
                 continue
             pings.append({
                 "usgs_id":        feat["id"],
@@ -95,6 +102,7 @@ def run():
         out = {
             "generated":    datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "lookback_hrs": LOOKBACK_HRS,
+            "max_ping_age_hrs": MAX_PING_AGE_HRS,
             "count":        len(pings),
             "pings":        pings,
         }
@@ -109,6 +117,7 @@ def run():
             out = {
                 "generated":    datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                 "lookback_hrs": LOOKBACK_HRS,
+                "max_ping_age_hrs": MAX_PING_AGE_HRS,
                 "count":        0,
                 "pings":        [],
             }
