@@ -104,6 +104,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 .pl-cta a{color:var(--accent);text-decoration:none}
 .pl-cta a:hover{text-decoration:underline}
 .pl-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(240px,300px);gap:16px;margin-bottom:20px;align-items:stretch}
+.pl-split>.log-panel,.pl-split>.pl-rail{min-height:0}
 @media(max-width:1200px){.pl-split{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.pl-rail{display:none!important}}
 @media(max-width:900px){.pl-split{grid-template-columns:1fr}}
 .pl-rail{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:12px;min-height:120px}
@@ -113,15 +114,15 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 .pl-rail ul{margin:0;padding-left:16px;font-size:12px;color:var(--dim);line-height:1.65}
 .pl-rail a{color:var(--accent);text-decoration:none;font-family:var(--font-m);font-size:10px}
 .pl-rail a:hover{text-decoration:underline}
-.log-panel{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:0;display:flex;flex-direction:column;max-height:min(72vh,720px)}
+.log-panel{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:0;display:flex;flex-direction:column;max-height:min(72vh,720px);min-height:0}
 .log-panel-hd{padding:11px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .log-panel-t{font-family:var(--font-d);font-size:10px;letter-spacing:.14em;color:var(--text-hi)}
 .log-panel-meta{font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.06em}
-.log-panel-body{padding:0;flex:1;min-height:0;display:flex;flex-direction:column}
+.log-panel-body{padding:0;flex:1 1 0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
 .poll-spark-wrap{padding:12px 16px;border-bottom:1px solid var(--border);background:var(--bg);flex-shrink:0}
 .poll-spark-h{font-family:var(--font-m);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
 .poll-spark-svg{width:100%;height:52px;display:block}
-.table-scroll{overflow:auto;flex:1;min-height:180px}
+.table-scroll{overflow:auto;flex:1 1 0;min-height:120px;min-width:0}
 .table-scroll .data-table thead th{position:sticky;top:0;z-index:2;box-shadow:0 1px 0 var(--border)}
 .seismic-row td:first-child{border-left:3px solid transparent}
 .seismic-row.rs-below td:first-child{border-left-color:var(--accent)}
@@ -391,7 +392,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
   </div>
   <div class="pl-cta">
     <span>Bright <strong style="color:#ffc857">amber</strong> rings on the <strong style="color:var(--text-hi)">Dashboard</strong> map match near-miss rows in the middle panel.</span>
-    <a href="#" onclick="showTab('dashboard',document.querySelector('.tab-nav .tab-btn'));return false;">Open Dashboard map</a>
+    <a href="#" id="pl-link-dashboard" onclick="return false;">Open Dashboard map</a>
   </div>
   <div class="pl-split">
     <div class="log-panel">
@@ -435,6 +436,14 @@ function showTab(name,btn){
 }
 function el(id){return document.getElementById(id)}
 function swColor(s){return s>=0.5?'var(--danger)':s>=0.3?'var(--warn)':'var(--accent2)'}
+(function(){
+  var a=document.getElementById('pl-link-dashboard');
+  if(a)a.addEventListener('click',function(ev){
+    ev.preventDefault();
+    var tabs=document.querySelectorAll('.tab-nav .tab-btn');
+    if(tabs.length)showTab('dashboard',tabs[0]);
+  });
+})();
 
 async function fetchDict(url,key){
   try{const d=await(await fetch(url)).json();for(let i=d.length-1;i>=0;i--){const v=d[i][key];if(v!=null&&!isNaN(+v))return+v;}}catch(e){}return null;
