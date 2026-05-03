@@ -105,12 +105,6 @@ FAST_POLL_DURATION_MIN  = 120   # minutes of fast polling after trigger
 FAST_POLL_INTERVAL_SEC  = 120   # 2-minute cycles during fast poll
 FAST_POLL_FILE          = "fast_poll.json"
 
-# ── Fast poll trigger ──────────────────────────────────────────────────────
-FAST_POLL_MW_TRIGGER    = 6.0   # lower than qualify threshold -- catches upgrades
-FAST_POLL_DURATION_MIN  = 120   # minutes of fast polling after trigger
-FAST_POLL_INTERVAL_SEC  = 120   # 2-minute cycles during fast poll
-FAST_POLL_FILE          = "fast_poll.json"
-
 # ── Logging ────────────────────────────────────────────────────────
 logging.basicConfig(
     level=logging.INFO,
@@ -126,11 +120,13 @@ log = logging.getLogger(__name__)
 # ── Helpers ────────────────────────────────────────────────────────
 def load_queue():
     if Path(EVENT_QUEUE_FILE).exists():
-        return json.loads(Path(EVENT_QUEUE_FILE).read_text())
+        return json.loads(Path(EVENT_QUEUE_FILE).read_text(encoding="utf-8"))
     return {"events": [], "seen_ids": []}
 
 def save_queue(q):
-    Path(EVENT_QUEUE_FILE).write_text(json.dumps(q, indent=2))
+    Path(EVENT_QUEUE_FILE).write_text(
+        json.dumps(q, indent=2), encoding="utf-8"
+    )
 
 def event_id(feature):
     """Stable ID from USGS event ID."""
@@ -575,7 +571,7 @@ def write_poll_log(new_candidates, queue, near_misses=None):
     poll_path = Path(POLL_LOG_FILE)
     if poll_path.exists():
         try:
-            data = json.loads(poll_path.read_text())
+            data = json.loads(poll_path.read_text(encoding="utf-8"))
         except Exception:
             data = {"total_polls": 0, "polls": [], "recent_seismicity": []}
     else:
@@ -586,11 +582,13 @@ def write_poll_log(new_candidates, queue, near_misses=None):
 
     events = queue.get("events", [])
     scored = sum(1 for e in events if e.get("status") == "scored")
+    pending = sum(1 for e in events if e.get("status") != "scored")
 
     entry = {
         "ts":             datetime.now(timezone.utc).isoformat(),
         "new_candidates": new_candidates,
         "total_queued":   len(events),
+        "pending":        pending,
         "scored":         scored,
     }
     data["polls"].append(entry)
@@ -602,7 +600,7 @@ def write_poll_log(new_candidates, queue, near_misses=None):
         data["recent_seismicity"].extend(near_misses)
         data["recent_seismicity"] = data["recent_seismicity"][-100:]
 
-    poll_path.write_text(json.dumps(data, indent=2))
+    poll_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
     log.info(f"Poll log updated — total polls: {data['total_polls']}, "
              f"near-misses this cycle: {len(near_misses or [])}")
 

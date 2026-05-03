@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GPS Tsunami Detection â€” Live Monitor</title>
+<title>GPS Tsunami Detection — Live Monitor</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -281,15 +281,15 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 
 <!-- ABOUT -->
 <div id="tab-about" class="tab-pane">
-  <div style="max-width:780px;margin:48px auto;padding:0 32px;font-family:var(--font-s);color:var(--text);line-height:1.8">
+  <div style="max-width:780px;margin:48px auto;padding:0 32px;font-family:var(--font-b);color:var(--text);line-height:1.8">
 
-    <h2 style="font-family:var(--font-h);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:0 0 24px">How It Works</h2>
+    <h2 style="font-family:var(--font-d);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:0 0 24px">How It Works</h2>
 
     <p style="margin:0 0 20px">When a large underwater earthquake occurs, it displaces the seafloor and shoves the entire water column upward. That displacement sends a pressure wave not just across the ocean surface as a tsunami &mdash; it also propagates upward through the atmosphere all the way to the <strong style="color:var(--accent2)">ionosphere</strong>, a layer of charged particles approximately 300&nbsp;km above the Earth where GPS satellite signals pass through.</p>
 
     <p style="margin:0 0 20px">That pressure wave slightly disturbs the electron density in the ionosphere. GPS receivers on the ground are sensitive enough to measure it as a change in <strong style="color:var(--accent2)">Total Electron Content (TEC)</strong> &mdash; the integrated number of electrons along the signal path. This phenomenon has been documented in the scientific literature. This pipeline attempts to detect it automatically, in real time, and fuse it with independent physical measurements to produce a calibrated confidence score.</p>
 
-    <h2 style="font-family:var(--font-h);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">The 8-Channel Sensor Stack</h2>
+    <h2 style="font-family:var(--font-d);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">The 8-Channel Sensor Stack</h2>
 
     <div style="display:grid;gap:12px;margin-bottom:28px">
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
@@ -307,10 +307,10 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
         <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">GIRO Digisonde foF2</div>
         <div style="font-size:13px;color:var(--dim)">5 ionosonde stations monitored via the Global Ionosphere Radio Observatory DIDBase API. Independent foF2 perturbation confirmation adds +0.12.</div>
-        <div style="margin-bottom:20px">
-          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">DYFI Crowdsourced Felt Reports The <code>dyfi_poller.py</code> module independently monitors Mw&nbsp;5.0+ Pacific events every 15&nbsp;min and renders felt-shaking pings on the map as amber pulsing rings sized by MMI.</div>
-          <div style="font-size:13px;color:var(--dim)">USGS &ldquo;Did You Feel It&rdquo; reports fetched from the event detail API. Available 5&ndash;15 min post-earthquake, before ShakeMap moment tensor is finalized. High response counts with elevated Modified Mercalli Intensity (MMI&nbsp;&ge;&nbsp;6) add +0.04; moderate reports add +0.02. Fail-open: no data = no penalty. Biased toward US/Japan/NZ populations &mdash; abstains below 20 responses.</div>
-        </div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
+        <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">DYFI Crowdsourced Felt Reports</div>
+        <div style="font-size:13px;color:var(--dim)">The <code style="font-size:12px">dyfi_poller.py</code> module independently monitors Mw&nbsp;5.0+ Pacific events every 15&nbsp;min and renders felt-shaking pings on the map as amber pulsing rings sized by MMI. USGS &ldquo;Did You Feel It&rdquo; reports are fetched from the event detail API. Available 5&ndash;15 min post-earthquake, before ShakeMap moment tensor is finalized. High response counts with elevated Modified Mercalli Intensity (MMI&nbsp;&ge;&nbsp;6) add +0.04; moderate reports add +0.02. Fail-open: no data = no penalty. Biased toward US/Japan/NZ populations &mdash; abstains below 20 responses.</div>
       </div>
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
         <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">Space Weather Quality Gate</div>
@@ -322,11 +322,11 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       </div>
     </div>
 
-    <h2 style="font-family:var(--font-h);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">Why It Could Matter</h2>
+    <h2 style="font-family:var(--font-d);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">Why It Could Matter</h2>
 
     <p style="margin:0 0 20px">Current operational tsunami warning relies primarily on DART buoys &mdash; physical sensors on the ocean floor that must wait for the wave to pass over them. The ionospheric signal travels through the atmosphere and may arrive at GPS stations before the wave reaches the nearest buoy. If that timing advantage holds on live events, even 20&ndash;30 minutes of additional warning time has real consequences for coastal communities.</p>
 
-    <h2 style="font-family:var(--font-h);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">Validation</h2>
+    <h2 style="font-family:var(--font-d);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">Validation</h2>
 
     <p style="margin:0 0 8px">Backtested against 9 historical Pacific events:</p>
     <div style="font-family:var(--font-m);font-size:12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px;margin-bottom:20px">
@@ -360,11 +360,6 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
   </div>
 </div>
 </div>
-
-<footer style="border-top:1px solid var(--border);padding:14px 32px;display:flex;justify-content:space-between;margin-top:32px">
-  <a href="https://github.com/Beastros/gps-tsunami-detection" style="font-family:var(--font-m);font-size:10px;color:var(--dim);text-decoration:none">github.com/Beastros/gps-tsunami-detection</a>
-  <span style="font-family:var(--font-m);font-size:10px;color:var(--dim)">Research monitoring &middot; not an operational warning system &middot; Scientific inquiries: <a href="mailto:mthhorn@gmail.com" style="color:var(--dim);text-decoration:none">mthhorn@gmail.com</a></span>
-</footer>
 
 <script>
 function showTab(name,btn){
@@ -443,21 +438,29 @@ async function loadSW(){
   el('sw-time').textContent='Updated '+new Date().toUTCString();
 }
 
-// SVG map projection helpers (matches viewBox 0 0 960 480)
-// x: 150E=229, 180=366, 150W=503  => 137px per 30deg => 4.5667 px/deg
-// y: 60N=37, 30N=147, EQ=258, 30S=369 => 111px per 30deg => 3.7 px/deg
-function lonToSvgX(lon){var l=lon<0?lon+360:lon;return(l-150)*(137/30)+229;}
-function latToSvgY(lat){return 258-lat*(111/30);}
-
 const BASE='https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/';
 function fmtDate(ts){if(!ts)return'--';const d=new Date(ts);if(isNaN(d))return'--';return d.toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});}
 
 async function loadPipeline(){
   try{
-    const[pr,lr,qr]=await Promise.all([fetch(BASE+'poll_log.json'),fetch(BASE+'running_log.json'),fetch(BASE+'event_queue.json')]);
-    if(pr.ok)renderPoll(await pr.json());
-    if(lr.ok)renderLog(await lr.json());
-    if(qr.ok)updateAlertBanner(await qr.json());
+    const[prRes,lrRes,qrRes]=await Promise.all([
+      fetch(BASE+'poll_log.json'),
+      fetch(BASE+'running_log.json'),
+      fetch(BASE+'event_queue.json')
+    ]);
+    const pr=prRes.ok?await prRes.json():null;
+    const lr=lrRes.ok?await lrRes.json():null;
+    const queue=qrRes.ok?await qrRes.json():null;
+    if(pr)renderPoll(pr);
+    if(lr)renderLog(lr);
+    if(queue){
+      updateAlertBanner(queue);
+      const lrEvents=lr&&(lr.scored_events||lr.events)||[];
+      if(!lrRes.ok||!lrEvents.length){
+        const nScored=(queue.events||[]).filter(function(e){return e.status==='scored';}).length;
+        if(nScored>0)el('st-scored').textContent=String(nScored);
+      }
+    }
   }catch(e){console.error(e);}
 }
 
@@ -469,6 +472,7 @@ function renderPoll(d){
     const t=new Date(last.ts);
     el('st-last').textContent=isNaN(t)?'--':t.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
     el('st-last-sub').textContent=isNaN(t)?'--':t.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    el('st-queued').textContent=last.total_queued!=null?String(last.total_queued):'--';
     const rows=polls.slice(-50).reverse().map(p=>{
       const ok=!p.error;
       return '<tr><td>'+fmtDate(p.ts)+'</td><td>'+(p.new_candidates??0)+'</td><td>'+(p.total_queued??'--')+'</td><td>'+(p.scored??'--')+'</td><td><span class="poll-status '+(ok?'ok':'err')+'">'+(ok?'OK':'ERR')+'</span></td></tr>';
@@ -484,43 +488,6 @@ function renderPoll(d){
     }).join('');
     el('seismic-body').innerHTML='<table class="data-table"><thead><tr><th>Time (UTC)</th><th>Mag</th><th>Location</th><th>Depth</th><th>Reason</th><th title="Delta from qualifying threshold">Delta Mw</th></tr></thead><tbody>'+rows+'</tbody></table>';
     renderSeismicOnMap(rs);
-    // Render near-miss events on the Pacific map
-    var grp=document.getElementById('seismic-markers');
-    if(grp){
-      grp.innerHTML='';
-      var recent=rs.slice(-60);
-      var now=Date.now();
-      recent.forEach(function(e){
-        if(e.lat==null||e.lon==null) return;
-        var x=lonToSvgX(e.lon), y=latToSvgY(e.lat);
-        if(x<0||x>960||y<0||y>480) return;
-        var mag=e.mag||5.5;
-        var r=Math.max(2.5, (mag-4.5)*2.2);
-        var age=(now-new Date(e.ts).getTime())/(1000*3600);
-        var op=Math.max(0.25, 0.75-age/48);
-        var nearMiss=(e.delta!=null&&e.delta>-0.5&&e.delta<=0);
-        var stroke=nearMiss?'#ffa726':'#c0702a';
-        var sw=nearMiss?1.5:1.0;
-        var g=document.createElementNS('http://www.w3.org/2000/svg','g');
-        var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-        c.setAttribute('cx',x.toFixed(1)); c.setAttribute('cy',y.toFixed(1));
-        c.setAttribute('r',r.toFixed(1));
-        c.setAttribute('fill','none'); c.setAttribute('stroke',stroke);
-        c.setAttribute('stroke-width',sw); c.setAttribute('opacity',op.toFixed(2));
-        var t=document.createElementNS('http://www.w3.org/2000/svg','title');
-        t.textContent='Mw '+(mag.toFixed?mag.toFixed(1):mag)+' '+( e.place||'')+' ('+( e.reason||'filtered')+')';
-        c.appendChild(t); g.appendChild(c);
-        if(nearMiss){
-          var c2=document.createElementNS('http://www.w3.org/2000/svg','circle');
-          c2.setAttribute('cx',x.toFixed(1)); c2.setAttribute('cy',y.toFixed(1));
-          c2.setAttribute('r',(r+2.5).toFixed(1));
-          c2.setAttribute('fill','none'); c2.setAttribute('stroke','#ffa726');
-          c2.setAttribute('stroke-width','0.6'); c2.setAttribute('opacity',(op*0.4).toFixed(2));
-          g.appendChild(c2);
-        }
-        grp.appendChild(g);
-      });
-    }
   }
 }
 
@@ -529,9 +496,16 @@ function renderLog(d){
   const events = d.scored_events || d.events || [];
   const summary = d.summary || {};
   el('st-scored').textContent = events.length;
-  if(!events.length) return;
+  if(!events.length){
+    el('oc-tp').textContent=el('oc-tn').textContent=el('oc-fp').textContent=el('oc-fn').textContent=el('oc-geo').textContent=el('oc-total').textContent='0';
+    el('perf-tpr').textContent=el('perf-fpr').textContent=el('perf-amp').textContent='--';
+    el('perf-lead').innerHTML='-- <span class="perf-unit">min</span>';
+    el('perf-med').innerHTML='-- <span class="perf-unit">min</span>';
+    el('events-body').innerHTML='<div class="empty-state"><div class="empty-icon">🌊</div><div class="empty-title">No scored events yet</div><div class="empty-sub">Pipeline active - monitoring Pacific basin</div></div>';
+    return;
+  }
 
-  // Outcome counts â€” scorer uses TRUE_POSITIVE etc.
+  // Outcome counts — scorer uses TRUE_POSITIVE etc.
   const tp  = summary.true_positives  ?? events.filter(e=>e.outcome==='TRUE_POSITIVE').length;
   const tn  = summary.true_negatives  ?? events.filter(e=>['TRUE_NEGATIVE','CORRECT_ABSTENTION_NO_ANCHOR'].includes(e.outcome)).length;
   const fp  = summary.false_positives ?? events.filter(e=>e.outcome==='FALSE_POSITIVE').length;
@@ -542,7 +516,7 @@ function renderLog(d){
   el('oc-fp').textContent=fp; el('oc-fn').textContent=fn;
   el('oc-geo').textContent=geo; el('oc-total').textContent=events.length;
 
-  // Performance â€” prefer summary fields
+  // Performance — prefer summary fields
   el('perf-tpr').textContent = summary.tpr!=null ? summary.tpr.toFixed(2) : (tp+fn>0?(tp/(tp+fn)).toFixed(2):'--');
   el('perf-fpr').textContent = summary.fpr!=null ? summary.fpr.toFixed(2) : (fp+tn>0?(fp/(fp+tn)).toFixed(2):'--');
   if(summary.mean_lead_time_min!=null){
@@ -610,22 +584,26 @@ function renderLog(d){
     +'<th>Date (UTC)</th><th>Location</th><th>Mw</th>'
     +'<th title="Multi-sensor fusion confidence (0=low, 1=high)">Confidence</th>'
     +'<th>TEC</th><th>Outcome</th>'
-    +'<th title="DART buoy: \u25CF confirmed \u25CB negative ~ pending">DART</th>'
+    +'<th title="GLONASS/Galileo vs GPS agreement">Const</th>'
+    +'<th title="dTEC/dt corroboration">\u0394TEC</th>'
+    +'<th title="Ionosonde foF2 confirmed">Iono</th>'
     +'<th title="DYFI felt report count (crowdsourced, USGS)">DYFI</th>'
+    +'<th title="DART buoy: \u25CF confirmed \u25CB negative ~ pending">DART</th>'
     +'<th title="Space weather contamination score">Space Wx</th>'
     +'</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
 loadSW();
 loadPipeline();
+setInterval(loadPipeline,5*60*1000);
 async function loadDyfi(){try{const r=await fetch(BASE+'dyfi_pings.json');if(!r.ok)return;const d=await r.json();renderDyfiPings(d.pings||[]);}catch(e){}}
-loadDyfi();
 setInterval(loadDyfi,15*60*1000);
 setInterval(loadSW,5*60*1000);
 initMap();
 
 // ── Leaflet Pacific Basin Map ─────────────────────────────────────
 function renderDyfiPings(pings){
+  var svg=window._mapSvg,proj=window._mapProj;
   if(!svg||!proj)return;
   svg.selectAll('.dyfi-ping').remove();
   pings.forEach(function(ping){
@@ -769,7 +747,9 @@ function initMap() {
       svg.append('circle').attr('cx',hilo[0]).attr('cy',hilo[1]).attr('r',2).attr('fill','#00ff9d').attr('pointer-events','none');
     }
 
+    svg.append('g').attr('id','seismic-markers');
     window._mapSvg=svg; window._mapProj=proj;
+    loadDyfi();
   }).catch(function(){
     svg.append('rect').attr('width',W).attr('height',H).attr('fill','#040e1a');
     svg.append('text').attr('x',W/2).attr('y',H/2).attr('text-anchor','middle').attr('fill','#6a9cc0').attr('font-size',13).text('Could not load world geography');
@@ -854,12 +834,15 @@ function updateAlertBanner(queue){
   else{setTimeout(function(){if(window._mapSvg&&window._mapProj)renderActiveEvent(events);},2500);}
 }
 
-// Hook into existing renderPoll to also update Leaflet seismic layer
-var _origRenderPoll = typeof renderPoll === 'function' ? renderPoll : null;
-
 </script>
-<footer style="margin-top:60px;padding:24px 32px;border-top:1px solid var(--border);text-align:center;font-family:var(--font-m);font-size:11px;color:var(--dim);line-height:1.7">
-  Built by one person using public APIs from NASA, NOAA, and USGS. Live-testing a novel hypothesis: that ionospheric GPS signals can provide earlier tsunami confirmation than existing methods. Backtested successfully against historical Pacific events. Research only &mdash; not an operational system.
+<footer style="border-top:1px solid var(--border);padding:18px 32px;margin-top:32px">
+  <div style="max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px">
+    <a href="https://github.com/Beastros/gps-tsunami-detection" style="font-family:var(--font-m);font-size:10px;color:var(--dim);text-decoration:none">github.com/Beastros/gps-tsunami-detection</a>
+    <span style="font-family:var(--font-m);font-size:10px;color:var(--dim);text-align:right">Research monitoring &middot; not an operational warning system &middot; <a href="mailto:mthhorn@gmail.com" style="color:var(--dim);text-decoration:none">mthhorn@gmail.com</a></span>
+  </div>
+  <p style="max-width:780px;margin:20px auto 0;padding:0 32px;text-align:center;font-family:var(--font-m);font-size:11px;color:var(--dim);line-height:1.7">
+    Built using public APIs from NASA, NOAA, and USGS. Live-testing whether ionospheric GPS signals can support earlier tsunami confirmation than existing methods. Backtested against historical Pacific events. Research only &mdash; not an operational system.
+  </p>
 </footer>
 
 </body>
