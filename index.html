@@ -103,8 +103,16 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 .pl-cta{font-family:var(--font-m);font-size:10px;color:var(--dim);margin-bottom:20px;padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
 .pl-cta a{color:var(--accent);text-decoration:none}
 .pl-cta a:hover{text-decoration:underline}
-.pl-split{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
-@media(max-width:1100px){.pl-split{grid-template-columns:1fr}}
+.pl-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(240px,300px);gap:16px;margin-bottom:20px;align-items:stretch}
+@media(max-width:1200px){.pl-split{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.pl-rail{display:none!important}}
+@media(max-width:900px){.pl-split{grid-template-columns:1fr}}
+.pl-rail{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:12px;min-height:120px}
+.pl-rail-t{font-family:var(--font-d);font-size:10px;letter-spacing:.12em;color:var(--text-hi);margin-bottom:2px}
+.pl-rail-k{font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-top:8px}
+.pl-rail-v{font-family:var(--font-m);font-size:11px;color:var(--accent);word-break:break-all}
+.pl-rail ul{margin:0;padding-left:16px;font-size:12px;color:var(--dim);line-height:1.65}
+.pl-rail a{color:var(--accent);text-decoration:none;font-family:var(--font-m);font-size:10px}
+.pl-rail a:hover{text-decoration:underline}
 .log-panel{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:0;display:flex;flex-direction:column;max-height:min(72vh,720px)}
 .log-panel-hd{padding:11px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .log-panel-t{font-family:var(--font-d);font-size:10px;letter-spacing:.14em;color:var(--text-hi)}
@@ -270,7 +278,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       <div><span style="display:inline-block;width:7px;height:7px;border:2px solid #ffd32a;transform:rotate(45deg);margin-right:7px;vertical-align:middle"></span>Ionosonde</div>
       <div><span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:2px solid #ff9f43;margin-right:6px;vertical-align:middle"></span>DYFI felt ping</div>
       <div><span style="display:inline-block;width:14px;height:2px;background:#c0392b;margin-right:6px;vertical-align:middle;opacity:0.85"></span>Subduction zone</div>
-      <div><span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:1.5px solid #ffa726;margin-right:6px;vertical-align:middle"></span>Near-miss seismic</div>
+      <div><span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:2px solid #ffc857;margin-right:6px;vertical-align:middle;box-shadow:0 0 6px rgba(255,200,87,0.55)"></span>Near-miss seismic</div>
     </div>
   </div>
 
@@ -382,7 +390,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
     <div class="stat-card"><div class="stat-label">Poll health</div><div class="stat-value stat-ok" id="pl-health" style="font-size:18px">--</div><div class="stat-sub" id="pl-health-sub">Last 50 rows</div></div>
   </div>
   <div class="pl-cta">
-    <span>Orange rings on the <strong style="color:var(--text-hi)">Dashboard</strong> map match near-miss rows below.</span>
+    <span>Bright <strong style="color:#ffc857">amber</strong> rings on the <strong style="color:var(--text-hi)">Dashboard</strong> map match near-miss rows in the middle panel.</span>
     <a href="#" onclick="showTab('dashboard',document.querySelector('.tab-nav .tab-btn'));return false;">Open Dashboard map</a>
   </div>
   <div class="pl-split">
@@ -399,6 +407,21 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
         <div id="seismic-scroll" class="table-scroll"><div id="seismic-body"><div class="empty-state"><div class="empty-icon">🌍</div><div class="empty-title">No near-miss rows</div><div class="empty-sub">Mw5.5+ in target zones that did not queue (threshold, depth, mechanism, or zone). Same events as map rings when present.</div></div></div>
       </div>
     </div>
+    <aside class="pl-rail" aria-label="Log metadata and raw data">
+      <div class="pl-rail-t">LOG METADATA</div>
+      <div class="pl-rail-k">poll_log.json last write</div>
+      <div class="pl-rail-v" id="pl-rail-updated">--</div>
+      <div class="pl-rail-k">Reason chip key</div>
+      <ul>
+        <li><span style="color:#00c8ff">Cyan</span> — below M6.5 threshold</li>
+        <li><span style="color:#ffa726">Amber</span> — focal / mechanism gate</li>
+        <li><span style="color:var(--dim)">Muted</span> — deep, zone, or other</li>
+      </ul>
+      <div class="pl-rail-k">Raw JSON (main)</div>
+      <a href="https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/poll_log.json" target="_blank" rel="noopener">poll_log.json</a><br>
+      <a href="https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/event_queue.json" target="_blank" rel="noopener">event_queue.json</a><br>
+      <a href="https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/running_log.json" target="_blank" rel="noopener">running_log.json</a>
+    </aside>
   </div>
 </div>
 </div>
@@ -532,6 +555,8 @@ function renderPollSpark(slice){
 }
 function renderPoll(d){
   el('st-polls').textContent=d.total_polls??'--';
+  var railU=el('pl-rail-updated');
+  if(railU)railU.textContent=d.last_updated?fmtDate(d.last_updated)+' (repo)':'--';
   var plAge=el('pl-age'),plAgeSub=el('pl-age-sub'),plTot=el('pl-total'),plM24=el('pl-miss24'),plHl=el('pl-health'),plHlSub=el('pl-health-sub');
   if(plTot)plTot.textContent=d.total_polls!=null?String(d.total_polls):'--';
   var polls=d.polls||[];
@@ -857,6 +882,7 @@ function renderSeismicOnMap(rs) {
   if(!svg||!proj||!rs||!rs.length) return;
   svg.selectAll('.seismic-marker').remove();
   var now=Date.now();
+  var colNear='#ffc857', colOther='#ff9a3c';
   rs.slice(-80).forEach(function(e){
     if(e.lat==null||e.lon==null) return;
     var p=proj([e.lon,e.lat]);
@@ -864,16 +890,22 @@ function renderSeismicOnMap(rs) {
     var mag=e.mag||5.5;
     var r=Math.max(3,(mag-4.5)*4);
     var age=(now-new Date(e.ts).getTime())/(1000*3600);
-    var op=Math.max(0.2,0.75-age/48);
+    var op=Math.max(0.5,0.92-age/36);
     var nearMiss=e.delta!=null&&e.delta>-0.5&&e.delta<=0;
-    var color=nearMiss?'#ffa726':'#c0702a';
+    var color=nearMiss?colNear:colOther;
+    var sw=nearMiss?2.4:1.6;
+    if(nearMiss){
+      svg.append('circle').attr('class','seismic-marker')
+        .attr('cx',p[0]).attr('cy',p[1]).attr('r',r+5)
+        .attr('fill','none').attr('stroke',colNear).attr('stroke-width',4).attr('opacity',op*0.22);
+    }
     svg.append('circle').attr('class','seismic-marker')
       .attr('cx',p[0]).attr('cy',p[1]).attr('r',r)
-      .attr('fill','none').attr('stroke',color).attr('stroke-width',nearMiss?1.8:1.0).attr('opacity',op);
+      .attr('fill','none').attr('stroke',color).attr('stroke-width',sw).attr('opacity',op);
     if(nearMiss){
       svg.append('circle').attr('class','seismic-marker')
         .attr('cx',p[0]).attr('cy',p[1]).attr('r',r+3)
-        .attr('fill','none').attr('stroke','#ffa726').attr('stroke-width',0.5).attr('opacity',op*0.35);
+        .attr('fill','none').attr('stroke',colNear).attr('stroke-width',1).attr('opacity',op*0.55);
     }
   });
 }
@@ -934,7 +966,7 @@ function updateAlertBanner(queue){
 <footer style="border-top:1px solid var(--border);padding:18px 32px;margin-top:32px">
   <div style="max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px">
     <a href="https://github.com/Beastros/gps-tsunami-detection" style="font-family:var(--font-m);font-size:10px;color:var(--dim);text-decoration:none">github.com/Beastros/gps-tsunami-detection</a>
-    <span style="font-family:var(--font-m);font-size:10px;color:var(--dim);text-align:right">Research monitoring &middot; not an operational warning system &middot; <a href="mailto:mthhorn@gmail.com" style="color:var(--dim);text-decoration:none">mthhorn@gmail.com</a></span>
+    <span style="font-family:var(--font-m);font-size:10px;color:var(--dim);text-align:right">Research monitoring &middot; not an operational warning system &middot; <a href="mailto:emfproj@proton.me" style="color:var(--dim);text-decoration:none">emfproj@proton.me</a></span>
   </div>
   <p style="max-width:780px;margin:20px auto 0;padding:0 32px;text-align:center;font-family:var(--font-m);font-size:11px;color:var(--dim);line-height:1.7">
     Built using public APIs from NASA, NOAA, and USGS. Live-testing whether ionospheric GPS signals can support earlier tsunami confirmation than existing methods. Backtested against historical Pacific events. Research only &mdash; not an operational system.
