@@ -1,6 +1,6 @@
 # GPS Ionospheric Tsunami Detection
 
-A 7-channel real-time sensor fusion pipeline for Pacific tsunami early warning using GPS Total Electron Content (TEC) perturbations fused with ocean pressure buoys, ionosonde measurements, constellation cross-validation, and seismic focal mechanism scoring.
+An **8-channel** real-time sensor fusion pipeline for Pacific tsunami early warning using GPS Total Electron Content (TEC) perturbations fused with ocean pressure buoys, ionosonde measurements, constellation cross-validation, DYFI felt reports, and seismic focal mechanism scoring (plus a dedicated space-weather quality gate on TEC).
 
 **Independent research project.** All data sourced from free public APIs and open-source tools. Zero cost to run.
 
@@ -14,7 +14,7 @@ When a tsunami crosses the open ocean it generates an Atmospheric Gravity Wave (
 
 The pipeline identifies tsunami signals by requiring that the perturbation propagates **coherently between two or more GPS stations** separated by ≥1,000 km, at a speed consistent with open-ocean tsunami propagation (150–350 m/s), in the direction consistent with the known epicenter, beginning 1.5–22 hours post-earthquake.
 
-This spatiotemporal consistency test eliminates 94–98% of single-station false alarms. Seven independent channels then fuse their evidence into a single `combined_confidence` score (0–1).
+This spatiotemporal consistency test eliminates 94–98% of single-station false alarms. The sensor stack (including the space-weather gate and DYFI) then fuses evidence into a single `combined_confidence` score (0–1).
 
 ---
 
@@ -28,7 +28,7 @@ This spatiotemporal consistency test eliminates 94–98% of single-station false
 | dTEC/dt | Derived from GPS TEC | +0.05 corroboration bonus |
 | DART ocean pressure | NOAA NDBC — 28 buoys | +0.45 |
 | GIRO ionosonde foF2 | GIRO DIDBase — 5 stations | +0.12 |
-| DYFI felt reports | USGS event detail API | +0.02 / +0.04 | ACTIVE — V7 |
+| DYFI felt reports | USGS event detail API | +0.02 / +0.04 |
 | ShakeMap focal mechanism | USGS moment tensor API | Hard gate + tsunamigenic prior weight |
 
 **combined_confidence formula:**
@@ -101,18 +101,19 @@ Backtest confidence scores are TEC-only (DART and ionosonde historical data not 
 
 ## Live Pipeline
 
-The operational pipeline monitors USGS in real time, downloads GPS RINEX data, runs the 7-channel detector, and scores predictions against NOAA tide gauges automatically every 15 minutes via Windows Task Scheduler.
+The operational pipeline monitors USGS in real time, downloads GPS RINEX data, runs the **8-channel** detector (space weather is applied inside the detector path), scores predictions against NOAA tide gauges, updates the DYFI ping file for the dashboard, and repeats on a **15-minute** cadence via Windows Task Scheduler (with optional **2-minute fast poll** when `fast_poll.json` is active after a large near-threshold event).
 
 ### Pipeline Stages
 
 ```
-[1] USGS listener       — polls Mw6.5+ shallow Pacific events every 15 min
+[1] USGS listener       — polls Mw6.5+ shallow Pacific events every 15 min;
                           filters strike-slip via USGS ShakeMap moment tensor
-[2] Space weather check — 4-channel NOAA SWPC quality gate before RINEX download
-[3] RINEX downloader    — fetches GPS/GLONASS/Galileo obs from NASA CDDIS
-[4] Detector runner     — 7-channel TEC + DART + ionosonde + constellation fusion
-[5] Scorer              — scores vs 4-station NOAA tide gauge network at T+24h
-[6] Alerting            — email + Discord webhook on qualifying detection
+[2] RINEX downloader    — fetches GPS/GLONASS/Galileo obs from NASA CDDIS
+[3] Detector runner     — 8-channel fusion: TEC coherence, SWPC space-weather gate,
+                          GLONASS/Galileo, dTEC/dt, DART, ionosonde, ShakeMap prior
+[4] Scorer              — scores vs 4-station NOAA tide gauge network at T+24h
+[5] DYFI poller         — writes dyfi_pings.json for the GitHub Pages dashboard map
+[6] Alerting            — email + Discord on new candidates, detections, and pipeline errors
 ```
 
 ### Scoring — Tide Gauge Network
@@ -130,7 +131,7 @@ The operational pipeline monitors USGS in real time, downloads GPS RINEX data, r
 # Run one cycle manually:
 python pipeline.py --once
 
-# Run the full health check (21 sections):
+# Run the full health check (23 sections — see list below):
 python health_check.py
 ```
 
@@ -167,19 +168,21 @@ ionosonde_checker.py      # GIRO DIDBase foF2 anomaly detection (5 stations)
 notify.py                 # Gmail email alerts
 notify_discord.py         # Discord webhook alerting
 backtest.py               # Historical backtester
-health_check.py           # 21-section system verification
+health_check.py           # 23-section system verification (Windows paths; see script header)
 adaptive_thresholds.py    # Bayesian threshold recommender (advisory)
-dyfi_poller.py            # DYFI shake ping map poller -- Mw5.0+ Pacific, writes dyfi_pings.json -- V8
+dyfi_checker.py           # DYFI contribution helper (USGS event API)
+dyfi_poller.py            # DYFI shake ping map — Mw5.0+ Pacific → dyfi_pings.json (dashboard)
 run_and_push.bat          # Task Scheduler target — runs pipeline + git push
 CLAUDE_CODE_RULES.md      # Environment reference — Windows/deployment pitfalls
 
 # Live data (auto-updated every 15 min by pipeline)
-running_log.json          # Append-only scored event log — read by dashboard
-poll_log.json             # USGS poll history — read by dashboard
-event_queue.json          # Internal event state tracker
+running_log.json          # Scored event log — read by dashboard (Events / metrics)
+poll_log.json             # USGS poll history — includes total_queued, pending, scored per poll
+event_queue.json          # Internal event state — drives alert banner when events are in-flight
+dyfi_pings.json           # DYFI ping list — read by dashboard for map overlays
 
 # Dashboard
-index.html                # Live dashboard — 4 tabs, hosted on GitHub Pages
+index.html                # GitHub Pages UI: NOAA SWPC (client) + repo JSON; 5 min pipeline refresh
 
 # Historical validation scripts
 scripts/
@@ -203,7 +206,7 @@ figures/
 |---|---|---|
 | NASA CDDIS | RINEX GPS/GLONASS/Galileo observations | cddis.nasa.gov/archive/gps/data/daily/ |
 | NOAA CO-OPS | Tide gauge water level | api.tidesandcurrents.noaa.gov |
-| NOAA SWPC | 4-channel space weather (Kp, Dst, X-ray, proton flux) | services.swpc.noaa.gov |
+| NOAA SWPC | Space weather (e.g. Kp, IMF Bz, solar wind speed, GOES X-ray; feeds used by pipeline + dashboard) | services.swpc.noaa.gov |
 | NOAA NDBC | DART ocean pressure buoys (28 Pacific stations) | ndbc.noaa.gov |
 | USGS | Real-time earthquake feed + ShakeMap moment tensors | earthquake.usgs.gov |
 | GIRO DIDBase | Ionosonde foF2 measurements (5 stations) | giro.uml.edu/didbase |
@@ -223,33 +226,23 @@ pip install numpy scipy pandas matplotlib georinex ncompress requests
 
 ---
 
-## Health Check (21 Sections)
+## Health Check (23 Sections)
 
-`health_check.py` verifies the full system in one pass:
+`health_check.py` verifies the full system in one pass. It assumes a **Windows** install with pipeline and repo paths set in the script header (`PIPELINE_DIR`, `REPO_DIR`). Sections:
 
 ```
-[ 1] Required files present
-[ 2] Credentials (.env) loaded and non-empty
-[ 3] USGS earthquake feed reachable
-[ 4] NASA CDDIS archive reachable
-[ 5] NOAA tide gauge API responding
-[ 6] GitHub repository and dashboard accessible
-[6b] Git repo push health and credential check
-[ 7] Event queue status
-[ 8] Poll log freshness (flags if >20 min since last run)
-[ 9] Windows Task Scheduler task status
-[10] Python dependencies installed
-[11] SMTP email auth check
-[12] CDDIS auth check
-[13] Module integrity (imports)
-[14] Deduplication check (event_queue.json)
-[15] Untracked files in repo
-[16] DART buoy API reachability
-[17] GIRO ionosonde API reachability
-[18] NOAA SWPC space weather feeds
-[19] Discord webhook reachability
-[20] Log freshness (task_runner.log)
-[21] Zone constraint integrity (station coverage check)
+[ 1] Required files          [11] NOAA tide gauge (CO-OPS)
+[ 2] Credentials (.env)     [12] Gmail SMTP
+[ 3] Python imports          [13] Discord webhook
+[ 4] Pipeline module integrity [14] GitHub repo & dashboard (raw JSON on main)
+[ 5] Pipeline dedup         [15] Git push health
+[ 6] USGS feed               [16] GPS station network (V4)
+[ 7] NASA CDDIS auth         [17] Log file freshness (poll_log, task_runner)
+[ 8] NOAA SWPC feeds         [18] Event queue status
+[ 9] NOAA NDBC / DART        [19] Adaptive thresholds file
+[10] GIRO Digisonde          [20] Windows Task Scheduler ("GPS Tsunami Master")
+        + Section 22: DYFI checker (import + API smoke test)
+        + Section 23: DYFI poller / dyfi_pings.json freshness
 ```
 
 ---
@@ -270,7 +263,7 @@ pip install numpy scipy pandas matplotlib georinex ncompress requests
 - [x] Core GPS TEC coherence detector validated (TPR=1.00, FPR=0.00, 9-event backtest)
 - [x] 8-channel sensor fusion (TEC, DART, ionosonde, GLONASS+Galileo, dTEC/dt, ShakeMap, space weather)
 - [x] Calibration model (wave_m formula, r²=0.988)
-- [x] Live operational pipeline (15-min poll cycle, 223+ polls)
+- [x] Live operational pipeline (15-min poll cycle; fast poll via `fast_poll.json` when triggered)
 - [x] HOLB geographic zone constraint (FPR=0.00 restored after V4 station expansion)
 - [x] Adaptive threshold recommender (Bayesian, advisory)
 - [x] Public dashboard — 4 tabs (Dashboard, Events, Poll Log, About)
