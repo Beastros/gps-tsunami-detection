@@ -341,11 +341,11 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 
     <p style="margin:0 0 20px;font-size:13px;color:var(--dim)">The TEC path requires a perturbation to appear <strong style="color:var(--text-hi)">coherently</strong> across <strong style="color:var(--text-hi)">long-baseline</strong> station pairs (roughly 1,000&nbsp;km apart), at speeds consistent with open-ocean tsunami propagation (about 150&ndash;350&nbsp;m/s), aligned with the epicenter, in a post-earthquake time window. That consistency check is what knocks down most single-station ionospheric noise.</p>
 
-    <h2 style="font-family:var(--font-d);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 12px">The 8-Channel Sensor Stack</h2>
+    <h2 style="font-family:var(--font-d);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">The 8-Channel Sensor Stack</h2>
 
-    <p style="margin:0 0 18px;font-size:13px;color:var(--dim);line-height:1.65">The <strong style="color:var(--accent2)">eighth channel</strong> is <strong style="color:var(--accent2)">DYFI</strong> &mdash; crowdsourced <strong style="color:#ffd54f">&ldquo;shake report&rdquo; pings</strong> from USGS Did You Feel It: amber pulsing rings on the Dashboard map (from <code style="font-size:11px">dyfi_pings.json</code>). That is <em>human felt intensity</em>, not ShakeMap contours and not the GPS TEC signal. The cards below list DYFI together with the seven physical / model inputs the pipeline fuses (GPS/TEC, dTEC/dt, DART, ionosonde, space weather, constellation cross-check, ShakeMap prior).</p>
+    <p style="margin:0 0 18px;font-size:13px;color:var(--dim);line-height:1.65">The first <strong style="color:var(--text-hi)">six</strong> cards are the physical and model-driven stack: GPS/GLONASS/Galileo TEC (with cross-constellation check), dTEC/dt, DART, GIRO ionosonde, space-weather gating, and ShakeMap focal mechanism. The <strong style="color:var(--text-hi)">seventh</strong> card is DYFI (crowdsourced felt reports for fusion and the map). The <strong style="color:var(--accent2)">eighth channel</strong> &mdash; what that DYFI layer means as human shake-report pings &mdash; is spelled out <strong style="color:var(--text-hi)">below the card grid</strong>.</p>
 
-    <div style="display:grid;gap:12px;margin-bottom:28px">
+    <div style="display:grid;gap:12px;margin-bottom:20px">
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
         <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">GPS / GLONASS / GALILEO TEC</div>
         <div style="font-size:13px;color:var(--dim)">RINEX observation files downloaded from NASA CDDIS for anchor stations across the Pacific. L1/L2 carrier phase differencing extracts TEC perturbations per satellite arc. Multi-constellation agreement adds confidence.</div>
@@ -363,10 +363,6 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
         <div style="font-size:13px;color:var(--dim)">5 ionosonde stations monitored via the Global Ionosphere Radio Observatory DIDBase API. Independent foF2 perturbation confirmation adds +0.12.</div>
       </div>
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
-        <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">DYFI Crowdsourced Felt Reports</div>
-        <div style="font-size:13px;color:var(--dim)">The <code style="font-size:12px">dyfi_poller.py</code> module independently monitors Mw&nbsp;5.0+ Pacific events every pipeline cycle and writes <code style="font-size:12px">dyfi_pings.json</code> for the map: amber pulsing rings sized by MMI (crowdsourced &ldquo;Did You Feel It&rdquo; counts from the USGS feed). Pings older than 24&nbsp;hours are dropped on the next refresh so the map does not accumulate stale events. High response counts with elevated MMI (&ge;&nbsp;6) add +0.04 to fusion; moderate add +0.02. Fail-open: no data = no penalty. Biased toward US/Japan/NZ populations &mdash; abstains below 20 responses.</div>
-      </div>
-      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
         <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">Space Weather Quality Gate</div>
         <div style="font-size:13px;color:var(--dim)">4 NOAA SWPC feeds &mdash; Kp index, IMF Bz, solar wind speed, GOES X-ray flux. Geomagnetic storms produce ionospheric disturbances that mimic tsunami signals. Elevated space weather reduces TEC reliability weighting.</div>
       </div>
@@ -374,7 +370,13 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
         <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">ShakeMap Focal Mechanism</div>
         <div style="font-size:13px;color:var(--dim)">USGS moment tensor API. Strike-slip earthquakes do not displace the water column and cannot generate tsunamis. Events below a tsunamigenic index of 0.25 are skipped entirely. Above that threshold the index scales the TEC contribution as a prior.</div>
       </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
+        <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">DYFI Crowdsourced Felt Reports</div>
+        <div style="font-size:13px;color:var(--dim)">The <code style="font-size:12px">dyfi_poller.py</code> module independently monitors Mw&nbsp;5.0+ Pacific events every pipeline cycle and writes <code style="font-size:12px">dyfi_pings.json</code> for the map: amber pulsing rings sized by MMI (crowdsourced &ldquo;Did You Feel It&rdquo; counts from the USGS feed). Pings older than 24&nbsp;hours are dropped on the next refresh so the map does not accumulate stale events. High response counts with elevated MMI (&ge;&nbsp;6) add +0.04 to fusion; moderate add +0.02. Fail-open: no data = no penalty. Biased toward US/Japan/NZ populations &mdash; fusion contribution abstains below 20 responses.</div>
+      </div>
     </div>
+
+    <p style="margin:0 0 28px;font-size:13px;color:var(--dim);line-height:1.75;padding:16px 18px;background:var(--surface2);border:1px solid var(--border);border-radius:6px">The <strong style="color:var(--accent2)">eighth channel</strong> is <strong style="color:var(--accent2)">DYFI</strong> &mdash; crowdsourced <strong style="color:#ffd54f">&ldquo;shake report&rdquo; pings</strong> from USGS Did You Feel It. On the Dashboard they show as <strong style="color:#ffd54f">amber pulsing rings</strong> (from <code style="font-size:11px">dyfi_pings.json</code>). That layer is <em>human felt intensity</em> from people who filled out the form; it is <strong>not</strong> ShakeMap contours, <strong>not</strong> the moment-tensor card above, and <strong>not</strong> the GPS TEC signal. It is an independent crowdsourced check and map overlay; fusion weights are summarized in the DYFI card.</p>
 
     <h2 style="font-family:var(--font-d);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">Why It Could Matter</h2>
 
