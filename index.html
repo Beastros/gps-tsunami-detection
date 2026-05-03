@@ -339,7 +339,11 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 
     <p style="margin:0 0 20px">That pressure wave slightly disturbs the electron density in the ionosphere. GPS receivers on the ground are sensitive enough to measure it as a change in <strong style="color:var(--accent2)">Total Electron Content (TEC)</strong> &mdash; the integrated number of electrons along the signal path. This phenomenon has been documented in the scientific literature. This pipeline attempts to detect it automatically, in real time, and fuse it with independent physical measurements to produce a calibrated confidence score.</p>
 
-    <h2 style="font-family:var(--font-d);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">The 8-Channel Sensor Stack</h2>
+    <p style="margin:0 0 20px;font-size:13px;color:var(--dim)">The TEC path requires a perturbation to appear <strong style="color:var(--text-hi)">coherently</strong> across <strong style="color:var(--text-hi)">long-baseline</strong> station pairs (roughly 1,000&nbsp;km apart), at speeds consistent with open-ocean tsunami propagation (about 150&ndash;350&nbsp;m/s), aligned with the epicenter, in a post-earthquake time window. That consistency check is what knocks down most single-station ionospheric noise.</p>
+
+    <h2 style="font-family:var(--font-d);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 12px">The 8-Channel Sensor Stack</h2>
+
+    <p style="margin:0 0 18px;font-size:13px;color:var(--dim);line-height:1.65">The <strong style="color:var(--accent2)">eighth channel</strong> is <strong style="color:var(--accent2)">DYFI</strong> &mdash; crowdsourced <strong style="color:#ffd54f">&ldquo;shake report&rdquo; pings</strong> from USGS Did You Feel It: amber pulsing rings on the Dashboard map (from <code style="font-size:11px">dyfi_pings.json</code>). That is <em>human felt intensity</em>, not ShakeMap contours and not the GPS TEC signal. The cards below list DYFI together with the seven physical / model inputs the pipeline fuses (GPS/TEC, dTEC/dt, DART, ionosonde, space weather, constellation cross-check, ShakeMap prior).</p>
 
     <div style="display:grid;gap:12px;margin-bottom:28px">
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
