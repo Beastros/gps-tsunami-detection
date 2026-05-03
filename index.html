@@ -103,18 +103,25 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 .pl-cta{font-family:var(--font-m);font-size:10px;color:var(--dim);margin-bottom:20px;padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
 .pl-cta a{color:var(--accent);text-decoration:none}
 .pl-cta a:hover{text-decoration:underline}
-.pl-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(240px,300px);gap:16px;margin-bottom:20px;align-items:stretch}
-.pl-split>.log-panel,.pl-split>.pl-rail{min-height:0}
-@media(max-width:1200px){.pl-split{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.pl-rail{display:none!important}}
-@media(max-width:900px){.pl-split{grid-template-columns:1fr}}
-.pl-rail{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:12px;min-height:120px}
+/* Poll Log: scope to tab so fr columns always get width (min-width:0 fixes grid blowout) */
+#tab-polllog .pl-split{display:grid;width:100%;min-width:0;gap:16px;margin-bottom:20px;align-items:stretch;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(220px,300px)}
+#tab-polllog .pl-split>.log-panel,#tab-polllog .pl-split>.pl-rail{min-width:0;min-height:0}
+@media(max-width:1200px){
+  #tab-polllog .pl-split{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  #tab-polllog .pl-rail{display:none!important}
+}
+@media(max-width:900px){
+  #tab-polllog .pl-split{grid-template-columns:minmax(0,1fr)}
+}
+#tab-polllog .pl-rail{background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:12px;min-height:120px;width:100%}
 .pl-rail-t{font-family:var(--font-d);font-size:10px;letter-spacing:.12em;color:var(--text-hi);margin-bottom:2px}
 .pl-rail-k{font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-top:8px}
 .pl-rail-v{font-family:var(--font-m);font-size:11px;color:var(--accent);word-break:break-all}
 .pl-rail ul{margin:0;padding-left:16px;font-size:12px;color:var(--dim);line-height:1.65}
 .pl-rail a{color:var(--accent);text-decoration:none;font-family:var(--font-m);font-size:10px}
 .pl-rail a:hover{text-decoration:underline}
-.log-panel{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:0;display:flex;flex-direction:column;max-height:min(72vh,720px);min-height:0}
+#tab-polllog .log-panel{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin:0;display:flex;flex-direction:column;max-height:min(72vh,720px);min-height:0;min-width:0;width:100%}
 .log-panel-hd{padding:11px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .log-panel-t{font-family:var(--font-d);font-size:10px;letter-spacing:.14em;color:var(--text-hi)}
 .log-panel-meta{font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.06em}
@@ -382,7 +389,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 
 <!-- POLL LOG -->
 <div id="tab-polllog" class="tab-pane">
-<div class="main">
+<div class="main" style="min-width:0;max-width:100%">
   <p class="section-title">Operations Log</p>
   <div class="stats-row" style="margin-bottom:16px">
     <div class="stat-card"><div class="stat-label">Last poll</div><div class="stat-value" id="pl-age" style="font-size:18px">--</div><div class="stat-sub" id="pl-age-sub">UTC age</div></div>
@@ -392,7 +399,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
   </div>
   <div class="pl-cta">
     <span>Bright <strong style="color:#ffc857">amber</strong> rings on the <strong style="color:var(--text-hi)">Dashboard</strong> map match near-miss rows in the middle panel.</span>
-    <a href="#" id="pl-link-dashboard" onclick="return false;">Open Dashboard map</a>
+    <a href="#" id="pl-link-dashboard">Open Dashboard map</a>
   </div>
   <div class="pl-split">
     <div class="log-panel">
