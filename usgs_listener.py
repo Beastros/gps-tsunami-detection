@@ -406,33 +406,6 @@ def _activate_fast_poll(usgs_id, mag, place, fp_path):
     log.info(f"FAST POLL ACTIVATED: Mw{mag} {place} -- 2-min cycles for {FAST_POLL_DURATION_MIN} min")
 
 
-def _activate_fast_poll(usgs_id, mag, place, fp_path):
-    """Write fast_poll.json to signal pipeline to switch to 2-min poll cycle."""
-    import json as _json
-    from datetime import datetime as _dt, timezone as _tz, timedelta as _td
-    now = _dt.now(_tz.utc)
-    # Don't overwrite an active file that was triggered by a larger event
-    if os.path.exists(fp_path):
-        try:
-            existing = _json.loads(open(fp_path, encoding="utf-8").read())
-            exp = _dt.fromisoformat(existing.get("expires_utc", "2000-01-01T00:00:00+00:00"))
-            if exp > now and existing.get("trigger_mag", 0) >= mag:
-                return  # existing trigger is fresher or larger
-        except Exception:
-            pass
-    state = {
-        "active":          True,
-        "trigger_usgs_id": usgs_id,
-        "trigger_mag":     mag,
-        "trigger_place":   place,
-        "activated_utc":   now.isoformat(),
-        "expires_utc":     (now + _td(minutes=FAST_POLL_DURATION_MIN)).isoformat(),
-        "poll_interval_sec": FAST_POLL_INTERVAL_SEC,
-    }
-    open(fp_path, "w", encoding="utf-8").write(_json.dumps(state, indent=2))
-    log.info(f"FAST POLL ACTIVATED: Mw{mag} {place} -- 2-min cycles for {FAST_POLL_DURATION_MIN} min")
-
-
 def check_feed(queue):
     """Check feed for new qualifying events. Returns (new_count, near_misses)."""
     features = fetch_feed()
@@ -476,77 +449,60 @@ def check_feed(queue):
                 f"TEC_window=+{w.get('tec_onset_window','?')}h "
                 f"expected_lead={w.get('expected_lead_time_min','?')}min"
             )
-        # ── Fast poll trigger ──────────────────────────────────────────────
-        # Fire on Mw >= FAST_POLL_MW_TRIGGER in any Pacific zone (even if
-        # it doesn't qualify at 6.5) so we catch magnitude upgrades early.
-        if mag is not None and mag >= FAST_POLL_MW_TRIGGER:
-            _zones = in_pacific_zone(
-                coords[1] if coords and coords[1] is not None else 0,
-                coords[0] if coords and coords[0] is not None else 0,
-            )
-            if _zones:
-                _activate_fast_poll(
-                    eid, mag, place,
-                    os.path.join(os.path.dirname(os.path.abspath(__file__)), FAST_POLL_FILE)
-                )
-
-        # ── Fast poll trigger ──────────────────────────────────────────────
-        # Fire on Mw >= FAST_POLL_MW_TRIGGER in any Pacific zone (even if
-        # it doesn't qualify at 6.5) so we catch magnitude upgrades early.
-        if mag is not None and mag >= FAST_POLL_MW_TRIGGER:
-            _zones = in_pacific_zone(
-                coords[1] if coords and coords[1] is not None else 0,
-                coords[0] if coords and coords[0] is not None else 0,
-            )
-            if _zones:
-                _activate_fast_poll(
-                    eid, mag, place,
-                    os.path.join(os.path.dirname(os.path.abspath(__file__)), FAST_POLL_FILE)
-                )
-
         else:
+            # Near-misses for dashboard map + Poll Log (Mw5.5+ inside Pacific zones only)
             lon = coords[0] if coords and coords[0] is not None else None
             lat = coords[1] if coords and coords[1] is not None else None
             depth_km = coords[2] if coords and coords[2] is not None else 0
+            reason, delta = None, None
 
-            if etype in SKIP_TYPES:
+            if lat is None or lon is None or not in_pacific_zone(lat, lon):
+                pass
+            elif etype in SKIP_TYPES:
                 reason = "non-tectonic"
-                delta = None
             elif mag < MW_THRESHOLD:
                 reason = "below threshold"
-                delta = round(mag - MW_THRESHOLD, 1)
+                delta = round(float(mag) - MW_THRESHOLD, 1)
             elif depth_km and depth_km > 100:
                 reason = f"too deep ({round(depth_km)}km)"
-                delta = None
-            elif etype not in SKIP_TYPES and mag >= MW_THRESHOLD:
-                # Check focal mechanism for near-miss logging
+            elif mag >= MW_THRESHOLD:
                 _fm = fetch_focal_mechanism(eid)
                 if _fm and _fm.get("available"):
                     _ti = compute_tsunamigenic_index(_fm["rake_score"], depth_km or 0)
                     if _ti < TSUNAMIGENIC_SKIP_THRESHOLD:
                         reason = f"{_fm['fault_type']} (rake={_fm['rake_deg']}°)"
-                        delta = None
-
-            elif lat is not None and not in_pacific_zone(lat, lon):
-                reason = "outside Pacific zones"
-                delta = None
+                    else:
+                        reason = "filtered"
+                else:
+                    reason = "ShakeMap / mechanism pending"
             else:
                 reason = "filtered"
-                delta = None
 
-            near_misses.append({
-                "ts":     event_time.isoformat(),
-                "mag":    mag,
-                "place":  place[:60],
-                "lat":    round(lat, 2) if lat is not None else None,
-                "lon":    round(lon, 2) if lon is not None else None,
-                "depth":  round(depth_km, 1) if depth_km else None,
-                "reason": reason,
-                "delta":  delta,
-            })
+            if reason is not None:
+                near_misses.append({
+                    "ts":     event_time.isoformat(),
+                    "mag":    mag,
+                    "place":  place[:60],
+                    "lat":    round(lat, 2) if lat is not None else None,
+                    "lon":    round(lon, 2) if lon is not None else None,
+                    "depth":  round(depth_km, 1) if depth_km else None,
+                    "reason": reason,
+                    "delta":  delta,
+                })
+                if mag >= MW_THRESHOLD:
+                    log.debug(f"Skipped Mw{mag} {place} — {reason}")
 
-            if mag >= MW_THRESHOLD:
-                log.debug(f"Skipped Mw{mag} {place} — {reason}")
+        # Fast poll: Mw >= trigger in Pacific (candidate or near-miss)
+        if mag is not None and mag >= FAST_POLL_MW_TRIGGER:
+            _zones = in_pacific_zone(
+                coords[1] if coords and coords[1] is not None else 0,
+                coords[0] if coords and coords[0] is not None else 0,
+            )
+            if _zones:
+                _activate_fast_poll(
+                    eid, mag, place,
+                    os.path.join(os.path.dirname(os.path.abspath(__file__)), FAST_POLL_FILE)
+                )
 
     return new_count, near_misses
 
