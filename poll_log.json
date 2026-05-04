@@ -5664,10 +5664,16 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-05-04T15:47:30.277687+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-05-04T15:32:29.148240+00:00",
-  "total_polls": 943,
+  "last_updated": "2026-05-04T15:47:30.277687+00:00",
+  "total_polls": 944,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -5716,6 +5722,16 @@
       "lat": 34.11,
       "lon": 135.49,
       "depth": 59.1,
+      "reason": "below threshold",
+      "delta": -0.8
+    },
+    {
+      "ts": "2026-05-04T15:19:26.467000+00:00",
+      "mag": 5.7,
+      "place": "2 km SE of Zocoteaca de Le\u00f3n, Mexico",
+      "lat": 16.62,
+      "lon": -97.98,
+      "depth": 22.2,
       "reason": "below threshold",
       "delta": -0.8
     }
