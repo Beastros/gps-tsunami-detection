@@ -1,0 +1,624 @@
+{
+  "generated_utc": "2026-05-04T03:09:47.221631+00:00",
+  "results": [
+    {
+      "usgs_id": "official20110311054624120_30",
+      "quake_utc": "2011-03-11T05:46:24Z",
+      "mw": 9.1,
+      "known_outcome": "TSUNAMI",
+      "notes": "Tohoku - KOKB-GUAM in V1",
+      "window_hours": {
+        "before": 72,
+        "after": 72
+      },
+      "rbsp_in_situ": false,
+      "skip_reason": "quake_time outside RBSP-A primary science era (use OMNI only below)",
+      "omni_segments": {
+        "baseline_early": {
+          "mean_kp": 1.275,
+          "mean_dst_nT": -13.1875
+        },
+        "pre_24h": {
+          "mean_kp": 3.9625,
+          "mean_dst_nT": -46.458333333333336
+        },
+        "pre_6h": {
+          "mean_kp": 5.15,
+          "mean_dst_nT": -66.83333333333333
+        },
+        "post_0_24h": {
+          "mean_kp": 3.8,
+          "mean_dst_nT": -56.291666666666664
+        },
+        "post_24_48h": {
+          "mean_kp": 1.925,
+          "mean_dst_nT": -29.291666666666668
+        },
+        "full_window": {
+          "mean_kp": 2.3520833333333333,
+          "mean_dst_nT": -28.86111111111111
+        }
+      },
+      "hope": {
+        "status": "skipped",
+        "reason": "quake_time outside RBSP-A primary science era (use OMNI only below)"
+      }
+    },
+    {
+      "usgs_id": "official20100227063411530_30",
+      "quake_utc": "2010-02-27T06:34:11Z",
+      "mw": 8.8,
+      "known_outcome": "TSUNAMI",
+      "notes": "Chile - 108 min lead V1",
+      "window_hours": {
+        "before": 72,
+        "after": 72
+      },
+      "rbsp_in_situ": false,
+      "skip_reason": "quake_time outside RBSP-A primary science era (use OMNI only below)",
+      "omni_segments": {
+        "baseline_early": {
+          "mean_kp": 0.78125,
+          "mean_dst_nT": -6.75
+        },
+        "pre_24h": {
+          "mean_kp": 0.0375,
+          "mean_dst_nT": -4.833333333333333
+        },
+        "pre_6h": {
+          "mean_kp": 0.0,
+          "mean_dst_nT": -2.1666666666666665
+        },
+        "post_0_24h": {
+          "mean_kp": 0.29166666666666663,
+          "mean_dst_nT": 1.9583333333333333
+        },
+        "post_24_48h": {
+          "mean_kp": 0.7875,
+          "mean_dst_nT": 5.666666666666667
+        },
+        "full_window": {
+          "mean_kp": 0.61875,
+          "mean_dst_nT": -1.4236111111111112
+        }
+      },
+      "hope": {
+        "status": "skipped",
+        "reason": "quake_time outside RBSP-A primary science era (use OMNI only below)"
+      }
+    },
+    {
+      "usgs_id": "usp000f1s0",
+      "quake_utc": "2006-11-15T11:14:14Z",
+      "mw": 8.3,
+      "known_outcome": "TSUNAMI",
+      "notes": "Kuril - MKEA-GUAM V1",
+      "window_hours": {
+        "before": 72,
+        "after": 72
+      },
+      "rbsp_in_situ": false,
+      "skip_reason": "quake_time outside RBSP-A primary science era (use OMNI only below)",
+      "omni_segments": {
+        "baseline_early": {
+          "mean_kp": 0.5520833333333333,
+          "mean_dst_nT": -16.979166666666668
+        },
+        "pre_24h": {
+          "mean_kp": 1.775,
+          "mean_dst_nT": -15.666666666666666
+        },
+        "pre_6h": {
+          "mean_kp": 1.0333333333333334,
+          "mean_dst_nT": -14.333333333333334
+        },
+        "post_0_24h": {
+          "mean_kp": 1.9,
+          "mean_dst_nT": -15.25
+        },
+        "post_24_48h": {
+          "mean_kp": 1.075,
+          "mean_dst_nT": -21.125
+        },
+        "full_window": {
+          "mean_kp": 1.0881944444444445,
+          "mean_dst_nT": -17.520833333333332
+        }
+      },
+      "hope": {
+        "status": "skipped",
+        "reason": "quake_time outside RBSP-A primary science era (use OMNI only below)"
+      }
+    },
+    {
+      "usgs_id": "usp000jrsf",
+      "quake_utc": "2012-10-28T03:04:08Z",
+      "mw": 7.7,
+      "known_outcome": "TSUNAMI",
+      "notes": "Haida Gwaii - HNLC-GUAM V1",
+      "window_hours": {
+        "before": 72,
+        "after": 72
+      },
+      "rbsp_in_situ": true,
+      "skip_reason": null,
+      "omni_segments": {
+        "baseline_early": {
+          "mean_kp": 0.9,
+          "mean_dst_nT": -4.5
+        },
+        "pre_24h": {
+          "mean_kp": 0.5875,
+          "mean_dst_nT": -7.791666666666667
+        },
+        "pre_6h": {
+          "mean_kp": 0.35,
+          "mean_dst_nT": 2.8333333333333335
+        },
+        "post_0_24h": {
+          "mean_kp": 0.675,
+          "mean_dst_nT": -1.75
+        },
+        "post_24_48h": {
+          "mean_kp": 0.575,
+          "mean_dst_nT": -2.1666666666666665
+        },
+        "full_window": {
+          "mean_kp": 0.63125,
+          "mean_dst_nT": -2.5347222222222223
+        }
+      },
+      "hope_segments": {
+        "baseline_early": {
+          "n_samples_L2_8": 4557,
+          "median_log10_ion_density": -0.5762627500176709
+        },
+        "pre_24h": {
+          "n_samples_L2_8": 2333,
+          "median_log10_ion_density": -0.20474581741911715
+        },
+        "pre_6h": {
+          "n_samples_L2_8": 815,
+          "median_log10_ion_density": -0.22279074185431516
+        },
+        "post_0_24h": {
+          "n_samples_L2_8": 3103,
+          "median_log10_ion_density": -0.4758636234074315
+        },
+        "post_24_48h": {
+          "n_samples_L2_8": 3033,
+          "median_log10_ion_density": -0.6552148773673393
+        },
+        "full_window": {
+          "n_samples_L2_8": 15863,
+          "median_log10_ion_density": -0.5312097379003891
+        }
+      },
+      "hope_markers_log10_density": {
+        "delta_pre24_minus_baseline_log10": 0.3715,
+        "delta_post0_24_minus_pre24_log10": -0.2711
+      },
+      "hope": {
+        "status": "ok",
+        "n_rows": 20640
+      }
+    },
+    {
+      "usgs_id": "usp000fjta",
+      "quake_utc": "2009-09-29T17:48:10Z",
+      "mw": 8.1,
+      "known_outcome": "ABSTAIN",
+      "notes": "Samoa - no anchor geometry V1",
+      "window_hours": {
+        "before": 72,
+        "after": 72
+      },
+      "rbsp_in_situ": false,
+      "skip_reason": "quake_time outside RBSP-A primary science era (use OMNI only below)",
+      "omni_segments": {
+        "baseline_early": {
+          "mean_kp": 1.725,
+          "mean_dst_nT": -0.8541666666666666
+        },
+        "pre_24h": {
+          "mean_kp": 0.6,
+          "mean_dst_nT": -3.2916666666666665
+        },
+        "pre_6h": {
+          "mean_kp": 0.3,
+          "mean_dst_nT": 2.3333333333333335
+        },
+        "post_0_24h": {
+          "mean_kp": 0.925,
+          "mean_dst_nT": 2.9166666666666665
+        },
+        "post_24_48h": {
+          "mean_kp": 0.7375,
+          "mean_dst_nT": -2.25
+        },
+        "full_window": {
+          "mean_kp": 1.00625,
+          "mean_dst_nT": -1.2777777777777777
+        }
+      },
+      "hope": {
+        "status": "skipped",
+        "reason": "quake_time outside RBSP-A primary science era (use OMNI only below)"
+      }
+    },
+    {
+      "usgs_id": "usp000jadn",
+      "quake_utc": "2012-04-11T08:38:36Z",
+      "mw": 8.6,
+      "known_outcome": "NO_TSUNAMI",
+      "notes": "Sumatra strike-slip - ShakeMap should gate",
+      "window_hours": {
+        "before": 72,
+        "after": 72
+      },
+      "rbsp_in_situ": false,
+      "skip_reason": "quake_time outside RBSP-A primary science era (use OMNI only below)",
+      "omni_segments": {
+        "baseline_early": {
+          "mean_kp": 1.0,
+          "mean_dst_nT": -9.083333333333334
+        },
+        "pre_24h": {
+          "mean_kp": 1.325,
+          "mean_dst_nT": 0.5416666666666666
+        },
+        "pre_6h": {
+          "mean_kp": 1.5,
+          "mean_dst_nT": 13.166666666666666
+        },
+        "post_0_24h": {
+          "mean_kp": 1.4875,
+          "mean_dst_nT": -1.6666666666666667
+        },
+        "post_24_48h": {
+          "mean_kp": 3.525,
+          "mean_dst_nT": -29.625
+        },
+        "full_window": {
+          "mean_kp": 1.8291666666666668,
+          "mean_dst_nT": -12.604166666666666
+        }
+      },
+      "hope": {
+        "status": "skipped",
+        "reason": "quake_time outside RBSP-A primary science era (use OMNI only below)"
+      }
+    },
+    {
+      "usgs_id": "usp000jhe9",
+      "quake_utc": "2013-05-24T05:44:48Z",
+      "mw": 8.3,
+      "known_outcome": "NO_TSUNAMI",
+      "notes": "Okhotsk deep 609km - depth gate",
+      "window_hours": {
+        "before": 72,
+        "after": 72
+      },
+      "rbsp_in_situ": true,
+      "skip_reason": null,
+      "omni_segments": {
+        "baseline_early": {
+          "mean_kp": 1.9,
+          "mean_dst_nT": -5.666666666666667
+        },
+        "pre_24h": {
+          "mean_kp": 1.9625,
+          "mean_dst_nT": -7.291666666666667
+        },
+        "pre_6h": {
+          "mean_kp": 2.35,
+          "mean_dst_nT": -6.166666666666667
+        },
+        "post_0_24h": {
+          "mean_kp": 3.7,
+          "mean_dst_nT": -22.166666666666668
+        },
+        "post_24_48h": {
+          "mean_kp": 4.25,
+          "mean_dst_nT": -38.25
+        },
+        "full_window": {
+          "mean_kp": 2.752083333333333,
+          "mean_dst_nT": -18.895833333333332
+        }
+      },
+      "hope_segments": {
+        "baseline_early": {
+          "n_samples_L2_8": 6162,
+          "median_log10_ion_density": -0.36071278552328107
+        },
+        "pre_24h": {
+          "n_samples_L2_8": 2943,
+          "median_log10_ion_density": -0.30688888453785873
+        },
+        "pre_6h": {
+          "n_samples_L2_8": 692,
+          "median_log10_ion_density": -0.3059215379192406
+        },
+        "post_0_24h": {
+          "n_samples_L2_8": 3107,
+          "median_log10_ion_density": -0.13194363817695845
+        },
+        "post_24_48h": {
+          "n_samples_L2_8": 2992,
+          "median_log10_ion_density": -0.06724728131896006
+        },
+        "full_window": {
+          "n_samples_L2_8": 18199,
+          "median_log10_ion_density": -0.25979526449255036
+        }
+      },
+      "hope_markers_log10_density": {
+        "delta_pre24_minus_baseline_log10": 0.0538,
+        "delta_post0_24_minus_pre24_log10": 0.1749
+      },
+      "hope": {
+        "status": "ok",
+        "n_rows": 20772
+      }
+    },
+    {
+      "usgs_id": "usp000hvtm",
+      "quake_utc": "2011-10-21T17:57:16Z",
+      "mw": 7.4,
+      "known_outcome": "NO_TSUNAMI",
+      "notes": "Kermadec Mw7.4 - below sensitivity",
+      "window_hours": {
+        "before": 72,
+        "after": 72
+      },
+      "rbsp_in_situ": false,
+      "skip_reason": "quake_time outside RBSP-A primary science era (use OMNI only below)",
+      "omni_segments": {
+        "baseline_early": {
+          "mean_kp": 1.19375,
+          "mean_dst_nT": -8.708333333333334
+        },
+        "pre_24h": {
+          "mean_kp": 1.1,
+          "mean_dst_nT": -16.166666666666668
+        },
+        "pre_6h": {
+          "mean_kp": 0.3,
+          "mean_dst_nT": -13.333333333333334
+        },
+        "post_0_24h": {
+          "mean_kp": 0.4625,
+          "mean_dst_nT": -10.875
+        },
+        "post_24_48h": {
+          "mean_kp": 0.3,
+          "mean_dst_nT": -1.25
+        },
+        "full_window": {
+          "mean_kp": 0.8625,
+          "mean_dst_nT": -7.715277777777778
+        }
+      },
+      "hope": {
+        "status": "skipped",
+        "reason": "quake_time outside RBSP-A primary science era (use OMNI only below)"
+      }
+    },
+    {
+      "usgs_id": "usp000hpgz",
+      "quake_utc": "2011-03-09T02:45:20Z",
+      "mw": 7.2,
+      "known_outcome": "NO_TSUNAMI",
+      "notes": "Tohoku foreshock Mw7.2 - below threshold",
+      "window_hours": {
+        "before": 72,
+        "after": 72
+      },
+      "rbsp_in_situ": false,
+      "skip_reason": "quake_time outside RBSP-A primary science era (use OMNI only below)",
+      "omni_segments": {
+        "baseline_early": {
+          "mean_kp": 1.89375,
+          "mean_dst_nT": -8.395833333333334
+        },
+        "pre_24h": {
+          "mean_kp": 1.3,
+          "mean_dst_nT": -17.958333333333332
+        },
+        "pre_6h": {
+          "mean_kp": 1.65,
+          "mean_dst_nT": -14.5
+        },
+        "post_0_24h": {
+          "mean_kp": 1.175,
+          "mean_dst_nT": -8.916666666666666
+        },
+        "post_24_48h": {
+          "mean_kp": 3.5875,
+          "mean_dst_nT": -39.083333333333336
+        },
+        "full_window": {
+          "mean_kp": 2.3291666666666666,
+          "mean_dst_nT": -23.854166666666668
+        }
+      },
+      "hope": {
+        "status": "skipped",
+        "reason": "quake_time outside RBSP-A primary science era (use OMNI only below)"
+      }
+    },
+    {
+      "usgs_id": "us2007aqbk",
+      "quake_utc": "2007-04-01T20:39:56Z",
+      "mw": 8.1,
+      "known_outcome": "TSUNAMI",
+      "notes": "Solomon Islands 2007 - thrust shallow - 52 killed 12m runup",
+      "window_hours": {
+        "before": 72,
+        "after": 72
+      },
+      "rbsp_in_situ": false,
+      "skip_reason": "quake_time outside RBSP-A primary science era (use OMNI only below)",
+      "omni_segments": {
+        "baseline_early": {
+          "mean_kp": 0.9375,
+          "mean_dst_nT": -3.9166666666666665
+        },
+        "pre_24h": {
+          "mean_kp": 3.7875,
+          "mean_dst_nT": -25.708333333333332
+        },
+        "pre_6h": {
+          "mean_kp": 3.5,
+          "mean_dst_nT": -33.333333333333336
+        },
+        "post_0_24h": {
+          "mean_kp": 3.65,
+          "mean_dst_nT": -31.0
+        },
+        "post_24_48h": {
+          "mean_kp": 2.6625,
+          "mean_dst_nT": -22.208333333333332
+        },
+        "full_window": {
+          "mean_kp": 2.3375,
+          "mean_dst_nT": -18.21527777777778
+        }
+      },
+      "hope": {
+        "status": "skipped",
+        "reason": "quake_time outside RBSP-A primary science era (use OMNI only below)"
+      }
+    },
+    {
+      "usgs_id": "us2007gbcv",
+      "quake_utc": "2007-08-15T23:40:57Z",
+      "mw": 8.0,
+      "known_outcome": "TSUNAMI",
+      "notes": "Peru Pisco 2007 - thrust - 10m local runup CHAT corridor",
+      "window_hours": {
+        "before": 72,
+        "after": 72
+      },
+      "rbsp_in_situ": false,
+      "skip_reason": "quake_time outside RBSP-A primary science era (use OMNI only below)",
+      "omni_segments": {
+        "baseline_early": {
+          "mean_kp": 0.64375,
+          "mean_dst_nT": -7.604166666666667
+        },
+        "pre_24h": {
+          "mean_kp": 2.0,
+          "mean_dst_nT": -2.5
+        },
+        "pre_6h": {
+          "mean_kp": 1.85,
+          "mean_dst_nT": -5.5
+        },
+        "post_0_24h": {
+          "mean_kp": 1.2625,
+          "mean_dst_nT": -7.0
+        },
+        "post_24_48h": {
+          "mean_kp": 0.8375,
+          "mean_dst_nT": -3.625
+        },
+        "full_window": {
+          "mean_kp": 0.9666666666666666,
+          "mean_dst_nT": -4.215277777777778
+        }
+      },
+      "hope": {
+        "status": "skipped",
+        "reason": "quake_time outside RBSP-A primary science era (use OMNI only below)"
+      }
+    },
+    {
+      "usgs_id": "usp000hjkp",
+      "quake_utc": "2010-10-25T14:42:22Z",
+      "mw": 7.7,
+      "known_outcome": "TSUNAMI",
+      "notes": "Mentawai 2010 - tsunami earthquake - 450 killed 9m runup Indian Ocean",
+      "window_hours": {
+        "before": 72,
+        "after": 72
+      },
+      "rbsp_in_situ": false,
+      "skip_reason": "quake_time outside RBSP-A primary science era (use OMNI only below)",
+      "omni_segments": {
+        "baseline_early": {
+          "mean_kp": 3.3375,
+          "mean_dst_nT": -18.625
+        },
+        "pre_24h": {
+          "mean_kp": 2.375,
+          "mean_dst_nT": -18.833333333333332
+        },
+        "pre_6h": {
+          "mean_kp": 2.2,
+          "mean_dst_nT": -17.166666666666668
+        },
+        "post_0_24h": {
+          "mean_kp": 1.8375,
+          "mean_dst_nT": -17.5
+        },
+        "post_24_48h": {
+          "mean_kp": 1.4625,
+          "mean_dst_nT": -19.0
+        },
+        "full_window": {
+          "mean_kp": 2.239583333333333,
+          "mean_dst_nT": -17.97222222222222
+        }
+      },
+      "hope": {
+        "status": "skipped",
+        "reason": "quake_time outside RBSP-A primary science era (use OMNI only below)"
+      }
+    },
+    {
+      "usgs_id": "us7000gc8r",
+      "quake_utc": "2022-01-15T04:14:45Z",
+      "mw": 5.8,
+      "known_outcome": "TSUNAMI",
+      "notes": "Tonga volcanic 2022 - MKEA-THTG detected V1 - volcanic AGW source",
+      "window_hours": {
+        "before": 72,
+        "after": 72
+      },
+      "rbsp_in_situ": false,
+      "skip_reason": "quake_time outside RBSP-A primary science era (use OMNI only below)",
+      "omni_segments": {
+        "baseline_early": {
+          "mean_kp": 0.5354166666666667,
+          "mean_dst_nT": 0.20833333333333334
+        },
+        "pre_24h": {
+          "mean_kp": 2.654166666666667,
+          "mean_dst_nT": -24.291666666666668
+        },
+        "pre_6h": {
+          "mean_kp": 4.666666666666666,
+          "mean_dst_nT": -73.5
+        },
+        "post_0_24h": {
+          "mean_kp": 3.2083333333333335,
+          "mean_dst_nT": -39.0
+        },
+        "post_24_48h": {
+          "mean_kp": 2.841666666666667,
+          "mean_dst_nT": -29.958333333333332
+        },
+        "full_window": {
+          "mean_kp": 2.0368055555555555,
+          "mean_dst_nT": -19.3125
+        }
+      },
+      "hope": {
+        "status": "skipped",
+        "reason": "quake_time outside RBSP-A primary science era (use OMNI only below)"
+      }
+    }
+  ]
+}
