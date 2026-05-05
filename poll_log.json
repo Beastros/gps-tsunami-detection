@@ -6036,10 +6036,16 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-05-05T07:17:31.045290+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-05-05T07:02:28.135030+00:00",
-  "total_polls": 1005,
+  "last_updated": "2026-05-05T07:17:31.045290+00:00",
+  "total_polls": 1006,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -6100,6 +6106,16 @@
       "depth": 22.2,
       "reason": "below threshold",
       "delta": -0.8
+    },
+    {
+      "ts": "2026-05-05T06:44:51.479000+00:00",
+      "mag": 5.8,
+      "place": "76 km S of Tambolaka, Indonesia",
+      "lat": -10.11,
+      "lon": 119.32,
+      "depth": 35.5,
+      "reason": "below threshold",
+      "delta": -0.7
     }
   ]
 }
