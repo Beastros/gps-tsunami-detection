@@ -6066,10 +6066,16 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-05-05T08:32:30.090692+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-05-05T08:17:28.717496+00:00",
-  "total_polls": 1010,
+  "last_updated": "2026-05-05T08:32:30.090692+00:00",
+  "total_polls": 1011,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -6138,6 +6144,16 @@
       "lat": -10.11,
       "lon": 119.32,
       "depth": 35.5,
+      "reason": "below threshold",
+      "delta": -0.7
+    },
+    {
+      "ts": "2026-05-05T08:00:43.579000+00:00",
+      "mag": 5.8,
+      "place": "127 km ENE of Pauanui, New Zealand",
+      "lat": -36.75,
+      "lon": 177.26,
+      "depth": 10,
       "reason": "below threshold",
       "delta": -0.7
     }
