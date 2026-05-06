@@ -6786,10 +6786,16 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-05-06T14:32:30.021945+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-05-06T14:17:30.014662+00:00",
-  "total_polls": 1130,
+  "last_updated": "2026-05-06T14:32:30.021945+00:00",
+  "total_polls": 1131,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -6880,6 +6886,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.9
+    },
+    {
+      "ts": "2026-05-06T14:15:32.254000+00:00",
+      "mag": 5.8,
+      "place": "235 km ESE of Attu Station, Alaska",
+      "lat": 52.26,
+      "lon": 176.52,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.7
     }
   ]
 }
