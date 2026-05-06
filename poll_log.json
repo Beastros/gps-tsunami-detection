@@ -6744,10 +6744,16 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-05-06T12:47:28.564701+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-05-06T12:32:29.717235+00:00",
-  "total_polls": 1123,
+  "last_updated": "2026-05-06T12:47:28.564701+00:00",
+  "total_polls": 1124,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -6828,6 +6834,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.7
+    },
+    {
+      "ts": "2026-05-06T11:46:48.851000+00:00",
+      "mag": 5.6,
+      "place": "south of the Kermadec Islands",
+      "lat": -32.17,
+      "lon": -177.93,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.9
     }
   ]
 }
