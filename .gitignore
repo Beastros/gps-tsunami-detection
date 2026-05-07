@@ -36,6 +36,11 @@ venv/
 # Output figures (committed versions in figures/)
 *.png
 
+# Outbreak dashboard (Node)
+outbreak-dashboard/node_modules/
+outbreak-dashboard/dist/
+outbreak-dashboard/ingest/.venv/
+
 # Jupyter
 .ipynb_checkpoints/
 
