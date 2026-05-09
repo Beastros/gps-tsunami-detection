@@ -8286,10 +8286,16 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-05-09T05:02:31.788500+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-05-09T04:47:31.469570+00:00",
-  "total_polls": 1380,
+  "last_updated": "2026-05-09T05:02:31.788500+00:00",
+  "total_polls": 1381,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -8410,6 +8416,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.9
+    },
+    {
+      "ts": "2026-05-09T04:42:23.298000+00:00",
+      "mag": 5.8,
+      "place": "292 km WSW of Adak, Alaska",
+      "lat": 51.08,
+      "lon": 179.35,
+      "depth": 26.5,
+      "reason": "below threshold",
+      "delta": -0.7
     }
   ]
 }
