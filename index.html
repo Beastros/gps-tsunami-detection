@@ -584,11 +584,6 @@ function applyPollCountdownTick(){
     plS.textContent=msg||'';
     if(stL){stL.textContent='ERROR';stL.className='stat-value stat-bad';if(stS)stS.textContent=msg||'';}
   }
-  function setStale(msg){
-    plA.textContent='STALE';plA.className='stat-value stat-warn';
-    plS.textContent=msg||'';
-    if(stL){stL.textContent='STALE';stL.className='stat-value stat-warn';if(stS)stS.textContent=msg||'';}
-  }
   function setWarn(line,sub){
     plA.textContent=line;plA.className='stat-value stat-warn';
     plS.textContent=sub||'';
@@ -613,14 +608,13 @@ function applyPollCountdownTick(){
     var now=Date.now();
     var late=now-due;
     var lastFmt=fmtDate(st.lastIso);
-    if(late>st.graceMs){
-      var remStale=intervalMs-((now-st.anchorMs)%intervalMs);
-      setWarn(fmtCountdownMs(remStale),'STALE · last poll '+lastFmt+' · no new GitHub row yet');
-      return;
-    }
     if(late>0){
-      var remLate=intervalMs-((now-st.anchorMs)%intervalMs);
-      setWarn(fmtCountdownMs(remLate),'Last poll '+lastFmt+' · waiting for GitHub (+ '+Math.ceil(late/1000)+' s)');
+      var rem=intervalMs-((now-st.anchorMs)%intervalMs);
+      var sub='Last poll '+lastFmt+' · ';
+      sub+=(late<=st.graceMs)
+        ? ('waiting for GitHub (+ '+Math.ceil(late/1000)+' s)')
+        : ('no newer poll row on GitHub yet');
+      setWarn(fmtCountdownMs(rem),sub);
       return;
     }
     var rem=due-now;
