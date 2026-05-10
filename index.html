@@ -647,10 +647,11 @@ function restartPollCountdownFromLog(d){
 async function loadPipeline(){
   window._pollCD=window._pollCD||{};
   try{
+    const fetchOpts={cache:'no-store'};
     const[prRes,lrRes,qrRes]=await Promise.all([
-      fetch(BASE+'poll_log.json'),
-      fetch(BASE+'running_log.json'),
-      fetch(BASE+'event_queue.json')
+      fetch(BASE+'poll_log.json',fetchOpts),
+      fetch(BASE+'running_log.json',fetchOpts),
+      fetch(BASE+'event_queue.json',fetchOpts)
     ]);
     window._pollCD.pollFetchOk=!!prRes.ok;
     var pr=null;
