@@ -188,7 +188,8 @@ event_queue.json          # Internal event state — drives alert banner when ev
 dyfi_pings.json           # DYFI ping list — read by dashboard for map overlays
 
 # Dashboard
-index.html                # GitHub Pages UI: NOAA SWPC (client) + repo JSON; 5 min pipeline refresh
+index.html                # GitHub Pages UI: NOAA SWPC (client) + repo JSON; dynamic poll refresh
+dart_stations_pacific.json # Canonical 34-station Pacific DART catalog for map + ops consistency
 
 # Historical validation scripts
 scripts/
@@ -215,7 +216,7 @@ figures/
 | NASA CDDIS | RINEX GPS/GLONASS/Galileo observations | cddis.nasa.gov/archive/gps/data/daily/ |
 | NOAA CO-OPS | Tide gauge water level | api.tidesandcurrents.noaa.gov |
 | NOAA SWPC | Space weather (e.g. Kp, IMF Bz, solar wind speed, GOES X-ray; feeds used by pipeline + dashboard) | services.swpc.noaa.gov |
-| NOAA NDBC | DART ocean pressure buoys (34 configured Pacific Ring-of-Fire stations) | ndbc.noaa.gov |
+| NOAA NDBC | DART ocean pressure buoys (34 configured Pacific Ring-of-Fire stations; catalog in dart_stations_pacific.json) | ndbc.noaa.gov |
 | USGS | Real-time earthquake feed + ShakeMap moment tensors | earthquake.usgs.gov |
 | GIRO DIDBase | Ionosonde foF2 measurements (7 stations in ionosonde_checker) | giro.uml.edu/didbase |
 

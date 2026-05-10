@@ -155,6 +155,7 @@ GPS_TSUNAMI_REPO_DIR=<optional git clone path for health_check section 15>
 ## 11. Dashboard (`index.html` on GitHub Pages)
 
 - Loads **`poll_log.json`**, **`running_log.json`**, **`event_queue.json`**, **`dyfi_pings.json`** from **raw** `main` URLs.
+- DART layer should come from **`dart_stations_pacific.json`** (canonical 34-station configured set) rather than hand-maintained coordinates in HTML.
 - **`renderDyfiPings`** must use **`window._mapSvg`** / **`window._mapProj`** after `initMap` completes.
 - **Poll Log tab:** hero stats, sparkline, sticky scroll tables, optional **metadata rail** (wide screens); **near-miss** map colors: bright gold / orange for visibility.
 - **`git pull` merge:** if Vim opens for merge message → **`Esc`**, **`:wq`**, **Enter**. Or `git config merge.autoEdit false` to skip editor.

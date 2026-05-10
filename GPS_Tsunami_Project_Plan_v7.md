@@ -108,6 +108,7 @@ When a tsunami crosses the open ocean it generates an Atmospheric Gravity Wave (
 | notify_discord.py | Discord webhook — predictions, near-misses, errors | LIVE — V3 |
 | dyfi_checker.py | DYFI detail fetch for detector fusion | LIVE |
 | dyfi_poller.py | Mw5.0+ Pacific DYFI pings → dyfi_pings.json for dashboard | LIVE — default output beside this file; optional `DYFI_PINGS_OUTPUT` |
+| dart_stations_pacific.json | Canonical Pacific DART station catalog (map/ops sync) | LIVE — 34-station configured set |
 | backtest.py | Historical backtester | LIVE — V3 |
 | health_check.py | 23-section system verification | LIVE — portable `PIPELINE_DIR` / optional `GPS_TSUNAMI_*`; optional dart_checker |
 | adaptive_thresholds.py | Bayesian threshold recommender | LIVE — V4 |
@@ -321,6 +322,6 @@ Copy-paste this to begin:
 
 *This is my GPS ionospheric tsunami detection project. Read this document for full context. Also read CLAUDE_CODE_RULES.md from the repo before writing any code.*
 
-*System is live: 8-signal stack (detector fusion = TEC + DART + constellations + dTEC/dt + ionosonde + ShakeMap gate + space weather; DYFI map pings + score-time DYFI fields in running_log). Fast poll (2-min cycles on Mw6.0+ Pacific). Discord near-miss alerts. V7: check_recent.py, CLAUDE rule 34. V6: dashboard overhaul, health_check zone integrity. See README.md on main for env vars and exact file list.*
+*System is live: 8-signal stack (detector fusion = TEC + DART + constellations + dTEC/dt + ionosonde + ShakeMap gate + space weather; DYFI map pings + score-time DYFI fields in running_log). Fast poll (2-min cycles on Mw6.0+ Pacific). Discord near-miss alerts. DART map reads canonical `dart_stations_pacific.json` (34 stations). V7: check_recent.py, CLAUDE rule 34. V6: dashboard overhaul, health_check zone integrity. See README.md on main for env vars and exact file list.*
 
 *Next optional hardening: fold DYFI contribution into detector-time `combined_confidence` if you want the headline score to move with felt reports at detection time (today DYFI is logged at score time and on the map).*

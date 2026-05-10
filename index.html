@@ -952,9 +952,9 @@ function initMap() {
     {id:'CH853',name:'Chatham Is.',lat:-43.93,lon:-176.57},
     {id:'AT138',name:'Townsville',lat:-19.63,lon:146.85},
   ];
-  // Canonical Pacific DART station set for this project phase (34 stations)
-  // Source snapshot: NOAA NDBC DART listing (2026-05-10 UTC)
-  var DART=[
+  // Fallback Pacific DART station set (34) if JSON catalog fails to load.
+  // Canonical source in-repo: dart_stations_pacific.json
+  var DART_DEFAULT=[
     {id:'21413',lat:30.53333,lon:152.13167,name:'SE of Tokyo, Japan'},
     {id:'21414',lat:48.96732,lon:178.21223,name:'SW of Adak, AK'},
     {id:'21415',lat:50.15000,lon:171.93333,name:'S of Attu, Alaska'},
@@ -990,6 +990,15 @@ function initMap() {
     {id:'52405',lat:13.03350,lon:132.15067,name:'W of Agana, Guam'},
     {id:'52406',lat:-5.37365,lon:164.99097,name:'NE of Guadalcanal'},
   ];
+  function loadDartStations(){
+    return fetch('dart_stations_pacific.json',{cache:'no-store'})
+      .then(function(r){ if(!r.ok) throw new Error('dart catalog '+r.status); return r.json(); })
+      .then(function(d){
+        var arr = (d && d.stations) || [];
+        return Array.isArray(arr) && arr.length ? arr : DART_DEFAULT;
+      })
+      .catch(function(){ return DART_DEFAULT; });
+  }
   var SZ=[
     [[153,46],[147,43],[143,40],[141,37],[140,34],[141,31],[140,28],[142,26],[144,22],[147,18],[145,14],[142,11]],
     [[180,52],[172,54],[163,55],[154,54],[148,52]],
@@ -1014,14 +1023,16 @@ function initMap() {
         .attr('d',path).attr('fill','none').attr('stroke','#c0392b').attr('stroke-width',2).attr('opacity',0.72);
     });
 
-    DART.forEach(function(b){
-      var p=proj([b.lon,b.lat]);
-      if(!p)return;
-      svg.append('circle').attr('cx',p[0]).attr('cy',p[1]).attr('r',3.5)
-        .attr('fill','none').attr('stroke','#0abde3').attr('stroke-width',1.4).attr('opacity',0.8)
-        .style('cursor','pointer')
-        .on('mouseover',function(e){showTip('<b style="color:#0abde3">DART '+b.id+'</b><br>'+b.name+'<br><span style="color:#6a9cc0">NOAA NDBC pressure sensor</span>',e);})
-        .on('mouseout',hideTip);
+    loadDartStations().then(function(DART){
+      DART.forEach(function(b){
+        var p=proj([b.lon,b.lat]);
+        if(!p)return;
+        svg.append('circle').attr('cx',p[0]).attr('cy',p[1]).attr('r',3.5)
+          .attr('fill','none').attr('stroke','#0abde3').attr('stroke-width',1.4).attr('opacity',0.8)
+          .style('cursor','pointer')
+          .on('mouseover',function(e){showTip('<b style="color:#0abde3">DART '+b.id+'</b><br>'+b.name+'<br><span style="color:#6a9cc0">NOAA NDBC pressure sensor</span>',e);})
+          .on('mouseout',hideTip);
+      });
     });
 
     IONO.forEach(function(io){
