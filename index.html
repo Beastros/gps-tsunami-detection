@@ -873,6 +873,16 @@ function renderLog(d){
 
 loadSW();
 loadPipeline();
+// Clean hard-refresh safety net: keeps long-running tabs in sync.
+// Data polling already runs continuously; this just resets page state periodically.
+setInterval(function(){
+  if(!document.hidden){
+    window.location.reload();
+  }
+},30*60*1000);
+// When the tab becomes active again, immediately refresh data.
+window.addEventListener('focus',function(){loadPipeline();loadSW();loadDyfi();});
+document.addEventListener('visibilitychange',function(){if(!document.hidden){loadPipeline();loadSW();loadDyfi();}});
 async function loadDyfi(){try{const r=await fetch(BASE+'dyfi_pings.json');if(!r.ok)return;const d=await r.json();renderDyfiPings(d.pings||[]);}catch(e){}}
 setInterval(loadDyfi,5*60*1000);
 setInterval(loadSW,5*60*1000);
