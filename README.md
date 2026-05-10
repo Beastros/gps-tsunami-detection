@@ -199,6 +199,8 @@ scripts/
   cascading_demo.py         # End-to-end prediction demo: Chile 2010
   calibration_updated.py    # Calibration model fit and evaluation
 
+The `scripts/` folder also carries **mirrored copies** of the live operational modules (`pipeline.py`, `usgs_listener.py`, `notify*.py`, `health_check.py`, and related imports) so paths stay aligned with the repo root.
+
 figures/
   blind_validation.png
   cascading_demo.png

@@ -42,7 +42,12 @@ def _resolve_dir(env_name: str, default: Path) -> Path:
 
 
 _HERE = Path(__file__).resolve().parent
-PIPELINE_DIR = _resolve_dir("GPS_TSUNAMI_PIPELINE_DIR", _HERE)
+# When this file lives in scripts/, default to repo root so paths match the live pipeline tree.
+if _HERE.name == "scripts" and (_HERE.parent / "pipeline.py").exists():
+    _DEFAULT_ROOT = _HERE.parent
+else:
+    _DEFAULT_ROOT = _HERE
+PIPELINE_DIR = _resolve_dir("GPS_TSUNAMI_PIPELINE_DIR", _DEFAULT_ROOT)
 REPO_DIR = _resolve_dir("GPS_TSUNAMI_REPO_DIR", PIPELINE_DIR)
 
 # â”€â”€ Load .env â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
