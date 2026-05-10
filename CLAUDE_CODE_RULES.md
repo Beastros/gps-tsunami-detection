@@ -2,7 +2,7 @@
 
 Lessons learned, Windows deployment pitfalls, and architecture reference for agents and humans editing this repo.
 
-**Last updated:** 2026-05-03 · **Doc version:** V8+ (aligned with 8-channel stack, DYFI map, Poll Log redesign, `usgs_listener` near-miss fix)
+**Last updated:** 2026-05-10 · **Doc version:** V8+ (aligned with 8-channel stack, DYFI map, Poll Log redesign, `usgs_listener` near-miss fix, Discord near-miss webhook, portable `health_check`)
 
 ---
 
@@ -72,6 +72,8 @@ python patch_tmp.py
 
 ## 6. Paths (Mike’s machine — adjust if layout changes)
 
+Typical **dual-root** layout below. Code defaults (`dyfi_pings.json` beside `dyfi_poller.py`, `health_check` roots) work from a **single clone**; keep this table when you still split “pipeline folder” vs “repo folder.”
+
 | Role | Path |
 |------|------|
 | **Pipeline** (Task Scheduler, `.env`, most runtime) | `C:\Users\Mike\Desktop\Earthquake Feed Listener Engine\` |
@@ -103,6 +105,9 @@ EARTHDATA_PASS=<earthdata password>
 NOTIFY_EMAIL=<smtp sender for alerts>
 NOTIFY_APP_PASSWORD=<app password if Gmail>
 DISCORD_WEBHOOK_URL=<webhook URL — rotate if ever pasted in chat>
+DYFI_PINGS_OUTPUT=<optional absolute path to dyfi_pings.json>
+GPS_TSUNAMI_PIPELINE_DIR=<optional override for health_check / ops>
+GPS_TSUNAMI_REPO_DIR=<optional git clone path for health_check section 15>
 ```
 
 - **Public inquiries** (footer on `index.html`, README): **`emfproj@proton.me`** — not the same as `NOTIFY_EMAIL` unless you intentionally use Proton SMTP for sends.
@@ -121,9 +126,9 @@ DISCORD_WEBHOOK_URL=<webhook URL — rotate if ever pasted in chat>
 3. `detector_runner` — 8-channel fusion (TEC + space weather + constellations + dTEC + DART + ionosonde + ShakeMap prior; DYFI fusion fields where applicable).
 4. `scorer` — tide gauges at T+24h → `running_log.json`.
 5. `dyfi_poller` — `dyfi_pings.json` for **GitHub Pages** map (see §10).
-6. Notify — email + Discord; pipeline errors to Discord.
+6. Notify — email + Discord (new candidates, **near-misses** via `notify_discord.send_near_miss_alerts`, detector predictions, pipeline errors).
 
-**Task Scheduler:** task name **`GPS Tsunami Master`** · target **`run_and_push.bat`** · ~15 min.
+**Task Scheduler:** task name **`GPS Tsunami Master`** · target **`run_and_push.bat`** or **`push_logs.bat`** (repo contains the latter) · ~15 min.
 
 **Live log file:** `task_runner.log` (from batch job) is the right freshness signal for scheduled runs — not only `pipeline.log` from manual runs.
 
@@ -141,7 +146,7 @@ DISCORD_WEBHOOK_URL=<webhook URL — rotate if ever pasted in chat>
 
 ## 10. DYFI poller (`dyfi_poller.py`)
 
-- Writes **`dyfi_pings.json`** into the repo path set by **`REPO_DIR`** at top of file (default `C:\Users\Mike\Desktop\repo`). If repo lives elsewhere, **edit `REPO_DIR`** or the file will land in the wrong place.
+- Writes **`dyfi_pings.json`** next to **`dyfi_poller.py`** by default (repo root in a normal clone). Override with env **`DYFI_PINGS_OUTPUT`** (absolute path) if Task Scheduler runs from a different cwd.
 - **Retention:** `LOOKBACK_HRS` / **`MAX_PING_AGE_HRS`** (24h) — pings older than max age are omitted on next run.
 - **MIN_FELT** (e.g. 10): below that, no map ping — quiet map is often “not enough DYFI responses,” not a broken fetch.
 
@@ -159,7 +164,8 @@ DISCORD_WEBHOOK_URL=<webhook URL — rotate if ever pasted in chat>
 ## 12. `health_check.py`
 
 - **23 sections** (includes DYFI checker / poller blocks). Section **numbers in script** may not be contiguous — trust the printed headers.
-- **`PIPELINE_DIR`** / **`REPO_DIR`** are **hardcoded Windows paths** at top of file — update if machine layout changes.
+- **`PIPELINE_DIR`** defaults to the directory containing **`health_check.py`**. If that file lives under **`scripts/`**, the default root is the **parent** folder (the repo / pipeline tree). Override with **`GPS_TSUNAMI_PIPELINE_DIR`** / **`GPS_TSUNAMI_REPO_DIR`** when your Task Scheduler working copy and git clone differ.
+- **`dart_checker.py`** is **optional** in git; health check warns instead of failing if the module is absent.
 
 ---
 
@@ -205,6 +211,7 @@ Prefer summary feeds (`4.5_week.geojson`, etc.) or build query URLs with **f-str
 | V4–V5 | More stations, HOLB zone, adaptive thresholds, map, near-miss concept |
 | V6 | Fast poll, README expansion |
 | **2026-05** | UTF-8 JSON in `usgs_listener`; **`pending`** on polls; **near-miss control-flow fix**; **`dyfi_poller`** 24h retention; **`index.html`** pipeline refresh, Events table, DYFI map hook, Poll Log redesign, brighter seismic rings, metadata rail; footer **emfproj@proton.me**; **README** sync (8-ch, 23 health sections) |
+| **2026-05-10** | **`notify_discord.send_near_miss_alerts`** (Discord webhook, same URL); **`notify` / `notify_discord`** in repo; portable **`health_check`** + optional **`dart_checker`**; **`dyfi_pings.json`** default path via `Path(__file__).parent`; **`DYFI_PINGS_OUTPUT`** env; **`scripts/`** mirrored to root pipeline modules |
 
 ---
 
@@ -216,7 +223,7 @@ Prefer summary feeds (`4.5_week.geojson`, etc.) or build query URLs with **f-str
 |----------------------|---------------------|
 | `pipeline.py`, `usgs_listener.py`, `rinex_downloader.py`, `detector_runner.py`, `scorer.py`, `space_weather.py`, `ionosonde_checker.py`, `dyfi_poller.py`, `dyfi_checker.py`, `notify*.py` | `index.html`, `poll_log.json`, `running_log.json`, `event_queue.json`, `dyfi_pings.json`, `README.md` |
 
-**Repo-only / docs:** `CLAUDE_CODE_RULES.md`, `scripts/` research utilities, figures.
+**Repo-only / docs:** `CLAUDE_CODE_RULES.md`, figures. The **`scripts/`** tree also holds **mirrored** live pipeline modules (see README) alongside historical research scripts.
 
 ---
 

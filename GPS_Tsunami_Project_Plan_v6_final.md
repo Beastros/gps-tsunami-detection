@@ -2,6 +2,8 @@
 ## Project Master Plan & Continuation Document — v6
 Last updated: April 26, 2026 (V5 session)  |  Status: LIVE — 7-channel fusion pipeline running  |  github.com/Beastros/gps-tsunami-detection
 
+**Note (2026-05-10):** Use **`GPS_Tsunami_Project_Plan_v7.md`**, **`README.md`**, and **`CLAUDE_CODE_RULES.md` on `main`** for current paths, DYFI/Discord/health-check behavior, and dashboard copy. This v6 document is kept as session history.
+
 ---
 
 # Instructions for New Claude Session

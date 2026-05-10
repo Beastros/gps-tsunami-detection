@@ -68,6 +68,13 @@ def run_pipeline():
     usgs_listener.write_poll_log(new, queue, near_misses)
     log.info(f"  {new} new candidates")
 
+    # Discord (same webhook as predictions): Pacific near-misses — phone push via Discord app
+    if near_misses:
+        try:
+            notify_discord.send_near_miss_alerts(near_misses)
+        except Exception as d_err:
+            log.warning("Discord near-miss notification failed: %s", d_err)
+
     # Notify on new qualifying events
     if new > 0:
         new_events = [e for e in queue["events"] if e.get("status") == "queued"][-new:]

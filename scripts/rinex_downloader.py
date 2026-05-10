@@ -41,9 +41,9 @@ CDDIS_BASE       = "https://cddis.nasa.gov/archive/gps/data/daily"
 
 # Stations to attempt per corridor
 CORRIDOR_STATIONS = {
-    "guam": ["guam", "mkea", "kokb", "hnlc"],
-    "chat": ["chat", "mkea", "kokb", "hnlc"],
-    "thti": ["thti", "thtg", "mkea", "kokb"],
+    "guam": ["guam", "kwj1", "noum", "holb", "mkea", "kokb", "hnlc"],
+    "chat": ["chat", "auck", "mkea", "kokb", "hnlc"],
+    "thti": ["thti", "thtg", "auck", "noum", "mkea", "kokb"],
     None:   ["mkea", "kokb", "hnlc", "guam"],
 }
 
@@ -108,7 +108,13 @@ def download_file(url, dest_path, auth):
         log.info(f"  {dest_path.name} already exists, skipping")
         return True
     try:
-        r = requests.get(url, auth=auth, timeout=60, stream=True)
+        import requests as _req
+        class _S(_req.Session):
+            def rebuild_auth(self, pr, r):
+                if self.auth: pr.prepare_auth(self.auth, pr.url)
+        _sess = _S()
+        _sess.auth = auth
+        r = _sess.get(url, timeout=60, stream=True)
         if r.status_code == 404:
             log.debug(f"  404: {dest_path.name}")
             return False

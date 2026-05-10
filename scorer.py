@@ -292,6 +292,22 @@ def score_event(event, gauge_results, dart_result=None):
     # ── DART reconciliation ───────────────────────────────────────
     dart_reconcile = reconcile_dart(dart_status_pred, dart_result)
 
+    # ── DYFI at score time (for dashboard / audit; fail-open) ───────
+    dyfi_contribution = None
+    dyfi_responses = None
+    dyfi_maxmmi = None
+    dyfi_confirmed = False
+    try:
+        from dyfi_checker import get_dyfi_contribution
+
+        _uid = event.get("usgs_id")
+        if _uid:
+            dyfi_contribution, dyfi_responses, dyfi_maxmmi, dyfi_confirmed = get_dyfi_contribution(
+                _uid
+            )
+    except Exception as _de:
+        log.debug("DYFI fetch at score time skipped: %s", _de)
+
     # ── Build score record ────────────────────────────────────────
     score = {
         # Identity
@@ -318,6 +334,12 @@ def score_event(event, gauge_results, dart_result=None):
         "space_weather_gated":        sw_gated,
         "space_weather_flags":        sw_flags,
         "dart_reconciliation":        dart_reconcile,
+
+        # DYFI (USGS Did You Feel It) — snapshot at T+24h score time
+        "dyfi_contribution":   dyfi_contribution,
+        "dyfi_responses":      dyfi_responses,
+        "dyfi_maxmmi":         dyfi_maxmmi,
+        "dyfi_confirmed":      dyfi_confirmed,
 
         # Scoring-time DART (existing fields, kept for compat)
         "dart_detected":         dart_result["tsunami_detected"] if dart_result else None,

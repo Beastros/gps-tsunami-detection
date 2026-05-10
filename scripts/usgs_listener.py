@@ -1,3 +1,4 @@
+import os
 """
 USGS Earthquake Feed Listener
 ==============================
@@ -34,6 +35,7 @@ POLL_INTERVAL_SEC = 900          # 15 minutes
 MW_THRESHOLD      = 6.5          # minimum magnitude
 LOOKBACK_HOURS    = 24           # how far back to look on startup
 EVENT_QUEUE_FILE  = "event_queue.json"
+POLL_LOG_FILE     = "poll_log.json"
 LOG_FILE          = "listener.log"
 
 # USGS feed — past 7 days, all magnitudes (we filter ourselves)
@@ -97,6 +99,12 @@ PACIFIC_ZONES = [
 # Known false-positive source types (usually not tsunamigenic)
 SKIP_TYPES = ["nuclear explosion", "quarry blast", "explosion", "mine collapse"]
 
+# ── Fast poll trigger ──────────────────────────────────────────────────────
+FAST_POLL_MW_TRIGGER    = 6.0   # lower than qualify threshold -- catches upgrades
+FAST_POLL_DURATION_MIN  = 120   # minutes of fast polling after trigger
+FAST_POLL_INTERVAL_SEC  = 120   # 2-minute cycles during fast poll
+FAST_POLL_FILE          = "fast_poll.json"
+
 # ── Logging ────────────────────────────────────────────────────────
 logging.basicConfig(
     level=logging.INFO,
@@ -112,11 +120,13 @@ log = logging.getLogger(__name__)
 # ── Helpers ────────────────────────────────────────────────────────
 def load_queue():
     if Path(EVENT_QUEUE_FILE).exists():
-        return json.loads(Path(EVENT_QUEUE_FILE).read_text())
+        return json.loads(Path(EVENT_QUEUE_FILE).read_text(encoding="utf-8"))
     return {"events": [], "seen_ids": []}
 
 def save_queue(q):
-    Path(EVENT_QUEUE_FILE).write_text(json.dumps(q, indent=2))
+    Path(EVENT_QUEUE_FILE).write_text(
+        json.dumps(q, indent=2), encoding="utf-8"
+    )
 
 def event_id(feature):
     """Stable ID from USGS event ID."""
@@ -210,6 +220,25 @@ def assess_event(feature):
         log.debug(f"Skipping deep event: {place} depth={depth_km}km")
         return None
 
+    # Fetch focal mechanism — fail-open (None = include by default)
+    focal = fetch_focal_mechanism(feature["id"])
+    tsunamigenic_index = None
+    if focal and focal.get("available"):
+        tsunamigenic_index = compute_tsunamigenic_index(focal["rake_score"], depth_km)
+        if tsunamigenic_index < TSUNAMIGENIC_SKIP_THRESHOLD:
+            log.info(
+                f"  ShakeMap SKIP: {feature.get('id','')} "
+                f"{focal['fault_type']} rake={focal['rake_deg']}° "
+                f"index={tsunamigenic_index:.2f} < {TSUNAMIGENIC_SKIP_THRESHOLD}"
+            )
+            return None
+        log.info(
+            f"  ShakeMap OK: {focal['fault_type']} "
+            f"rake={focal['rake_deg']}° index={tsunamigenic_index:.2f}"
+        )
+    else:
+        log.debug(f"  ShakeMap: no focal data for {feature.get('id','')} — including")
+
     zones = in_pacific_zone(lat, lon)
     if not zones:
         return None
@@ -236,6 +265,8 @@ def assess_event(feature):
         "detector_run": False,
         "scored": False,
         "result": None,
+        "focal_mechanism": focal if focal else {"available": False},
+        "tsunamigenic_index": tsunamigenic_index,
     }
 
     return event
@@ -251,25 +282,161 @@ def fetch_feed():
         log.error(f"Feed fetch failed: {e}")
         return []
 
+
+
+# ── ShakeMap focal mechanism filter ──────────────────────────
+# Fetches USGS moment tensor data and scores tsunamigenic potential.
+# Rake angle: +90=thrust (high), -90=normal (med), 0/180=strike-slip (low)
+
+TSUNAMIGENIC_SKIP_THRESHOLD = 0.25  # below this = hard skip
+FOCAL_TIMEOUT               = 12    # seconds per USGS detail API call
+
+
+def classify_rake(rake_deg):
+    """
+    Convert rake angle to fault type and tsunamigenic score (0-1).
+    +90 = pure thrust (1.0), -90 = normal (0.4), 0/180 = strike-slip (0.0-0.15)
+    Returns (fault_type: str, score: float)
+    """
+    import math
+    r = rake_deg % 360
+    if r > 180: r -= 360
+    abs_r = abs(r)
+    if 45 <= abs_r <= 135:
+        if r > 0:
+            fault_type = "thrust"
+            score = round(math.sin(math.radians(r)), 3)
+        else:
+            fault_type = "normal"
+            score = round(0.4 * abs(math.sin(math.radians(r))), 3)
+    else:
+        fault_type = "strike-slip"
+        score = round(0.15 * abs(math.sin(math.radians(r))), 3)
+    return fault_type, max(0.0, min(1.0, score))
+
+
+def compute_tsunamigenic_index(rake_score, depth_km):
+    """
+    Combine rake score with depth weighting.
+    Shallow thrust events are most dangerous; deep events attenuate.
+    """
+    if depth_km is None or depth_km <= 30:
+        depth_weight = 1.0
+    elif depth_km <= 70:
+        depth_weight = 0.7
+    else:
+        depth_weight = 0.4
+    return round(rake_score * depth_weight, 3)
+
+
+def fetch_focal_mechanism(usgs_id):
+    """
+    Fetch focal mechanism from USGS event detail API.
+    Returns dict with rake, fault_type, tsunamigenic_score.
+    Returns None on fetch failure (caller should fail-open).
+
+    USGS product hierarchy: moment-tensor > focal-mechanism > beachball
+    """
+    url = f"https://earthquake.usgs.gov/earthquakes/feed/v1.0/detail/{usgs_id}.geojson"
+    try:
+        r = requests.get(url, timeout=FOCAL_TIMEOUT)
+        r.raise_for_status()
+        data = r.json()
+    except Exception as exc:
+        log.debug(f"  ShakeMap: fetch failed for {usgs_id}: {exc}")
+        return None
+
+    products = data.get("properties", {}).get("products", {})
+
+    for ptype in ("moment-tensor", "focal-mechanism"):
+        plist = products.get(ptype, [])
+        if not plist:
+            continue
+        props = plist[0].get("properties", {})
+        rake = None
+        for plane in ("1", "2"):
+            key = f"nodal-plane-{plane}-rake"
+            if key in props:
+                try:
+                    rake = float(props[key])
+                    break
+                except (ValueError, TypeError):
+                    continue
+        if rake is None:
+            continue
+        fault_type, rake_score = classify_rake(rake)
+        return {
+            "rake_deg":          round(rake, 1),
+            "fault_type":        fault_type,
+            "rake_score":        rake_score,
+            "product_type":      ptype,
+            "source":            plist[0].get("source", "unknown"),
+            "available":         True,
+        }
+
+    # No focal mechanism in USGS products yet (common for recent events)
+    return {"available": False, "fault_type": "unknown",
+            "rake_deg": None, "rake_score": 0.5, "product_type": None}
+
+
+def _activate_fast_poll(usgs_id, mag, place, fp_path):
+    """Write fast_poll.json to signal pipeline to switch to 2-min poll cycle."""
+    import json as _json
+    from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+    now = _dt.now(_tz.utc)
+    # Don't overwrite an active file that was triggered by a larger event
+    if os.path.exists(fp_path):
+        try:
+            existing = _json.loads(open(fp_path, encoding="utf-8").read())
+            exp = _dt.fromisoformat(existing.get("expires_utc", "2000-01-01T00:00:00+00:00"))
+            if exp > now and existing.get("trigger_mag", 0) >= mag:
+                return  # existing trigger is fresher or larger
+        except Exception:
+            pass
+    state = {
+        "active":          True,
+        "trigger_usgs_id": usgs_id,
+        "trigger_mag":     mag,
+        "trigger_place":   place,
+        "activated_utc":   now.isoformat(),
+        "expires_utc":     (now + _td(minutes=FAST_POLL_DURATION_MIN)).isoformat(),
+        "poll_interval_sec": FAST_POLL_INTERVAL_SEC,
+    }
+    open(fp_path, "w", encoding="utf-8").write(_json.dumps(state, indent=2))
+    log.info(f"FAST POLL ACTIVATED: Mw{mag} {place} -- 2-min cycles for {FAST_POLL_DURATION_MIN} min")
+
+
 def check_feed(queue):
-    """Check feed for new qualifying events, add to queue."""
+    """Check feed for new qualifying events. Returns (new_count, near_misses)."""
     features = fetch_feed()
     new_count = 0
+    near_misses = []
     cutoff = datetime.now(timezone.utc) - timedelta(hours=LOOKBACK_HOURS)
 
     for feat in features:
         eid = event_id(feat)
+        props = feat.get("properties", {})
+        geom  = feat.get("geometry", {})
+        mag   = props.get("mag")
+        place = props.get("place", "Unknown")
+        etype = props.get("type", "").lower()
+        time_ms = props.get("time", 0)
+        coords  = geom.get("coordinates", [None, None, None])
+
         if eid in queue["seen_ids"]:
             continue
 
         queue["seen_ids"].append(eid)
 
-        # Age filter
-        time_ms = feat.get("properties", {}).get("time", 0)
         if time_ms:
             event_time = datetime.fromtimestamp(time_ms/1000, tz=timezone.utc)
             if event_time < cutoff:
                 continue
+        else:
+            event_time = datetime.now(timezone.utc)
+
+        if mag is None or mag < 5.5:
+            continue
 
         candidate = assess_event(feat)
         if candidate:
@@ -283,19 +450,61 @@ def check_feed(queue):
                 f"expected_lead={w.get('expected_lead_time_min','?')}min"
             )
         else:
-            # Log why skipped for transparency
-            props = feat.get("properties", {})
-            mag = props.get("mag", 0)
-            if mag and mag >= MW_THRESHOLD:
-                coords = feat.get("geometry", {}).get("coordinates", [])
-                if coords:
-                    log.debug(
-                        f"Skipped Mw{mag} {props.get('place','')} "
-                        f"lat={coords[1]:.1f} lon={coords[0]:.1f} "
-                        f"(not Pacific subduction or too deep)"
-                    )
+            # Near-misses for dashboard map + Poll Log (Mw5.5+ inside Pacific zones only)
+            lon = coords[0] if coords and coords[0] is not None else None
+            lat = coords[1] if coords and coords[1] is not None else None
+            depth_km = coords[2] if coords and coords[2] is not None else 0
+            reason, delta = None, None
 
-    return new_count
+            if lat is None or lon is None or not in_pacific_zone(lat, lon):
+                pass
+            elif etype in SKIP_TYPES:
+                reason = "non-tectonic"
+            elif mag < MW_THRESHOLD:
+                reason = "below threshold"
+                delta = round(float(mag) - MW_THRESHOLD, 1)
+            elif depth_km and depth_km > 100:
+                reason = f"too deep ({round(depth_km)}km)"
+            elif mag >= MW_THRESHOLD:
+                _fm = fetch_focal_mechanism(eid)
+                if _fm and _fm.get("available"):
+                    _ti = compute_tsunamigenic_index(_fm["rake_score"], depth_km or 0)
+                    if _ti < TSUNAMIGENIC_SKIP_THRESHOLD:
+                        reason = f"{_fm['fault_type']} (rake={_fm['rake_deg']}°)"
+                    else:
+                        reason = "filtered"
+                else:
+                    reason = "ShakeMap / mechanism pending"
+            else:
+                reason = "filtered"
+
+            if reason is not None:
+                near_misses.append({
+                    "ts":     event_time.isoformat(),
+                    "mag":    mag,
+                    "place":  place[:60],
+                    "lat":    round(lat, 2) if lat is not None else None,
+                    "lon":    round(lon, 2) if lon is not None else None,
+                    "depth":  round(depth_km, 1) if depth_km else None,
+                    "reason": reason,
+                    "delta":  delta,
+                })
+                if mag >= MW_THRESHOLD:
+                    log.debug(f"Skipped Mw{mag} {place} — {reason}")
+
+        # Fast poll: Mw >= trigger in Pacific (candidate or near-miss)
+        if mag is not None and mag >= FAST_POLL_MW_TRIGGER:
+            _zones = in_pacific_zone(
+                coords[1] if coords and coords[1] is not None else 0,
+                coords[0] if coords and coords[0] is not None else 0,
+            )
+            if _zones:
+                _activate_fast_poll(
+                    eid, mag, place,
+                    os.path.join(os.path.dirname(os.path.abspath(__file__)), FAST_POLL_FILE)
+                )
+
+    return new_count, near_misses
 
 def print_status(queue):
     """Print current queue status."""
@@ -313,6 +522,64 @@ def print_status(queue):
             f"lead={w.get('expected_lead_time_min','?')}min"
         )
 
+def effective_poll_interval_sec():
+    """Next poll cadence for dashboard countdown (2 min when fast_poll.json active)."""
+    try:
+        fp = Path(FAST_POLL_FILE)
+        if not fp.is_file():
+            return POLL_INTERVAL_SEC
+        import json as _json
+        from datetime import datetime as _dt, timezone as _tz
+        st = _json.loads(fp.read_text(encoding="utf-8"))
+        exp = _dt.fromisoformat(st.get("expires_utc", "2000-01-01T00:00:00+00:00"))
+        if st.get("active") and exp > _dt.now(_tz.utc):
+            return int(st.get("poll_interval_sec", FAST_POLL_INTERVAL_SEC))
+    except Exception:
+        pass
+    return POLL_INTERVAL_SEC
+
+
+def write_poll_log(new_candidates, queue, near_misses=None):
+    """Append a poll entry and near-miss events to poll_log.json."""
+    poll_path = Path(POLL_LOG_FILE)
+    if poll_path.exists():
+        try:
+            data = json.loads(poll_path.read_text(encoding="utf-8"))
+        except Exception:
+            data = {"total_polls": 0, "polls": [], "recent_seismicity": []}
+    else:
+        data = {"total_polls": 0, "polls": [], "recent_seismicity": []}
+
+    if "recent_seismicity" not in data:
+        data["recent_seismicity"] = []
+
+    events = queue.get("events", [])
+    scored = sum(1 for e in events if e.get("status") == "scored")
+    pending = sum(1 for e in events if e.get("status") != "scored")
+
+    entry = {
+        "ts":             datetime.now(timezone.utc).isoformat(),
+        "new_candidates": new_candidates,
+        "total_queued":   len(events),
+        "pending":        pending,
+        "scored":         scored,
+    }
+    data["polls"].append(entry)
+    data["total_polls"]  = len(data["polls"])
+    data["last_updated"] = entry["ts"]
+    # Dashboard: countdown to next expected poll (seconds — matches pipeline sleep)
+    data["expected_poll_interval_sec"] = effective_poll_interval_sec()
+
+    # Append near-misses, keep last 100
+    if near_misses:
+        data["recent_seismicity"].extend(near_misses)
+        data["recent_seismicity"] = data["recent_seismicity"][-100:]
+
+    poll_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    log.info(f"Poll log updated — total polls: {data['total_polls']}, "
+             f"near-misses this cycle: {len(near_misses or [])}")
+
+
 # ── Main ────────────────────────────────────────────────────────────
 def main(once=False):
     log.info("="*55)
@@ -327,8 +594,9 @@ def main(once=False):
 
     while True:
         log.info("Checking USGS feed...")
-        new = check_feed(queue)
+        new, near_misses = check_feed(queue)
         save_queue(queue)
+        write_poll_log(new, queue, near_misses)
 
         if new > 0:
             log.info(f"Added {new} new candidate event(s)")
