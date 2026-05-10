@@ -8814,10 +8814,16 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-05-10T03:02:32.938767+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-05-10T02:47:43.473434+00:00",
-  "total_polls": 1468,
+  "last_updated": "2026-05-10T03:02:32.938767+00:00",
+  "total_polls": 1469,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -8948,6 +8954,16 @@
       "depth": 26.5,
       "reason": "below threshold",
       "delta": -0.7
+    },
+    {
+      "ts": "2026-05-10T02:34:07.249000+00:00",
+      "mag": 5.5,
+      "place": "27 km ENE of Ca\u00f1ete, Chile",
+      "lat": -37.72,
+      "lon": -73.11,
+      "depth": 34.3,
+      "reason": "below threshold",
+      "delta": -1.0
     }
   ]
 }
