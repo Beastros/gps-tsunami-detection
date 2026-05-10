@@ -611,10 +611,9 @@ function applyPollCountdownTick(){
     var lastFmt=fmtDate(st.lastIso);
     if(late>0){
       var rem=intervalMs-((now-st.anchorMs)%intervalMs);
-      var sub='Last poll '+lastFmt+' · ';
-      sub+=(late<=st.graceMs)
-        ? ('waiting for GitHub (+ '+Math.ceil(late/1000)+' s)')
-        : ('no newer poll row on GitHub yet');
+      var sub=(late<=st.graceMs)
+        ? ('Last poll '+lastFmt+' · waiting for GitHub (+ '+Math.ceil(late/1000)+' s)')
+        : ('Last poll '+lastFmt);
       setWarn(fmtCountdownMs(rem),sub);
       return;
     }
