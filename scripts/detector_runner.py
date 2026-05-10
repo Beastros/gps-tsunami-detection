@@ -24,6 +24,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from scipy.signal import butter, filtfilt
 from itertools import combinations
+from space_weather import get_space_weather_quality
 
 EVENT_QUEUE_FILE = "event_queue.json"
 LOG_FILE = "runner.log"
@@ -32,13 +33,13 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(levelname)s  %(message)s",
     handlers=[
-        logging.FileHandler(LOG_FILE),
+        logging.FileHandler(LOG_FILE, encoding="utf-8"),
         logging.StreamHandler()
     ]
 )
 log = logging.getLogger(__name__)
 
-# ── FROZEN PARAMETERS (locked 2025-04-22) ─────────────────────────
+# â”€â”€ FROZEN PARAMETERS (locked 2025-04-22) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 SNR_THRESHOLD    = 2.0
 MIN_DURATION_MIN = 3
 SPEED_MIN        = 150
@@ -53,7 +54,7 @@ LONG_BASELINE_KM = 1000
 KP_THRESHOLD     = 4.0
 PARAM_FREEZE_DATE = "2025-04-22"
 
-# ── Calibration model (frozen) ─────────────────────────────────────
+# â”€â”€ Calibration model (frozen) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 CALIB_A = 2283.839
 CALIB_B = 0.771
 CALIB_C = 2.614
@@ -62,30 +63,306 @@ def predict_wave(tec, mw, dist_km):
     return CALIB_A * tec * (10**(CALIB_B*mw)) / (dist_km**CALIB_C)
 
 STATIONS = {
+    # Hawaii anchor network (original)
     "mkea": {"lat": 19.801,  "lon": -155.456, "alt": 3763},
     "kokb": {"lat": 22.127,  "lon": -159.665, "alt": 1167},
     "hnlc": {"lat": 21.297,  "lon": -157.816, "alt":    5},
+    # Western Pacific
     "guam": {"lat": 13.489,  "lon":  144.868, "alt":   83},
+    "kwj1": {"lat":  8.722,  "lon":  167.730, "alt":   39},  # Kwajalein -- Central Pacific relay
+    "noum": {"lat": -22.270, "lon":  166.413, "alt":   69},  # Noumea NC -- SW Pacific
+    # South Pacific
     "chat": {"lat": -43.956, "lon": -176.566, "alt":   63},
+    "auck": {"lat": -36.602, "lon":  174.834, "alt":  106},  # Auckland NZ -- South Pacific
+    # Tahiti
     "thti": {"lat": -17.577, "lon": -149.606, "alt":   87},
     "thtg": {"lat": -17.577, "lon": -149.606, "alt":   87},
+    # West Coast -- Cascadia upstream
+    "holb": {"lat":  50.640, "lon": -128.133, "alt":  180},  # Holberg BC -- Cascadia anchor
 }
+
+# V5 -- geographic zone constraints
+# Prevents cross-basin spurious pairs (e.g. HOLB-Hawaii on Japan/Kermadec events).
+# Each entry defines the ONLY epicenter bounding box where that station may contribute.
+STATION_ZONE_CONSTRAINTS = {
+    "MKEA": None,
+    "KOKB": None,
+    "HNLC": None,
+    "GUAM": None,
+    "CHAT": None,
+    "THTI": None,
+    "THTG": None,
+    "AUCK": None,
+    "NOUM": None,
+    "KWJ1": None,
+    "HOLB": {"lat_min": 40.0, "lat_max": 52.0, "lon_min": -135.0, "lon_max": -120.0},
+}
+
+def _pair_zone_ok(s1_name, s2_name, event_lat, event_lon):
+    """Return False if either station zone constraint excludes this epicenter."""
+    for stn in (s1_name, s2_name):
+        if stn.upper() in STATION_ZONE_CONSTRAINTS:
+            z = STATION_ZONE_CONSTRAINTS[stn.upper()]
+            if not (z["lat_min"] <= event_lat <= z["lat_max"] and
+                    z["lon_min"] <= event_lon <= z["lon_max"]):
+                return False
+    return True
+
+
 
 HILO = {"lat": 19.730, "lon": -155.087}  # tide gauge target
 
 F1,F2=1575.42e6,1227.60e6; LAM1=2.998e8/F1; LAM2=2.998e8/F2
 K=40.3e16*(1/F2**2-1/F1**2); MU=3.986005e14; OMEGA_E=7.2921151467e-5; RE=6371000.0
 
-def haversine_km(la1,lo1,la2,lo2):
+def fetch_kp(quake_utc_str):
+    """
+    Fetch the actual Kp index from NOAA Space Weather at the time of the quake.
+    Returns float Kp value or None on failure.
+    NOAA SWPC planetary K-index feed: 3-hour cadence, past 7 days.
+    """
+    try:
+        import urllib.request
+        url = "https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json"
+        req = urllib.request.Request(url, headers={"User-Agent": "gps-tsunami-detector"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            data = json.loads(r.read())
+
+        # data[0] is the header row: ["time_tag","Kp","Kp_fraction","a_running","station_count"]
+        quake_dt = datetime.fromisoformat(quake_utc_str.replace("Z", "+00:00"))
+
+        best_kp = None
+        best_dt = None
+        for row in data[1:]:
+            try:
+                t = datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
+                kp_val = float(row[1])
+                dt = abs((t - quake_dt).total_seconds())
+                if best_dt is None or dt < best_dt:
+                    best_dt = dt
+                    best_kp = kp_val
+            except:
+                continue
+
+        if best_kp is not None:
+            log.info(f"  Kp index at quake time: {best_kp} "
+                     f"({'DISTURBED â€” gate active' if best_kp >= KP_THRESHOLD else 'quiet'})")
+        return best_kp
+
+    except Exception as e:
+        log.warning(f"  Kp fetch failed: {e} â€” gate disabled for this event")
+        return None
+
+
+
+def haversine_km(la1, lo1, la2, lo2):
     import math
     R=6371.0; la1,lo1,la2,lo2=map(math.radians,[la1,lo1,la2,lo2])
     dlat=la2-la1; dlon=lo2-lo1
     a=math.sin(dlat/2)**2+math.cos(la1)*math.cos(la2)*math.sin(dlon/2)**2
     return R*2*math.asin(math.sqrt(a))
 
+def compute_dart_score(dart_result):
+    """
+    Convert check_dart_network() result to 0-1 score.
+    0.0 = no data or no signal.  1.0 = strong multi-buoy confirmation.
+    """
+    if not dart_result or dart_result.get("buoys_with_data", 0) == 0:
+        return 0.0
+    confirming = dart_result.get("confirming_buoys", 0)
+    if confirming == 0:
+        return 0.0
+    base = {1: 0.45, 2: 0.72}.get(confirming, 0.90)
+    max_sigma = 0.0
+    for b in dart_result.get("results", {}).values():
+        if b.get("detected") and b.get("detection"):
+            max_sigma = max(max_sigma, b["detection"].get("sigma_score", 0))
+    sigma_boost = min((max_sigma - 3.0) / 10.0, 0.10) if max_sigma > 3 else 0.0
+    return min(round(base + sigma_boost, 3), 1.0)
+
+
+def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score, const_agreement=None, dtec_corroborates=False, ionosonde_confirmed=False, tsunamigenic_weight=0.5):
+    """
+    Multi-sensor fusion confidence score (0-1).
+
+    TEC coherence (GPS):  up to 0.55  â€” reliability reduced by space weather
+    DART ocean pressure:  up to 0.45  â€” independent of ionosphere
+
+    dart_status: 'pending' | 'no_buoys' | 'negative' | 'confirmed'
+    """
+    tec_reliability = max(1.0 - sw_score * 0.6, 0.2)
+    tec_contrib = 0.55 * tec_reliability * tsunamigenic_weight if tec_detected else 0.0
+    if dart_status in ("pending", "no_buoys"):
+        dart_contrib = 0.0
+    elif dart_status == "negative":
+        dart_contrib = -0.08 if tec_detected else 0.0
+    else:
+        dart_contrib = dart_score * 0.45
+    # Constellation agreement bonus/penalty (0 if only GPS available)
+    const_contrib = 0.0
+    if const_agreement is not None and tec_detected:
+        lbl = const_agreement.get('agreement_label', 'single_constellation')
+        if const_agreement.get('n_available', 1) >= 2:
+            if lbl == 'agreement':     const_contrib =  0.10
+            elif lbl == 'disagreement': const_contrib = -0.10
+            elif lbl == 'partial':      const_contrib =  0.03
+    # dTEC/dt corroboration â€” small boost (not independent, same GPS data)
+    dtec_contrib = 0.05 if (dtec_corroborates and tec_detected) else 0.0
+    # Ionosonde foF2 â€” truly independent HF radar, significant boost
+    iono_contrib = 0.12 if (ionosonde_confirmed and tec_detected) else 0.0
+    confidence = max(tec_contrib + dart_contrib + const_contrib + dtec_contrib + iono_contrib, 0.0)
+    return min(round(confidence, 3), 1.0)
+
+
+CONST_FREQ = {
+    'G': (1575.42e6, 1227.60e6),
+    'R': (1602.00e6, 1246.00e6),
+    'E': (1575.42e6, 1207.14e6),
+}
+CONST_K   = {c: 40.3e16*(1/f2**2-1/f1**2) for c,(f1,f2) in CONST_FREQ.items()}
+CONST_LAM = {c: (2.998e8/f1, 2.998e8/f2)  for c,(f1,f2) in CONST_FREQ.items()}
+
+
+def compute_tec_for_constellation(obs_path, constellation, lat, lon, alt):
+    if constellation not in CONST_FREQ:
+        return None
+    lam1, lam2 = CONST_LAM[constellation]
+    k_val = CONST_K[constellation]
+    try:
+        import georinex as gr
+        obs = gr.load(str(obs_path), use=constellation)
+    except Exception as exc:
+        log.debug(f'  [{constellation}] RINEX load failed: {exc}')
+        return None
+    avail = list(obs.data_vars)
+    l1v = next((v for v in avail if v.startswith('L1')), None)
+    l2v = next((v for v in avail if v.startswith('L2') or v.startswith('L7') or v.startswith('L5')), None)
+    if not l1v or not l2v:
+        return None
+    l1d = obs[l1v]; l2d = obs[l2v]; arcs = []
+    for sv in obs.sv.values:
+        try:
+            a = l1d.sel(sv=sv); b = l2d.sel(sv=sv)
+            if a.ndim > 1: a = a.isel({d: 0 for d in a.dims if d != 'time'})
+            if b.ndim > 1: b = b.isel({d: 0 for d in b.dims if d != 'time'})
+            mask = (~np.isnan(a.values)) & (~np.isnan(b.values))
+            times = a.time.values[mask]
+            if len(times) < MIN_ARC_EPOCHS: continue
+            l4 = a.values[mask] * lam1 - b.values[mask] * lam2
+            sl_ = np.where(np.abs(np.diff(l4)) > 0.5)[0] + 1
+            bds = [0] + list(sl_) + [len(l4)]
+            for s, e in zip(bds[:-1], bds[1:]):
+                if e - s < MIN_ARC_EPOCHS: continue
+                tn = np.linspace(0, 1, e - s)
+                try:
+                    c = np.polyfit(tn, l4[s:e], POLYNOMIAL_ORDER)
+                    r = (l4[s:e] - np.polyval(c, tn)) / k_val
+                    ts = [pd.Timestamp(t).tz_localize('UTC') for t in times[s:e]]
+                    arcs.append(pd.Series(r, index=ts))
+                except: continue
+        except: continue
+    if not arcs: return None
+    combined = pd.concat([s.resample(f'{RESAMPLE_SEC}s').mean() for s in arcs], axis=1)
+    stacked = combined.median(axis=1).interpolate(limit=10)
+    try:
+        return bandpass(stacked, 1 / float(RESAMPLE_SEC))
+    except Exception:
+        return None
+
+
+def compute_constellation_agreement(filts_by_const, quake_utc):
+    qu = pd.Timestamp(quake_utc)
+    window_start = qu + pd.Timedelta(hours=MIN_POST_QUAKE_H)
+    window_end   = qu + pd.Timedelta(hours=MAX_POST_QUAKE_H)
+    const_results = {}
+    for const, filts in filts_by_const.items():
+        if not filts:
+            const_results[const] = {'available': False, 'anomaly': False, 'n_stations': 0}
+            continue
+        has_anomaly = False
+        for sid, filt in filts.items():
+            try:
+                win = filt[(filt.index >= window_start) & (filt.index <= window_end)]
+                pre = filt[filt.index < qu]
+                if win.empty or pre.empty: continue
+                noise = max(float(pre.std()), 1e-4)
+                if float(win.abs().max()) > SNR_THRESHOLD * noise:
+                    has_anomaly = True; break
+            except Exception: continue
+        const_results[const] = {'available': True, 'anomaly': has_anomaly, 'n_stations': len(filts)}
+    available = [c for c, v in const_results.items() if v['available']]
+    detecting = [c for c, v in const_results.items() if v.get('anomaly')]
+    n_avail = len(available); n_detect = len(detecting)
+    if n_avail == 0:       label, score = 'no_data', 0.0
+    elif n_avail == 1:     label, score = 'single_constellation', 0.5
+    else:
+        frac = n_detect / n_avail
+        if frac >= 0.67:   label, score = 'agreement', round(0.8 + 0.2*frac, 2)
+        elif frac <= 0.34: label, score = 'disagreement', 0.2
+        else:              label, score = 'partial', 0.5
+    return {'constellations': const_results, 'n_available': n_avail,
+            'n_detecting': n_detect, 'detecting': detecting,
+            'agreement_score': score, 'agreement_label': label}
+
+
+
+
 def bandpass(s,fs):
     nyq=0.5*fs; b,a=butter(4,[max(1/(120*60)/nyq,1e-6),min(1/(10*60)/nyq,0.999)],btype="band")
     return pd.Series(filtfilt(b,a,s.values),index=s.index)
+
+
+def compute_dtec(filt):
+    """
+    Compute rate of change of TEC in TECU/min.
+    Tsunami-driven ionospheric disturbances have a sharp leading-edge
+    dTEC/dt spike at the wave front, distinct from smooth geomagnetic changes.
+    """
+    if filt is None or len(filt) < 5:
+        return None
+    diff = filt.diff().dropna()
+    dtec_per_min = diff * (60.0 / RESAMPLE_SEC)
+    smoothed = dtec_per_min.rolling(window=5, center=True, min_periods=3).mean()
+    return smoothed.dropna()
+
+
+def get_dtec_onsets(dtec, quake_utc):
+    """
+    Detect sharp dTEC/dt spikes in the post-quake detection window.
+    Uses 3-sigma threshold relative to pre-quake baseline.
+    Returns list of onset dicts.
+    """
+    if dtec is None or dtec.empty:
+        return []
+    qu = pd.Timestamp(quake_utc)
+    pre = dtec[dtec.index < qu]
+    if pre.empty or len(pre) < 6:
+        return []
+    noise = max(float(pre.abs().std()), 1e-5)
+    threshold = 3.0 * noise
+    win_start = qu + pd.Timedelta(hours=MIN_POST_QUAKE_H)
+    win_end   = qu + pd.Timedelta(hours=MAX_POST_QUAKE_H)
+    window = dtec[(dtec.index >= win_start) & (dtec.index <= win_end)]
+    if window.empty:
+        return []
+    onsets = []; in_ev = False; ev_start = None; ev_peak = 0.0
+    for t, v in window.items():
+        if abs(v) >= threshold:
+            if not in_ev: in_ev = True; ev_start = t; ev_peak = abs(v)
+            else: ev_peak = max(ev_peak, abs(v))
+        else:
+            if in_ev and ev_peak > threshold:
+                post_h = (ev_start - qu).total_seconds() / 3600
+                onsets.append({
+                    "time":              ev_start.isoformat(),
+                    "post_h":            round(post_h, 2),
+                    "dtec_max_tecu_min": round(ev_peak, 4),
+                    "noise_std":         round(noise, 5),
+                    "snr_dtec":          round(ev_peak / noise, 1),
+                })
+            in_ev = False; ev_peak = 0.0
+    return onsets
+
 
 def decompress(gz):
     out=Path(str(gz).replace('.Z',''))
@@ -274,6 +551,7 @@ def run_event(event, kp_override=None):
     for sid in STATIONS:
         og = rinex_dir / f"{sid}{doy:03d}0.{yr2}o.Z"
         ng = rinex_dir / f"{sid}{doy:03d}0.{yr2}n.Z"
+        print('CHECK', str(og), og.exists())
         if not og.exists(): continue
         op = decompress(og)
         if not op: continue
@@ -292,12 +570,45 @@ def run_event(event, kp_override=None):
         filt = compute_tec(op, nav, scfg['lat'], scfg['lon'], scfg['alt'])
         if filt is not None:
             filts[sid] = filt
-            log.info(f"    → {sid.upper()} OK")
+            log.info(f"    â†’ {sid.upper()} OK")
 
+
+    # Multi-constellation TEC (GLONASS + Galileo cross-check)
+    filts_by_const = {'G': filts}
+    for _const in ('R', 'E'):
+        _cfilts = {}
+        for _sid in STATIONS:
+            _og = rinex_dir / f"{_sid}{doy:03d}0.{yr2}o.Z"
+            if not _og.exists(): continue
+            _op = decompress(_og)
+            if not _op: continue
+            _scfg = STATIONS[_sid]
+            _cf = compute_tec_for_constellation(_op, _const, _scfg['lat'], _scfg['lon'], _scfg['alt'])
+            if _cf is not None: _cfilts[_sid] = _cf
+        if _cfilts: log.info(f"  [{_const}] {len(_cfilts)} station(s) with data")
+        filts_by_const[_const] = _cfilts
     if len(filts) < 2:
         log.warning(f"  Insufficient stations ({len(filts)})")
         return {"detected": False, "reason": "insufficient_stations",
                 "stations_processed": list(filts.keys())}
+
+
+    # dTEC/dt rate-of-change computation
+    # Tsunami wave fronts create sharp dTEC/dt spikes that precede
+    # the sustained amplitude disturbance the main detector sees.
+    dtec_filts  = {}
+    dtec_onsets_map = {}
+    for _sid, _filt in filts.items():
+        _dtec = compute_dtec(_filt)
+        if _dtec is not None:
+            dtec_filts[_sid]      = _dtec
+            dtec_onsets_map[_sid] = get_dtec_onsets(_dtec, quake_utc)
+            _n = len(dtec_onsets_map[_sid])
+            if _n > 0:
+                _best = max(dtec_onsets_map[_sid], key=lambda x: x['snr_dtec'])
+                log.info(f"  [{_sid.upper()}] dTEC/dt: {_n} onset(s) "
+                         f"peak_snr={_best['snr_dtec']:.1f} "
+                         f"at +{_best['post_h']:.1f}h")
 
     # Get onsets
     onsets = {}
@@ -320,6 +631,10 @@ def run_event(event, kp_override=None):
 
     # Best detection in window
     window_pairs = [p for p in pairs if MIN_POST_QUAKE_H <= p['post_h'] <= MAX_POST_QUAKE_H]
+    window_pairs = [p for p in window_pairs
+                   if _pair_zone_ok(p['pair'].split('-')[0],
+                                    p['pair'].split('-')[1],
+                                    epi_lat, epi_lon)]
 
     prediction = {
         "run_utc": datetime.now(timezone.utc).isoformat(),
@@ -363,7 +678,7 @@ def run_event(event, kp_override=None):
                         "CHAT/GUAM may have higher error"
             }
 
-        log.info(f"  ✓ DETECTED: {best['pair']} +{best['post_h']:.1f}h "
+        log.info(f"  âœ“ DETECTED: {best['pair']} +{best['post_h']:.1f}h "
                  f"{best['speed_ms']:.0f}m/s")
         if prediction["wave_forecast"]:
             wf = prediction["wave_forecast"]
@@ -375,7 +690,7 @@ def run_event(event, kp_override=None):
                  "no_coherent_pairs" if not window_pairs else "no_pairs"
         prediction["detected"] = False
         prediction["reason"] = reason
-        log.info(f"  − No detection: {reason}")
+        log.info(f"  âˆ’ No detection: {reason}")
 
     # Save plot
     plot_path = rinex_dir / "tec_plot.png"
@@ -396,8 +711,8 @@ def run_event(event, kp_override=None):
             ax.annotate(f"{d['pair']}\n{d['speed_ms']:.0f}m/s",
                        (d['post_h'], 0.85), xycoords=('data','axes fraction'),
                        fontsize=8, color="green", fontweight="bold")
-        status = "✓ DETECTED" if prediction["detected"] else "− No detection"
-        ax.set_title(f"{event['place']}  Mw{mw}  {quake_utc[:16]} UTC  —  {status}",
+        status = "âœ“ DETECTED" if prediction["detected"] else "âˆ’ No detection"
+        ax.set_title(f"{event['place']}  Mw{mw}  {quake_utc[:16]} UTC  â€”  {status}",
                     fontsize=10, fontweight="bold")
         ax.set_xlabel("Hours after earthquake"); ax.set_ylabel("TEC (TECU)")
         ax.set_xlim(-1, 16); ax.legend(fontsize=7); ax.grid(alpha=0.15)
@@ -408,6 +723,115 @@ def run_event(event, kp_override=None):
         log.info(f"  Saved plot: {plot_path}")
     except Exception as e:
         log.warning(f"  Plot failed: {e}")
+
+
+    # Constellation agreement
+    const_agreement = compute_constellation_agreement(filts_by_const, quake_utc)
+    log.info(f"  CONSTELLATION: {const_agreement['n_detecting']}/{const_agreement['n_available']} "
+             f"detecting  label={const_agreement['agreement_label']}  score={const_agreement['agreement_score']}")
+
+
+    # dTEC/dt corroboration check
+    # Does dTEC/dt onset precede or coincide with amplitude detection?
+    dtec_corroboration = []
+    if prediction.get('detected') and prediction.get('detection'):
+        _det = prediction['detection']
+        _amp_onset = pd.Timestamp(_det['onset_utc'])
+        for _sid in _det['pair'].split('-'):
+            for _de in dtec_onsets_map.get(_sid, []):
+                _dt_min = (_amp_onset - pd.Timestamp(_de['time'])).total_seconds() / 60
+                if -10 <= _dt_min <= 90:  # dTEC/dt within 90min before amplitude
+                    dtec_corroboration.append({
+                        'station':      _sid,
+                        'dtec_post_h':  _de['post_h'],
+                        'amp_post_h':   _det['post_h'],
+                        'lead_min':     round(_dt_min, 1),
+                        'snr_dtec':     _de['snr_dtec'],
+                    })
+                    break
+    dtec_corroborates = len(dtec_corroboration) > 0
+    prediction['dtec_onsets']        = dtec_onsets_map
+    prediction['dtec_corroborates']  = dtec_corroborates
+    prediction['dtec_corroboration'] = dtec_corroboration
+    if dtec_corroborates:
+        log.info(f"  dTEC/dt CORROBORATES detection â€” "
+                 f"{len(dtec_corroboration)} station(s)")
+
+
+    # Ionosonde foF2 cross-check (independent HF radar â€” GIRO Digisonde network)
+    ionosonde_result    = None
+    ionosonde_confirmed = False
+    try:
+        from ionosonde_checker import check_ionosonde_network
+        _elat2 = event.get('lat') or event.get('latitude')
+        _elon2 = event.get('lon') or event.get('longitude')
+        if _elat2 is not None and _elon2 is not None:
+            ionosonde_result    = check_ionosonde_network(quake_utc, _elat2, _elon2)
+            ionosonde_confirmed = ionosonde_result.get('ionosonde_detected', False)
+            _ci = ionosonde_result.get('confirming_stations', 0)
+            _di = ionosonde_result.get('stations_with_data', 0)
+            log.info(f'  IONOSONDE: confirmed={ionosonde_confirmed} {_ci}/{_di} stations')
+    except ImportError:
+        log.debug('  ionosonde_checker not available â€” skipping')
+    except Exception as _ie:
+        log.warning(f'  Ionosonde check failed: {_ie}')
+
+    # DART buoy check (runs after TEC; skipped if wave hasn't had time to arrive)
+    from datetime import datetime as _dt
+    _now      = _dt.now(timezone.utc)
+    _qdt2     = _dt.fromisoformat(quake_utc.replace("Z", "+00:00"))
+    _post_h   = (_now - _qdt2).total_seconds() / 3600
+    dart_result = None
+    dart_score  = 0.0
+    dart_status = "no_buoys"
+    try:
+        from dart_checker import check_dart_network
+        _elat = event.get("lat") or event.get("latitude")
+        _elon = event.get("lon") or event.get("longitude")
+        if _elat is not None and _elon is not None:
+            if _post_h < 1.5:
+                dart_status = "pending"
+                log.info(f"  DART: too early ({_post_h:.1f}h post-quake) â€” skipping")
+            else:
+                dart_result = check_dart_network(quake_utc, _elat, _elon)
+                dart_score  = compute_dart_score(dart_result)
+                if dart_result["buoys_checked"] == 0:
+                    dart_status = "no_buoys"
+                elif dart_result["tsunami_detected"]:
+                    dart_status = "confirmed"
+                else:
+                    dart_status = "negative"
+                log.info(
+                    f"  DART: {dart_status}  score={dart_score:.2f}  "
+                    f"confirming={dart_result['confirming_buoys']}/"
+                    f"{dart_result['buoys_with_data']}"
+                )
+        else:
+            log.warning("  DART: no epicenter coords in event â€” skipping")
+    except Exception as _e:
+        log.warning(f"  DART check failed: {_e}")
+        dart_status = "no_buoys"
+
+    _tec  = prediction.get("detected", False)
+    _sw   = prediction.get("space_weather_score", 0.0)
+    _ti = event.get("tsunamigenic_index")
+    _tw = _ti if _ti is not None else 0.5
+    combined_confidence = compute_combined_confidence(
+        _tec, dart_score, dart_status, _sw, const_agreement,
+        dtec_corroborates=dtec_corroborates,
+        ionosonde_confirmed=ionosonde_confirmed,
+        tsunamigenic_weight=_tw
+    )
+    prediction["constellation_agreement"] = const_agreement
+    prediction["ionosonde_result"]         = ionosonde_result
+    prediction["ionosonde_confirmed"]      = ionosonde_confirmed
+    prediction["dart_result"]              = dart_result
+    prediction["dart_score"]          = dart_score
+    prediction["dart_status"]         = dart_status
+    prediction["combined_confidence"] = combined_confidence
+    log.info(f"  CONFIDENCE: TEC={'yes' if _tec else 'no'}  "
+             f"DART={dart_status}({dart_score:.2f})  sw={_sw:.2f}  "
+             f"combined={combined_confidence:.3f}")
 
     return prediction
 
@@ -421,7 +845,7 @@ def save_queue(q):
 
 def main(event_id=None):
     log.info("="*55)
-    log.info("GPS Tsunami Detector — Detector Runner")
+    log.info("GPS Tsunami Detector â€” Detector Runner")
     log.info(f"Parameters frozen: {PARAM_FREEZE_DATE}")
     log.info("="*55)
 
@@ -441,13 +865,14 @@ def main(event_id=None):
 
     for event in ready:
         try:
-            prediction = run_event(event)
+            kp = fetch_kp(event["quake_utc"])
+            prediction = run_event(event, kp_override=kp)
             event["prediction"] = prediction
             event["detector_run"] = True
             event["detector_run_utc"] = datetime.now(timezone.utc).isoformat()
             event["status"] = "predicted"
             save_queue(queue)
-            log.info(f"Updated queue: {event['usgs_id']} → predicted")
+            log.info(f"Updated queue: {event['usgs_id']} â†’ predicted")
         except Exception as e:
             log.error(f"Detector failed for {event['usgs_id']}: {e}")
             import traceback; traceback.print_exc()
@@ -460,3 +885,4 @@ if __name__ == "__main__":
     parser.add_argument("--event", help="Process specific USGS event ID")
     args = parser.parse_args()
     main(event_id=args.event)
+

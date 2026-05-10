@@ -39,6 +39,7 @@ import detector_runner
 import scorer
 import notify
 import notify_discord
+import notify_twitch
 import dyfi_poller
 
 LOG_FILE = "pipeline.log"
@@ -67,6 +68,13 @@ def run_pipeline():
     usgs_listener.save_queue(queue)
     usgs_listener.write_poll_log(new, queue, near_misses)
     log.info(f"  {new} new candidates")
+
+    # Twitch: Pacific near-misses (Mw5.5+ in zone, did not queue) — exercises alerting without a full candidate
+    if near_misses:
+        try:
+            notify_twitch.send_near_miss_alerts(near_misses)
+        except Exception as tw_err:
+            log.warning("Twitch near-miss notification failed: %s", tw_err)
 
     # Notify on new qualifying events
     if new > 0:
