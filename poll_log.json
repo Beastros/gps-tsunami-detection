@@ -8862,10 +8862,16 @@
       "new_candidates": 0,
       "total_queued": 0,
       "scored": 0
+    },
+    {
+      "ts": "2026-05-10T05:02:29.109454+00:00",
+      "new_candidates": 0,
+      "total_queued": 0,
+      "scored": 0
     }
   ],
-  "last_updated": "2026-05-10T04:47:31.030937+00:00",
-  "total_polls": 1476,
+  "last_updated": "2026-05-10T05:02:29.109454+00:00",
+  "total_polls": 1477,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
