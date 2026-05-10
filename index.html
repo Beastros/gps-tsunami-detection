@@ -608,12 +608,14 @@ function applyPollCountdownTick(){
       setOk('--','No poll rows in poll_log yet');
       return;
     }
-    var due=st.anchorMs+st.intervalSec*1000;
+    var intervalMs=st.intervalSec*1000;
+    var due=st.anchorMs+intervalMs;
     var now=Date.now();
     var late=now-due;
     var lastFmt=fmtDate(st.lastIso);
     if(late>st.graceMs){
-      setStale('GitHub still on last poll '+lastFmt+' — run pipeline + push, or check Task Scheduler.');
+      var remStale=intervalMs-((now-st.anchorMs)%intervalMs);
+      setWarn(fmtCountdownMs(remStale),'STALE · last poll '+lastFmt+' · no new GitHub row. Next expected slot in '+fmtCountdownMs(remStale));
       return;
     }
     if(late>0){
