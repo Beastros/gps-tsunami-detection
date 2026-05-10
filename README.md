@@ -113,7 +113,7 @@ The operational pipeline monitors USGS in real time, downloads GPS RINEX data, r
                           GLONASS/Galileo, dTEC/dt, DART, ionosonde, ShakeMap prior
 [4] Scorer              — scores vs 4-station NOAA tide gauge network at T+24h
 [5] DYFI poller         — writes dyfi_pings.json for the GitHub Pages dashboard map
-[6] Alerting            — email + Discord on new candidates, detections, and pipeline errors
+[6] Alerting            — email + Discord on new candidates, detections, and pipeline errors; optional Twitch chat on near-misses
 ```
 
 ### Scoring — Tide Gauge Network
@@ -145,11 +145,17 @@ EARTHDATA_PASS=your_nasa_earthdata_password
 NOTIFY_EMAIL=your_email@gmail.com
 NOTIFY_APP_PASSWORD=xxxx xxxx xxxx xxxx
 DISCORD_WEBHOOK_URL=your_discord_webhook_url
+
+# Optional — Twitch IRC chat line on each Pacific near-miss (Mw5.5+ in zone, did not queue)
+TWITCH_IRC_NICK=your_bot_username
+TWITCH_IRC_TOKEN=oauth:xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWITCH_IRC_CHANNEL=yourchannel
 ```
 
 - `EARTHDATA_*`: free NASA Earthdata account at urs.earthdata.nasa.gov
 - `NOTIFY_APP_PASSWORD`: Gmail App Password from myaccount.google.com/apppasswords
 - `DISCORD_WEBHOOK_URL`: Discord channel webhook URL — regenerate if ever exposed in chat logs
+- `TWITCH_IRC_*`: IRC password from [twitchapps.com/tmi](https://twitchapps.com/tmi/) (must include the `oauth:` prefix). The account in `TWITCH_IRC_NICK` must match the token. Test any time without a real earthquake: `python notify_twitch.py --test`
 
 ---
 
@@ -167,6 +173,7 @@ dart_checker.py           # 28-buoy NOAA NDBC DART ocean pressure check
 ionosonde_checker.py      # GIRO DIDBase foF2 anomaly detection (5 stations)
 notify.py                 # Gmail email alerts
 notify_discord.py         # Discord webhook alerting
+notify_twitch.py          # Twitch IRC — near-miss seismic + `python notify_twitch.py --test`
 backtest.py               # Historical backtester
 health_check.py           # 23-section system verification (Windows paths; see script header)
 adaptive_thresholds.py    # Bayesian threshold recommender (advisory)
