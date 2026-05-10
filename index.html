@@ -619,7 +619,8 @@ function applyPollCountdownTick(){
       return;
     }
     if(late>0){
-      setWarn('LATE','Last poll '+lastFmt+' · waiting for GitHub (+ '+Math.ceil(late/1000)+' s)');
+      var remLate=intervalMs-((now-st.anchorMs)%intervalMs);
+      setWarn(fmtCountdownMs(remLate),'Last poll '+lastFmt+' · waiting for GitHub (+ '+Math.ceil(late/1000)+' s)');
       return;
     }
     var rem=due-now;
