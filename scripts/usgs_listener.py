@@ -522,6 +522,23 @@ def print_status(queue):
             f"lead={w.get('expected_lead_time_min','?')}min"
         )
 
+def effective_poll_interval_sec():
+    """Next poll cadence for dashboard countdown (2 min when fast_poll.json active)."""
+    try:
+        fp = Path(FAST_POLL_FILE)
+        if not fp.is_file():
+            return POLL_INTERVAL_SEC
+        import json as _json
+        from datetime import datetime as _dt, timezone as _tz
+        st = _json.loads(fp.read_text(encoding="utf-8"))
+        exp = _dt.fromisoformat(st.get("expires_utc", "2000-01-01T00:00:00+00:00"))
+        if st.get("active") and exp > _dt.now(_tz.utc):
+            return int(st.get("poll_interval_sec", FAST_POLL_INTERVAL_SEC))
+    except Exception:
+        pass
+    return POLL_INTERVAL_SEC
+
+
 def write_poll_log(new_candidates, queue, near_misses=None):
     """Append a poll entry and near-miss events to poll_log.json."""
     poll_path = Path(POLL_LOG_FILE)
@@ -550,6 +567,8 @@ def write_poll_log(new_candidates, queue, near_misses=None):
     data["polls"].append(entry)
     data["total_polls"]  = len(data["polls"])
     data["last_updated"] = entry["ts"]
+    # Dashboard: countdown to next expected poll (seconds — matches pipeline sleep)
+    data["expected_poll_interval_sec"] = effective_poll_interval_sec()
 
     # Append near-misses, keep last 100
     if near_misses:

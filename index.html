@@ -149,6 +149,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 .stat-value.stat-warn{color:var(--warn)}
 .stat-value.stat-ok{color:var(--accent2)}
 .stat-value.stat-bad{color:var(--danger)}
+.stat-value.stat-warn{color:var(--warn)}
 /* About tab — 8 sensor cards */
 #tab-about .about-sensor-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
 @media(max-width:640px){#tab-about .about-sensor-grid{grid-template-columns:1fr}}
@@ -168,7 +169,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
     <h1>GPS TSUNAMI DETECTION</h1>
     <p>GPS/GLONASS/Galileo &middot; DART &middot; Digisonde foF2 &middot; Space weather &middot; 8-channel fusion &middot; Pacific basin</p>
   </div>
-  <div class="live-badge"><div class="pulse"></div>LIVE &middot; 15 MIN POLL</div>
+  <div class="live-badge"><div class="pulse"></div>LIVE &middot; NEXT POLL</div>
 </header>
 <div id="alert-banner" style="display:none">
   <div style="display:flex;align-items:center;gap:16px;max-width:1400px;margin:0 auto">
@@ -277,7 +278,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
     <div class="stat-card"><div class="stat-label">Total Polls</div><div class="stat-value" id="st-polls">--</div><div class="stat-sub">USGS API calls since launch</div></div>
     <div class="stat-card"><div class="stat-label">Candidates Queued</div><div class="stat-value" id="st-queued">--</div><div class="stat-sub">Pacific Mw6.5+ events</div></div>
     <div class="stat-card"><div class="stat-label">Events Scored</div><div class="stat-value" id="st-scored">--</div><div class="stat-sub">Predictions vs ground truth</div></div>
-    <div class="stat-card"><div class="stat-label">Last Poll</div><div class="stat-value" id="st-last" style="font-size:16px;padding-top:5px">--</div><div class="stat-sub" id="st-last-sub">--</div></div>
+    <div class="stat-card"><div class="stat-label">Next poll</div><div class="stat-value" id="st-last" style="font-size:16px;padding-top:5px">--</div><div class="stat-sub" id="st-last-sub">Countdown from repo poll_log</div></div>
   </div>
 
   <p class="section-title">Station Network &middot; Pacific Basin</p>
@@ -405,7 +406,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 <div class="main" style="min-width:0;max-width:100%">
   <p class="section-title">Operations Log</p>
   <div class="stats-row" style="margin-bottom:16px">
-    <div class="stat-card"><div class="stat-label">Last poll</div><div class="stat-value" id="pl-age" style="font-size:18px">--</div><div class="stat-sub" id="pl-age-sub">UTC age</div></div>
+    <div class="stat-card"><div class="stat-label">Next poll</div><div class="stat-value" id="pl-age" style="font-size:18px">--</div><div class="stat-sub" id="pl-age-sub">Countdown from last row in poll_log.json</div></div>
     <div class="stat-card"><div class="stat-label">Total polls</div><div class="stat-value" id="pl-total">--</div><div class="stat-sub">Since log start</div></div>
     <div class="stat-card"><div class="stat-label">Near-misses (24h)</div><div class="stat-value" id="pl-miss24">--</div><div class="stat-sub">Pacific Mw5.5+ logged</div></div>
     <div class="stat-card"><div class="stat-label">Poll health</div><div class="stat-value stat-ok" id="pl-health" style="font-size:18px">--</div><div class="stat-sub" id="pl-health-sub">Last 50 rows</div></div>
@@ -536,17 +537,107 @@ async function loadSW(){
 const BASE='https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/';
 function fmtDate(ts){if(!ts)return'--';const d=new Date(ts);if(isNaN(d))return'--';return d.toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});}
 
+window._pollCD={iv:null,anchorMs:null,intervalSec:900,lastIso:null,pollFetchOk:true,graceMs:120000};
+
+function stopPollCountdown(){
+  if(window._pollCD.iv){clearInterval(window._pollCD.iv);window._pollCD.iv=null;}
+}
+
+function fmtCountdownMs(ms){
+  if(ms<=0)return'00:00';
+  var s=Math.floor(ms/1000),m=Math.floor(s/60);s=s%60;
+  return m+':'+(s<10?'0':'')+s;
+}
+
+function applyPollCountdownTick(){
+  var st=window._pollCD;
+  var plA=el('pl-age'),plS=el('pl-age-sub'),stL=el('st-last'),stS=el('st-last-sub');
+  if(!plA)return;
+  function setErr(msg){
+    plA.textContent='ERROR';plA.className='stat-value stat-bad';
+    plS.textContent=msg||'';
+    if(stL){stL.textContent='ERROR';stL.className='stat-value stat-bad';if(stS)stS.textContent=msg||'';}
+  }
+  function setWarn(line,sub){
+    plA.textContent=line;plA.className='stat-value stat-warn';
+    plS.textContent=sub||'';
+    if(stL){stL.textContent=line;stL.className='stat-value stat-warn';if(stS)stS.textContent=sub||'';}
+  }
+  function setOk(line,sub){
+    plA.textContent=line;plA.className='stat-value';
+    plS.textContent=sub||'';
+    if(stL){stL.textContent=line;if(stL)stL.className='stat-value';if(stS)stS.textContent=sub||'';}
+  }
+  if(!st.pollFetchOk){
+    setErr('Could not load poll_log.json from GitHub');
+    return;
+  }
+  if(st.anchorMs==null||isNaN(st.anchorMs)){
+    setOk('--','No poll rows in poll_log yet');
+    return;
+  }
+  var due=st.anchorMs+st.intervalSec*1000;
+  var now=Date.now();
+  var late=now-due;
+  var lastFmt=fmtDate(st.lastIso)+' UTC';
+  if(late>st.graceMs){
+    setErr('No new poll row within '+Math.round(st.intervalSec/60)+' min + '+Math.round(st.graceMs/60000)+' min grace — check pipeline / git push');
+    return;
+  }
+  if(late>0){
+    setWarn('LATE','Last poll '+lastFmt+' · waiting for GitHub (+ '+Math.ceil(late/1000)+' s)');
+    return;
+  }
+  var rem=due-now;
+  setOk(fmtCountdownMs(rem),'Last poll '+lastFmt+' · next row due ~'+fmtCountdownMs(rem));
+}
+
+function restartPollCountdownFromLog(d){
+  stopPollCountdown();
+  var st=window._pollCD;
+  st.pollFetchOk=true;
+  st.intervalSec=900;
+  if(d&&d.expected_poll_interval_sec!=null&&!isNaN(+d.expected_poll_interval_sec)&&+d.expected_poll_interval_sec>0)
+    st.intervalSec=+d.expected_poll_interval_sec;
+  var polls=d&&d.polls||[];
+  if(!polls.length){
+    st.anchorMs=null;st.lastIso=null;
+    applyPollCountdownTick();
+    return;
+  }
+  var last=polls[polls.length-1];
+  var t=new Date(last.ts).getTime();
+  if(isNaN(t)){
+    st.anchorMs=null;st.lastIso=null;
+    applyPollCountdownTick();
+    return;
+  }
+  st.anchorMs=t;
+  st.lastIso=last.ts;
+  st.iv=setInterval(applyPollCountdownTick,1000);
+  applyPollCountdownTick();
+}
+
 async function loadPipeline(){
+  window._pollCD=window._pollCD||{};
   try{
     const[prRes,lrRes,qrRes]=await Promise.all([
       fetch(BASE+'poll_log.json'),
       fetch(BASE+'running_log.json'),
       fetch(BASE+'event_queue.json')
     ]);
-    const pr=prRes.ok?await prRes.json():null;
+    window._pollCD.pollFetchOk=!!prRes.ok;
+    var pr=null;
+    if(prRes.ok){
+      try{pr=await prRes.json();}catch(_e){window._pollCD.pollFetchOk=false;}
+    }
     const lr=lrRes.ok?await lrRes.json():null;
     const queue=qrRes.ok?await qrRes.json():null;
     if(pr)renderPoll(pr);
+    else{
+      stopPollCountdown();
+      restartPollCountdownFromLog({polls:[],expected_poll_interval_sec:900});
+    }
     if(lr)renderLog(lr);
     if(queue){
       updateAlertBanner(queue);
@@ -556,7 +647,12 @@ async function loadPipeline(){
         if(nScored>0)el('st-scored').textContent=String(nScored);
       }
     }
-  }catch(e){console.error(e);}
+  }catch(e){
+    console.error(e);
+    window._pollCD.pollFetchOk=false;
+    stopPollCountdown();
+    restartPollCountdownFromLog(null);
+  }
 }
 
 function plReasonStyle(reason){
@@ -587,13 +683,11 @@ function renderPoll(d){
   el('st-polls').textContent=d.total_polls??'--';
   var railU=el('pl-rail-updated');
   if(railU)railU.textContent=d.last_updated?fmtDate(d.last_updated)+' (repo)':'--';
-  var plAge=el('pl-age'),plAgeSub=el('pl-age-sub'),plTot=el('pl-total'),plM24=el('pl-miss24'),plHl=el('pl-health'),plHlSub=el('pl-health-sub');
+  var plTot=el('pl-total'),plM24=el('pl-miss24'),plHl=el('pl-health'),plHlSub=el('pl-health-sub');
   if(plTot)plTot.textContent=d.total_polls!=null?String(d.total_polls):'--';
   var polls=d.polls||[];
   var now=Date.now(),h24=86400000;
   if(!polls.length){
-    if(plAge)plAge.textContent='--';
-    if(plAgeSub)plAgeSub.textContent='No poll rows in JSON';
     if(plM24)plM24.textContent='--';
     if(plHl){plHl.textContent='--';plHl.className='stat-value';}
     if(plHlSub)plHlSub.textContent='—';
@@ -602,14 +696,7 @@ function renderPoll(d){
   }else{
     var last=polls[polls.length-1];
     var t=new Date(last.ts);
-    el('st-last').textContent=isNaN(t)?'--':t.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false});
-    el('st-last-sub').textContent=isNaN(t)?'--':t.toLocaleDateString('en-US',{month:'short',day:'numeric'});
     el('st-queued').textContent=last.total_queued!=null?String(last.total_queued):'--';
-    if(plAge&&!isNaN(t)){
-      var mins=Math.floor((now-t.getTime())/60000);
-      plAge.textContent=mins<120?mins+'m':Math.floor(mins/60)+'h';
-      plAgeSub.textContent=fmtDate(last.ts)+' UTC';
-    }else if(plAge){plAge.textContent='--';if(plAgeSub)plAgeSub.textContent='';}
     var slice50=polls.slice(-50);
     var errN=slice50.filter(function(p){return p.error;}).length;
     if(plHl){
@@ -640,6 +727,7 @@ function renderPoll(d){
   }else{
     el('seismic-body').innerHTML='<div class="empty-state"><div class="empty-icon">🌍</div><div class="empty-title">No near-miss rows</div><div class="empty-sub">Pacific Mw5.5+ that did not queue. Orange rings on the Dashboard use this same list.</div></div>';
   }
+  restartPollCountdownFromLog(d);
 }
 
 function renderLog(d){
