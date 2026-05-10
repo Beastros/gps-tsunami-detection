@@ -1,6 +1,6 @@
 # GPS Ionospheric Tsunami Detection
 
-An **8-channel** real-time sensor fusion pipeline for Pacific tsunami early warning using GPS Total Electron Content (TEC) perturbations fused with ocean pressure buoys, ionosonde measurements, constellation cross-validation, DYFI felt reports, and seismic focal mechanism scoring (plus a dedicated space-weather quality gate on TEC).
+An **8-channel** real-time sensor fusion pipeline for Pacific tsunami early warning using GPS Total Electron Content (TEC) perturbations fused with ocean pressure buoys, ionosonde measurements (seven GIRO stations in the checker), constellation cross-validation, DYFI felt reports, and seismic focal mechanism scoring (plus a dedicated space-weather quality gate on TEC).
 
 **Independent research project.** All data sourced from free public APIs and open-source tools. Zero cost to run.
 
@@ -27,7 +27,7 @@ This spatiotemporal consistency test eliminates 94–98% of single-station false
 | GLONASS + Galileo | Same RINEX, R/E satellites | ±0.10 constellation agreement bonus |
 | dTEC/dt | Derived from GPS TEC | +0.05 corroboration bonus |
 | DART ocean pressure | NOAA NDBC — 28 buoys | +0.45 |
-| GIRO ionosonde foF2 | GIRO DIDBase — 5 stations | +0.12 |
+| GIRO ionosonde foF2 | GIRO DIDBase — 7 stations | +0.12 |
 | DYFI felt reports | USGS event detail API | +0.02 / +0.04 |
 | ShakeMap focal mechanism | USGS moment tensor API | Hard gate + tsunamigenic prior weight |
 
@@ -146,6 +146,9 @@ NOTIFY_EMAIL=your_email@gmail.com
 NOTIFY_APP_PASSWORD=xxxx xxxx xxxx xxxx
 DISCORD_WEBHOOK_URL=your_discord_webhook_url
 
+# Optional — override path for dyfi_pings.json (default: same folder as dyfi_poller.py)
+# DYFI_PINGS_OUTPUT=/path/to/dyfi_pings.json
+
 # Optional — Twitch IRC chat line on each Pacific near-miss (Mw5.5+ in zone, did not queue)
 TWITCH_IRC_NICK=your_bot_username
 TWITCH_IRC_TOKEN=oauth:xxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -156,21 +159,22 @@ TWITCH_IRC_CHANNEL=yourchannel
 - `NOTIFY_APP_PASSWORD`: Gmail App Password from myaccount.google.com/apppasswords
 - `DISCORD_WEBHOOK_URL`: Discord channel webhook URL — regenerate if ever exposed in chat logs
 - `TWITCH_IRC_*`: IRC password from [twitchapps.com/tmi](https://twitchapps.com/tmi/) (must include the `oauth:` prefix). The account in `TWITCH_IRC_NICK` must match the token. Test any time without a real earthquake: `python notify_twitch.py --test`
+- `DYFI_PINGS_OUTPUT`: only if `dyfi_pings.json` should be written somewhere other than the pipeline directory
 
 ---
 
 ## Repository Structure
 
 ```
-# Live operational pipeline (pipeline folder — not all files committed to repo)
+# Live operational pipeline (clone this repo; add dart_checker.py locally if you use full DART fusion)
 pipeline.py               # Master orchestrator — runs all stages every 15 min
 usgs_listener.py          # Polls USGS, filters focal mechanism via ShakeMap
 rinex_downloader.py       # Downloads RINEX from NASA CDDIS (Earthdata session auth)
 detector_runner.py        # 8-channel fusion detector + zone constraints
 scorer.py                 # Scores predictions vs 4-station tide gauge network
 space_weather.py          # 4-channel NOAA SWPC space weather quality score
-dart_checker.py           # 28-buoy NOAA NDBC DART ocean pressure check
-ionosonde_checker.py      # GIRO DIDBase foF2 anomaly detection (5 stations)
+dart_checker.py           # 28-buoy DART check (lazy-import in detector; not shipped here—copy from your deploy bundle)
+ionosonde_checker.py      # GIRO DIDBase foF2 anomaly detection (7 stations configured)
 notify.py                 # Gmail email alerts
 notify_discord.py         # Discord webhook alerting
 notify_twitch.py          # Twitch IRC — near-miss seismic + `python notify_twitch.py --test`
@@ -179,7 +183,7 @@ health_check.py           # 23-section verification — uses this folder by defa
 adaptive_thresholds.py    # Bayesian threshold recommender (advisory)
 dyfi_checker.py           # DYFI contribution helper (USGS event API)
 dyfi_poller.py            # DYFI shake ping map — Mw5.0+ Pacific → dyfi_pings.json (dashboard)
-run_and_push.bat          # Task Scheduler target — runs pipeline + git push
+run_and_push.bat          # Task Scheduler target (or push_logs.bat in-repo) — runs pipeline + git push
 CLAUDE_CODE_RULES.md      # Environment reference — Windows/deployment pitfalls
 
 # Live data (auto-updated every 15 min by pipeline)
@@ -218,7 +222,7 @@ figures/
 | NOAA SWPC | Space weather (e.g. Kp, IMF Bz, solar wind speed, GOES X-ray; feeds used by pipeline + dashboard) | services.swpc.noaa.gov |
 | NOAA NDBC | DART ocean pressure buoys (28 Pacific stations) | ndbc.noaa.gov |
 | USGS | Real-time earthquake feed + ShakeMap moment tensors | earthquake.usgs.gov |
-| GIRO DIDBase | Ionosonde foF2 measurements (5 stations) | giro.uml.edu/didbase |
+| GIRO DIDBase | Ionosonde foF2 measurements (7 stations in ionosonde_checker) | giro.uml.edu/didbase |
 
 ---
 
@@ -237,7 +241,7 @@ pip install numpy scipy pandas matplotlib georinex ncompress requests
 
 ## Health Check (23 Sections)
 
-`health_check.py` verifies the full system in one pass. It resolves **`PIPELINE_DIR`** to the directory containing `health_check.py` (your clone or copied pipeline folder). Optional: set **`GPS_TSUNAMI_PIPELINE_DIR`** and **`GPS_TSUNAMI_REPO_DIR`** if your Task Scheduler working directory and git clone differ. Windows-only sections (Task Scheduler) warn on non-Windows hosts. Sections:
+`health_check.py` verifies the full system in one pass. It resolves **`PIPELINE_DIR`** to the directory containing `health_check.py` (your clone or copied pipeline folder). If that file is the copy under **`scripts/`**, the default is the **parent** directory (repo root). Optional: set **`GPS_TSUNAMI_PIPELINE_DIR`** and **`GPS_TSUNAMI_REPO_DIR`** if your Task Scheduler working directory and git clone differ. **`dart_checker`** is optional: the check warns if the module file is missing. Windows-only sections (Task Scheduler) warn on non-Windows hosts. Sections:
 
 ```
 [ 1] Required files          [11] NOAA tide gauge (CO-OPS)
@@ -277,6 +281,7 @@ pip install numpy scipy pandas matplotlib georinex ncompress requests
 - [x] Adaptive threshold recommender (Bayesian, advisory)
 - [x] Public dashboard — 4 tabs (Dashboard, Events, Poll Log, About)
 - [x] Discord + email alerting
+- [x] Optional Twitch IRC lines on Pacific near-miss seismic (`notify_twitch.py`)
 - [x] 23-section health check
 - [x] Historical backtester
 - [ ] First live scored event (awaiting qualifying Pacific event)

@@ -2,6 +2,8 @@
 ## Project Master Plan & Continuation Document — v7
 Last updated: April 28, 2026 (V7 session)  |  Status: LIVE — 7-channel fusion + fast poll mode  |  github.com/Beastros/gps-tsunami-detection
 
+**Errata (2026-05-10):** Treat **`README.md` on `main`** as the live spec for **8-channel** fusion, **`notify_twitch`** near-miss IRC, portable **`health_check`** (`GPS_TSUNAMI_*`, `scripts/` default root), **`DYFI_PINGS_OUTPUT`**, optional **`dart_checker.py`** (not in public git), and **`scripts/`** mirrors of the pipeline stack. Prose below still says “7-channel” / fixed Windows paths in places; use this errata when they conflict.
+
 ---
 
 # Instructions for New Claude Session

@@ -18,11 +18,20 @@ import json
 import logging
 import requests
 from datetime import datetime, timezone, timedelta
+from pathlib import Path
 
 log = logging.getLogger(__name__)
 
-REPO_DIR = r"C:\Users\Mike\Desktop\repo"
-OUTPUT   = os.path.join(REPO_DIR, "dyfi_pings.json")
+
+def _pings_output_path() -> Path:
+    """Write next to this module by default (repo root). Override with DYFI_PINGS_OUTPUT."""
+    override = os.environ.get("DYFI_PINGS_OUTPUT", "").strip()
+    if override:
+        return Path(override).expanduser()
+    return Path(__file__).resolve().parent / "dyfi_pings.json"
+
+
+OUTPUT = str(_pings_output_path())
 
 USGS_URL = (
     "https://earthquake.usgs.gov/fdsnws/event/1/query"

@@ -66,7 +66,7 @@ if REPO_DIR != PIPELINE_DIR:
     info(f"REPO_DIR     = {REPO_DIR}")
 REQUIRED = [
     "pipeline.py","usgs_listener.py","rinex_downloader.py","detector_runner.py",
-    "scorer.py","dart_checker.py","space_weather.py","ionosonde_checker.py",
+    "scorer.py","space_weather.py","ionosonde_checker.py",
     "notify.py","notify_discord.py","notify_twitch.py","backtest.py","adaptive_thresholds.py",
     "health_check.py",
 ]
@@ -74,6 +74,11 @@ for f in REQUIRED:
     p = PIPELINE_DIR / f
     if p.exists(): ok(f)
     else: fail(f"{f} -- MISSING"); issues.append(f"Missing: {f}")
+_p_dart = PIPELINE_DIR / "dart_checker.py"
+if _p_dart.exists():
+    ok("dart_checker.py (optional deploy module)")
+else:
+    warn("dart_checker.py not in tree — DART fusion is skipped until you add this module")
 _batch_names = ("run_and_push.bat", "push_logs.bat")
 _batch_found = next((n for n in _batch_names if (PIPELINE_DIR / n).exists()), None)
 if _batch_found:
@@ -109,7 +114,7 @@ else:
 # â”€â”€ 3. Python module imports â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 3 ] Python module imports")
 MODULES = ["numpy","scipy","pandas","matplotlib","georinex","ncompress","requests",
-           "dart_checker","space_weather","ionosonde_checker","notify","notify_discord","notify_twitch"]
+           "space_weather","ionosonde_checker","notify","notify_discord","notify_twitch"]
 os.chdir(PIPELINE_DIR)
 for mod in MODULES:
     try:
@@ -117,6 +122,11 @@ for mod in MODULES:
         ok(mod)
     except ImportError as e:
         fail(f"{mod} -- {e}"); issues.append(f"Import failed: {mod}")
+try:
+    importlib.import_module("dart_checker")
+    ok("dart_checker (optional)")
+except ImportError:
+    warn("dart_checker import skipped — install dart_checker.py for full DART checks")
 
 # â”€â”€ 4. Pipeline module integrity â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 4 ] Pipeline module integrity")
@@ -140,6 +150,8 @@ try:
     import dart_checker as dc
     buoy_count = len(getattr(dc, "DART_BUOYS", []))
     ok(f"dart_checker loaded -- {buoy_count} buoys configured")
+except ImportError:
+    warn("dart_checker not present — skipping buoy list integrity check")
 except Exception as e:
     fail(f"dart_checker check failed: {e}"); issues.append("dart_checker integrity check failed")
 
