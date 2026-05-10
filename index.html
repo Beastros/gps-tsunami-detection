@@ -586,7 +586,7 @@ function applyPollCountdownTick(){
   var late=now-due;
   var lastFmt=fmtDate(st.lastIso)+' UTC';
   if(late>st.graceMs){
-    setStale('No new row on GitHub after last poll '+lastFmt+' — pipeline or git push likely stopped (Poll health only checks row flags, not freshness).');
+    setStale('GitHub still on last poll '+lastFmt+' — run pipeline + push, or check Task Scheduler.');
     return;
   }
   if(late>0){
