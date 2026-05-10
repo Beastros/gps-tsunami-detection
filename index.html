@@ -615,7 +615,7 @@ function applyPollCountdownTick(){
     var lastFmt=fmtDate(st.lastIso);
     if(late>st.graceMs){
       var remStale=intervalMs-((now-st.anchorMs)%intervalMs);
-      setWarn(fmtCountdownMs(remStale),'STALE · last poll '+lastFmt+' · no new GitHub row. Next expected slot in '+fmtCountdownMs(remStale));
+      setWarn(fmtCountdownMs(remStale),'STALE · last poll '+lastFmt+' · no new GitHub row yet');
       return;
     }
     if(late>0){
@@ -623,7 +623,7 @@ function applyPollCountdownTick(){
       return;
     }
     var rem=due-now;
-    setOk(fmtCountdownMs(rem),'Last poll '+lastFmt+' · next row due ~'+fmtCountdownMs(rem));
+    setOk(fmtCountdownMs(rem),'Last poll '+lastFmt);
   }finally{
     syncPipelineJsonRefresh();
   }
