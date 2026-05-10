@@ -259,12 +259,12 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">DART</div>
       <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
-      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">28 buoys</div>
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">34 Pacific buoys</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Ionosonde</div>
       <div style="font-family:var(--font-m);font-size:11px;color:var(--accent2)">● ACTIVE</div>
-      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">GIRO foF2 5-sta</div>
+      <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);margin-top:4px">GIRO foF2 7-sta</div>
     </div>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:10px;text-align:center">
       <div style="font-family:var(--font-m);font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">ShakeMap</div>
@@ -952,13 +952,43 @@ function initMap() {
     {id:'CH853',name:'Chatham Is.',lat:-43.93,lon:-176.57},
     {id:'AT138',name:'Townsville',lat:-19.63,lon:146.85},
   ];
+  // Canonical Pacific DART station set for this project phase (34 stations)
+  // Source snapshot: NOAA NDBC DART listing (2026-05-10 UTC)
   var DART=[
-    [19.619,-154.063],[24.423,-162.058],[51.019,-154.059],[54.973,-162.071],
-    [53.618,-164.988],[57.845,-137.981],[45.858,-128.826],[59.676,-144.003],
-    [53.0,-129.8],[40.838,-129.079],[37.374,-129.803],[40.249,-134.063],
-    [48.754,-129.986],[30.518,152.116],[28.994,178.006],[19.276,136.329],
-    [-18.032,-86.485],[-20.671,-109.388],[-14.91,-105.172],[-22.81,-79.01],
-    [-1.877,-82.398],[-1.723,-90.289],[-18.861,-173.036],[-32.54,-177.58],[-9.924,99.562],
+    {id:'21413',lat:30.53333,lon:152.13167,name:'SE of Tokyo, Japan'},
+    {id:'21414',lat:48.96732,lon:178.21223,name:'SW of Adak, AK'},
+    {id:'21415',lat:50.15000,lon:171.93333,name:'S of Attu, Alaska'},
+    {id:'21416',lat:48.12167,lon:163.32834,name:'SE of Kamchatka'},
+    {id:'21418',lat:38.72833,lon:148.64999,name:'NE of Tokyo, Japan'},
+    {id:'21419',lat:44.43500,lon:155.71666,name:'SE of Kuril Islands'},
+    {id:'21420',lat:28.89060,lon:135.02280,name:'SE of Miyazaki, Japan'},
+    {id:'32401',lat:-20.46861,lon:-73.43278,name:'W of Iquique, Chile'},
+    {id:'32402',lat:-26.73472,lon:-73.97750,name:'Coast of Caldera, Chile'},
+    {id:'32411',lat:4.96000,lon:-90.87500,name:'WSW of Panama City'},
+    {id:'32413',lat:-7.40667,lon:-93.51722,name:'WNW of Lima, Peru'},
+    {id:'43412',lat:16.03667,lon:-106.97500,name:'SW of Manzanillo, Mexico'},
+    {id:'43413',lat:11.00500,lon:-100.09667,name:'SSW of Acapulco, Mexico'},
+    {id:'46402',lat:50.97833,lon:-163.94833,name:'S of Dutch Harbor, AK'},
+    {id:'46403',lat:52.66833,lon:-156.97000,name:'SE of Shumagin Island, AK'},
+    {id:'46404',lat:45.84833,lon:-128.77499,name:'W of Astoria, OR'},
+    {id:'46407',lat:42.70834,lon:-127.82500,name:'W of Coos Bay, OR'},
+    {id:'46408',lat:49.64833,lon:-169.88834,name:'NW Pacific south of AK'},
+    {id:'46409',lat:55.32333,lon:-148.55167,name:'SE of Kodiak, AK'},
+    {id:'46410',lat:57.63233,lon:-143.74966,name:'SE of Anchorage, AK'},
+    {id:'46411',lat:39.33915,lon:-127.07259,name:'W of Mendocino Bay, CA'},
+    {id:'46413',lat:48.00167,lon:-174.20166,name:'SSE of Adak Island, AK'},
+    {id:'46414',lat:53.72550,lon:-152.48334,name:'SE of Chirikof Island, AK'},
+    {id:'46415',lat:52.97467,lon:-139.94034,name:'SW of Juneau, AK'},
+    {id:'46416',lat:49.90000,lon:-134.40712,name:'W of Vancouver, BC'},
+    {id:'46419',lat:48.80660,lon:-129.62219,name:'WNW of Seattle, WA'},
+    {id:'51407',lat:19.55578,lon:-156.53592,name:'SE of Honolulu, HI'},
+    {id:'51425',lat:-9.50500,lon:-176.26167,name:'NW of Apia, Samoa'},
+    {id:'52401',lat:19.23953,lon:155.72929,name:'NE of Saipan'},
+    {id:'52402',lat:11.92593,lon:153.90614,name:'NW of Kwajalein'},
+    {id:'52403',lat:4.05000,lon:145.58833,name:'SW of Truk'},
+    {id:'52404',lat:20.62727,lon:132.14372,name:'NE of Manila, Philippines'},
+    {id:'52405',lat:13.03350,lon:132.15067,name:'W of Agana, Guam'},
+    {id:'52406',lat:-5.37365,lon:164.99097,name:'NE of Guadalcanal'},
   ];
   var SZ=[
     [[153,46],[147,43],[143,40],[141,37],[140,34],[141,31],[140,28],[142,26],[144,22],[147,18],[145,14],[142,11]],
@@ -985,12 +1015,12 @@ function initMap() {
     });
 
     DART.forEach(function(b){
-      var p=proj([b[1],b[0]]);
+      var p=proj([b.lon,b.lat]);
       if(!p)return;
       svg.append('circle').attr('cx',p[0]).attr('cy',p[1]).attr('r',3.5)
         .attr('fill','none').attr('stroke','#0abde3').attr('stroke-width',1.4).attr('opacity',0.8)
         .style('cursor','pointer')
-        .on('mouseover',function(e){showTip('<b style="color:#0abde3">DART buoy</b><br><span style="color:#6a9cc0">NOAA NDBC pressure sensor</span>',e);})
+        .on('mouseover',function(e){showTip('<b style="color:#0abde3">DART '+b.id+'</b><br>'+b.name+'<br><span style="color:#6a9cc0">NOAA NDBC pressure sensor</span>',e);})
         .on('mouseout',hideTip);
     });
 

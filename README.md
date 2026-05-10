@@ -26,7 +26,7 @@ This spatiotemporal consistency test eliminates 94–98% of single-station false
 | Space weather gate | 4-channel NOAA SWPC | Penalty multiplier on TEC weight |
 | GLONASS + Galileo | Same RINEX, R/E satellites | ±0.10 constellation agreement bonus |
 | dTEC/dt | Derived from GPS TEC | +0.05 corroboration bonus |
-| DART ocean pressure | NOAA NDBC — 28 buoys | +0.45 |
+| DART ocean pressure | NOAA NDBC — 34 Pacific Ring-of-Fire buoys (configured) | +0.45 |
 | GIRO ionosonde foF2 | GIRO DIDBase — 7 stations | +0.12 |
 | DYFI felt reports | USGS event detail API | +0.02 / +0.04 |
 | ShakeMap focal mechanism | USGS moment tensor API | Hard gate + tsunamigenic prior weight |
@@ -169,7 +169,7 @@ rinex_downloader.py       # Downloads RINEX from NASA CDDIS (Earthdata session a
 detector_runner.py        # 8-channel fusion detector + zone constraints
 scorer.py                 # Scores predictions vs 4-station tide gauge network
 space_weather.py          # 4-channel NOAA SWPC space weather quality score
-dart_checker.py           # 28-buoy DART check (lazy-import in detector; not shipped here—copy from your deploy bundle)
+dart_checker.py           # 34-buoy DART check (configured set) (lazy-import in detector; not shipped here—copy from your deploy bundle)
 ionosonde_checker.py      # GIRO DIDBase foF2 anomaly detection (7 stations configured)
 notify.py                 # Gmail email alerts
 notify_discord.py         # Discord webhook — predictions, near-misses, pipeline errors
@@ -215,7 +215,7 @@ figures/
 | NASA CDDIS | RINEX GPS/GLONASS/Galileo observations | cddis.nasa.gov/archive/gps/data/daily/ |
 | NOAA CO-OPS | Tide gauge water level | api.tidesandcurrents.noaa.gov |
 | NOAA SWPC | Space weather (e.g. Kp, IMF Bz, solar wind speed, GOES X-ray; feeds used by pipeline + dashboard) | services.swpc.noaa.gov |
-| NOAA NDBC | DART ocean pressure buoys (28 Pacific stations) | ndbc.noaa.gov |
+| NOAA NDBC | DART ocean pressure buoys (34 configured Pacific Ring-of-Fire stations) | ndbc.noaa.gov |
 | USGS | Real-time earthquake feed + ShakeMap moment tensors | earthquake.usgs.gov |
 | GIRO DIDBase | Ionosonde foF2 measurements (7 stations in ionosonde_checker) | giro.uml.edu/didbase |
 

@@ -65,7 +65,7 @@ When a tsunami crosses the open ocean it generates an Atmospheric Gravity Wave (
 - Downloads GPS RINEX files from NASA CDDIS for upstream anchor stations
 - Computes TEC perturbations for GPS, GLONASS, and Galileo constellations independently
 - Computes dTEC/dt (rate of change) as a secondary wave-front feature
-- Checks 28 DART buoys for ocean pressure anomalies
+- Checks configured Pacific Ring-of-Fire DART buoys for ocean pressure anomalies
 - Checks 5 GIRO Digisonde stations for independent foF2 perturbations
 - Fuses all channels into combined_confidence (0–1)
 - Scores predictions 24h later against 4-station NOAA tide gauge network
@@ -97,7 +97,7 @@ When a tsunami crosses the open ocean it generates an Atmospheric Gravity Wave (
 | rinex_downloader.py | Downloads RINEX from NASA CDDIS | LIVE — Earthdata session auth fixed V3 |
 | detector_runner.py | 7-channel TEC detector + zone constraints | LIVE — V5 zone constraint added |
 | scorer.py | Binary + confidence scoring | LIVE — v2 scorer |
-| dart_checker.py | 28 DART buoys | LIVE |
+| dart_checker.py | DART buoy network (configured set) | LIVE |
 | space_weather.py | 4-channel NOAA SWPC quality score | LIVE — V2 |
 | ionosonde_checker.py | GIRO DIDBase foF2 anomaly detection | LIVE — V2 |
 | notify.py | Gmail email alert | LIVE |
@@ -141,7 +141,7 @@ combined        = min(sum, 1.0)
 | Space weather gate | 4 NOAA SWPC feeds | Penalty on TEC weight | LIVE |
 | GLONASS + Galileo | Same RINEX, R/E sats | +0.10 agreement bonus | ACTIVE |
 | dTEC/dt | Derived from GPS TEC | +0.05 corroboration | ACTIVE |
-| DART ocean pressure | NOAA NDBC — 28 buoys | +0.45 | ACTIVE |
+| DART ocean pressure | NOAA NDBC — configured Pacific DART set | +0.45 | ACTIVE |
 | GIRO ionosonde foF2 | GIRO DIDBase — 5 stations | +0.12 | ACTIVE |
 | ShakeMap focal mechanism | USGS moment tensor API | Hard gate + tsunamigenic_weight prior | ACTIVE |
 
@@ -188,7 +188,7 @@ combined        = min(sum, 1.0)
 GPS-TEC coherence only. 4-station Kp gate. TPR=1.00, FPR=0.00 on 8 validated events.
 
 ## V2 (pre-V3)
-Added: DART 28-buoy network, GIRO ionosonde 5 stations, GLONASS+Galileo constellation, dTEC/dt, ShakeMap focal mechanism filter, 4-channel space weather quality score, combined_confidence fusion formula, confidence calibration tracking, V2 scorer.
+Added: DART network integration, GIRO ionosonde 5 stations, GLONASS+Galileo constellation, dTEC/dt, ShakeMap focal mechanism filter, 4-channel space weather quality score, combined_confidence fusion formula, confidence calibration tracking, V2 scorer.
 
 ## V3 (April 26, 2026)
 Added: Discord webhook alerting, historical backtester, CDDIS auth fix, README updated to V2, UTF-8 logging fixed.
