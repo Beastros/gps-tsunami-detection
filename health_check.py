@@ -9,6 +9,12 @@ Run anytime to confirm the system is healthy.
 Green = good. Yellow = warning. Red = action needed.
 Last updated: V4 session (April 26 2026)
 Sections: 23
+
+Paths (no hard-coded Desktop):
+  Defaults to the directory containing this script (clone or copied pipeline tree).
+  Override with environment variables if your layout splits repo vs runtime folder:
+    GPS_TSUNAMI_PIPELINE_DIR  — folder with pipeline.py, .env, JSON logs
+    GPS_TSUNAMI_REPO_DIR      — git checkout (defaults to same as pipeline dir)
 """
 
 import os, json, subprocess, smtplib, importlib
@@ -26,8 +32,18 @@ def info(msg): print(f"  {CYAN}->{RESET}  {msg}")
 def head(msg): print(f"\n{BOLD}{msg}{RESET}")
 
 issues = []
-PIPELINE_DIR = Path(r"C:\Users\Mike\Desktop\Earthquake Feed Listener Engine")
-REPO_DIR     = Path(r"C:\Users\Mike\Desktop\repo")
+
+
+def _resolve_dir(env_name: str, default: Path) -> Path:
+    raw = os.environ.get(env_name, "").strip()
+    if raw:
+        return Path(raw).expanduser().resolve()
+    return default
+
+
+_HERE = Path(__file__).resolve().parent
+PIPELINE_DIR = _resolve_dir("GPS_TSUNAMI_PIPELINE_DIR", _HERE)
+REPO_DIR = _resolve_dir("GPS_TSUNAMI_REPO_DIR", PIPELINE_DIR)
 
 # â”€â”€ Load .env â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 env_lines = {}
@@ -40,16 +56,25 @@ if env_path.exists():
 
 # â”€â”€ 1. Required files â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 1 ] Required files")
+info(f"PIPELINE_DIR = {PIPELINE_DIR}")
+if REPO_DIR != PIPELINE_DIR:
+    info(f"REPO_DIR     = {REPO_DIR}")
 REQUIRED = [
     "pipeline.py","usgs_listener.py","rinex_downloader.py","detector_runner.py",
     "scorer.py","dart_checker.py","space_weather.py","ionosonde_checker.py",
-    "notify.py","notify_discord.py","backtest.py","adaptive_thresholds.py",
-    "health_check.py","run_and_push.bat",
+    "notify.py","notify_discord.py","notify_twitch.py","backtest.py","adaptive_thresholds.py",
+    "health_check.py",
 ]
 for f in REQUIRED:
     p = PIPELINE_DIR / f
     if p.exists(): ok(f)
     else: fail(f"{f} -- MISSING"); issues.append(f"Missing: {f}")
+_batch_names = ("run_and_push.bat", "push_logs.bat")
+_batch_found = next((n for n in _batch_names if (PIPELINE_DIR / n).exists()), None)
+if _batch_found:
+    ok(f"Task Scheduler batch: {_batch_found}")
+else:
+    warn("No run_and_push.bat or push_logs.bat in pipeline folder (Windows deploy only)")
 
 # â”€â”€ 2. Credentials (.env) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 2 ] Credentials (.env)")
@@ -79,7 +104,7 @@ else:
 # â”€â”€ 3. Python module imports â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 3 ] Python module imports")
 MODULES = ["numpy","scipy","pandas","matplotlib","georinex","ncompress","requests",
-           "dart_checker","space_weather","ionosonde_checker","notify","notify_discord"]
+           "dart_checker","space_weather","ionosonde_checker","notify","notify_discord","notify_twitch"]
 os.chdir(PIPELINE_DIR)
 for mod in MODULES:
     try:
@@ -127,8 +152,18 @@ nd_imports = pl.count("import notify_discord\n")
 da_blocks  = pl.count("discord_alerted")
 err_calls  = pl.count("send_pipeline_error")
 ok(f"notify_discord imported once ({nd_imports})") if nd_imports == 1 else (fail(f"notify_discord imported {nd_imports}x -- duplicate"), issues.append("Duplicate notify_discord import"))
-ok(f"discord_alerted blocks: {da_blocks} (expected 2)") if da_blocks == 2 else warn(f"discord_alerted count={da_blocks} unexpected")
-ok(f"send_pipeline_error called once ({err_calls})") if err_calls == 1 else (fail(f"send_pipeline_error called {err_calls}x -- duplicate"), issues.append("Duplicate send_pipeline_error"))
+if da_blocks < 1:
+    fail("pipeline.py has no discord_alerted handling"); issues.append("discord_alerted missing")
+else:
+    ok(f"discord_alerted references in pipeline.py: {da_blocks}")
+    if da_blocks > 2:
+        warn(f"discord_alerted count={da_blocks} — verify for duplicate alert blocks")
+if err_calls < 1:
+    fail("send_pipeline_error not wired in pipeline.py"); issues.append("send_pipeline_error missing")
+elif err_calls > 1:
+    fail(f"send_pipeline_error appears {err_calls}x — duplicate exception handlers?"); issues.append("Duplicate send_pipeline_error")
+else:
+    ok("send_pipeline_error wired once in pipeline.py")
 
 # â”€â”€ 6. USGS feed â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 6 ] USGS Earthquake Feed")
@@ -295,8 +330,15 @@ except Exception as e:
 
 # â”€â”€ 15. Git repo health â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 15 ] Git Repo / Push Health")
-if REPO_DIR.exists():
-    ok("Repo folder found")
+if not REPO_DIR.exists():
+    warn(f"REPO_DIR does not exist ({REPO_DIR}) — skipping git checks")
+elif not (REPO_DIR / ".git").is_dir():
+    warn(
+        f"No .git under REPO_DIR ({REPO_DIR}) — skipping clone checks "
+        "(set GPS_TSUNAMI_REPO_DIR if the git clone lives elsewhere)"
+    )
+else:
+    ok("Git repo found")
     try:
         log_r = subprocess.run(["git","-C",str(REPO_DIR),"log","--oneline","-1"], capture_output=True, text=True, timeout=10)
         if log_r.returncode == 0: ok(f"Last commit: {log_r.stdout.strip()}")
@@ -307,8 +349,6 @@ if REPO_DIR.exists():
         ok("GitHub remote reachable") if rem.returncode == 0 else (fail("GitHub remote unreachable"), issues.append("Git remote unreachable"))
     except Exception as e:
         warn(f"Git check error: {e}")
-else:
-    fail(f"Repo folder not found"); issues.append("Repo folder missing")
 
 # â”€â”€ 16. Station network integrity â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 16 ] GPS Station Network (V4)")
@@ -370,8 +410,11 @@ else:
 
 # â”€â”€ 20. Task Scheduler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 20 ] Windows Task Scheduler")
-bat = PIPELINE_DIR / "run_and_push.bat"
-ok("run_and_push.bat found") if bat.exists() else (fail("run_and_push.bat missing"), issues.append("run_and_push.bat missing"))
+bat = next((PIPELINE_DIR / n for n in ("run_and_push.bat", "push_logs.bat") if (PIPELINE_DIR / n).exists()), None)
+if bat:
+    ok(f"Batch script for scheduler: {bat.name}")
+else:
+    warn("No run_and_push.bat or push_logs.bat (add one for Task Scheduler on Windows)")
 try:
     r = subprocess.run(["schtasks","/query","/tn","GPS Tsunami Master","/fo","LIST"], capture_output=True, text=True, timeout=10)
     if r.returncode == 0:
@@ -421,7 +464,7 @@ if _dyfi_ok:
 # === Section 23: DYFI Poller ===
 print("\n--- Section 23: DYFI Poller ---")
 _poller_path = os.path.join(PIPELINE_DIR, "dyfi_poller.py")
-_pings_path  = r"C:\Users\Mike\Desktop\repo\dyfi_pings.json"
+_pings_path  = str(PIPELINE_DIR / "dyfi_pings.json")
 if os.path.exists(_poller_path):
     ok("dyfi_poller.py found")
 else:

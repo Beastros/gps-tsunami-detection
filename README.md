@@ -175,7 +175,7 @@ notify.py                 # Gmail email alerts
 notify_discord.py         # Discord webhook alerting
 notify_twitch.py          # Twitch IRC — near-miss seismic + `python notify_twitch.py --test`
 backtest.py               # Historical backtester
-health_check.py           # 23-section system verification (Windows paths; see script header)
+health_check.py           # 23-section verification — uses this folder by default; env overrides in script header
 adaptive_thresholds.py    # Bayesian threshold recommender (advisory)
 dyfi_checker.py           # DYFI contribution helper (USGS event API)
 dyfi_poller.py            # DYFI shake ping map — Mw5.0+ Pacific → dyfi_pings.json (dashboard)
@@ -235,7 +235,7 @@ pip install numpy scipy pandas matplotlib georinex ncompress requests
 
 ## Health Check (23 Sections)
 
-`health_check.py` verifies the full system in one pass. It assumes a **Windows** install with pipeline and repo paths set in the script header (`PIPELINE_DIR`, `REPO_DIR`). Sections:
+`health_check.py` verifies the full system in one pass. It resolves **`PIPELINE_DIR`** to the directory containing `health_check.py` (your clone or copied pipeline folder). Optional: set **`GPS_TSUNAMI_PIPELINE_DIR`** and **`GPS_TSUNAMI_REPO_DIR`** if your Task Scheduler working directory and git clone differ. Windows-only sections (Task Scheduler) warn on non-Windows hosts. Sections:
 
 ```
 [ 1] Required files          [11] NOAA tide gauge (CO-OPS)
