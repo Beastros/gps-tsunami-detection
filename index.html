@@ -537,7 +537,10 @@ async function loadSW(){
 const BASE='https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/';
 function fmtDate(ts){if(!ts)return'--';const d=new Date(ts);if(isNaN(d))return'--';return d.toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});}
 
-window._pollCD={iv:null,anchorMs:null,intervalSec:900,lastIso:null,pollFetchOk:true,graceMs:180000};
+window._pollCD={iv:null,anchorMs:null,intervalSec:900,lastIso:null,pollFetchOk:true,graceMs:180000,_refreshMs:null};
+var _pollRefreshIv=null;
+var PIPELINE_JSON_REFRESH_NORMAL_MS=5*60*1000;
+var PIPELINE_JSON_REFRESH_STALE_MS=60*1000;
 
 function stopPollCountdown(){
   if(window._pollCD.iv){clearInterval(window._pollCD.iv);window._pollCD.iv=null;}
@@ -549,10 +552,25 @@ function fmtCountdownMs(ms){
   return m+':'+(s<10?'0':'')+s;
 }
 
+function syncPipelineJsonRefresh(){
+  var st=window._pollCD;
+  if(!st)return;
+  var want=PIPELINE_JSON_REFRESH_NORMAL_MS;
+  if(!st.pollFetchOk)want=PIPELINE_JSON_REFRESH_STALE_MS;
+  else if(st.anchorMs!=null&&!isNaN(st.anchorMs)){
+    var due=st.anchorMs+st.intervalSec*1000;
+    if(Date.now()>due)want=PIPELINE_JSON_REFRESH_STALE_MS;
+  }
+  if(st._refreshMs===want&&_pollRefreshIv!=null)return;
+  st._refreshMs=want;
+  if(_pollRefreshIv){clearInterval(_pollRefreshIv);_pollRefreshIv=null;}
+  _pollRefreshIv=setInterval(loadPipeline,want);
+}
+
 function applyPollCountdownTick(){
   var st=window._pollCD;
   var plA=el('pl-age'),plS=el('pl-age-sub'),stL=el('st-last'),stS=el('st-last-sub');
-  if(!plA)return;
+  if(!plA){syncPipelineJsonRefresh();return;}
   function setErr(msg){
     plA.textContent='ERROR';plA.className='stat-value stat-bad';
     plS.textContent=msg||'';
@@ -573,28 +591,32 @@ function applyPollCountdownTick(){
     plS.textContent=sub||'';
     if(stL){stL.textContent=line;if(stL)stL.className='stat-value';if(stS)stS.textContent=sub||'';}
   }
-  if(!st.pollFetchOk){
-    setErr('Could not load poll_log.json from GitHub');
-    return;
+  try{
+    if(!st.pollFetchOk){
+      setErr('Could not load poll_log.json from GitHub');
+      return;
+    }
+    if(st.anchorMs==null||isNaN(st.anchorMs)){
+      setOk('--','No poll rows in poll_log yet');
+      return;
+    }
+    var due=st.anchorMs+st.intervalSec*1000;
+    var now=Date.now();
+    var late=now-due;
+    var lastFmt=fmtDate(st.lastIso)+' UTC';
+    if(late>st.graceMs){
+      setStale('GitHub still on last poll '+lastFmt+' — run pipeline + push, or check Task Scheduler.');
+      return;
+    }
+    if(late>0){
+      setWarn('LATE','Last poll '+lastFmt+' · waiting for GitHub (+ '+Math.ceil(late/1000)+' s)');
+      return;
+    }
+    var rem=due-now;
+    setOk(fmtCountdownMs(rem),'Last poll '+lastFmt+' · next row due ~'+fmtCountdownMs(rem));
+  }finally{
+    syncPipelineJsonRefresh();
   }
-  if(st.anchorMs==null||isNaN(st.anchorMs)){
-    setOk('--','No poll rows in poll_log yet');
-    return;
-  }
-  var due=st.anchorMs+st.intervalSec*1000;
-  var now=Date.now();
-  var late=now-due;
-  var lastFmt=fmtDate(st.lastIso)+' UTC';
-  if(late>st.graceMs){
-    setStale('GitHub still on last poll '+lastFmt+' — run pipeline + push, or check Task Scheduler.');
-    return;
-  }
-  if(late>0){
-    setWarn('LATE','Last poll '+lastFmt+' · waiting for GitHub (+ '+Math.ceil(late/1000)+' s)');
-    return;
-  }
-  var rem=due-now;
-  setOk(fmtCountdownMs(rem),'Last poll '+lastFmt+' · next row due ~'+fmtCountdownMs(rem));
 }
 
 function restartPollCountdownFromLog(d){
@@ -656,6 +678,8 @@ async function loadPipeline(){
     window._pollCD.pollFetchOk=false;
     stopPollCountdown();
     restartPollCountdownFromLog(null);
+  }finally{
+    syncPipelineJsonRefresh();
   }
 }
 
@@ -838,7 +862,6 @@ function renderLog(d){
 
 loadSW();
 loadPipeline();
-setInterval(loadPipeline,5*60*1000);
 async function loadDyfi(){try{const r=await fetch(BASE+'dyfi_pings.json');if(!r.ok)return;const d=await r.json();renderDyfiPings(d.pings||[]);}catch(e){}}
 setInterval(loadDyfi,5*60*1000);
 setInterval(loadSW,5*60*1000);
