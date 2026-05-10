@@ -1,6 +1,6 @@
 # GPS Ionospheric Tsunami Detection
 ## Project Master Plan & Continuation Document — v7
-Last updated: May 10, 2026 (V7+ session)  |  Status: **OPERATIONAL** — live 8-signal stack on `main` (fusion + fast poll + DYFI map + optional Twitch near-miss IRC)  |  github.com/Beastros/gps-tsunami-detection
+Last updated: May 10, 2026 (V7+ session)  |  Status: **OPERATIONAL** — live 8-signal stack on `main` (fusion + fast poll + DYFI map + Discord near-miss alerts)  |  github.com/Beastros/gps-tsunami-detection
 
 ---
 
@@ -105,8 +105,7 @@ When a tsunami crosses the open ocean it generates an Atmospheric Gravity Wave (
 | space_weather.py | 4-channel NOAA SWPC quality score | LIVE — V2 |
 | ionosonde_checker.py | GIRO DIDBase foF2 anomaly detection | LIVE — V2 (7 stations in config) |
 | notify.py | Gmail email alert | LIVE |
-| notify_discord.py | Discord webhook alerting | LIVE — V3 |
-| notify_twitch.py | Twitch IRC — one line per Pacific near-miss poll cycle | LIVE — optional `.env` |
+| notify_discord.py | Discord webhook — predictions, near-misses, errors | LIVE — V3 |
 | dyfi_checker.py | DYFI detail fetch for detector fusion | LIVE |
 | dyfi_poller.py | Mw5.0+ Pacific DYFI pings → dyfi_pings.json for dashboard | LIVE — default output beside this file; optional `DYFI_PINGS_OUTPUT` |
 | backtest.py | Historical backtester | LIVE — V3 |
@@ -220,7 +219,7 @@ Added: tsunamigenic_weight in combined_confidence, 4 new stations (AUCK/NOUM/KWJ
 Fixed: HOLB geographic zone constraint — FPR restored to 0.00. Dashboard: About tab, footer, UTF-8 mojibake fixed, Google Analytics added. Health check section 21. CLAUDE_CODE_RULES.md rules 1-26.
 
 ## May 10, 2026
-- `notify_twitch.py` + `pipeline.py` — optional Twitch IRC line on each Pacific **near-miss** poll cycle (`TWITCH_IRC_*` in `.env`); `python notify_twitch.py --test` for connectivity.
+- `notify_discord.send_near_miss_alerts` + `pipeline.py` — Discord webhook (same URL as other alerts) on each Pacific **near-miss** poll cycle for phone push.
 - `health_check.py` — portable roots (`GPS_TSUNAMI_*`), optional `dart_checker`, 23 sections; `scripts/` carries mirrored live modules.
 - `dyfi_poller.py` — default `dyfi_pings.json` next to module; `DYFI_PINGS_OUTPUT` override.
 - `scorer.py` — DYFI fields on scored events for dashboard Events table.
@@ -322,6 +321,6 @@ Copy-paste this to begin:
 
 *This is my GPS ionospheric tsunami detection project. Read this document for full context. Also read CLAUDE_CODE_RULES.md from the repo before writing any code.*
 
-*System is live: 8-signal stack (detector fusion = TEC + DART + constellations + dTEC/dt + ionosonde + ShakeMap gate + space weather; DYFI map pings + score-time DYFI fields in running_log). Fast poll (2-min cycles on Mw6.0+ Pacific). Optional Twitch IRC on near-misses. V7: check_recent.py, CLAUDE rule 34. V6: dashboard overhaul, health_check zone integrity. See README.md on main for env vars and exact file list.*
+*System is live: 8-signal stack (detector fusion = TEC + DART + constellations + dTEC/dt + ionosonde + ShakeMap gate + space weather; DYFI map pings + score-time DYFI fields in running_log). Fast poll (2-min cycles on Mw6.0+ Pacific). Discord near-miss alerts. V7: check_recent.py, CLAUDE rule 34. V6: dashboard overhaul, health_check zone integrity. See README.md on main for env vars and exact file list.*
 
 *Next optional hardening: fold DYFI contribution into detector-time `combined_confidence` if you want the headline score to move with felt reports at detection time (today DYFI is logged at score time and on the map).*

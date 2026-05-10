@@ -67,7 +67,7 @@ if REPO_DIR != PIPELINE_DIR:
 REQUIRED = [
     "pipeline.py","usgs_listener.py","rinex_downloader.py","detector_runner.py",
     "scorer.py","space_weather.py","ionosonde_checker.py",
-    "notify.py","notify_discord.py","notify_twitch.py","backtest.py","adaptive_thresholds.py",
+    "notify.py","notify_discord.py","backtest.py","adaptive_thresholds.py",
     "health_check.py",
 ]
 for f in REQUIRED:
@@ -114,7 +114,7 @@ else:
 # â”€â”€ 3. Python module imports â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 head("[ 3 ] Python module imports")
 MODULES = ["numpy","scipy","pandas","matplotlib","georinex","ncompress","requests",
-           "space_weather","ionosonde_checker","notify","notify_discord","notify_twitch"]
+           "space_weather","ionosonde_checker","notify","notify_discord"]
 os.chdir(PIPELINE_DIR)
 for mod in MODULES:
     try:
@@ -134,8 +134,10 @@ try:
     import notify_discord as nd
     has_detection = hasattr(nd, "send_detection_alert")
     has_error     = hasattr(nd, "send_pipeline_error")
+    has_near      = hasattr(nd, "send_near_miss_alerts")
     ok("notify_discord.send_detection_alert") if has_detection else (fail("notify_discord missing send_detection_alert"), issues.append("notify_discord.send_detection_alert missing"))
     ok("notify_discord.send_pipeline_error")  if has_error     else (fail("notify_discord missing send_pipeline_error"),  issues.append("notify_discord.send_pipeline_error missing"))
+    ok("notify_discord.send_near_miss_alerts") if has_near else (fail("notify_discord missing send_near_miss_alerts"), issues.append("notify_discord.send_near_miss_alerts missing"))
 except Exception as e:
     fail(f"notify_discord check failed: {e}"); issues.append("notify_discord integrity check failed")
 

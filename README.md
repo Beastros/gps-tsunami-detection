@@ -115,7 +115,7 @@ The operational pipeline monitors USGS in real time, downloads GPS RINEX data, r
                           GLONASS/Galileo, dTEC/dt, DART, ionosonde, ShakeMap prior
 [4] Scorer              — scores vs 4-station NOAA tide gauge network at T+24h
 [5] DYFI poller         — writes dyfi_pings.json for the GitHub Pages dashboard map
-[6] Alerting            — email + Discord on new candidates, detections, and pipeline errors; optional Twitch chat on near-misses
+[6] Alerting            — email + Discord on new candidates, detections, Pacific near-misses, and pipeline errors
 ```
 
 ### Scoring — Tide Gauge Network
@@ -150,17 +150,11 @@ DISCORD_WEBHOOK_URL=your_discord_webhook_url
 
 # Optional — override path for dyfi_pings.json (default: same folder as dyfi_poller.py)
 # DYFI_PINGS_OUTPUT=/path/to/dyfi_pings.json
-
-# Optional — Twitch IRC chat line on each Pacific near-miss (Mw5.5+ in zone, did not queue)
-TWITCH_IRC_NICK=your_bot_username
-TWITCH_IRC_TOKEN=oauth:xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-TWITCH_IRC_CHANNEL=yourchannel
 ```
 
 - `EARTHDATA_*`: free NASA Earthdata account at urs.earthdata.nasa.gov
 - `NOTIFY_APP_PASSWORD`: Gmail App Password from myaccount.google.com/apppasswords
-- `DISCORD_WEBHOOK_URL`: Discord channel webhook URL — regenerate if ever exposed in chat logs
-- `TWITCH_IRC_*`: IRC password from [twitchapps.com/tmi](https://twitchapps.com/tmi/) (must include the `oauth:` prefix). The account in `TWITCH_IRC_NICK` must match the token. Test any time without a real earthquake: `python notify_twitch.py --test`
+- `DISCORD_WEBHOOK_URL`: Discord channel webhook URL — used for detector predictions, **Pacific near-miss seismic** (same channel as your phone notifications), and pipeline errors. Regenerate if ever exposed in chat logs
 - `DYFI_PINGS_OUTPUT`: only if `dyfi_pings.json` should be written somewhere other than the pipeline directory
 
 ---
@@ -178,8 +172,7 @@ space_weather.py          # 4-channel NOAA SWPC space weather quality score
 dart_checker.py           # 28-buoy DART check (lazy-import in detector; not shipped here—copy from your deploy bundle)
 ionosonde_checker.py      # GIRO DIDBase foF2 anomaly detection (7 stations configured)
 notify.py                 # Gmail email alerts
-notify_discord.py         # Discord webhook alerting
-notify_twitch.py          # Twitch IRC — near-miss seismic + `python notify_twitch.py --test`
+notify_discord.py         # Discord webhook — predictions, near-misses, pipeline errors
 backtest.py               # Historical backtester
 health_check.py           # 23-section verification — uses this folder by default; env overrides in script header
 adaptive_thresholds.py    # Bayesian threshold recommender (advisory)
@@ -285,7 +278,7 @@ pip install numpy scipy pandas matplotlib georinex ncompress requests
 - [x] Adaptive threshold recommender (Bayesian, advisory)
 - [x] Public dashboard — 4 tabs (Dashboard, Events, Poll Log, About)
 - [x] Discord + email alerting
-- [x] Optional Twitch IRC lines on Pacific near-miss seismic (`notify_twitch.py`)
+- [x] Discord alerts on Pacific near-miss seismic (`notify_discord.send_near_miss_alerts`)
 - [x] 23-section health check
 - [x] Historical backtester
 - [ ] First live scored event (awaiting qualifying Pacific event)

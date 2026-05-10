@@ -1,5 +1,6 @@
 """
-Discord webhook alerts for detector predictions and pipeline errors.
+Discord webhook alerts for detector predictions, Pacific near-miss seismic,
+and pipeline errors (same DISCORD_WEBHOOK_URL).
 """
 import json
 import logging
@@ -75,3 +76,32 @@ def send_pipeline_error(component: str, err: str):
     """Pipeline cycle exception or fatal stage error."""
     text = f"**{component}** error:\n```{err[:1800]}```"
     _post_webhook({"content": text[:2000], "username": "GPS Tsunami"})
+
+
+def send_near_miss_alerts(near_misses: list):
+    """
+    Same webhook as other alerts — Pacific Mw5.5+ in zone that did not queue
+    (threshold, depth, mechanism, ShakeMap pending, etc.). One embed per poll cycle.
+    """
+    if not near_misses:
+        return
+    chunks = []
+    for nm in near_misses[:10]:
+        mag = nm.get("mag", "?")
+        place = (nm.get("place") or "?")[:90]
+        reason = (nm.get("reason") or "?")[:120]
+        delta = nm.get("delta")
+        dstr = f"ΔMw vs 6.5 threshold: {delta:+.1f}" if delta is not None else "ΔMw: —"
+        ts = str(nm.get("ts", ""))[:22]
+        dep = nm.get("depth")
+        dline = f"Depth: {dep} km" if dep is not None else ""
+        chunks.append(f"**Mw{mag}** — {place}\n{dstr} · {reason}\n`{ts}`" + (f"\n{dline}" if dline else ""))
+    desc = "\n\n".join(chunks)
+    if len(near_misses) > 10:
+        desc += f"\n\n_+{len(near_misses) - 10} more in this cycle_"
+    embed = {
+        "title": "GPS Tsunami — Pacific near-miss (did not queue)",
+        "description": desc[:4000],
+        "color": 0xFFA726,
+    }
+    _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})

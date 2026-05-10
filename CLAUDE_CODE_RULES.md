@@ -2,7 +2,7 @@
 
 Lessons learned, Windows deployment pitfalls, and architecture reference for agents and humans editing this repo.
 
-**Last updated:** 2026-05-10 · **Doc version:** V8+ (aligned with 8-channel stack, DYFI map, Poll Log redesign, `usgs_listener` near-miss fix, Twitch near-miss IRC, portable `health_check`)
+**Last updated:** 2026-05-10 · **Doc version:** V8+ (aligned with 8-channel stack, DYFI map, Poll Log redesign, `usgs_listener` near-miss fix, Discord near-miss webhook, portable `health_check`)
 
 ---
 
@@ -105,9 +105,6 @@ EARTHDATA_PASS=<earthdata password>
 NOTIFY_EMAIL=<smtp sender for alerts>
 NOTIFY_APP_PASSWORD=<app password if Gmail>
 DISCORD_WEBHOOK_URL=<webhook URL — rotate if ever pasted in chat>
-TWITCH_IRC_NICK=<twitch username for IRC>
-TWITCH_IRC_TOKEN=oauth:<token from twitchapps.com/tmi>
-TWITCH_IRC_CHANNEL=<channel without #>
 DYFI_PINGS_OUTPUT=<optional absolute path to dyfi_pings.json>
 GPS_TSUNAMI_PIPELINE_DIR=<optional override for health_check / ops>
 GPS_TSUNAMI_REPO_DIR=<optional git clone path for health_check section 15>
@@ -129,7 +126,7 @@ GPS_TSUNAMI_REPO_DIR=<optional git clone path for health_check section 15>
 3. `detector_runner` — 8-channel fusion (TEC + space weather + constellations + dTEC + DART + ionosonde + ShakeMap prior; DYFI fusion fields where applicable).
 4. `scorer` — tide gauges at T+24h → `running_log.json`.
 5. `dyfi_poller` — `dyfi_pings.json` for **GitHub Pages** map (see §10).
-6. Notify — email + Discord; pipeline errors to Discord; optional **Twitch IRC** on Pacific near-miss rows (`notify_twitch.py`, see README).
+6. Notify — email + Discord (new candidates, **near-misses** via `notify_discord.send_near_miss_alerts`, detector predictions, pipeline errors).
 
 **Task Scheduler:** task name **`GPS Tsunami Master`** · target **`run_and_push.bat`** or **`push_logs.bat`** (repo contains the latter) · ~15 min.
 
@@ -214,7 +211,7 @@ Prefer summary feeds (`4.5_week.geojson`, etc.) or build query URLs with **f-str
 | V4–V5 | More stations, HOLB zone, adaptive thresholds, map, near-miss concept |
 | V6 | Fast poll, README expansion |
 | **2026-05** | UTF-8 JSON in `usgs_listener`; **`pending`** on polls; **near-miss control-flow fix**; **`dyfi_poller`** 24h retention; **`index.html`** pipeline refresh, Events table, DYFI map hook, Poll Log redesign, brighter seismic rings, metadata rail; footer **emfproj@proton.me**; **README** sync (8-ch, 23 health sections) |
-| **2026-05-10** | **`notify_twitch`** near-miss IRC + test CLI; **`notify` / `notify_discord`** in repo; portable **`health_check`** + optional **`dart_checker`**; **`dyfi_pings.json`** default path via `Path(__file__).parent`; **`DYFI_PINGS_OUTPUT`** env; **`scripts/`** mirrored to root pipeline modules |
+| **2026-05-10** | **`notify_discord.send_near_miss_alerts`** (Discord webhook, same URL); **`notify` / `notify_discord`** in repo; portable **`health_check`** + optional **`dart_checker`**; **`dyfi_pings.json`** default path via `Path(__file__).parent`; **`DYFI_PINGS_OUTPUT`** env; **`scripts/`** mirrored to root pipeline modules |
 
 ---
 
