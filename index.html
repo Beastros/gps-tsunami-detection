@@ -535,7 +535,15 @@ async function loadSW(){
 }
 
 const BASE='https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/';
-function fmtDate(ts){if(!ts)return'--';const d=new Date(ts);if(isNaN(d))return'--';return d.toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});}
+function fmtDate(ts){
+  if(!ts)return'--';
+  const d=new Date(ts);
+  if(isNaN(d))return'--';
+  return d.toLocaleString('en-US',{
+    month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false,
+    timeZone:'UTC'
+  }) + ' UTC';
+}
 
 window._pollCD={iv:null,anchorMs:null,intervalSec:900,lastIso:null,pollFetchOk:true,graceMs:180000,_refreshMs:null};
 var _pollRefreshIv=null;
@@ -603,7 +611,7 @@ function applyPollCountdownTick(){
     var due=st.anchorMs+st.intervalSec*1000;
     var now=Date.now();
     var late=now-due;
-    var lastFmt=fmtDate(st.lastIso)+' UTC';
+    var lastFmt=fmtDate(st.lastIso);
     if(late>st.graceMs){
       setStale('GitHub still on last poll '+lastFmt+' — run pipeline + push, or check Task Scheduler.');
       return;
