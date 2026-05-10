@@ -3,7 +3,7 @@ dyfi_poller.py -- DYFI shake ping poller for dashboard map
 GPS Ionospheric Tsunami Detection Pipeline -- V8
 
 Polls USGS for recent Mw5.0+ Pacific events with DYFI felt reports.
-Writes dyfi_pings.json to the repo folder for the dashboard map.
+Writes dyfi_pings.json beside this file (or DYFI_PINGS_OUTPUT) for the dashboard map.
 Runs every pipeline cycle independent of the Mw6.5+ detection gate.
 
 Pacific basin covered via two USGS queries (avoids antimeridian issue):

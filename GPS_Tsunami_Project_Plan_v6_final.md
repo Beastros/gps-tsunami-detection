@@ -2,7 +2,7 @@
 ## Project Master Plan & Continuation Document — v6
 Last updated: April 26, 2026 (V5 session)  |  Status: LIVE — 7-channel fusion pipeline running  |  github.com/Beastros/gps-tsunami-detection
 
-**Errata (2026-05-10):** Prefer **`README.md` + `CLAUDE_CODE_RULES.md` on `main`** for current architecture (8-channel wording, Twitch optional alerts, portable health check, `dyfi_pings.json` path, `scripts/` mirror). This v6 snapshot is historical context.
+**Note (2026-05-10):** Use **`GPS_Tsunami_Project_Plan_v7.md`**, **`README.md`**, and **`CLAUDE_CODE_RULES.md` on `main`** for current paths, DYFI/Twitch/health-check behavior, and dashboard copy. This v6 document is kept as session history.
 
 ---
 

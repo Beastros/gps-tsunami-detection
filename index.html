@@ -346,7 +346,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 
     <h2 style="font-family:var(--font-d);font-size:18px;letter-spacing:.12em;color:var(--accent);text-transform:uppercase;margin:32px 0 16px">The 8-Channel Sensor Stack</h2>
 
-    <p style="margin:0 0 18px;font-size:13px;color:var(--dim);line-height:1.65">Eight inputs below are fused into one <strong style="color:var(--text-hi)">combined confidence</strong> score. Each card is one channel: what it measures, where the data comes from, and how it affects the pipeline or map.</p>
+    <p style="margin:0 0 18px;font-size:13px;color:var(--dim);line-height:1.65">Eight parallel signals below: seven feed the detector&rsquo;s <strong style="color:var(--text-hi)">combined confidence</strong> at prediction time; <strong style="color:var(--text-hi)">DYFI</strong> is map pings plus a USGS felt/MMI snapshot written when each event is <strong style="color:var(--text-hi)">scored</strong> (Events table), using the same +0.04 / +0.02 weights as <code style="font-size:11px">dyfi_checker.py</code> &mdash; not yet mixed into the live detector fusion number.</p>
 
     <div class="about-sensor-grid">
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
@@ -367,7 +367,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       </div>
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
         <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">GIRO Digisonde foF2</div>
-        <div style="font-size:13px;color:var(--dim)">Five GIRO DIDBase ionosonde stations. foF2 perturbation in line with the event adds <strong style="color:var(--text-hi)">+0.12</strong> when the checker confirms; missing data is fail-open (no penalty).</div>
+        <div style="font-size:13px;color:var(--dim)">Seven GIRO DIDBase ionosonde stations in <code style="font-size:11px">ionosonde_checker.py</code>. foF2 perturbation in line with the event adds <strong style="color:var(--text-hi)">+0.12</strong> when the checker confirms; missing data is fail-open (no penalty).</div>
       </div>
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
         <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">Space Weather Quality Gate</div>
@@ -379,7 +379,7 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       </div>
       <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:16px 20px">
         <div style="font-family:var(--font-m);font-size:11px;letter-spacing:.08em;color:var(--accent2);margin-bottom:6px">DYFI &mdash; Shake-Report Pings (8th channel)</div>
-        <div style="font-size:13px;color:var(--dim)">USGS <strong style="color:#ffd54f">&ldquo;Did You Feel It&rdquo;</strong> &mdash; <em>human</em> felt-intensity reports, not ShakeMap contours and not the GPS TEC signal. <code style="font-size:11px">dyfi_poller.py</code> polls Mw&nbsp;5.0+ Pacific events; <code style="font-size:11px">dyfi_pings.json</code> feeds the Dashboard as <strong style="color:#ffd54f">amber pulsing rings</strong> sized by MMI (enough felt responses required for a ping). Pings drop after <strong style="color:var(--text-hi)">24&nbsp;h</strong>. Fusion: high MMI with many responses up to <strong style="color:var(--text-hi)">+0.04</strong>, moderate <strong style="color:var(--text-hi)">+0.02</strong>, fail-open if no data; fusion abstains below <strong style="color:var(--text-hi)">20</strong> responses.</div>
+        <div style="font-size:13px;color:var(--dim)">USGS <strong style="color:#ffd54f">&ldquo;Did You Feel It&rdquo;</strong> &mdash; <em>human</em> felt-intensity reports, not ShakeMap contours and not the GPS TEC signal. <code style="font-size:11px">dyfi_poller.py</code> polls Mw&nbsp;5.0+ Pacific events; <code style="font-size:11px">dyfi_pings.json</code> feeds the Dashboard as <strong style="color:#ffd54f">amber pulsing rings</strong> sized by MMI (enough felt responses required for a ping). Pings drop after <strong style="color:var(--text-hi)">24&nbsp;h</strong>. At score time, <code style="font-size:11px">scorer.py</code> calls <code style="font-size:11px">dyfi_checker.py</code> for the same +0.04 / +0.02 / fail-open rules (abstains below <strong style="color:var(--text-hi)">20</strong> responses) and stores counts on each Events row.</div>
       </div>
     </div>
 
@@ -441,7 +441,8 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
       <div class="pl-rail-k">Raw JSON (main)</div>
       <a href="https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/poll_log.json" target="_blank" rel="noopener">poll_log.json</a><br>
       <a href="https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/event_queue.json" target="_blank" rel="noopener">event_queue.json</a><br>
-      <a href="https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/running_log.json" target="_blank" rel="noopener">running_log.json</a>
+      <a href="https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/running_log.json" target="_blank" rel="noopener">running_log.json</a><br>
+      <a href="https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/dyfi_pings.json" target="_blank" rel="noopener">dyfi_pings.json</a>
     </aside>
   </div>
 </div>
@@ -747,7 +748,7 @@ loadSW();
 loadPipeline();
 setInterval(loadPipeline,5*60*1000);
 async function loadDyfi(){try{const r=await fetch(BASE+'dyfi_pings.json');if(!r.ok)return;const d=await r.json();renderDyfiPings(d.pings||[]);}catch(e){}}
-setInterval(loadDyfi,15*60*1000);
+setInterval(loadDyfi,5*60*1000);
 setInterval(loadSW,5*60*1000);
 initMap();
 

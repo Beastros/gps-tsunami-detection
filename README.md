@@ -42,6 +42,8 @@ iono_contrib    = +0.12 if ionosonde confirmed
 combined        = min(sum, 1.0)
 ```
 
+DYFI (+0.02 / +0.04 from `dyfi_checker.py`) is recorded at **score time** in `running_log.json` (`scorer.py`); it is **not** part of the detector `combined` sum above. Map pings use `dyfi_poller.py` → `dyfi_pings.json`.
+
 Strike-slip events (tsunamigenic index < 0.25 from USGS ShakeMap moment tensor) are hard-gated before any RINEX processing.
 
 ---
