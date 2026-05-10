@@ -1,6 +1,6 @@
 # GPS Ionospheric Tsunami Detection
 ## Project Master Plan & Continuation Document — v7
-Last updated: May 10, 2026 (V7+ session)  |  Status: LIVE — 8-channel fusion + fast poll + DYFI map + optional Twitch near-miss IRC  |  github.com/Beastros/gps-tsunami-detection
+Last updated: May 10, 2026 (V7+ session)  |  Status: **OPERATIONAL** — live 8-signal stack on `main` (fusion + fast poll + DYFI map + optional Twitch near-miss IRC)  |  github.com/Beastros/gps-tsunami-detection
 
 ---
 

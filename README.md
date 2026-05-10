@@ -275,6 +275,8 @@ pip install numpy scipy pandas matplotlib georinex ncompress requests
 
 ## Status
 
+**Live pipeline:** Operational on `main` — USGS listener, RINEX pull, detector, scorer, DYFI poller, JSON to GitHub, GitHub Pages dashboard (15-min cadence; fast poll when `fast_poll.json` is active).
+
 - [x] Core GPS TEC coherence detector validated (TPR=1.00, FPR=0.00, 9-event backtest)
 - [x] 8-channel sensor fusion (TEC, DART, ionosonde, GLONASS+Galileo, dTEC/dt, ShakeMap, space weather)
 - [x] Calibration model (wave_m formula, r²=0.988)
@@ -292,4 +294,4 @@ pip install numpy scipy pandas matplotlib georinex ncompress requests
 
 ---
 
-*Parameters frozen 2025-04-22. All results reproducible from publicly available data. This is an independent research project — not an operational warning system.*
+*Parameters frozen 2025-04-22. All results reproducible from publicly available data. Independent research project; **live software stack is operational** — not a government-certified or public tsunami **warning** system.*
