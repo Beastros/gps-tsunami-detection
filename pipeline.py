@@ -80,8 +80,8 @@ def run_pipeline():
         new_events = [e for e in queue["events"] if e.get("status") == "queued"][-new:]
         notify.send_event_alert(new_events)
 
-    # Step 2: Download RINEX
-    log.info("\n[2/4] Downloading RINEX...")
+    # Step 2: Rolling RINEX cache + event copy/download
+    log.info("\n[2/4] RINEX cache refresh + event download...")
     rinex_downloader.main()
 
     # Step 3: Run detector

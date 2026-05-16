@@ -1,0 +1,14 @@
+{
+  "_note": "Logical pipeline IDs -> alternate 4-char CDDIS filenames. Auto-updated when listing finds a match.",
+  "guam": ["guam", "gvim"],
+  "kwj1": ["kwj1", "kwj2"],
+  "mkea": ["mkea"],
+  "kokb": ["kokb"],
+  "hnlc": ["hnlc"],
+  "holb": ["holb"],
+  "noum": ["noum"],
+  "chat": ["chat"],
+  "auck": ["auck"],
+  "thti": ["thti", "thtg"],
+  "thtg": ["thtg", "thti"]
+}
