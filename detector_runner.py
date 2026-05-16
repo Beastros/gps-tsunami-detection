@@ -877,6 +877,7 @@ def run_event(event, kp_override=None):
         dart_status = "no_buoys"
 
     _tec  = prediction.get("detected", False)
+    _sw = prediction.get("space_weather_score")
     if _sw is None:
         _sw = 0.0
     _ti = event.get("tsunamigenic_index")
