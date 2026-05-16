@@ -10,5 +10,15 @@
   "chat": ["chat"],
   "auck": ["auck"],
   "thti": ["thti", "thtg"],
-  "thtg": ["thtg", "thti"]
+  "thtg": ["thtg", "thti"],
+  "mizu": ["mizu"],
+  "usud": ["usud"],
+  "aira": ["aira"],
+  "tskb": ["tskb", "tske"],
+  "yssz": ["yssz"],
+  "khaj": ["khaj"],
+  "pimo": ["pimo"],
+  "cnmr": ["cnmr", "tnml"],
+  "pohn": ["pohn"],
+  "gvim": ["gvim", "guam"]
 }

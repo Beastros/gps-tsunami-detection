@@ -79,6 +79,17 @@ STATIONS = {
     "thtg": {"lat": -17.577, "lon": -149.606, "alt":   87},
     # West Coast -- Cascadia upstream
     "holb": {"lat":  50.640, "lon": -128.133, "alt":  180},  # Holberg BC -- Cascadia anchor
+    # Japan / Kuril upstream (CDDIS IGS)
+    "mizu": {"lat":  39.135, "lon":  141.133, "alt":   61},
+    "usud": {"lat":  36.133, "lon":  138.362, "alt": 1508},
+    "aira": {"lat":  31.824, "lon":  130.599, "alt":   31},
+    "tskb": {"lat":  36.106, "lon":  140.087, "alt":   43},
+    "yssz": {"lat":  46.997, "lon":  142.712, "alt":   89},
+    "khaj": {"lat":  53.045, "lon":  158.632, "alt":  152},
+    # Philippines / Taiwan relay
+    "pimo": {"lat":   9.773, "lon":  118.759, "alt":   41},
+    "cnmr": {"lat":  24.964, "lon":  121.380, "alt":  222},
+    "pohn": {"lat":   6.959, "lon":  158.213, "alt":   50},
 }
 
 # V5 -- geographic zone constraints
@@ -96,6 +107,15 @@ STATION_ZONE_CONSTRAINTS = {
     "NOUM": None,
     "KWJ1": None,
     "HOLB": {"lat_min": 40.0, "lat_max": 52.0, "lon_min": -135.0, "lon_max": -120.0},
+    "MIZU": {"lat_min": 28.0, "lat_max": 46.0, "lon_min": 128.0, "lon_max": 146.0},
+    "USUD": {"lat_min": 28.0, "lat_max": 46.0, "lon_min": 128.0, "lon_max": 146.0},
+    "AIRA": {"lat_min": 28.0, "lat_max": 46.0, "lon_min": 128.0, "lon_max": 146.0},
+    "TSKB": {"lat_min": 28.0, "lat_max": 46.0, "lon_min": 128.0, "lon_max": 146.0},
+    "YSSZ": {"lat_min": 40.0, "lat_max": 56.0, "lon_min": 138.0, "lon_max": 158.0},
+    "KHAJ": {"lat_min": 45.0, "lat_max": 58.0, "lon_min": 150.0, "lon_max": 168.0},
+    "PIMO": {"lat_min": -5.0, "lat_max": 25.0, "lon_min": 95.0, "lon_max": 130.0},
+    "CNMR": {"lat_min": 18.0, "lat_max": 30.0, "lon_min": 115.0, "lon_max": 128.0},
+    "POHN": {"lat_min": -5.0, "lat_max": 20.0, "lon_min": 145.0, "lon_max": 175.0},
 }
 
 def _pair_zone_ok(s1_name, s2_name, event_lat, event_lon):
@@ -181,6 +201,15 @@ def compute_dart_score(dart_result):
             max_sigma = max(max_sigma, b["detection"].get("sigma_score", 0))
     sigma_boost = min((max_sigma - 3.0) / 10.0, 0.10) if max_sigma > 3 else 0.0
     return min(round(base + sigma_boost, 3), 1.0)
+
+
+def _fmt_num(value, fmt=".3f", missing="—"):
+    if value is None:
+        return missing
+    try:
+        return format(value, fmt)
+    except (TypeError, ValueError):
+        return missing
 
 
 def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score, const_agreement=None, dtec_corroborates=False, ionosonde_confirmed=False, tsunamigenic_weight=0.5):
@@ -731,7 +760,9 @@ def run_event(event, kp_override=None):
         fig, ax = plt.subplots(figsize=(12, 4))
         qu = pd.Timestamp(quake_utc)
         colors = {"mkea":"#D85A30","kokb":"#185FA5","hnlc":"#7F77DD",
-                  "guam":"#0F6E56","chat":"#BA7517","thti":"#8E44AD"}
+                  "guam":"#0F6E56","chat":"#BA7517","thti":"#8E44AD",
+                  "mizu":"#C0392B","usud":"#E74C3C","aira":"#9B59B6",
+                  "tskb":"#3498DB","yssz":"#1ABC9C","holb":"#95A5A6"}
         for sid, filt in filts.items():
             t = [(ts-qu).total_seconds()/3600 for ts in filt.index]
             ax.plot(t, filt.values, color=colors.get(sid,"gray"),
@@ -846,7 +877,9 @@ def run_event(event, kp_override=None):
         dart_status = "no_buoys"
 
     _tec  = prediction.get("detected", False)
-    _sw   = prediction.get("space_weather_score", 0.0)
+    _sw = prediction.get("space_weather_score")
+    if _sw is None:
+        _sw = 0.0
     _ti = event.get("tsunamigenic_index")
     _tw = _ti if _ti is not None else 0.5
     combined_confidence = compute_combined_confidence(
@@ -863,8 +896,8 @@ def run_event(event, kp_override=None):
     prediction["dart_status"]         = dart_status
     prediction["combined_confidence"] = combined_confidence
     log.info(f"  CONFIDENCE: TEC={'yes' if _tec else 'no'}  "
-             f"DART={dart_status}({dart_score:.2f})  sw={_sw:.2f}  "
-             f"combined={combined_confidence:.3f}")
+             f"DART={dart_status}({_fmt_num(dart_score, '.2f')})  sw={_fmt_num(_sw, '.2f')}  "
+             f"combined={_fmt_num(combined_confidence)}")
 
     return prediction
 
