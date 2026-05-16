@@ -12,7 +12,8 @@ echo ===== %date% %time% =====>>"%LOG%"
 
 python pipeline.py --once >>"%LOG%" 2>&1
 if errorlevel 1 (
-  echo Pipeline exit code %errorlevel%>>"%LOG%"
+  echo Pipeline exit code %errorlevel% — running USGS listener only>>"%LOG%"
+  python usgs_listener.py --once >>"%LOG%" 2>&1
 )
 
 git pull --rebase origin main >>"%LOG%" 2>&1
