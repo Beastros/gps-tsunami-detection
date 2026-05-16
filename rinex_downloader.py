@@ -30,16 +30,24 @@ EVENT_QUEUE_FILE = "event_queue.json"
 RINEX_BASE_DIR = "rinex_live"
 RINEX_CACHE_DIR = "rinex_cache"
 ALIASES_FILE = "rinex_station_aliases.json"
+CATALOG_FILE = "igs_station_catalog.json"
 LOG_FILE = "downloader.log"
 CDDIS_BASE = "https://cddis.nasa.gov/archive/gnss/data/daily"
 CDDIS_SUFFIXES = (".gz", ".Z")
-CACHE_DAYS = 2  # today + yesterday UTC
+CACHE_DAYS = 3  # rolling UTC days kept on disk
+EVENT_DOY_OFFSETS = (-1, 0, 1)  # quake day ±1 for propagation window
+DISCOVERY_RADIUS_KM = 3200  # auto-add catalog sites within this range of epicenter
 
 CORRIDOR_STATIONS = {
-    "guam": ["guam", "kwj1", "noum", "holb", "mkea", "kokb", "hnlc"],
-    "chat": ["chat", "auck", "mkea", "kokb", "hnlc"],
-    "thti": ["thti", "thtg", "auck", "noum", "mkea", "kokb"],
-    None: ["mkea", "kokb", "hnlc", "guam"],
+    "guam": [
+        "mizu", "usud", "aira", "tskb", "yssz", "khaj",
+        "pimo", "cnmr", "pohn",
+        "guam", "kwj1", "noum",
+        "mkea", "kokb", "hnlc", "holb",
+    ],
+    "chat": ["chat", "auck", "mkea", "kokb", "hnlc", "sant", "iqqe"],
+    "thti": ["thti", "thtg", "auck", "noum", "mkea", "kokb", "savo", "faf2"],
+    None: ["mkea", "kokb", "hnlc", "guam", "mizu", "usud"],
 }
 
 RINEX_HREF_RE = re.compile(
@@ -65,7 +73,85 @@ def all_corridor_station_ids() -> list[str]:
     for stations in CORRIDOR_STATIONS.values():
         for s in stations:
             seen.add(s.lower())
+    for s in load_station_catalog():
+        seen.add(s.lower())
     return sorted(seen)
+
+
+def haversine_km(lat1, lon1, lat2, lon2):
+    from math import radians, sin, cos, sqrt, atan2
+
+    r = 6371.0
+    p1, p2 = radians(lat1), radians(lat2)
+    dlat = radians(lat2 - lat1)
+    dlon = radians(lon2 - lon1)
+    a = sin(dlat / 2) ** 2 + cos(p1) * cos(p2) * sin(dlon / 2) ** 2
+    return 2 * r * atan2(sqrt(a), sqrt(1 - a))
+
+
+def load_station_catalog() -> dict[str, dict]:
+    p = Path(CATALOG_FILE)
+    if not p.exists():
+        return {}
+    data = json.loads(p.read_text(encoding="utf-8"))
+    return {k.lower(): v for k, v in data.items() if not k.startswith("_")}
+
+
+def discover_stations_near_epicenter(
+    epi_lat: float,
+    epi_lon: float,
+    year: int,
+    doy: int,
+    yr2: str,
+    sess: requests.Session,
+    aliases: dict[str, list[str]],
+    max_km: float = DISCOVERY_RADIUS_KM,
+) -> list[str]:
+    """Pick catalog stations on CDDIS for this DOY within max_km of epicenter."""
+    catalog = load_station_catalog()
+    if not catalog:
+        return []
+    sites_o = fetch_cddis_listing(year, doy, yr2, "o", sess)
+    sites_n = fetch_cddis_listing(year, doy, yr2, "n", sess)
+    found: list[tuple[float, str]] = []
+    for logical, meta in catalog.items():
+        code = resolve_station_code(logical, sites_o, sites_n, aliases)
+        if not code:
+            continue
+        dist = haversine_km(epi_lat, epi_lon, meta["lat"], meta["lon"])
+        if dist <= max_km:
+            found.append((dist, logical))
+    found.sort(key=lambda x: x[0])
+    picked = [s for _, s in found]
+    if picked:
+        log.info(f"  CDDIS discovery ({year}/{doy:03d}): {picked} within {max_km:.0f} km")
+    return picked
+
+
+def stations_for_event(event: dict) -> list[str]:
+    """Corridor list + epicenter discovery (unique, corridor order first)."""
+    anchor = event.get("primary_anchor")
+    base = list(CORRIDOR_STATIONS.get(anchor, CORRIDOR_STATIONS[None]))
+    lat, lon = event.get("lat"), event.get("lon")
+    if lat is None or lon is None:
+        return base
+    year, doy, yr2, _ = quake_to_doy(event["quake_utc"])
+    user, pwd = get_credentials()
+    if not user:
+        return base
+    sess = earthdata_session(HTTPBasicAuth(user, pwd))
+    aliases = load_aliases()
+    discovered = discover_stations_near_epicenter(
+        lat, lon, year, doy, yr2, sess, aliases
+    )
+    merged: list[str] = []
+    seen: set[str] = set()
+    for s in base + discovered:
+        k = s.lower()
+        if k not in seen:
+            seen.add(k)
+            merged.append(k)
+    return merged
 
 
 def load_aliases() -> dict[str, list[str]]:
@@ -332,24 +418,16 @@ def resolve_corridor_stations(
     return resolved
 
 
-def download_event(event, auth: HTTPBasicAuth):
-    year, doy, yr2, quake_dt = quake_to_doy(event["quake_utc"])
-    anchor = event.get("primary_anchor")
-    logical_stations = CORRIDOR_STATIONS.get(anchor, CORRIDOR_STATIONS[None])
-
-    event_dir = Path(RINEX_BASE_DIR) / event["usgs_id"]
-    event_dir.mkdir(parents=True, exist_ok=True)
-    sess = earthdata_session(auth)
-    aliases = load_aliases()
-
-    log.info(f"\nRINEX for {event['usgs_id']} — {event.get('place', '')[:50]}")
-    log.info(f"  Mw{event['magnitude']}  {event['quake_utc'][:16]}  DOY={doy}")
-
-    resolved = resolve_corridor_stations(logical_stations, year, doy, yr2, sess, aliases)
+def _download_resolved_for_doy(
+    year: int,
+    doy: int,
+    yr2: str,
+    resolved: dict[str, str],
+    event_dir: Path,
+    sess: requests.Session,
+) -> int:
     downloaded = copy_from_cache(year, doy, yr2, resolved, event_dir)
-    log.info(f"  From cache: {downloaded} files")
-
-    for logical, code in resolved.items():
+    for _logical, code in resolved.items():
         for ftype in ("o", "n"):
             for suf in CDDIS_SUFFIXES:
                 fname = f"{code}{doy:03d}0.{yr2}{ftype}{suf}"
@@ -360,26 +438,64 @@ def download_event(event, auth: HTTPBasicAuth):
                     year, doy, yr2, code, event_dir, sess, (ftype,)
                 )
         time.sleep(0.35)
+    return downloaded
 
-    if quake_dt.hour >= 18:
-        next_dt = quake_dt + timedelta(days=1)
-        ny, ndoy, ny2 = next_dt.year, next_dt.timetuple().tm_yday, str(next_dt.year)[-2:]
-        log.info(f"  Late UTC — adding DOY {ndoy}")
-        resolved_next = resolve_corridor_stations(
-            logical_stations[:4], ny, ndoy, ny2, sess, aliases
-        )
-        downloaded += copy_from_cache(ny, ndoy, ny2, resolved_next, event_dir)
-        for logical, code in resolved_next.items():
-            downloaded += download_station_day_to_dir(
-                ny, ndoy, ny2, code, event_dir, sess
+
+def download_event(event, auth: HTTPBasicAuth):
+    _, quake_doy, _, quake_dt = quake_to_doy(event["quake_utc"])
+    logical_stations = stations_for_event(event)
+
+    event_dir = Path(RINEX_BASE_DIR) / event["usgs_id"]
+    event_dir.mkdir(parents=True, exist_ok=True)
+    sess = earthdata_session(auth)
+    aliases = load_aliases()
+
+    log.info(f"\nRINEX for {event['usgs_id']} — {event.get('place', '')[:50]}")
+    log.info(f"  Mw{event['magnitude']}  {event['quake_utc'][:16]}  DOY={quake_doy}")
+    log.info(f"  Station list ({len(logical_stations)}): {logical_stations}")
+
+    manifest: dict = {"usgs_id": event["usgs_id"], "days": [], "stations_requested": logical_stations}
+    downloaded = 0
+    epi_lat, epi_lon = event.get("lat"), event.get("lon")
+
+    for day_off in EVENT_DOY_OFFSETS:
+        dt = quake_dt + timedelta(days=day_off)
+        year, doy, yr2 = dt.year, dt.timetuple().tm_yday, str(dt.year)[-2:]
+        station_list = list(logical_stations)
+        if epi_lat is not None and epi_lon is not None:
+            extra = discover_stations_near_epicenter(
+                epi_lat, epi_lon, year, doy, yr2, sess, aliases
             )
+            for s in extra:
+                if s not in station_list:
+                    station_list.append(s)
+
+        resolved = resolve_corridor_stations(station_list, year, doy, yr2, sess, aliases)
+        if not resolved:
+            log.warning(f"  No stations resolved for {year}/{doy:03d}")
+            manifest["days"].append({"year": year, "doy": doy, "resolved": {}, "files": 0})
+            continue
+
+        n = _download_resolved_for_doy(year, doy, yr2, resolved, event_dir, sess)
+        downloaded += n
+        manifest["days"].append(
+            {"year": year, "doy": doy, "resolved": resolved, "files": n}
+        )
+        log.info(f"  DOY {doy:03d}: {n} files, stations={list(resolved.keys())}")
 
     save_aliases(aliases)
+    manifest["total_files"] = downloaded
+    manifest["updated_utc"] = datetime.now(timezone.utc).isoformat()
+    (event_dir / "rinex_manifest.json").write_text(
+        json.dumps(manifest, indent=2), encoding="utf-8"
+    )
     log.info(f"  Total {downloaded} RINEX files in {event_dir}")
     return downloaded, str(event_dir)
 
 
-def is_ready_to_download(event):
+def is_ready_to_download(event, force: bool = False):
+    if force:
+        return bool(event.get("usgs_id"))
     if event.get("rinex_downloaded"):
         return False
     status = event.get("status", "")
@@ -395,7 +511,39 @@ def is_ready_to_download(event):
     return hours_since >= min_wait_h
 
 
-def main(event_id=None, cache_only=False):
+def _clear_running_log_score(usgs_id: str) -> None:
+    p = Path("running_log.json")
+    if not p.exists():
+        return
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        before = len(data.get("scored_events", []))
+        data["scored_events"] = [
+            e for e in data.get("scored_events", []) if e.get("usgs_id") != usgs_id
+        ]
+        if len(data["scored_events"]) < before:
+            from scorer import update_summary
+
+            update_summary(data)
+            p.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    except Exception as e:
+        log.warning("Could not trim running_log for %s: %s", usgs_id, e)
+
+
+def reset_event_for_reprocess(event: dict) -> None:
+    """Allow re-download + re-run detector on an already-processed event."""
+    _clear_running_log_score(event["usgs_id"])
+    event["rinex_downloaded"] = False
+    event["detector_run"] = False
+    event["scored"] = False
+    event.pop("prediction", None)
+    event.pop("score", None)
+    event.pop("discord_alerted", None)
+    event["status"] = "queued"
+    event["reprocess_requested"] = True
+
+
+def main(event_id=None, cache_only=False, force=False):
     log.info("=" * 55)
     log.info("GPS Tsunami Detector — RINEX Downloader")
     log.info("=" * 55)
@@ -421,7 +569,13 @@ def main(event_id=None, cache_only=False):
             log.error(f"Event {event_id} not found")
             return
 
-    ready = [e for e in events if is_ready_to_download(e)]
+    if force:
+        for event in events:
+            reset_event_for_reprocess(event)
+        save_queue(queue)
+        log.info(f"Force reprocess: reset {len(events)} event(s)")
+
+    ready = [e for e in events if is_ready_to_download(e, force=force)]
     log.info(f"Queue: {len(events)} events, {len(ready)} ready for event RINEX")
 
     if not ready:
@@ -448,5 +602,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--event", help="Process specific USGS event ID")
     parser.add_argument("--cache-only", action="store_true", help="Only refresh rolling cache")
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Re-download RINEX and reset detector/scorer for selected event(s)",
+    )
     args = parser.parse_args()
-    main(event_id=args.event, cache_only=args.cache_only)
+    main(event_id=args.event, cache_only=args.cache_only, force=args.force)

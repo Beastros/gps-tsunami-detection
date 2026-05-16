@@ -50,7 +50,7 @@ PACIFIC_ZONES = [
         "name": "Japan/Kuril",
         "lat": (30, 55), "lon": (130, 165),
         "anchor": "guam",
-        "note": "Tōhoku, Kuril corridors → GUAM upstream"
+        "note": "Japan/Kuril → Japan IGS + Marianas + Hawaii RINEX (guam anchor)"
     },
     {
         "name": "Alaska/Aleutian",

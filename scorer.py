@@ -41,6 +41,15 @@ def _fmt_num(value, fmt=".3f", missing="—"):
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+
+def _fmt_num(value, fmt=".3f", missing="—"):
+    if value is None:
+        return missing
+    try:
+        return format(value, fmt)
+    except (TypeError, ValueError):
+        return missing
+
 try:
     import requests
 except ImportError:
@@ -345,6 +354,14 @@ def score_event(event, gauge_results, dart_result=None):
         "space_weather_flags":        sw_flags,
         "dart_reconciliation":        dart_reconcile,
 
+        # Detector snapshot (for dashboard — copied from prediction)
+        "stations_processed":         pred.get("stations_processed"),
+        "detection_reason":           pred.get("reason"),
+        "constellation_agreement":    pred.get("constellation_agreement"),
+        "dtec_corroborates":          pred.get("dtec_corroborates", False),
+        "ionosonde_confirmed":        pred.get("ionosonde_confirmed", False),
+        "lb_pairs_in_window":         pred.get("lb_pairs_in_window"),
+
         # DYFI (USGS Did You Feel It) — snapshot at T+24h score time
         "dyfi_contribution":   dyfi_contribution,
         "dyfi_responses":      dyfi_responses,
@@ -600,10 +617,6 @@ def main(event_id=None, force=False):
                 f"  Prediction: TEC={'yes' if pred.get('detected') else 'no'}  "
                 f"DART={pred.get('dart_status','n/a')}({_fmt_num(pred.get('dart_score'), '.2f')})  "
                 f"SW={_fmt_num(pred.get('space_weather_score'), '.2f')}  "
-                f"combined={_fmt_num(pred['combined_confidence'])}"
-            )
-
-        # Fetch all gauges
         gauge_results = fetch_all_gauges(event["quake_utc"])
         any_signal    = any(g["tsunami"] for g in gauge_results.values())
 

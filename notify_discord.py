@@ -52,7 +52,6 @@ def _post_webhook(payload: dict):
 
 
 def _prediction_summary(evt) -> str:
-    """Human-readable detector result for Discord (not raw dict)."""
     pred = evt.get("prediction")
     if not isinstance(pred, dict):
         return str(evt.get("result") or evt.get("status") or "predicted")[:200]
@@ -80,24 +79,15 @@ def _prediction_summary(evt) -> str:
     wf = pred.get("wave_forecast")
     if wf and wf.get("predicted_wave_m") is not None:
         lines.append(f"**Hilo forecast:** {wf['predicted_wave_m']:.3f} m")
-    note = (
-        "_Banner “predicted” = detector finished, not tsunami confirmed._"
-    )
-    return "\n".join(lines)[:900] + "\n\n" + note
-
-
 def send_detection_alert(evt):
-    """Posted when an event first reaches status predicted."""
     mag = evt.get("magnitude", "?")
     place = evt.get("place", "?")[:120]
     quake = evt.get("quake_utc", "?")
     usgs = evt.get("usgs_id", "")
     summary = _prediction_summary(evt)
-
     embed = {
         "title": "GPS Tsunami — detector complete",
         "description": summary,
-        "color": 0x5865F2 if not (evt.get("prediction") or {}).get("detected") else 0x57F287,
         "fields": [
             {"name": "Mw / location", "value": f"{mag} — {place}", "inline": False},
             {"name": "Origin (UTC)", "value": str(quake)[:32], "inline": True},
@@ -108,16 +98,11 @@ def send_detection_alert(evt):
 
 
 def send_pipeline_error(component: str, err: str):
-    """Pipeline cycle exception or fatal stage error."""
     text = f"**{component}** error:\n```{err[:1800]}```"
     _post_webhook({"content": text[:2000], "username": "GPS Tsunami"})
 
 
 def send_near_miss_alerts(near_misses: list):
-    """
-    Same webhook as other alerts — Pacific Mw5.5+ in zone that did not queue
-    (threshold, depth, mechanism, ShakeMap pending, etc.). One embed per poll cycle.
-    """
     if not near_misses:
         return
     chunks = []
