@@ -1,6 +1,19 @@
 {
-  "generated": "2026-05-10T15:47:30Z",
-  "lookback_hrs": 12,
-  "count": 0,
-  "pings": []
+  "generated": "2026-05-16T16:54:37Z",
+  "lookback_hrs": 24,
+  "max_ping_age_hrs": 24,
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000sy84",
+      "mag": 6.0,
+      "place": "70 km ESE of Codrington, Antigua and Barbuda",
+      "time_ms": 1778943003503,
+      "lat": 17.513,
+      "lon": -61.177,
+      "depth": 30.0,
+      "dyfi_responses": 99,
+      "dyfi_maxmmi": 4.6
+    }
+  ]
 }
