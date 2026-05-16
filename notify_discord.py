@@ -79,22 +79,15 @@ def _prediction_summary(evt) -> str:
     wf = pred.get("wave_forecast")
     if wf and wf.get("predicted_wave_m") is not None:
         lines.append(f"**Hilo forecast:** {wf['predicted_wave_m']:.3f} m")
-    lines.append("_“Predicted” = detector finished, not tsunami confirmed._")
-    return "\n".join(lines)[:900]
-
-
 def send_detection_alert(evt):
     mag = evt.get("magnitude", "?")
     place = evt.get("place", "?")[:120]
     quake = evt.get("quake_utc", "?")
     usgs = evt.get("usgs_id", "")
     summary = _prediction_summary(evt)
-    pred = evt.get("prediction") or {}
-
     embed = {
         "title": "GPS Tsunami — detector complete",
         "description": summary,
-        "color": 0x57F287 if pred.get("detected") else 0x5865F2,
         "fields": [
             {"name": "Mw / location", "value": f"{mag} — {place}", "inline": False},
             {"name": "Origin (UTC)", "value": str(quake)[:32], "inline": True},

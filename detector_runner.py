@@ -669,8 +669,8 @@ def run_event(event, kp_override=None):
             if _n > 0:
                 _best = max(dtec_onsets_map[_sid], key=lambda x: x['snr_dtec'])
                 log.info(f"  [{_sid.upper()}] dTEC/dt: {_n} onset(s) "
-                         f"peak_snr={_best['snr_dtec']:.1f} "
-                         f"at +{_best['post_h']:.1f}h")
+                         f"peak_snr={_fmt_num(_best.get('snr_dtec'), '.1f')} "
+                         f"at +{_fmt_num(_best.get('post_h'), '.1f')}h")
 
     # Get onsets
     onsets = {}
@@ -877,7 +877,6 @@ def run_event(event, kp_override=None):
         dart_status = "no_buoys"
 
     _tec  = prediction.get("detected", False)
-    _sw = prediction.get("space_weather_score")
     if _sw is None:
         _sw = 0.0
     _ti = event.get("tsunamigenic_index")

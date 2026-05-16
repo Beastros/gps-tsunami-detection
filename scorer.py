@@ -28,6 +28,16 @@ import json
 import logging
 import argparse
 import numpy as np
+
+
+def _fmt_num(value, fmt=".3f", missing="—"):
+    """Format a number for logs; None or bad values become a dash."""
+    if value is None:
+        return missing
+    try:
+        return format(value, fmt)
+    except (TypeError, ValueError):
+        return missing
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -607,10 +617,6 @@ def main(event_id=None, force=False):
                 f"  Prediction: TEC={'yes' if pred.get('detected') else 'no'}  "
                 f"DART={pred.get('dart_status','n/a')}({_fmt_num(pred.get('dart_score'), '.2f')})  "
                 f"SW={_fmt_num(pred.get('space_weather_score'), '.2f')}  "
-                f"combined={_fmt_num(pred.get('combined_confidence'))}"
-            )
-
-        # Fetch all gauges
         gauge_results = fetch_all_gauges(event["quake_utc"])
         any_signal    = any(g["tsunami"] for g in gauge_results.values())
 
