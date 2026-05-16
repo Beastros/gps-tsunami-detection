@@ -42,8 +42,7 @@
       },
       "tsunamigenic_index": 0.687,
       "rinex_dir": "rinex_live/us6000sxwq",
-      "rinex_download_utc": "2026-05-16T22:42:47.610262+00:00",
-      "detector_error": "cannot access local variable '_sw' where it is not associated with a value"
+      "rinex_download_utc": "2026-05-16T22:42:47.610262+00:00"
     }
   ],
   "seen_ids": [
