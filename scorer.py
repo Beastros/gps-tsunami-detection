@@ -617,6 +617,9 @@ def main(event_id=None, force=False):
                 f"  Prediction: TEC={'yes' if pred.get('detected') else 'no'}  "
                 f"DART={pred.get('dart_status','n/a')}({_fmt_num(pred.get('dart_score'), '.2f')})  "
                 f"SW={_fmt_num(pred.get('space_weather_score'), '.2f')}  "
+                f"combined={_fmt_num(pred.get('combined_confidence'))}"
+            )
+
         gauge_results = fetch_all_gauges(event["quake_utc"])
         any_signal    = any(g["tsunami"] for g in gauge_results.values())
 
