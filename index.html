@@ -805,6 +805,12 @@ function renderLog(d){
     const det = e.algo_detected ?? false;
     const gated = e.space_weather_gated ?? false;
     const bc  = det ? 'detected' : gated ? 'gated' : 'silent';
+    const stList = (e.stations_processed || []).map(function(s){return String(s).toUpperCase();});
+    const detReason = e.detection_reason || (det ? 'coherent_pairs' : 'no_coherent_pairs');
+    const tecTip = det
+      ? 'GPS TEC: detection declared'
+      : 'GPS TEC: silent — ' + detReason
+        + (stList.length ? ' (' + stList.join(', ') + ')' : ' (no RINEX processed)');
 
     // Confidence bar
     const conf = e.combined_confidence;
@@ -833,17 +839,29 @@ function renderLog(d){
     // Outcome label
     const outMap = {'TRUE_POSITIVE':'TP','TRUE_NEGATIVE':'TN','FALSE_POSITIVE':'FP',
       'FALSE_NEGATIVE':'FN','GEOMETRY_LIMITED_MISS':'GEO','CORRECT_ABSTENTION_NO_ANCHOR':'TN'};
-    const outLabel = outMap[e.outcome] || (e.outcome||'--');
+    let outLabel = outMap[e.outcome] || (e.outcome||'--');
+    let outTip = e.outcome || '';
+    if(e.outcome==='FALSE_NEGATIVE' && !det && e.any_gauge_tsunami){
+      outLabel = 'FN·gauges';
+      outTip = 'GPS silent; NOAA tide gauge(s) flagged a small signal (not a TEC detection)';
+    } else if(e.outcome==='FALSE_NEGATIVE' && !det){
+      outTip = 'GPS did not detect; scorer outcome vs gauge truth';
+    } else if(e.outcome==='TRUE_NEGATIVE' && !det){
+      outTip = 'No GPS detection and no gauge tsunami — correct abstention';
+    }
+
     const outCol = outLabel==='TP'?'var(--accent2)':outLabel==='FP'?'var(--danger)':
-                   outLabel==='FN'?'var(--warn)':'var(--dim)';
+                   (outLabel==='FN'||outLabel==='FN·gauges')?'var(--warn)':'var(--dim)';
 
     return '<tr>'
       +'<td>'+fmtDate(e.quake_utc)+'</td>'
       +'<td>'+( e.place||'--')+'</td>'
       +'<td style="font-family:var(--font-m)">Mw '+(e.magnitude!=null?e.magnitude.toFixed(1):'--')+'</td>'
       +'<td>'+confCell+'</td>'
-      +'<td><span class="det-badge '+bc+'">'+(det?'DETECTED':gated?'GATED':'SILENT')+'</span></td>'
-      +'<td style="font-family:var(--font-m);color:'+outCol+'">'+outLabel+'</td>'
+      +'<td title="'+tecTip+'"><span class="det-badge '+bc+'">'+(det?'DETECTED':gated?'GATED':'SILENT')+'</span>'
+      +(stList.length?'<span style="display:block;font-size:10px;color:var(--dim);margin-top:2px">'+stList.slice(0,4).join(' ')+(stList.length>4?' +'+ (stList.length-4):'')+'</span>':'')
+      +'</td>'
+      +'<td style="font-family:var(--font-m);color:'+outCol+'" title="'+outTip+'">'+outLabel+'</td>'
       +'<td title="Constellation: '+(e.constellation_agreement?e.constellation_agreement.agreement_label:'n/a')+'" style="font-family:var(--font-m);color:var(--dim);text-align:center">'+(e.constellation_agreement?(e.constellation_agreement.n_detecting+'/'+e.constellation_agreement.n_available):'--')+'</td>'
       +'<td style="text-align:center;color:'+(e.dtec_corroborates?'var(--accent2)':'var(--dim)')+'" title="dTEC/dt corroboration">'+(e.dtec_corroborates?'\u25CF':'\u25CB')+'</td>'
       +'<td style="text-align:center;color:'+(e.ionosonde_confirmed?'var(--accent2)':'var(--dim)')+'" title="Ionosonde foF2 confirmed">'+(e.ionosonde_confirmed?'\u25CF':'\u25CB')+'</td>'
