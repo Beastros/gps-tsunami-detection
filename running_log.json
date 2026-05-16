@@ -1,1 +1,144 @@
-{"scored_events": [], "summary": {}}
+{
+  "scored_events": [
+    {
+      "usgs_id": "us6000sxwq",
+      "quake_utc": "2026-05-15T11:22:01.649000+00:00",
+      "magnitude": 6.7,
+      "place": "49 km ESE of \u014cfunato, Japan",
+      "anchor": "guam",
+      "kp": null,
+      "algo_detected": false,
+      "gauge_tsunami": true,
+      "any_gauge_tsunami": true,
+      "corroborated_by": [
+        "midway"
+      ],
+      "combined_confidence": 0.0,
+      "confidence_detected": false,
+      "confidence_threshold": 0.35,
+      "dart_score_prediction": 0.0,
+      "dart_status_prediction": "no_buoys",
+      "space_weather_score": null,
+      "space_weather_gated": false,
+      "space_weather_flags": [],
+      "dart_reconciliation": {
+        "reconciled": false,
+        "reason": "no_scoring_dart"
+      },
+      "stations_processed": [
+        "hnlc",
+        "holb"
+      ],
+      "detection_reason": "no_coherent_pairs",
+      "constellation_agreement": {
+        "constellations": {
+          "G": {
+            "available": true,
+            "anomaly": true,
+            "n_stations": 2
+          },
+          "R": {
+            "available": true,
+            "anomaly": true,
+            "n_stations": 1
+          },
+          "E": {
+            "available": false,
+            "anomaly": false,
+            "n_stations": 0
+          }
+        },
+        "n_available": 2,
+        "n_detecting": 2,
+        "detecting": [
+          "G",
+          "R"
+        ],
+        "agreement_score": 1.0,
+        "agreement_label": "agreement"
+      },
+      "dtec_corroborates": false,
+      "ionosonde_confirmed": false,
+      "lb_pairs_in_window": 0,
+      "dyfi_contribution": 0.04,
+      "dyfi_responses": 89,
+      "dyfi_maxmmi": 6.6,
+      "dyfi_confirmed": true,
+      "dart_detected": null,
+      "dart_confirming_buoys": null,
+      "dart_buoys_checked": null,
+      "dart_network": null,
+      "gauge_network": {
+        "hilo": {
+          "signal": true,
+          "arrival_h": 4.63,
+          "amplitude_m": 0.061,
+          "method": "variance_threshold"
+        },
+        "midway": {
+          "signal": true,
+          "arrival_h": 8.43,
+          "amplitude_m": 0.051,
+          "method": "variance_threshold"
+        },
+        "johnston": {
+          "signal": false,
+          "arrival_h": null,
+          "amplitude_m": null,
+          "method": null
+        },
+        "pago": {
+          "signal": false,
+          "arrival_h": null,
+          "amplitude_m": null,
+          "method": null
+        }
+      },
+      "outcome": "FALSE_NEGATIVE",
+      "outcome_confidence": "FALSE_NEGATIVE",
+      "lead_time_min": null,
+      "amplitude_predicted_m": null,
+      "amplitude_actual_m": null,
+      "amplitude_error_pct": null,
+      "timing_error_min": null,
+      "notes": [
+        "Multi-gauge confirmed: ['midway']"
+      ],
+      "tide_gauge_truth": {
+        "onset_utc": "2026-05-15T16:00:00+00:00",
+        "arrival_h_post_quake": 4.63,
+        "amplitude_m": 0.061,
+        "detection_method": "variance_threshold"
+      }
+    }
+  ],
+  "summary": {
+    "total_scored": 1,
+    "true_positives": 0,
+    "true_negatives": 0,
+    "false_positives": 0,
+    "false_negatives": 1,
+    "tpr": 0.0,
+    "fpr": null,
+    "confidence_tp": 0,
+    "confidence_tn": 0,
+    "confidence_fp": 0,
+    "confidence_fn": 1,
+    "confidence_tpr": 0.0,
+    "confidence_fpr": null,
+    "confidence_threshold": 0.35,
+    "mean_lead_time_min": null,
+    "median_lead_time_min": null,
+    "mean_amplitude_error_pct": null,
+    "mean_confidence": 0.0,
+    "dart_confirmed_events": 0,
+    "dart_pending_at_detection": 0,
+    "confidence_calibration": {
+      "0.0-0.2": {
+        "n": 1,
+        "hit_rate": 1.0
+      }
+    },
+    "last_updated": "2026-05-16T23:55:03.627553+00:00"
+  }
+}
