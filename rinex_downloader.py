@@ -37,7 +37,8 @@ except ImportError:
 EVENT_QUEUE_FILE = "event_queue.json"
 RINEX_BASE_DIR   = "rinex_live"
 LOG_FILE         = "downloader.log"
-CDDIS_BASE       = "https://cddis.nasa.gov/archive/gps/data/daily"
+CDDIS_BASE       = "https://cddis.nasa.gov/archive/gnss/data/daily"
+CDDIS_SUFFIXES   = (".gz", ".Z")  # CDDIS daily RINEX is usually .YYo.gz (was .Z)
 
 # Stations to attempt per corridor
 CORRIDOR_STATIONS = {
@@ -97,38 +98,54 @@ def quake_to_doy(quake_utc_str):
     yr2 = str(dt.year)[-2:]
     return dt.year, doy, yr2, dt
 
-def build_cddis_url(year, doy, yr2, station, ftype="o"):
-    """Build CDDIS URL for a station/day observation or nav file."""
-    fname = f"{station}{doy:03d}0.{yr2}{ftype}.Z"
-    return f"{CDDIS_BASE}/{year}/{doy:03d}/{yr2}{ftype}/{fname}", fname
+def build_cddis_candidates(year, doy, yr2, station, ftype="o"):
+    """URLs and local filenames to try (CDDIS gnss tree; daily files usually .gz)."""
+    base = f"{station}{doy:03d}0.{yr2}{ftype}"
+    return [
+        (f"{CDDIS_BASE}/{year}/{doy:03d}/{yr2}{ftype}/{base}{suf}", base + suf)
+        for suf in CDDIS_SUFFIXES
+    ]
 
 def download_file(url, dest_path, auth):
     """Download a single file from CDDIS. Returns True on success."""
-    if dest_path.exists():
+    if dest_path.exists() and dest_path.stat().st_size > 500:
         log.info(f"  {dest_path.name} already exists, skipping")
         return True
     try:
-        import requests as _req
-        class _S(_req.Session):
+        class _S(requests.Session):
             def rebuild_auth(self, pr, r):
-                if self.auth: pr.prepare_auth(self.auth, pr.url)
+                if self.auth:
+                    pr.prepare_auth(self.auth, r.url)
         _sess = _S()
         _sess.auth = auth
-        r = _sess.get(url, timeout=60, stream=True)
+        r = _sess.get(url, timeout=120, stream=True)
         if r.status_code == 404:
-            log.debug(f"  404: {dest_path.name}")
             return False
         r.raise_for_status()
         dest_path.parent.mkdir(parents=True, exist_ok=True)
         with open(dest_path, "wb") as f:
             for chunk in r.iter_content(chunk_size=65536):
                 f.write(chunk)
+        if dest_path.stat().st_size < 500:
+            dest_path.unlink(missing_ok=True)
+            return False
+        if dest_path.read_bytes()[:1] == b"<":
+            dest_path.unlink(missing_ok=True)
+            log.warning(f"  HTML error page for {dest_path.name}")
+            return False
         size_kb = dest_path.stat().st_size / 1024
-        log.info(f"  ✓ {dest_path.name}  ({size_kb:.0f} KB)")
+        log.info(f"  OK {dest_path.name}  ({size_kb:.0f} KB)")
         return True
     except Exception as e:
-        log.warning(f"  ✗ {dest_path.name}: {e}")
+        log.warning(f"  FAIL {dest_path.name}: {e}")
+        dest_path.unlink(missing_ok=True)
         return False
+
+def download_station_day(year, doy, yr2, station, ftype, event_dir, auth):
+    for url, fname in build_cddis_candidates(year, doy, yr2, station, ftype):
+        if download_file(url, event_dir / fname, auth):
+            return True
+    return False
 
 def download_event(event, auth):
     """Download all RINEX files for a single event. Returns file count."""
@@ -146,9 +163,7 @@ def download_event(event, auth):
     downloaded = 0
     for sid in stations:
         for ftype in ["o", "n"]:
-            url, fname = build_cddis_url(year, doy, yr2, sid, ftype)
-            dest = event_dir / fname
-            if download_file(url, dest, auth):
+            if download_station_day(year, doy, yr2, sid, ftype, event_dir, auth):
                 downloaded += 1
             time.sleep(0.5)  # be polite to CDDIS
 
@@ -161,9 +176,7 @@ def download_event(event, auth):
         log.info(f"  Late UTC event — also downloading day {next_doy} files")
         for sid in stations[:3]:  # key stations only for next day
             for ftype in ["o", "n"]:
-                url, fname = build_cddis_url(next_dt.year, next_doy, next_yr2, sid, ftype)
-                dest = event_dir / fname
-                if download_file(url, dest, auth):
+                if download_station_day(next_dt.year, next_doy, next_yr2, sid, ftype, event_dir, auth):
                     downloaded += 1
                 time.sleep(0.5)
 
@@ -178,8 +191,13 @@ def is_ready_to_download(event):
     """
     if event.get("rinex_downloaded"):
         return False
-    if event.get("status") not in ["queued", "pending_rinex"]:
+    status = event.get("status", "")
+    if status not in ("queued", "pending_rinex", "rinex_failed"):
         return False
+    if status == "rinex_failed":
+        retries = int(event.get("rinex_retries", 0))
+        if retries >= 8:
+            return False
 
     quake_time = datetime.fromisoformat(event["quake_utc"].replace("Z", "+00:00"))
     now = datetime.now(timezone.utc)
@@ -238,6 +256,8 @@ def main(event_id=None):
         else:
             log.warning(f"No files downloaded for {event['usgs_id']}")
             event["status"] = "rinex_failed"
+            event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
+            event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
             save_queue(queue)
 
 if __name__ == "__main__":

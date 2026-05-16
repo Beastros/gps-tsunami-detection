@@ -103,6 +103,8 @@ def _pair_zone_ok(s1_name, s2_name, event_lat, event_lon):
     for stn in (s1_name, s2_name):
         if stn.upper() in STATION_ZONE_CONSTRAINTS:
             z = STATION_ZONE_CONSTRAINTS[stn.upper()]
+            if z is None:
+                continue
             if not (z["lat_min"] <= event_lat <= z["lat_max"] and
                     z["lon_min"] <= event_lon <= z["lon_max"]):
                 return False
@@ -364,13 +366,45 @@ def get_dtec_onsets(dtec, quake_utc):
     return onsets
 
 
+def _rinex_obs_path(rinex_dir, sid, doy, yr2):
+    """First existing observation archive (.Z or .gz) for station/day."""
+    base = rinex_dir / f"{sid}{doy:03d}0.{yr2}o"
+    for ext in (".Z", ".gz"):
+        p = Path(str(base) + ext)
+        if p.exists():
+            return p
+    return base.with_suffix(".Z")
+
+def _rinex_nav_path(rinex_dir, sid, doy, yr2):
+    base = rinex_dir / f"{sid}{doy:03d}0.{yr2}n"
+    for ext in (".Z", ".gz"):
+        p = Path(str(base) + ext)
+        if p.exists():
+            return p
+    return base.with_suffix(".Z")
+
 def decompress(gz):
-    out=Path(str(gz).replace('.Z',''))
-    if out.exists(): return out
-    try:
-        import ncompress; data=ncompress.decompress(open(gz,'rb').read())
-        open(out,'wb').write(data); return out
-    except: return None
+  p = Path(gz)
+  if p.suffix == ".gz":
+      out = Path(str(p)[:-3])
+  else:
+      out = Path(str(p).replace(".Z", ""))
+  if out.exists():
+      return out
+  try:
+      raw = open(p, "rb").read()
+      if p.suffix == ".gz":
+          import gzip
+          raw = gzip.decompress(raw)
+      else:
+          import ncompress
+          raw = ncompress.decompress(raw)
+      if raw[:1] == b"<":
+          return None
+      open(out, "wb").write(raw)
+      return out
+  except Exception:
+      return None
 
 def keplerian_to_ecef(rec,t):
     try:
@@ -549,9 +583,8 @@ def run_event(event, kp_override=None):
     # Determine which stations have files
     filts = {}
     for sid in STATIONS:
-        og = rinex_dir / f"{sid}{doy:03d}0.{yr2}o.Z"
-        ng = rinex_dir / f"{sid}{doy:03d}0.{yr2}n.Z"
-        print('CHECK', str(og), og.exists())
+        og = _rinex_obs_path(rinex_dir, sid, doy, yr2)
+        ng = _rinex_nav_path(rinex_dir, sid, doy, yr2)
         if not og.exists(): continue
         op = decompress(og)
         if not op: continue
@@ -578,7 +611,7 @@ def run_event(event, kp_override=None):
     for _const in ('R', 'E'):
         _cfilts = {}
         for _sid in STATIONS:
-            _og = rinex_dir / f"{_sid}{doy:03d}0.{yr2}o.Z"
+            _og = _rinex_obs_path(rinex_dir, _sid, doy, yr2)
             if not _og.exists(): continue
             _op = decompress(_og)
             if not _op: continue
