@@ -183,6 +183,15 @@ def compute_dart_score(dart_result):
     return min(round(base + sigma_boost, 3), 1.0)
 
 
+def _fmt_num(value, fmt=".3f", missing="—"):
+    if value is None:
+        return missing
+    try:
+        return format(value, fmt)
+    except (TypeError, ValueError):
+        return missing
+
+
 def compute_combined_confidence(tec_detected, dart_score, dart_status, sw_score, const_agreement=None, dtec_corroborates=False, ionosonde_confirmed=False, tsunamigenic_weight=0.5):
     """
     Multi-sensor fusion confidence score (0-1).
@@ -640,8 +649,8 @@ def run_event(event, kp_override=None):
             if _n > 0:
                 _best = max(dtec_onsets_map[_sid], key=lambda x: x['snr_dtec'])
                 log.info(f"  [{_sid.upper()}] dTEC/dt: {_n} onset(s) "
-                         f"peak_snr={_best['snr_dtec']:.1f} "
-                         f"at +{_best['post_h']:.1f}h")
+                         f"peak_snr={_fmt_num(_best.get('snr_dtec'), '.1f')} "
+                         f"at +{_fmt_num(_best.get('post_h'), '.1f')}h")
 
     # Get onsets
     onsets = {}
@@ -846,7 +855,9 @@ def run_event(event, kp_override=None):
         dart_status = "no_buoys"
 
     _tec  = prediction.get("detected", False)
-    _sw   = prediction.get("space_weather_score", 0.0)
+    _sw   = prediction.get("space_weather_score")
+    if _sw is None:
+        _sw = 0.0
     _ti = event.get("tsunamigenic_index")
     _tw = _ti if _ti is not None else 0.5
     combined_confidence = compute_combined_confidence(
@@ -863,8 +874,8 @@ def run_event(event, kp_override=None):
     prediction["dart_status"]         = dart_status
     prediction["combined_confidence"] = combined_confidence
     log.info(f"  CONFIDENCE: TEC={'yes' if _tec else 'no'}  "
-             f"DART={dart_status}({dart_score:.2f})  sw={_sw:.2f}  "
-             f"combined={combined_confidence:.3f}")
+             f"DART={dart_status}({_fmt_num(dart_score, '.2f')})  sw={_fmt_num(_sw, '.2f')}  "
+             f"combined={_fmt_num(combined_confidence)}")
 
     return prediction
 

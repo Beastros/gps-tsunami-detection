@@ -28,6 +28,16 @@ import json
 import logging
 import argparse
 import numpy as np
+
+
+def _fmt_num(value, fmt=".3f", missing="—"):
+    """Format a number for logs; None or bad values become a dash."""
+    if value is None:
+        return missing
+    try:
+        return format(value, fmt)
+    except (TypeError, ValueError):
+        return missing
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -409,14 +419,14 @@ def score_event(event, gauge_results, dart_result=None):
                 score["notes"].append(
                     f"Layer disagreement: binary={score['outcome']} "
                     f"confidence={score['outcome_confidence']} "
-                    f"(conf={combined_confidence:.3f} threshold={CONFIDENCE_THRESHOLD})"
+                    f"(conf={_fmt_num(combined_confidence)} threshold={CONFIDENCE_THRESHOLD})"
                 )
 
     # ── Space weather gate note ───────────────────────────────────
     if sw_gated:
         score["notes"].append(
             f"Space weather gated at detection time "
-            f"(score={sw_score_pred:.2f}, flags={'; '.join(sw_flags)})"
+            f"(score={_fmt_num(sw_score_pred, '.2f')}, flags={'; '.join(sw_flags)})"
         )
 
     # ── Quantitative metrics (true positives only) ────────────────
@@ -588,9 +598,9 @@ def main(event_id=None, force=False):
         if pred.get("combined_confidence") is not None:
             log.info(
                 f"  Prediction: TEC={'yes' if pred.get('detected') else 'no'}  "
-                f"DART={pred.get('dart_status','n/a')}({pred.get('dart_score', 0):.2f})  "
-                f"SW={pred.get('space_weather_score', 0):.2f}  "
-                f"combined={pred['combined_confidence']:.3f}"
+                f"DART={pred.get('dart_status','n/a')}({_fmt_num(pred.get('dart_score'), '.2f')})  "
+                f"SW={_fmt_num(pred.get('space_weather_score'), '.2f')}  "
+                f"combined={_fmt_num(pred['combined_confidence'])}"
             )
 
         # Fetch all gauges
@@ -620,7 +630,7 @@ def main(event_id=None, force=False):
         log.info(f"  Outcome (binary):     {score['outcome']}")
         if score.get("outcome_confidence"):
             log.info(f"  Outcome (confidence): {score['outcome_confidence']} "
-                     f"(conf={score['combined_confidence']:.3f})")
+                     f"(conf={_fmt_num(score.get('combined_confidence'))})")
         if score.get("dart_reconciliation", {}).get("agreement"):
             log.info(f"  DART reconciled:      {score['dart_reconciliation']['agreement']}")
         for note in score.get("notes", []):
@@ -652,15 +662,17 @@ def main(event_id=None, force=False):
         if s.get("confidence_tpr") is not None:
             log.info(f"  Confidence: TP={s['confidence_tp']} TN={s['confidence_tn']} "
                      f"FP={s['confidence_fp']} FN={s['confidence_fn']}")
-        if s.get("tpr") is not None:
-            log.info(f"  TPR={s['tpr']:.3f}  FPR={s['fpr']:.3f}")
+        if s.get("tpr") is not None or s.get("fpr") is not None:
+            log.info(f"  TPR={_fmt_num(s.get('tpr'))}  FPR={_fmt_num(s.get('fpr'))}")
         if s.get("mean_lead_time_min") is not None:
             log.info(f"  Lead time: mean={s['mean_lead_time_min']}min  "
                      f"median={s['median_lead_time_min']}min")
         if s.get("mean_amplitude_error_pct") is not None:
-            log.info(f"  Amplitude error: {s['mean_amplitude_error_pct']:.1f}% mean absolute")
+            log.info(
+                f"  Amplitude error: {_fmt_num(s.get('mean_amplitude_error_pct'), '.1f')}% mean absolute"
+            )
         if s.get("mean_confidence") is not None:
-            log.info(f"  Mean confidence: {s['mean_confidence']:.3f}")
+            log.info(f"  Mean confidence: {_fmt_num(s.get('mean_confidence'))}")
         if s.get("confidence_calibration"):
             log.info("  Calibration (confidence → hit rate):")
             for bucket, data in s["confidence_calibration"].items():

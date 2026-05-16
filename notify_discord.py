@@ -51,22 +51,57 @@ def _post_webhook(payload: dict):
         log.error("Discord webhook failed: %s", e)
 
 
+def _prediction_summary(evt) -> str:
+    """Human-readable detector result for Discord (not raw dict)."""
+    pred = evt.get("prediction")
+    if not isinstance(pred, dict):
+        return str(evt.get("result") or evt.get("status") or "predicted")[:200]
+
+    detected = pred.get("detected", False)
+    reason = pred.get("reason") or ("coherent_pairs" if detected else "—")
+    conf = pred.get("combined_confidence")
+    conf_s = f"{conf:.3f}" if conf is not None else "—"
+    stations = pred.get("stations_processed") or []
+    st_s = ", ".join(stations).upper() if stations else "—"
+    dart = pred.get("dart_status") or "n/a"
+    lines = [
+        f"**TEC signal:** {'yes' if detected else 'no'}",
+        f"**Reason:** {reason}",
+        f"**Confidence:** {conf_s}",
+        f"**Stations:** {st_s}",
+        f"**DART:** {dart}",
+    ]
+    if detected and pred.get("detection"):
+        d = pred["detection"]
+        pair = d.get("pair", "?")
+        post_h = d.get("post_h")
+        post_s = f"+{post_h:.1f}h" if post_h is not None else "—"
+        lines.append(f"**Best pair:** {pair} {post_s}")
+    wf = pred.get("wave_forecast")
+    if wf and wf.get("predicted_wave_m") is not None:
+        lines.append(f"**Hilo forecast:** {wf['predicted_wave_m']:.3f} m")
+    note = (
+        "_Banner “predicted” = detector finished, not tsunami confirmed._"
+    )
+    return "\n".join(lines)[:900] + "\n\n" + note
+
+
 def send_detection_alert(evt):
     """Posted when an event first reaches status predicted."""
     mag = evt.get("magnitude", "?")
     place = evt.get("place", "?")[:120]
     quake = evt.get("quake_utc", "?")
-    result = evt.get("result") or evt.get("prediction") or "predicted"
     usgs = evt.get("usgs_id", "")
+    summary = _prediction_summary(evt)
 
     embed = {
-        "title": "GPS Tsunami — detector prediction",
-        "color": 0x5865F2,
+        "title": "GPS Tsunami — detector complete",
+        "description": summary,
+        "color": 0x5865F2 if not (evt.get("prediction") or {}).get("detected") else 0x57F287,
         "fields": [
             {"name": "Mw / location", "value": f"{mag} — {place}", "inline": False},
             {"name": "Origin (UTC)", "value": str(quake)[:32], "inline": True},
             {"name": "USGS id", "value": str(usgs)[:48] or "—", "inline": True},
-            {"name": "Status", "value": str(result)[:200], "inline": False},
         ],
     }
     _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
