@@ -27,8 +27,8 @@
         "expected_lead_time_min": 289,
         "rinex_download_after_h": 4.4
       },
-      "status": "detector_failed",
-      "rinex_downloaded": true,
+      "status": "rinex_failed",
+      "rinex_downloaded": false,
       "detector_run": false,
       "scored": false,
       "result": null,
@@ -40,9 +40,7 @@
         "source": "us",
         "available": true
       },
-      "tsunamigenic_index": 0.687,
-      "rinex_dir": "rinex_live/us6000sxwq",
-      "rinex_download_utc": "2026-05-16T22:42:47.610262+00:00"
+      "tsunamigenic_index": 0.687
     }
   ],
   "seen_ids": [

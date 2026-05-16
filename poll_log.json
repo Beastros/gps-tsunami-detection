@@ -12848,36 +12848,44 @@
       "scored": 0
     },
     {
-      "ts": "2026-05-16T22:42:35.632362+00:00",
+      "ts": "2026-05-16T22:17:28.222545+00:00",
       "new_candidates": 0,
       "total_queued": 1,
-      "pending": 1,
       "scored": 0
     },
     {
-      "ts": "2026-05-16T22:42:38.017660+00:00",
+      "ts": "2026-05-16T22:32:28.495173+00:00",
       "new_candidates": 0,
       "total_queued": 1,
-      "pending": 1,
       "scored": 0
     },
     {
-      "ts": "2026-05-16T23:29:08.798441+00:00",
+      "ts": "2026-05-16T22:47:28.286860+00:00",
       "new_candidates": 0,
       "total_queued": 1,
-      "pending": 1,
       "scored": 0
     },
     {
-      "ts": "2026-05-16T23:29:12.611762+00:00",
+      "ts": "2026-05-16T23:02:29.164350+00:00",
       "new_candidates": 0,
       "total_queued": 1,
-      "pending": 1,
+      "scored": 0
+    },
+    {
+      "ts": "2026-05-16T23:17:29.229419+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "scored": 0
+    },
+    {
+      "ts": "2026-05-16T23:32:28.948698+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
       "scored": 0
     }
   ],
-  "last_updated": "2026-05-16T23:29:12.611762+00:00",
-  "total_polls": 2144,
+  "last_updated": "2026-05-16T23:32:28.948698+00:00",
+  "total_polls": 2146,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -13049,6 +13057,5 @@
       "reason": "below threshold",
       "delta": -0.8
     }
-  ],
-  "expected_poll_interval_sec": 900
+  ]
 }
