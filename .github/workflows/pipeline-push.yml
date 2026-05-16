@@ -1,0 +1,54 @@
+# Keeps poll_log.json / dyfi_pings.json fresh on GitHub Pages dashboard
+# even when the Windows Task Scheduler machine is offline.
+name: Pipeline poll and push
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pipeline-push-main
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt requests
+
+      - name: USGS poll + DYFI map
+        run: |
+          python usgs_listener.py --once
+          python dyfi_poller.py
+
+      - name: Full pipeline (RINEX/detector need secrets; steps no-op if idle)
+        env:
+          EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
+          EARTHDATA_PASS: ${{ secrets.EARTHDATA_PASS }}
+        run: python pipeline.py --once
+        continue-on-error: true
+
+      - name: Commit and push dashboard JSON
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin main
+          git add poll_log.json event_queue.json dyfi_pings.json running_log.json
+          if git diff --cached --quiet; then
+            echo "No JSON changes"
+            exit 0
+          fi
+          git commit -m "CI: pipeline JSON update $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push origin main

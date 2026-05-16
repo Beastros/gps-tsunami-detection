@@ -33,6 +33,9 @@ __pycache__/
 .env
 venv/
 
+# Local pipeline logs (Task Scheduler / manual runs)
+*.log
+
 # Output figures (committed versions in figures/)
 *.png
 
