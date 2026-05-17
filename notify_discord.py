@@ -79,6 +79,9 @@ def _prediction_summary(evt) -> str:
     wf = pred.get("wave_forecast")
     if wf and wf.get("predicted_wave_m") is not None:
         lines.append(f"**Hilo forecast:** {wf['predicted_wave_m']:.3f} m")
+    return "\n".join(lines)
+
+
 def send_detection_alert(evt):
     mag = evt.get("magnitude", "?")
     place = evt.get("place", "?")[:120]
@@ -92,6 +95,98 @@ def send_detection_alert(evt):
             {"name": "Mw / location", "value": f"{mag} — {place}", "inline": False},
             {"name": "Origin (UTC)", "value": str(quake)[:32], "inline": True},
             {"name": "USGS id", "value": str(usgs)[:48] or "—", "inline": True},
+        ],
+    }
+    _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
+
+
+def send_retroactive_triggered(info: dict):
+    """CDDIS coverage improved — event queued for re-download and re-run."""
+    usgs = info.get("usgs_id", "?")
+    mag = info.get("magnitude", "?")
+    place = (info.get("place") or "?")[:100]
+    reason = (info.get("reason") or "new RINEX on CDDIS")[:500]
+    prior = info.get("prior_status") or "?"
+    prior_det = info.get("prior_detected")
+    prior_det_s = (
+        "yes" if prior_det is True else "no" if prior_det is False else "—"
+    )
+    stations = info.get("new_stations") or []
+    st_s = ", ".join(str(s).upper() for s in stations[:12]) if stations else "—"
+    if len(stations) > 12:
+        st_s += f" (+{len(stations) - 12} more)"
+    embed = {
+        "title": "Retroactive re-run started",
+        "description": (
+            f"**Why:** {reason}\n\n"
+            f"Pipeline reset this event and will re-download RINEX, re-run the detector, "
+            f"and re-score if the event is 24h+ old.\n\n"
+            f"**Before:** status `{prior}`, GPS TEC signal **{prior_det_s}**"
+        ),
+        "color": 0x00C8FF,
+        "fields": [
+            {"name": "Event", "value": f"Mw{mag} — {place}", "inline": False},
+            {"name": "USGS id", "value": str(usgs), "inline": True},
+            {"name": "CDDIS stations now", "value": st_s, "inline": True},
+            {
+                "name": "Run",
+                "value": f"retro #{info.get('retro_run', '?')}",
+                "inline": True,
+            },
+        ],
+    }
+    _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
+
+
+def send_retroactive_completed(evt: dict):
+    """Detector finished after a retroactive re-run — includes before/after summary."""
+    usgs = evt.get("usgs_id", "?")
+    mag = evt.get("magnitude", "?")
+    place = (evt.get("place") or "?")[:100]
+    reason = (evt.get("retro_trigger_reason") or "CDDIS coverage improved")[:400]
+    prior_det = evt.get("retro_prior_detected")
+    prior_det_s = (
+        "yes" if prior_det is True else "no" if prior_det is False else "—"
+    )
+    pred = evt.get("prediction") if isinstance(evt.get("prediction"), dict) else {}
+    new_det = pred.get("detected", False)
+    new_det_s = "yes" if new_det else "no"
+    changed = prior_det_s != "—" and (prior_det is True) != (new_det is True)
+    summary = _prediction_summary(evt)
+    embed = {
+        "title": "Retroactive re-run complete",
+        "description": (
+            f"**Trigger:** {reason}\n\n"
+            f"**GPS TEC signal:** {prior_det_s} → **{new_det_s}**"
+            + (" _(changed)_" if changed else "")
+            + f"\n\n{summary}"
+        ),
+        "color": 0x00FF9D if new_det else 0x6A9CC0,
+        "fields": [
+            {"name": "Event", "value": f"Mw{mag} — {place}", "inline": False},
+            {"name": "USGS id", "value": str(usgs), "inline": True},
+            {
+                "name": "Status",
+                "value": str(evt.get("status") or "predicted"),
+                "inline": True,
+            },
+        ],
+    }
+    _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
+
+
+def send_retroactive_aborted(evt: dict, detail: str):
+    """Retro run could not download new RINEX."""
+    usgs = evt.get("usgs_id", "?")
+    place = (evt.get("place") or "?")[:80]
+    embed = {
+        "title": "Retroactive re-run — no new files",
+        "description": (evt.get("retro_trigger_reason") or "CDDIS probe")[:300]
+        + f"\n\n{detail[:500]}",
+        "color": 0xFFA726,
+        "fields": [
+            {"name": "USGS id", "value": str(usgs), "inline": True},
+            {"name": "Location", "value": place, "inline": True},
         ],
     }
     _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
