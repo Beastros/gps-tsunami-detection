@@ -83,6 +83,8 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 .data-table tbody tr:hover{background:var(--surface2)}
 .det-badge{font-family:var(--font-m);font-size:10px;letter-spacing:.08em;padding:3px 8px;border-radius:2px}
 .det-badge.detected{background:rgba(0,255,157,.12);color:var(--accent2);border:1px solid rgba(0,255,157,.25)}
+.det-badge.ok{background:rgba(0,255,157,.12);color:var(--accent2);border:1px solid rgba(0,255,157,.25)}
+.det-badge.warn{background:rgba(255,167,38,.1);color:var(--warn);border:1px solid rgba(255,167,38,.25)}
 .det-badge.silent{background:rgba(106,156,192,.1);color:var(--dim);border:1px solid var(--border)}
 .det-badge.gated{background:rgba(255,74,74,.1);color:var(--danger);border:1px solid rgba(255,74,74,.2)}
 .reason-tag{font-family:var(--font-m);font-size:10px;padding:2px 8px;border-radius:2px;background:var(--surface2);border:1px solid var(--border);color:var(--dim)}
@@ -93,7 +95,11 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 .empty-title{font-family:var(--font-m);font-size:13px;margin-bottom:5px;color:var(--text)}
 .empty-sub{font-size:12px}
 .map-wrap{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:20px;position:relative}
-#alert-banner{border-bottom:1px solid rgba(255,74,74,0.38);padding:11px 32px;background:rgba(255,40,40,0.1);animation:alert-bg-pulse 3s ease-in-out infinite}
+#alert-banner{border-bottom:1px solid var(--border);padding:12px 32px;background:var(--surface2)}
+#alert-banner.tone-alert{border-color:rgba(255,74,74,0.45);background:rgba(255,40,40,0.12);animation:alert-bg-pulse 3s ease-in-out infinite}
+#alert-banner.tone-warn{border-color:rgba(255,167,38,0.45);background:rgba(255,167,38,0.08)}
+#alert-banner.tone-error{border-color:rgba(255,74,74,0.5);background:rgba(255,40,40,0.14)}
+#alert-banner.tone-info{border-color:rgba(0,200,255,0.35);background:rgba(0,200,255,0.06)}
 @keyframes alert-bg-pulse{0%,100%{background:rgba(255,40,40,0.10)}50%{background:rgba(255,40,40,0.20)}}
 @keyframes pulse-red{0%,100%{opacity:1;box-shadow:0 0 12px #ff4a4a}50%{opacity:.3;box-shadow:0 0 3px #ff4a4a}}@keyframes dyfi-pulse{0%,100%{opacity:0.65}50%{opacity:0.1}}.dyfi-ping-ring{animation:dyfi-pulse 2.5s ease-in-out infinite}
 @keyframes ev-ring-anim{0%,100%{opacity:.55}50%{opacity:.12}}
@@ -174,10 +180,10 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 </header>
 <div id="alert-banner" style="display:none">
   <div style="display:flex;align-items:center;gap:16px;max-width:1400px;margin:0 auto">
-    <div style="width:10px;height:10px;border-radius:50%;background:#ff4a4a;flex-shrink:0;animation:pulse-red 1.5s ease-in-out infinite"></div>
-    <span style="font-family:var(--font-d);font-size:11px;letter-spacing:.14em;color:#ff4a4a" id="alert-title">DETECTION ACTIVE</span>
-    <span style="font-family:var(--font-m);font-size:11px;color:#ffaaaa;flex:1" id="alert-detail"></span>
-    <span style="font-family:var(--font-m);font-size:10px;color:#ff7675;letter-spacing:.1em;border:1px solid rgba(255,74,74,0.4);padding:3px 10px;border-radius:2px;white-space:nowrap">FAST POLL &middot; 2 MIN CYCLES</span>
+    <div data-alert-dot style="width:10px;height:10px;border-radius:50%;background:#ff4a4a;flex-shrink:0;animation:pulse-red 1.5s ease-in-out infinite"></div>
+    <span style="font-family:var(--font-d);font-size:11px;letter-spacing:.14em;color:var(--text-hi)" id="alert-title">MONITORING</span>
+    <span style="font-family:var(--font-m);font-size:11px;color:var(--text);flex:1;line-height:1.45" id="alert-detail"></span>
+    <span style="font-family:var(--font-m);font-size:10px;color:var(--dim);letter-spacing:.06em;border:1px solid var(--border);padding:3px 10px;border-radius:2px;white-space:nowrap" id="alert-badge-tag">Research monitor</span>
   </div>
 </div>
 <nav class="tab-nav">
@@ -299,8 +305,8 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 
     <p class="section-title">Performance Metrics</p>
   <div class="perf-grid">
-    <div class="perf-cell"><div class="perf-label">True Positive Rate</div><div class="perf-value" id="perf-tpr">--</div></div>
-    <div class="perf-cell"><div class="perf-label">False Alarm Rate</div><div class="perf-value" id="perf-fpr">--</div></div>
+    <div class="perf-cell"><div class="perf-label">Detection rate</div><div class="perf-value" id="perf-tpr">--</div></div>
+    <div class="perf-cell"><div class="perf-label">False alarm rate</div><div class="perf-value" id="perf-fpr">--</div></div>
     <div class="perf-cell"><div class="perf-label">Mean Lead Time</div><div class="perf-value" id="perf-lead">-- <span class="perf-unit">min</span></div></div>
     <div class="perf-cell"><div class="perf-label">Median Lead Time</div><div class="perf-value" id="perf-med">-- <span class="perf-unit">min</span></div></div>
     <div class="perf-cell"><div class="perf-label">Amplitude Error</div><div class="perf-value" id="perf-amp">--</div></div>
@@ -308,11 +314,11 @@ header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;alig
 
   <p class="section-title">Outcome Breakdown</p>
   <div class="outcome-row">
-    <div class="outcome-chip tp"><div class="val" id="oc-tp">0</div><div class="lbl">TP</div></div>
-    <div class="outcome-chip tn"><div class="val" id="oc-tn">0</div><div class="lbl">TN</div></div>
-    <div class="outcome-chip fp"><div class="val" id="oc-fp">0</div><div class="lbl">FP</div></div>
-    <div class="outcome-chip fn"><div class="val" id="oc-fn">0</div><div class="lbl">FN</div></div>
-    <div class="outcome-chip geo"><div class="val" id="oc-geo">0</div><div class="lbl">GEO</div></div>
+    <div class="outcome-chip tp"><div class="val" id="oc-tp">0</div><div class="lbl">Confirmed</div></div>
+    <div class="outcome-chip tn"><div class="val" id="oc-tn">0</div><div class="lbl">Quiet</div></div>
+    <div class="outcome-chip fp"><div class="val" id="oc-fp">0</div><div class="lbl">GPS only</div></div>
+    <div class="outcome-chip fn"><div class="val" id="oc-fn">0</div><div class="lbl">Gauges only</div></div>
+    <div class="outcome-chip geo"><div class="val" id="oc-geo">0</div><div class="lbl">Limited</div></div>
     <div class="outcome-chip geo"><div class="val" id="oc-total">0</div><div class="lbl">Scored</div></div>
   </div>
 </div>
@@ -498,9 +504,9 @@ async function loadSW(){
   el('sw-bar').style.width=(score*100)+'%';
   el('sw-bar').style.background=swColor(score);
   const b=el('sw-badge');
-  if(gated){b.textContent='GATED';b.className='sw-badge gated';}
-  else if(score>=0.3){b.textContent='ACTIVE';b.className='sw-badge active';}
-  else{b.textContent='CLEAR';b.className='sw-badge clear';}
+  if(gated){b.textContent='STORM HOLD';b.className='sw-badge gated';}
+  else if(score>=0.3){b.textContent='ELEVATED';b.className='sw-badge active';}
+  else{b.textContent='CALM';b.className='sw-badge clear';}
   // Kp
   el('sw-kp-val').textContent=kp!=null?kp.toFixed(1):'--';
   el('sw-kp-bar').style.width=kp!=null?Math.min(kp/9*100,100)+'%':'0%';
@@ -545,6 +551,19 @@ function fmtDate(ts){
     timeZone:'UTC'
   }) + ' UTC';
 }
+
+/** Viewer-facing copy — internal codes remain in JSON only. */
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+var REASON_PLAIN={no_coherent_pairs:'No tsunami-like pattern between GPS stations',insufficient_stations:'Not enough GPS stations had usable data',kp_gated:'Geomagnetic storm — GPS check paused',no_pairs:'No qualifying station pairs in the time window'};
+function plainReason(code,fallback){if(!code)return fallback||'Analysis finished';var k=String(code).toLowerCase();return REASON_PLAIN[k]||fallback||'Analysis finished';}
+function stationListUpper(ev){var a=ev.rinex_acquired_stations||(ev.prediction&&ev.prediction.stations_processed)||[];return a.map(function(s){return String(s).toUpperCase();});}
+function awaitingArchiveNote(ev){var w=ev.rinex_awaiting_archive||[];if(!w.length)return '';var show=w.slice(0,6).map(function(s){return String(s).toUpperCase();}).join(', ');if(w.length>6)show+=' +'+(w.length-6);return 'Still waiting on public GPS files: '+show+'.';}
+function humanTec(ev){var det=!!(ev.algo_detected||ev.prediction&&ev.prediction.detected);var gated=!!ev.space_weather_gated;if(det)return{label:'Signal seen',badge:'ok',tip:'GPS found a coherent tsunami-like ionospheric pattern.'};if(gated)return{label:'Storm hold',badge:'gated',tip:'Space weather was too disturbed for a reliable GPS check.'};var reason=ev.detection_reason||(ev.prediction&&ev.prediction.reason);var st=stationListUpper(ev);var tip=plainReason(reason,'No tsunami-like GPS pattern was found.');if(st.length)tip+=' Stations analyzed: '+st.join(', ')+'.';if(ev.data_status==='partial'||ev.data_status==='awaiting_archive'){var a=awaitingArchiveNote(ev);if(a)tip+=' '+a;}return{label:'No signal',badge:'silent',tip:tip};}
+function humanOutcome(ev){var det=!!ev.algo_detected;var o=ev.outcome||'';if(o==='TRUE_POSITIVE')return{label:'Confirmed',tip:'GPS and tide gauges agree a tsunami-like signal was present.',tone:'good'};if(o==='TRUE_NEGATIVE'||o==='CORRECT_ABSTENTION_NO_ANCHOR')return{label:'Quiet ocean',tip:'No tsunami-like signal in GPS or tide gauges.',tone:'neutral'};if(o==='FALSE_POSITIVE')return{label:'GPS only',tip:'GPS flagged a pattern but tide gauges did not confirm.',tone:'bad'};if(o==='FALSE_NEGATIVE'){if(!det&&ev.any_gauge_tsunami)return{label:'Gauges only',tip:'Small tide-gauge motion; GPS did not see a matching ionospheric signal. Not a live tsunami alert.',tone:'warn'};return{label:'Missed',tip:'Tide gauges saw something GPS did not pick up.',tone:'warn'};}if(o==='GEOMETRY_LIMITED_MISS')return{label:'Out of range',tip:'Station geometry limits which sites can contribute.',tone:'neutral'};return{label:'—',tip:o||'Not scored yet',tone:'neutral'};}
+function humanDart(ds){if(ds==='confirmed')return{sym:'\u25CF',tip:'Ocean buoy saw a pressure signal',col:'var(--accent)'};if(ds==='negative')return{sym:'\u25CB',tip:'Buoy data — no tsunami-like pressure',col:'var(--dim)'};if(ds==='pending')return{sym:'~',tip:'Buoy check pending',col:'var(--dim)'};if(ds==='no_buoys')return{sym:'—',tip:'No buoy in range for this event',col:'var(--dim)'};return{sym:'—',tip:'Buoy data not available',col:'var(--dim)'};}
+function humanNearMiss(reason){var r=(reason||'').toLowerCase();if(r.indexOf('below threshold')>=0)return 'Below M6.5 threshold';if(r.indexOf('too deep')>=0)return 'Too deep';if(r.indexOf('strike')>=0||r.indexOf('rake')>=0||r.indexOf('thrust')>=0)return 'Focal mechanism filter';if(r.indexOf('outside')>=0||r.indexOf('pacific')>=0)return 'Outside Pacific watch';return reason||'Did not queue';}
+function describeLiveEvent(ev){var st=(ev.status||'queued').toLowerCase();var mw='Mw'+(ev.magnitude!=null?(+ev.magnitude).toFixed(1):'?');var place=ev.place||'Unknown location';var zone=ev.zones&&ev.zones.length?ev.zones[0]:'Pacific';var head=mw+' · '+place;var pred=ev.prediction||{};var awaitNote=awaitingArchiveNote(ev);if(st==='queued'||st==='pending_rinex'){var sub='On watch list. GPS files are downloaded a few hours after the earthquake.';if(awaitNote)sub+=' '+awaitNote;return{tone:'info',title:'AWAITING DATA — '+zone.toUpperCase(),detail:head,tag:'Queued',note:sub};}if(st==='rinex_failed'){return{tone:'warn',title:'AWAITING GPS FILES — '+zone.toUpperCase(),detail:head,tag:(ev.rinex_retries?'Retry '+ev.rinex_retries:'Archive backlog'),note:(awaitNote||'Public GPS archives do not have enough files yet.')+' Automatic retries continue. Not a coast warning.'};}if(st==='detector_failed'){return{tone:'error',title:'ANALYSIS PAUSED — '+zone.toUpperCase(),detail:head,tag:'Will retry',note:'A processing step failed; the pipeline will try again. Not a tsunami warning.'};}if(st==='rinex_ready'){return{tone:'info',title:'ANALYZING GPS — '+zone.toUpperCase(),detail:head,tag:'In progress',note:'Running the ionospheric detector on downloaded GPS data.'+(awaitNote?' '+awaitNote:'')};}if(st==='predicted'){if(pred.detected){return{tone:'alert',title:'POSSIBLE IONOSPHERIC SIGNAL — '+zone.toUpperCase(),detail:head,tag:'Research alert',note:'GPS pattern matches tsunami-like criteria. Not an official warning — confirm with NOAA and local authorities.'};}var stations=stationListUpper(ev);var note=plainReason(pred.reason,'Analysis complete — no tsunami-like GPS pattern.');if(stations.length)note+=' Stations used: '+stations.join(', ')+'.';if(awaitNote)note+=' '+awaitNote;if(ev.retro_trigger_reason)note+=' Re-checking because new GPS files appeared on the archive.';return{tone:'info',title:'NO GPS TSUNAMI SIGNATURE — '+zone.toUpperCase(),detail:head,tag:'Analysis complete',note:note};}if(ev.data_status==='awaiting_archive'||ev.data_status==='partial'){return{tone:'warn',title:'PARTIAL GPS DATA — '+zone.toUpperCase(),detail:head,tag:'Awaiting archive',note:(awaitNote||'Some nearby GPS files are not on the public archive yet.')+' Monitoring continues.'};}return{tone:'info',title:'MONITORING — '+zone.toUpperCase(),detail:head,tag:'In progress',note:'Pipeline is processing this event.'};}
+function applyBannerTone(banner,tone){banner.classList.remove('tone-alert','tone-warn','tone-error','tone-info');if(tone)banner.classList.add('tone-'+tone);var dot=banner.querySelector('[data-alert-dot]');var titleEl=document.getElementById('alert-title');var col=tone==='alert'||tone==='error'?'#ff4a4a':tone==='warn'?'#ffa726':tone==='info'?'var(--accent)':'var(--text-hi)';if(dot)dot.style.background=col;if(titleEl)titleEl.style.color=tone==='info'?'var(--accent)':tone==='warn'?'#ffa726':tone==='alert'||tone==='error'?'#ff4a4a':'var(--text-hi)';}
 
 window._pollCD={iv:null,anchorMs:null,intervalSec:900,lastIso:null,pollFetchOk:true,graceMs:180000,_refreshMs:null};
 var _pollRefreshIv=null;
@@ -597,7 +616,7 @@ function applyPollCountdownTick(){
   }
   try{
     if(!st.pollFetchOk){
-      setErr('Could not load poll_log.json from GitHub');
+      setErr('Cannot reach GitHub');
       return;
     }
     if(st.anchorMs==null||isNaN(st.anchorMs)){
@@ -734,14 +753,14 @@ function renderPoll(d){
     var slice50=polls.slice(-50);
     var errN=slice50.filter(function(p){return p.error;}).length;
     if(plHl){
-      plHl.textContent=errN?'ERR':'OK';
+      plHl.textContent=errN?'Issue':'Healthy';
       plHl.className='stat-value '+(errN?'stat-bad':'stat-ok');
     }
     if(plHlSub)plHlSub.textContent=errN?errN+' error row(s) in last 50':'All OK in last 50';
     renderPollSpark(slice50);
     var rows=slice50.slice().reverse().map(function(p){
       var ok=!p.error;
-      return '<tr><td>'+fmtDate(p.ts)+'</td><td>'+(p.new_candidates??0)+'</td><td>'+(p.total_queued??'--')+'</td><td>'+(p.scored??'--')+'</td><td><span class="poll-status '+(ok?'ok':'err')+'">'+(ok?'OK':'ERR')+'</span></td></tr>';
+      return '<tr><td>'+fmtDate(p.ts)+'</td><td>'+(p.new_candidates??0)+'</td><td>'+(p.total_queued??'--')+'</td><td>'+(p.scored??'--')+'</td><td><span class="poll-status '+(ok?'ok':'err')+'">'+(ok?'Healthy':'Issue')+'</span></td></tr>';
     }).join('');
     el('poll-body').innerHTML='<table class="data-table"><thead><tr><th>Time (UTC)</th><th>New</th><th>Queued</th><th>Scored</th><th>Status</th></tr></thead><tbody>'+rows+'</tbody></table>';
   }
@@ -754,7 +773,7 @@ function renderPoll(d){
       var delta=e.delta!=null?e.delta:null;
       var dStr=delta!=null?'<span class="'+(delta>=0?'delta-pos':'delta-neg')+'">'+(delta>=0?'+':'')+delta.toFixed(1)+'</span>':'—';
       var reasonEsc=(e.reason||'--').replace(/</g,'&lt;').replace(/"/g,'&quot;');
-      return '<tr class="seismic-row '+st.row+'"><td>'+fmtDate(e.ts)+'</td><td style="font-family:var(--font-m)">Mw '+(e.mag!=null?e.mag.toFixed(1):'--')+'</td><td>'+(e.place||'--')+'</td><td>'+(e.depth!=null?e.depth+' km':'—')+'</td><td><span class="reason-chip '+st.chip+'" title="'+reasonEsc+'">'+(e.reason||'--')+'</span></td><td class="col-delta" style="font-family:var(--font-m)">'+dStr+'</td></tr>';
+      return '<tr class="seismic-row '+st.row+'"><td>'+fmtDate(e.ts)+'</td><td style="font-family:var(--font-m)">Mw '+(e.mag!=null?e.mag.toFixed(1):'--')+'</td><td>'+(e.place||'--')+'</td><td>'+(e.depth!=null?e.depth+' km':'—')+'</td><td><span class="reason-chip '+st.chip+'" title="'+reasonEsc+'">'+(humanNearMiss(e.reason))+'</span></td><td class="col-delta" style="font-family:var(--font-m)">'+dStr+'</td></tr>';
     }).join('');
     el('seismic-body').innerHTML='<table class="data-table"><thead><tr><th>Time (UTC)</th><th>Mag</th><th>Location</th><th>Depth</th><th>Reason</th><th title="ΔMw vs M6.5 threshold">Δ Mw</th></tr></thead><tbody>'+rows2+'</tbody></table>';
     renderSeismicOnMap(rs);
@@ -801,86 +820,33 @@ function renderLog(d){
 
   // Events table
   const rows = events.slice().reverse().map(e=>{
-    // scored events have fields at top level (from scorer.py)
-    const det = e.algo_detected ?? false;
-    const gated = e.space_weather_gated ?? false;
-    const bc  = det ? 'detected' : gated ? 'gated' : 'silent';
-    const stList = (e.stations_processed || []).map(function(s){return String(s).toUpperCase();});
-    const detReason = e.detection_reason || (det ? 'coherent_pairs' : 'no_coherent_pairs');
-    const tecTip = det
-      ? 'GPS TEC: detection declared'
-      : 'GPS TEC: silent — ' + detReason
-        + (stList.length ? ' (' + stList.join(', ') + ')' : ' (no RINEX processed)');
-
-    // Confidence bar
+    const tec = humanTec(e);
+    const out = humanOutcome(e);
+    const stList = stationListUpper(e);
     const conf = e.combined_confidence;
     let confCell = '<span style="color:var(--dim)">--</span>';
     if(conf!=null){
       const pct = Math.round(conf*100);
       const col = conf>=0.7?'var(--accent2)':conf>=0.35?'var(--warn)':'var(--dim)';
-      confCell = '<div style="display:flex;align-items:center;gap:5px">'
-        +'<div style="width:52px;height:5px;background:var(--surface3);border-radius:3px;overflow:hidden">'
-        +'<div style="width:'+pct+'%;height:100%;background:'+col+';border-radius:3px"></div></div>'
-        +'<span style="font-family:var(--font-m);font-size:11px;color:'+col+'">'+conf.toFixed(2)+'</span></div>';
+      confCell = '<div style="display:flex;align-items:center;gap:5px"><div style="width:52px;height:5px;background:var(--surface3);border-radius:3px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+col+';border-radius:3px"></div></div><span style="font-family:var(--font-m);font-size:11px;color:'+col+'">'+conf.toFixed(2)+'</span></div>';
     }
-
-    // DART status
     const ds = e.dart_status_prediction;
-    const di = ds==='confirmed'?'\u25CF':ds==='negative'?'\u25CB':ds==='pending'?'~':'\u2014';
-    const dc = ds==='confirmed'?'var(--accent)':ds==='negative'?'var(--dim)':'var(--dim)';
-    const dScore = e.dart_score_prediction;
-    const dTip = 'DART: '+(ds||'n/a')+(dScore!=null?' ('+dScore.toFixed(2)+')':'');
-
-    // Space weather
+    const dart = humanDart(ds);
     const sw = e.space_weather_score;
     const swTxt = sw!=null?sw.toFixed(2):'--';
     const swCol = sw>=0.5?'var(--danger)':sw>=0.3?'var(--warn)':'var(--accent2)';
-
-    // Outcome label
-    const outMap = {'TRUE_POSITIVE':'TP','TRUE_NEGATIVE':'TN','FALSE_POSITIVE':'FP',
-      'FALSE_NEGATIVE':'FN','GEOMETRY_LIMITED_MISS':'GEO','CORRECT_ABSTENTION_NO_ANCHOR':'TN'};
-    let outLabel = outMap[e.outcome] || (e.outcome||'--');
-    let outTip = e.outcome || '';
-    if(e.outcome==='FALSE_NEGATIVE' && !det && e.any_gauge_tsunami){
-      outLabel = 'FN·gauges';
-      outTip = 'GPS silent; NOAA tide gauge(s) flagged a small signal (not a TEC detection)';
-    } else if(e.outcome==='FALSE_NEGATIVE' && !det){
-      outTip = 'GPS did not detect; scorer outcome vs gauge truth';
-    } else if(e.outcome==='TRUE_NEGATIVE' && !det){
-      outTip = 'No GPS detection and no gauge tsunami — correct abstention';
-    }
-
-    const outCol = outLabel==='TP'?'var(--accent2)':outLabel==='FP'?'var(--danger)':
-                   (outLabel==='FN'||outLabel==='FN·gauges')?'var(--warn)':'var(--dim)';
-
-    return '<tr>'
-      +'<td>'+fmtDate(e.quake_utc)+'</td>'
-      +'<td>'+( e.place||'--')+'</td>'
-      +'<td style="font-family:var(--font-m)">Mw '+(e.magnitude!=null?e.magnitude.toFixed(1):'--')+'</td>'
-      +'<td>'+confCell+'</td>'
-      +'<td title="'+tecTip+'"><span class="det-badge '+bc+'">'+(det?'DETECTED':gated?'GATED':'SILENT')+'</span>'
-      +(stList.length?'<span style="display:block;font-size:10px;color:var(--dim);margin-top:2px">'+stList.slice(0,4).join(' ')+(stList.length>4?' +'+ (stList.length-4):'')+'</span>':'')
-      +'</td>'
-      +'<td style="font-family:var(--font-m);color:'+outCol+'" title="'+outTip+'">'+outLabel+'</td>'
-      +'<td title="Constellation: '+(e.constellation_agreement?e.constellation_agreement.agreement_label:'n/a')+'" style="font-family:var(--font-m);color:var(--dim);text-align:center">'+(e.constellation_agreement?(e.constellation_agreement.n_detecting+'/'+e.constellation_agreement.n_available):'--')+'</td>'
-      +'<td style="text-align:center;color:'+(e.dtec_corroborates?'var(--accent2)':'var(--dim)')+'" title="dTEC/dt corroboration">'+(e.dtec_corroborates?'\u25CF':'\u25CB')+'</td>'
-      +'<td style="text-align:center;color:'+(e.ionosonde_confirmed?'var(--accent2)':'var(--dim)')+'" title="Ionosonde foF2 confirmed">'+(e.ionosonde_confirmed?'\u25CF':'\u25CB')+'</td>'
-        +'<td style="text-align:center;font-size:11px;color:'+(e.dyfi_responses!=null&&e.dyfi_confirmed?'var(--accent2)':'var(--dim)')+'" title="DYFI felt reports'+(e.dyfi_responses!=null?' ('+e.dyfi_responses+' resp, MMI '+e.dyfi_maxmmi+')':' (no data)')+'"> '+(e.dyfi_responses!=null?String(e.dyfi_responses):'\u2014')+'</td>'
-      +'<td title="'+dTip+'" style="font-family:var(--font-m);color:'+dc+';text-align:center">'+di+'</td>'
-      +'<td style="font-family:var(--font-m);color:'+swCol+'">'+swTxt+'</td>'
-      +'</tr>';
+    const swTip = sw>=0.5?'Stormy ionosphere — GPS less reliable':sw>=0.3?'Elevated space weather':'Calm space weather';
+    const outCol = out.tone==='good'?'var(--accent2)':out.tone==='bad'?'var(--danger)':out.tone==='warn'?'var(--warn)':'var(--dim)';
+    return '<tr><td>'+fmtDate(e.quake_utc)+'</td><td>'+esc(e.place||'--')+'</td><td style="font-family:var(--font-m)">Mw '+(e.magnitude!=null?e.magnitude.toFixed(1):'--')+'</td><td>'+confCell+'</td><td title="'+esc(tec.tip)+'"><span class="det-badge '+tec.badge+'">'+esc(tec.label)+'</span>'+(stList.length?'<span style="display:block;font-size:10px;color:var(--dim);margin-top:2px">'+esc(stList.slice(0,4).join(' ')+(stList.length>4?' +'+ (stList.length-4):''))+'</span>':'')+'</td><td style="font-family:var(--font-m);color:'+outCol+'" title="'+esc(out.tip)+'">'+esc(out.label)+'</td><td title="Other constellations vs GPS" style="font-family:var(--font-m);color:var(--dim);text-align:center">'+(e.constellation_agreement?(e.constellation_agreement.n_detecting+'/'+e.constellation_agreement.n_available):'--')+'</td><td style="text-align:center;color:'+(e.dtec_corroborates?'var(--accent2)':'var(--dim)')+'" title="Rate of TEC change">'+(e.dtec_corroborates?'\u25CF':'\u25CB')+'</td><td style="text-align:center;color:'+(e.ionosonde_confirmed?'var(--accent2)':'var(--dim)')+'" title="Ionosphere sounder">'+(e.ionosonde_confirmed?'\u25CF':'\u25CB')+'</td><td style="text-align:center;font-size:11px;color:'+(e.dyfi_responses!=null&&e.dyfi_confirmed?'var(--accent2)':'var(--dim)')+'" title="USGS felt reports">'+(e.dyfi_responses!=null?String(e.dyfi_responses):'\u2014')+'</td><td title="'+esc(dart.tip)+'" style="font-family:var(--font-m);color:'+dart.col+';text-align:center">'+dart.sym+'</td><td style="font-family:var(--font-m);color:'+swCol+'" title="'+esc(swTip)+'">'+swTxt+'</td></tr>';
   }).join('');
 
   el('events-body').innerHTML='<table class="data-table"><thead><tr>'
     +'<th>Date (UTC)</th><th>Location</th><th>Mw</th>'
-    +'<th title="Multi-sensor fusion confidence (0=low, 1=high)">Confidence</th>'
-    +'<th>TEC</th><th>Outcome</th>'
-    +'<th title="GLONASS/Galileo vs GPS agreement">Const</th>'
-    +'<th title="dTEC/dt corroboration">\u0394TEC</th>'
-    +'<th title="Ionosonde foF2 confirmed">Iono</th>'
-    +'<th title="DYFI felt report count (crowdsourced, USGS)">DYFI</th>'
-    +'<th title="DART buoy: \u25CF confirmed \u25CB negative ~ pending">DART</th>'
-    +'<th title="Space weather contamination score">Space Wx</th>'
+    +'<th title="Fusion confidence">Confidence</th>'
+    +'<th title="GPS ionosphere check">GPS</th><th title="Compared to tide gauges after 24h">Result</th>'
+    +'<th title="GLONASS/Galileo vs GPS">Const</th><th title="Rate of TEC change">ΔTEC</th>'
+    +'<th title="Ionosphere sounder">Iono</th><th title="USGS felt reports">DYFI</th>'
+    +'<th title="Ocean buoys">Buoys</th><th title="Space weather">Space Wx</th>'
     +'</tr></thead><tbody>'+rows+'</tbody></table>';
 }
 
@@ -1157,7 +1123,7 @@ function renderActiveEvent(events){
       .attr('font-family','JetBrains Mono,monospace').attr('pointer-events','none').text(mw);
     g.append('text').attr('x',p[0]+20).attr('y',p[1]+7)
       .attr('fill','#ff7675').attr('font-size',9)
-      .attr('font-family','JetBrains Mono,monospace').attr('pointer-events','none').text('ACTIVE');
+      .attr('font-family','JetBrains Mono,monospace').attr('pointer-events','none').text((function(){var st=(ev.status||'').toLowerCase();if(st==='predicted'&&ev.prediction&&ev.prediction.detected)return 'SIGNAL';if(st==='predicted')return 'CLEAR';if(st==='rinex_failed'||st==='detector_failed')return 'RETRY';return 'WATCH';})());
   });
 }
 
@@ -1165,19 +1131,32 @@ function updateAlertBanner(queue){
   var banner=document.getElementById('alert-banner');
   if(!banner)return;
   var events=(queue.events||[]).filter(function(e){return e.status&&e.status!=='scored';});
-  if(!events.length){banner.style.display='none';return;}
+  var liveBadge=document.querySelector('.live-badge');
+  if(!events.length){
+    banner.style.display='none';
+    applyBannerTone(banner,null);
+    if(liveBadge)liveBadge.innerHTML='<div class="pulse"></div>LIVE · NEXT POLL';
+    if(window._mapSvg)window._mapSvg.selectAll('.event-marker').remove();
+    return;
+  }
   banner.style.display='block';
   var ev=events[0];
+  var info=describeLiveEvent(ev);
+  applyBannerTone(banner,info.tone);
   var titleEl=document.getElementById('alert-title');
   var detailEl=document.getElementById('alert-detail');
-  var zone=ev.zones&&ev.zones.length?ev.zones[0].toUpperCase()+' ZONE':'PACIFIC';
-  if(titleEl)titleEl.textContent='DETECTION ACTIVE — '+zone;
+  var tagEl=document.getElementById('alert-badge-tag');
+  if(titleEl)titleEl.textContent=info.title;
   if(detailEl){
-    var mw='Mw'+(ev.magnitude!=null?(+ev.magnitude).toFixed(1):'?');
-    detailEl.textContent=mw+' · '+(ev.place||'Unknown')+' · '+(ev.status||'QUEUED').toUpperCase();
+    detailEl.innerHTML='<strong>'+esc(info.detail)+'</strong>'
+      +(info.note?'<br><span style="color:var(--dim)">'+esc(info.note)+'</span>':'');
   }
-  var badge=document.querySelector('.live-badge');
-  if(badge)badge.innerHTML='<div class="pulse" style="background:#ff4a4a;box-shadow:0 0 8px #ff4a4a"></div><span style="color:#ff4a4a">ALERT · FAST POLL</span>';
+  if(tagEl)tagEl.textContent=info.tag||'Research monitor';
+  if(liveBadge){
+    var urgent=info.tone==='alert'||info.tone==='error';
+    liveBadge.innerHTML='<div class="pulse" style="background:'+(urgent?'#ff4a4a':'var(--accent2)')+';box-shadow:0 0 8px '+(urgent?'#ff4a4a':'var(--accent2)')+'"></div>'
+      +'<span style="color:'+(urgent?'#ff4a4a':'var(--accent2)')+'">'+(urgent?'LIVE · EVENT WATCH':'LIVE · NEXT POLL')+'</span>';
+  }
   if(window._mapSvg&&window._mapProj){renderActiveEvent(events);}
   else{setTimeout(function(){if(window._mapSvg&&window._mapProj)renderActiveEvent(events);},2500);}
 }

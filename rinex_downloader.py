@@ -486,6 +486,10 @@ def download_event(event, auth: HTTPBasicAuth):
     save_aliases(aliases)
     manifest["total_files"] = downloaded
     manifest["updated_utc"] = datetime.now(timezone.utc).isoformat()
+    _summarize_rinex_availability(event, logical_stations, manifest, downloaded)
+    manifest["stations_acquired"] = event.get("rinex_acquired_stations", [])
+    manifest["stations_awaiting_archive"] = event.get("rinex_awaiting_archive", [])
+    manifest["data_status"] = event.get("data_status")
     manifest_path = event_dir / "rinex_manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     try:
@@ -496,6 +500,26 @@ def download_event(event, auth: HTTPBasicAuth):
         log.debug("Could not update rinex_coverage fingerprint: %s", exc)
     log.info(f"  Total {downloaded} RINEX files in {event_dir}")
     return downloaded, str(event_dir)
+
+
+def _summarize_rinex_availability(
+    event: dict, logical_stations: list[str], manifest: dict, downloaded: int
+) -> None:
+    """Fields for dashboard: acquired vs still on NASA archive backlog."""
+    acquired: set[str] = set()
+    for day in manifest.get("days") or []:
+        acquired.update(k.lower() for k in (day.get("resolved") or {}))
+    requested = {s.lower() for s in logical_stations}
+    awaiting = sorted(requested - acquired)
+    acquired_sorted = sorted(acquired)
+    event["rinex_acquired_stations"] = acquired_sorted
+    event["rinex_awaiting_archive"] = awaiting
+    if downloaded == 0:
+        event["data_status"] = "awaiting_archive" if awaiting else "unavailable"
+    elif awaiting:
+        event["data_status"] = "partial"
+    else:
+        event["data_status"] = "ready"
 
 
 def is_ready_to_download(event, force: bool = False):

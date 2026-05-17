@@ -133,20 +133,10 @@ def coverage_improvement(
     if added:
         return True, "new stations on CDDIS: " + ", ".join(s.upper() for s in added)
 
-    old_days = {(d.get("year"), d.get("doy")): set(d.get("stations") or []) for d in old.get("days") or []}
-    for day in new.get("days") or []:
-        key = (day.get("year"), day.get("doy"))
-        new_day_st = set(day.get("stations") or [])
-        old_day_st = old_days.get(key, set())
-        day_added = sorted(new_day_st - old_day_st)
-        if day_added:
-            doy = day.get("doy")
-            return True, f"DOY {doy:03d} gained " + ", ".join(s.upper() for s in day_added)
-
     old_n = old.get("n_stations", len(old_set))
     new_n = new.get("n_stations", len(new_set))
     if new_n > old_n:
-        return True, f"resolved station count {old_n} → {new_n}"
+        return True, f"new stations on CDDIS: " + ", ".join(s.upper() for s in added) if (added := sorted(new_set - old_set)) else f"station count {old_n} → {new_n}"
 
     return False, ""
 
