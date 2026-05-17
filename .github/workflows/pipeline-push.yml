@@ -28,16 +28,22 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt requests
 
-      - name: Write Earthdata .env for RINEX (from repo secrets)
+      - name: Write .env for RINEX and Discord (from repo secrets)
         env:
           EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
           EARTHDATA_PASS: ${{ secrets.EARTHDATA_PASS }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
           if [ -z "$EARTHDATA_USER" ] || [ -z "$EARTHDATA_PASS" ]; then
             echo "::warning::EARTHDATA_USER / EARTHDATA_PASS secrets not set — RINEX downloads will fail"
             exit 0
           fi
           printf 'EARTHDATA_USER=%s\nEARTHDATA_PASS=%s\n' "$EARTHDATA_USER" "$EARTHDATA_PASS" > .env
+          if [ -n "$DISCORD_WEBHOOK_URL" ]; then
+            printf 'DISCORD_WEBHOOK_URL=%s\n' "$DISCORD_WEBHOOK_URL" >> .env
+          else
+            echo "::warning::DISCORD_WEBHOOK_URL secret not set — retroactive Discord alerts disabled in CI"
+          fi
 
       - name: USGS poll + DYFI map
         run: |

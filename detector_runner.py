@@ -924,8 +924,18 @@ def main(event_id=None):
     if event_id:
         events = [e for e in events if e["usgs_id"] == event_id]
 
-    ready = [e for e in events
-             if e.get("status") == "rinex_ready" and not e.get("detector_run")]
+    ready = [
+        e
+        for e in events
+        if not e.get("detector_run")
+        and (
+            e.get("status") == "rinex_ready"
+            or (
+                e.get("status") == "detector_failed"
+                and e.get("rinex_downloaded")
+            )
+        )
+    ]
 
     log.info(f"Events ready to run: {len(ready)}")
 

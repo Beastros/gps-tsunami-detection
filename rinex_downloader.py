@@ -486,9 +486,14 @@ def download_event(event, auth: HTTPBasicAuth):
     save_aliases(aliases)
     manifest["total_files"] = downloaded
     manifest["updated_utc"] = datetime.now(timezone.utc).isoformat()
-    (event_dir / "rinex_manifest.json").write_text(
-        json.dumps(manifest, indent=2), encoding="utf-8"
-    )
+    manifest_path = event_dir / "rinex_manifest.json"
+    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    try:
+        from retroactive_rinex import update_event_coverage_from_manifest
+
+        update_event_coverage_from_manifest(event, manifest_path)
+    except Exception as exc:
+        log.debug("Could not update rinex_coverage fingerprint: %s", exc)
     log.info(f"  Total {downloaded} RINEX files in {event_dir}")
     return downloaded, str(event_dir)
 
@@ -496,6 +501,8 @@ def download_event(event, auth: HTTPBasicAuth):
 def is_ready_to_download(event, force: bool = False):
     if force:
         return bool(event.get("usgs_id"))
+    if event.get("retroactive_pending") and event.get("usgs_id"):
+        return True
     if event.get("rinex_downloaded"):
         return False
     status = event.get("status", "")
@@ -530,8 +537,24 @@ def _clear_running_log_score(usgs_id: str) -> None:
         log.warning("Could not trim running_log for %s: %s", usgs_id, e)
 
 
-def reset_event_for_reprocess(event: dict) -> None:
+def reset_event_for_reprocess(event: dict, *, keep_retro_meta: bool = False) -> None:
     """Allow re-download + re-run detector on an already-processed event."""
+    retro_meta = None
+    if keep_retro_meta:
+        retro_meta = {
+            k: event.get(k)
+            for k in (
+                "retro_run_count",
+                "retro_last_trigger_utc",
+                "retro_trigger_reason",
+                "retro_triggered_utc",
+                "retro_prior_status",
+                "retro_prior_prediction",
+                "retro_prior_detected",
+                "rinex_coverage_probe",
+            )
+            if event.get(k) is not None
+        }
     _clear_running_log_score(event["usgs_id"])
     event["rinex_downloaded"] = False
     event["detector_run"] = False
@@ -541,26 +564,40 @@ def reset_event_for_reprocess(event: dict) -> None:
     event.pop("discord_alerted", None)
     event["status"] = "queued"
     event["reprocess_requested"] = True
+    if retro_meta:
+        event.update(retro_meta)
 
 
-def main(event_id=None, cache_only=False, force=False):
+def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
     log.info("=" * 55)
     log.info("GPS Tsunami Detector — RINEX Downloader")
     log.info("=" * 55)
 
     user, pwd = get_credentials()
     if not user:
-        return
+        return []
     auth = HTTPBasicAuth(user, pwd)
 
     refresh_rolling_cache(auth)
 
     if cache_only:
-        return
+        return []
 
     queue = load_queue()
     if not queue:
-        return
+        return []
+
+    retro_triggered: list[dict] = []
+    if not force and not skip_retro_check and not event_id:
+        try:
+            from retroactive_rinex import find_retroactive_candidates
+
+            retro_triggered = find_retroactive_candidates(queue["events"], auth)
+            if retro_triggered:
+                save_queue(queue)
+                log.info("Retroactive: queued %d event(s) for re-download", len(retro_triggered))
+        except Exception as exc:
+            log.warning("Retroactive check skipped: %s", exc)
 
     events = queue["events"]
     if event_id:
@@ -579,7 +616,7 @@ def main(event_id=None, cache_only=False, force=False):
     log.info(f"Queue: {len(events)} events, {len(ready)} ready for event RINEX")
 
     if not ready:
-        return
+        return retro_triggered
 
     for event in ready:
         count, event_dir = download_event(event, auth)
@@ -595,7 +632,11 @@ def main(event_id=None, cache_only=False, force=False):
             event["status"] = "rinex_failed"
             event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
             event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
+            if event.get("retroactive_pending"):
+                event.pop("retroactive_pending", None)
             save_queue(queue)
+
+    return retro_triggered
 
 
 if __name__ == "__main__":
