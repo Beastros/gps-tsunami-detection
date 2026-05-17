@@ -1,6 +1,69 @@
 {
-  "fetched_at": "2026-05-07T00:05:02+00:00",
+  "fetched_at": "2026-05-17T19:07:38+00:00",
   "items": [
+    {
+      "id": "c38998d470c074cc",
+      "title": "Canadian from hantavirus-hit cruise ship tests positive",
+      "url": "https://www.bbc.com/news/articles/c2k2p057ezno",
+      "published_at": "2026-05-17",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "The individual is one of four former passengers on the MV Hondius isolating on Vancouver Island, British Columbia."
+    },
+    {
+      "id": "3064040d10ff2869",
+      "title": "How are countries responding to hantavirus?",
+      "url": "https://www.bbc.com/news/articles/c4g8318v4yzo",
+      "published_at": "2026-05-13",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "The UK, US and EU are asking all citizens returning home from the virus-hit MV Hondius to self-isolate for about six weeks."
+    },
+    {
+      "id": "f2c4bfe4cbf96a47",
+      "title": "How worried should we be about hantavirus?",
+      "url": "https://www.bbc.com/news/articles/c98r199e195o",
+      "published_at": "2026-05-12",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "Passengers potentially exposed to hantavirus are being repatriated, so what is the risk to the wider public?"
+    },
+    {
+      "id": "35ecd6f29494387a",
+      "title": "French national shows symptoms on return from hantavirus-hit ship",
+      "url": "https://www.bbc.com/news/articles/c3r2p70jdy7o",
+      "published_at": "2026-05-11",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "Five passengers of the MV Hondius will be quarantined in Paris \"until further notice\", France's prime minister says."
+    },
+    {
+      "id": "a77d58dfc08b200c",
+      "title": "Worldwide race to trace passengers from hantavirus-hit cruise ship",
+      "url": "https://www.bbc.com/news/articles/clyp1505p84o",
+      "published_at": "2026-05-08",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "About 12 countries have so far been linked to the hantavirus outbreak on the MV Hondius, as the UN health agency confirms at least five cases."
+    },
+    {
+      "id": "71dc37cd2dc183e5",
+      "title": "Hantavirus-hit cruise ship on way to Canary Islands after three evacuated",
+      "url": "https://www.bbc.com/news/articles/c5y093d5n9ko",
+      "published_at": "2026-05-07",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "A British man is among three evacuees sent to the Netherlands after displaying symptoms while aboard the MV Hondius."
+    },
+    {
+      "id": "ce74a769d98fb762",
+      "title": "Hantavirus survivor says sickness was like 'hell on earth'",
+      "url": "https://www.bbc.com/news/articles/cy72xmk1114o",
+      "published_at": "2026-05-07",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "Two survivors who caught the hantavirus years earlier told the BBC they both felt lucky to be alive."
+    },
     {
       "id": "723f399303878592",
       "title": "What is the cruise ship hantavirus and how does it spread?",
@@ -18,15 +81,6 @@
       "source_name": "BBC News — Health",
       "source_tier": 2,
       "summary": "The Andes strain of the virus has been confirmed in two passengers who were taken to South Africa, according to the country's health minister"
-    },
-    {
-      "id": "6c3e1e7a14ae3ff1",
-      "title": "Hantavirus-hit cruise ship leaves Cape Verde after three evacuated",
-      "url": "https://www.bbc.com/news/articles/c5y093d5n9ko",
-      "published_at": "2026-05-06",
-      "source_name": "BBC News — Health",
-      "source_tier": 2,
-      "summary": "A British man is among three evacuees sent to the Netherlands after displaying symptoms while aboard the MV Hondius."
     },
     {
       "id": "11dab8e66a3beee0",
