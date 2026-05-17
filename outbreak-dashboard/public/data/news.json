@@ -1,0 +1,68 @@
+{
+  "fetched_at": "2026-05-07T00:05:02+00:00",
+  "items": [
+    {
+      "id": "723f399303878592",
+      "title": "What is the cruise ship hantavirus and how does it spread?",
+      "url": "https://www.bbc.com/news/articles/c8r8j1l6j0go",
+      "published_at": "2026-05-06",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "The Andes strain of the virus has been confirmed in some passengers, which can rarely be passed from person to person."
+    },
+    {
+      "id": "22ff07eb5f4dd031",
+      "title": "What is the Andes Strain of Hantavirus?",
+      "url": "https://www.bbc.com/news/videos/cqxp099yl8do",
+      "published_at": "2026-05-06",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "The Andes strain of the virus has been confirmed in two passengers who were taken to South Africa, according to the country's health minister"
+    },
+    {
+      "id": "6c3e1e7a14ae3ff1",
+      "title": "Hantavirus-hit cruise ship leaves Cape Verde after three evacuated",
+      "url": "https://www.bbc.com/news/articles/c5y093d5n9ko",
+      "published_at": "2026-05-06",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "A British man is among three evacuees sent to the Netherlands after displaying symptoms while aboard the MV Hondius."
+    },
+    {
+      "id": "11dab8e66a3beee0",
+      "title": "Hantavirus strain that spreads between humans found in cruise ship passengers",
+      "url": "https://www.bbc.com/news/articles/ce8pypvjx1ko",
+      "published_at": "2026-05-06",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "South Africa's health ministry said the Andes strain of the virus was found in two confirmed cases linked to the outbreak."
+    },
+    {
+      "id": "d9620c42a9e39388",
+      "title": "Cruise passengers tell of life on board stranded ship after hantavirus outbreak",
+      "url": "https://www.bbc.com/news/articles/clype7ededzo",
+      "published_at": "2026-05-06",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "While passengers onboard the MV Hondius say the situation is calm, they face days at sea as officials warn the disease may have spread."
+    },
+    {
+      "id": "2a9f40924ab1c754",
+      "title": "Hantavirus may have spread between passengers on cruise ship, WHO says",
+      "url": "https://www.bbc.com/news/articles/cm2p186gyp2o",
+      "published_at": "2026-05-05",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "Two cases of the virus, which rarely spreads between humans, have been confirmed on the ship, and three people have died."
+    },
+    {
+      "id": "4c1f63a02d157a9c",
+      "title": "Cruise ship’s hantavirus outbreak puts researchers in uncharted territory",
+      "url": "https://www.science.org/content/article/cruise-ship-s-hantavirus-outbreak-puts-researchers-uncharted-territory",
+      "published_at": "2026-05-05",
+      "source_name": "Science Magazine — News",
+      "source_tier": 3,
+      "summary": "Questions about the culprit virus and its route of spread remain as health officials make plans for stranded passengers"
+    }
+  ]
+}

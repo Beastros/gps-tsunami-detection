@@ -1,0 +1,33 @@
+{
+  "updated": "2026-05-06T12:00:00Z",
+  "disclaimer": "Sample rows for layout testing only. Replace with verified figures and primary-source URLs before sharing publicly. Infectious disease tallies should follow jurisdictional definitions (suspected / probable / confirmed).",
+  "regions": [
+    {
+      "id": "ar-sample-buenos-aires",
+      "name": "Argentina — Buenos Aires region (sample)",
+      "lat": -34.6037,
+      "lng": -58.3816,
+      "suspected": 3,
+      "probable": 1,
+      "confirmed": 0,
+      "outbreak_level": "elevated",
+      "last_reported": "2026-05-05",
+      "sources": [
+        "https://www.who.int/emergencies/disease-outbreak-news",
+        "https://www.cdc.gov/hantavirus/hps/index.html"
+      ]
+    },
+    {
+      "id": "us-sample-four-corners",
+      "name": "United States — Four Corners illustrative point (sample)",
+      "lat": 36.9989,
+      "lng": -109.0452,
+      "suspected": 0,
+      "probable": 0,
+      "confirmed": 1,
+      "outbreak_level": "informational",
+      "last_reported": "2026-04-28",
+      "sources": ["https://www.cdc.gov/hantavirus/hps/index.html"]
+    }
+  ]
+}
