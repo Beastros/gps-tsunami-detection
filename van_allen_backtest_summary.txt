@@ -1,0 +1,77 @@
+Van Allen / RBSP-A HOPE + OMNI2 retrospective (CDAWeb HAPI)
+Generated: 2026-05-04T03:09:47.222231+00:00
+L-shell filter for HOPE stats: [2.0, 8.0]
+
+Interpretation:
+- Ion_density (HOPE) is a plasmasphere / thermal plasma proxy, not earthquake precursors.
+- Kp / Dst summarize global geomagnetic activity; large |Dst| or Kp usually dominates
+  any magnetospheric 'signal' around arbitrary timestamps.
+
+Per event:
+========================================================================
+official20110311054624120_30  Mw9.1  2011-03-11  TSUNAMI
+  Tohoku - KOKB-GUAM in V1
+  OMNI full-window mean Kp=2.3520833333333333  mean Dst=-28.86111111111111 nT
+  HOPE: skipped  quake_time outside RBSP-A primary science era (use OMNI only below)
+
+official20100227063411530_30  Mw8.8  2010-02-27  TSUNAMI
+  Chile - 108 min lead V1
+  OMNI full-window mean Kp=0.61875  mean Dst=-1.4236111111111112 nT
+  HOPE: skipped  quake_time outside RBSP-A primary science era (use OMNI only below)
+
+usp000f1s0  Mw8.3  2006-11-15  TSUNAMI
+  Kuril - MKEA-GUAM V1
+  OMNI full-window mean Kp=1.0881944444444445  mean Dst=-17.520833333333332 nT
+  HOPE: skipped  quake_time outside RBSP-A primary science era (use OMNI only below)
+
+usp000jrsf  Mw7.7  2012-10-28  TSUNAMI
+  Haida Gwaii - HNLC-GUAM V1
+  OMNI full-window mean Kp=0.63125  mean Dst=-2.5347222222222223 nT
+  HOPE median log10(n) pre_24h=-0.20474581741911715 post_0_24h=-0.4758636234074315
+  Markers (log10 n): d(pre24-baseline)=0.3715 d(post-pre24)=-0.2711
+
+usp000fjta  Mw8.1  2009-09-29  ABSTAIN
+  Samoa - no anchor geometry V1
+  OMNI full-window mean Kp=1.00625  mean Dst=-1.2777777777777777 nT
+  HOPE: skipped  quake_time outside RBSP-A primary science era (use OMNI only below)
+
+usp000jadn  Mw8.6  2012-04-11  NO_TSUNAMI
+  Sumatra strike-slip - ShakeMap should gate
+  OMNI full-window mean Kp=1.8291666666666668  mean Dst=-12.604166666666666 nT
+  HOPE: skipped  quake_time outside RBSP-A primary science era (use OMNI only below)
+
+usp000jhe9  Mw8.3  2013-05-24  NO_TSUNAMI
+  Okhotsk deep 609km - depth gate
+  OMNI full-window mean Kp=2.752083333333333  mean Dst=-18.895833333333332 nT
+  HOPE median log10(n) pre_24h=-0.30688888453785873 post_0_24h=-0.13194363817695845
+  Markers (log10 n): d(pre24-baseline)=0.0538 d(post-pre24)=0.1749
+
+usp000hvtm  Mw7.4  2011-10-21  NO_TSUNAMI
+  Kermadec Mw7.4 - below sensitivity
+  OMNI full-window mean Kp=0.8625  mean Dst=-7.715277777777778 nT
+  HOPE: skipped  quake_time outside RBSP-A primary science era (use OMNI only below)
+
+usp000hpgz  Mw7.2  2011-03-09  NO_TSUNAMI
+  Tohoku foreshock Mw7.2 - below threshold
+  OMNI full-window mean Kp=2.3291666666666666  mean Dst=-23.854166666666668 nT
+  HOPE: skipped  quake_time outside RBSP-A primary science era (use OMNI only below)
+
+us2007aqbk  Mw8.1  2007-04-01  TSUNAMI
+  Solomon Islands 2007 - thrust shallow - 52 killed 12m runup
+  OMNI full-window mean Kp=2.3375  mean Dst=-18.21527777777778 nT
+  HOPE: skipped  quake_time outside RBSP-A primary science era (use OMNI only below)
+
+us2007gbcv  Mw8.0  2007-08-15  TSUNAMI
+  Peru Pisco 2007 - thrust - 10m local runup CHAT corridor
+  OMNI full-window mean Kp=0.9666666666666666  mean Dst=-4.215277777777778 nT
+  HOPE: skipped  quake_time outside RBSP-A primary science era (use OMNI only below)
+
+usp000hjkp  Mw7.7  2010-10-25  TSUNAMI
+  Mentawai 2010 - tsunami earthquake - 450 killed 9m runup Indian Ocea
+  OMNI full-window mean Kp=2.239583333333333  mean Dst=-17.97222222222222 nT
+  HOPE: skipped  quake_time outside RBSP-A primary science era (use OMNI only below)
+
+us7000gc8r  Mw5.8  2022-01-15  TSUNAMI
+  Tonga volcanic 2022 - MKEA-THTG detected V1 - volcanic AGW source
+  OMNI full-window mean Kp=2.0368055555555555  mean Dst=-19.3125 nT
+  HOPE: skipped  quake_time outside RBSP-A primary science era (use OMNI only below)
