@@ -1,0 +1,786 @@
+diff --git a/.github/workflows/ingest.yml b/.github/workflows/ingest.yml
+index 73026ca..fbbfabf 100644
+--- a/.github/workflows/ingest.yml
++++ b/.github/workflows/ingest.yml
+@@ -10,6 +10,8 @@ concurrency:
+ 
+ permissions:
+   contents: write
++  pages: write
++  id-token: write
+ 
+ jobs:
+   ingest:
+@@ -25,7 +27,6 @@ jobs:
+           python-version: '3.12'
+       - name: Install dependencies
+         run: pip install -r ingest/requirements.txt
+-      # Reddit must run even when Claude/AIS ingest fails (secrets/API errors).
+       - name: Mirror r/hantavirus intel (hot + new)
+         continue-on-error: true
+         working-directory: ingest
+@@ -49,4 +50,34 @@ jobs:
+           git commit -m "chore: ingest refresh" || echo "[info] nothing to commit"
+           git fetch origin main
+           git pull --rebase origin main
+-          git push origin main
+\ No newline at end of file
++          git push origin main
++
++  publish-pages:
++    needs: ingest
++    runs-on: ubuntu-latest
++    permissions:
++      contents: read
++      pages: write
++      id-token: write
++    environment:
++      name: github-pages
++      url: ${{ steps.deployment.outputs.page_url }}
++    steps:
++      - uses: actions/checkout@v4
++      - uses: actions/setup-node@v4
++        with:
++          node-version: '22'
++          cache: npm
++          cache-dependency-path: package-lock.json
++      - name: Install and build
++        env:
++          GITHUB_REPOSITORY: ${{ github.repository }}
++          VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
++        run: |
++          npm ci
++          npm run build
++      - uses: actions/upload-pages-artifact@v3
++        with:
++          path: dist
++      - uses: actions/deploy-pages@v4
++        id: deployment
+diff --git a/.github/workflows/pages.yml b/.github/workflows/pages.yml
+index 8dca217..cec9096 100644
+--- a/.github/workflows/pages.yml
++++ b/.github/workflows/pages.yml
+@@ -3,14 +3,6 @@ on:
+   push:
+     branches: [main]
+   workflow_dispatch:
+-  # Ingest commits `public/data/*` using `GITHUB_TOKEN`; those pushes do not fire
+-  # `push` workflows. Without this, GitHub Pages keeps serving an older `dist/`
+-  # (stale JSON baked in at last build). Rebuild when ingest finishes successfully.
+-  workflow_run:
+-    workflows:
+-      - 'Ingest RSS + AI extraction'
+-    types:
+-      - completed
+ permissions:
+   contents: read
+   pages: write
+@@ -20,7 +12,6 @@ concurrency:
+   cancel-in-progress: true
+ jobs:
+   build:
+-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v4
+diff --git a/ingest/run.py b/ingest/run.py
+index a6ca6a5..25b47ce 100644
+--- a/ingest/run.py
++++ b/ingest/run.py
+@@ -454,7 +454,7 @@ def extract_from_rss(articles, existing_cases, already_processed):
+     calls = 0
+ 
+     for art in articles:
+-        if calls >= 5:
++        if calls >= 12:
+             break
+         aid = art.get("id", "")
+         if not aid or aid in already_processed:
+@@ -664,6 +664,12 @@ def main():
+     )
+     print(f"[ok] cases-individual.json: {len(existing_cases)} cases")
+ 
++    # Sync regional ledger counts from the individual-case registry (same ingest run).
++    from sync_regions import sync_cases_json
++
++    sync_cases_json(DATA, existing_cases, updated_iso=now_iso())
++    print(f"[ok] cases.json: region counts synced from {len(existing_cases)} registry rows")
++
+     # 7. Ship position + breadcrumb track
+     if ship:
+         (DATA / "ship-position.json").write_text(
+diff --git a/ingest/sync_regions.py b/ingest/sync_regions.py
+new file mode 100644
+index 0000000..9379996
+--- /dev/null
++++ b/ingest/sync_regions.py
+@@ -0,0 +1,158 @@
++"""Roll up cases-individual.json into cases.json region counts each ingest run."""
++
++from __future__ import annotations
++
++import json
++import math
++from pathlib import Path
++from typing import Any
++
++# (region_id, location substrings — first match wins)
++_LOCATION_RULES: list[tuple[str, tuple[str, ...]]] = [
++    ("ar-ushuaia", ("ushuaia", "argentina")),
++    ("sh-saint-helena", ("saint helena",)),
++    ("sh-ascension", ("ascension",)),
++    ("cv-cape-verde", ("cape verde", "hondius", "cruise ship", "mv ")),
++    ("za-johannesburg", ("johannesburg", "south africa")),
++    ("nl-netherlands", ("netherlands", "amsterdam", "dutch", "rotterdam")),
++    ("ch-zurich", ("zurich", "switzerland")),
++    ("fr-france", ("france", "french", "paris")),
++    ("sg-singapore", ("singapore")),
++    ("us-arizona", ("arizona", "phoenix")),
++    ("us-georgia", ("georgia", "atlanta", "savannah")),
++    ("us-california", ("california", "los angeles")),
++    ("us-omaha", ("omaha", "nebraska")),
++    ("es-tenerife", ("tenerife", "canary", "spain", "granadilla")),
++    ("uk-london", ("london", "guys", "st thomas", "nhs", "united kingdom", "british")),
++    ("uk-tristan", ("tristan",)),
++    ("ca-canada", ("canada", "canadian", "ontario", "british columbia", "vancouver")),
++    ("uy-uruguay", ("uruguay",)),
++    ("cl-chile", ("chile",)),
++]
++
++
++def _should_skip_case(case: dict[str, Any]) -> bool:
++    if case.get("source") != "ai-extracted":
++        return False
++    note = str(case.get("notes") or "").lower()
++    if "deaths reported" in note and "3 deaths" in note:
++        return True
++    if not case.get("nationality") and case.get("age") is None and not case.get("sex"):
++        if str(case.get("location") or "").lower() in ("cruise ship", "mv hondius"):
++            return True
++    return False
++
++
++def _haversine_km(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
++    r = 6371.0
++    p1, p2 = math.radians(lat1), math.radians(lat2)
++    dlat = math.radians(lat2 - lat1)
++    dlng = math.radians(lng2 - lng1)
++    a = math.sin(dlat / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dlng / 2) ** 2
++    return 2 * r * math.asin(math.sqrt(min(1.0, a)))
++
++
++def region_id_for_case(case: dict[str, Any], regions: list[dict[str, Any]]) -> str | None:
++    loc = str(case.get("location") or "").lower()
++    for rid, keys in _LOCATION_RULES:
++        if any(k in loc for k in keys):
++            return rid
++
++    nat = str(case.get("nationality") or "").lower()
++    if "dutch" in nat and "netherlands" not in loc:
++        return "nl-netherlands"
++    if "british" in nat and "tristan" not in loc:
++        return "uk-london"
++    if "german" in nat:
++        return "cv-cape-verde"
++    if "french" in nat:
++        return "fr-france"
++    if "american" in nat or "singaporean" in nat:
++        pass  # fall through to geo
++
++    lat, lng = case.get("lat"), case.get("lng")
++    try:
++        lat_f, lng_f = float(lat), float(lng)
++    except (TypeError, ValueError):
++        return None
++
++    best_id: str | None = None
++    best_km = 1e9
++    for reg in regions:
++        try:
++            rlat, rlng = float(reg["lat"]), float(reg["lng"])
++        except (KeyError, TypeError, ValueError):
++            continue
++        km = _haversine_km(lat_f, lng_f, rlat, rlng)
++        if km < best_km:
++            best_km = km
++            best_id = str(reg["id"])
++    if best_id and best_km <= 800:
++        return best_id
++    return None
++
++
++def rollup_regions(
++    registry: list[dict[str, Any]],
++    regions_template: list[dict[str, Any]],
++) -> list[dict[str, Any]]:
++    totals: dict[str, dict[str, int]] = {
++        str(r["id"]): {"suspected": 0, "probable": 0, "confirmed": 0, "deaths": 0}
++        for r in regions_template
++    }
++
++    for case in registry:
++        if _should_skip_case(case):
++            continue
++        rid = region_id_for_case(case, regions_template)
++        if not rid or rid not in totals:
++            continue
++        outcome = str(case.get("outcome") or "")
++        bucket = totals[rid]
++        if outcome == "died":
++            bucket["deaths"] += 1
++        elif outcome == "confirmed":
++            bucket["confirmed"] += 1
++        elif outcome in ("suspected", "hospitalized"):
++            bucket["suspected"] += 1
++
++    rolled: list[dict[str, Any]] = []
++    for reg in regions_template:
++        rid = str(reg["id"])
++        t = totals[rid]
++        row = dict(reg)
++        row["suspected"] = t["suspected"]
++        row["probable"] = t["probable"]
++        row["confirmed"] = t["confirmed"]
++        row["deaths"] = t["deaths"]
++        if t["deaths"] > 0 or t["confirmed"] >= 2:
++            row["outbreak_level"] = "high"
++        elif t["confirmed"] > 0 or t["suspected"] > 0:
++            if row.get("outbreak_level") == "informational":
++                row["outbreak_level"] = "elevated"
++        rolled.append(row)
++    return rolled
++
++
++def sync_cases_json(
++    data_dir: Path,
++    registry: list[dict[str, Any]],
++    *,
++    updated_iso: str,
++) -> dict[str, Any]:
++    path = data_dir / "cases.json"
++    base = json.loads(path.read_text(encoding="utf-8-sig"))
++    regions_tpl = base.get("regions") or []
++    if not isinstance(regions_tpl, list):
++        regions_tpl = []
++
++    payload = {
++        "updated": updated_iso,
++        "disclaimer": (
++            "Personal signal tracker. Region counts auto-synced from cases-individual.json each ingest; "
++            "notes on regions are preserved from the ledger template."
++        ),
++        "regions": rollup_regions(registry, regions_tpl),
++    }
++    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
++    return payload
+diff --git a/scripts/Apply-PermanentPagesFix.ps1 b/scripts/Apply-PermanentPagesFix.ps1
+new file mode 100644
+index 0000000..2b02d76
+--- /dev/null
++++ b/scripts/Apply-PermanentPagesFix.ps1
+@@ -0,0 +1,251 @@
++#Requires -Version 5.1
++<#
++.SYNOPSIS
++  Permanent fix: live JSON on github.io + Pages deploy after every ingest.
++
++.EXAMPLE
++  cd C:\Users\Mike\dev\hantavirus-dashboard
++  powershell -ExecutionPolicy Bypass -File .\scripts\Apply-PermanentPagesFix.ps1
++#>
++param([switch]$NoPush)
++
++$ErrorActionPreference = 'Stop'
++$RepoRoot = Split-Path -Parent $PSScriptRoot
++Set-Location $RepoRoot
++
++if (-not (Test-Path '.git')) { throw 'Not a git repo.' }
++
++git checkout main | Out-Null
++git pull origin main --rebase
++if ($LASTEXITCODE -ne 0) { throw 'git pull failed' }
++
++$utf8 = New-Object System.Text.UTF8Encoding $false
++
++$loadData = @'
++import type { CasesFile, NewsFile, RedditIntelFile } from './types'
++
++const LIVE_DATA_REPO = 'Beastros/hantavirus-dashboard'
++const LIVE_DATA_BRANCH = 'main'
++
++function basePath(): string {
++  const base = import.meta.env.BASE_URL
++  return base.endsWith('/') ? base : `${base}/`
++}
++
++function isGithubPages(): boolean {
++  if (typeof window === 'undefined') return false
++  return window.location.hostname.endsWith('.github.io')
++}
++
++function dataJsonUrl(file: string): string {
++  if (isGithubPages()) {
++    return `https://cdn.jsdelivr.net/gh/${LIVE_DATA_REPO}@${LIVE_DATA_BRANCH}/public/data/${file}`
++  }
++  return `${basePath()}data/${file}`
++}
++
++async function fetchJson<T>(url: string): Promise<T> {
++  const bust = url.includes('?') ? `&_=${Date.now()}` : `?_=${Date.now()}`
++  const res = await fetch(`${url}${bust}`, { cache: 'no-store' })
++  if (!res.ok) throw new Error(`Failed to load ${url}: ${res.status}`)
++  return res.json() as Promise<T>
++}
++
++export function loadCases(): Promise<CasesFile> {
++  return fetchJson<CasesFile>(dataJsonUrl('cases.json'))
++}
++export function loadNews(): Promise<NewsFile> {
++  return fetchJson<NewsFile>(dataJsonUrl('news.json'))
++}
++export function loadRedditIntel(): Promise<RedditIntelFile> {
++  return fetchJson<RedditIntelFile>(dataJsonUrl('reddit_hot.json'))
++}
++export function loadIndividualCases(): Promise<any> {
++  return fetchJson<any>(dataJsonUrl('cases-individual.json'))
++}
++export function loadIngestStatus(): Promise<any> {
++  return fetchJson<any>(dataJsonUrl('ingest-status.json'))
++}
++export function loadShipPosition(): Promise<any> {
++  return fetchJson<any>(dataJsonUrl('ship-position.json'))
++}
++
++export type ShipTrackPoint = {
++  t?: string
++  lat: number
++  lng: number
++  source?: string
++  note?: string
++}
++
++export function loadShipTrack(): Promise<{ updated?: string; mmsi?: string; points: ShipTrackPoint[] }> {
++  return fetchJson(dataJsonUrl('ship-track.json'))
++}
++export function loadTrends(): Promise<any> {
++  return fetchJson<any>(dataJsonUrl('trends.json'))
++}
++'@
++
++$ingestYml = Get-Content -Raw -LiteralPath (Join-Path $RepoRoot '.github\workflows\ingest.yml') -ErrorAction SilentlyContinue
++if ($ingestYml -notmatch 'publish-pages:') {
++  $ingestPath = Join-Path $RepoRoot '.github\workflows\ingest.yml'
++  $ingestNew = @'
++name: Ingest RSS + AI extraction
++on:
++  schedule:
++    - cron: '*/15 * * * *'
++  workflow_dispatch:
++
++concurrency:
++  group: ingest-main
++  cancel-in-progress: false
++
++permissions:
++  contents: write
++  pages: write
++  id-token: write
++
++jobs:
++  ingest:
++    runs-on: ubuntu-latest
++    env:
++      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          fetch-depth: 0
++      - uses: actions/setup-python@v5
++        with:
++          python-version: '3.12'
++      - name: Install dependencies
++        run: pip install -r ingest/requirements.txt
++      - name: Mirror r/hantavirus intel (hot + new)
++        continue-on-error: true
++        working-directory: ingest
++        env:
++          REDDIT_SUBREDDIT: hantavirus
++          REDDIT_HOT_LIMIT: '18'
++        run: python reddit_hot.py
++      - name: Run ingest (RSS + AI)
++        continue-on-error: true
++        working-directory: ingest
++        env:
++          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
++          AIS_API_KEY: ${{ secrets.AIS_API_KEY }}
++        run: python run.py
++      - name: Commit and push
++        run: |
++          git config user.name "github-actions[bot]"
++          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
++          date -u +%Y-%m-%dT%H:%M:%SZ > public/data/last-build.txt
++          git add public/data/
++          git commit -m "chore: ingest refresh" || echo "[info] nothing to commit"
++          git fetch origin main
++          git pull --rebase origin main
++          git push origin main
++
++  publish-pages:
++    needs: ingest
++    runs-on: ubuntu-latest
++    permissions:
++      contents: read
++      pages: write
++      id-token: write
++    environment:
++      name: github-pages
++      url: ${{ steps.deployment.outputs.page_url }}
++    steps:
++      - uses: actions/checkout@v4
++      - uses: actions/setup-node@v4
++        with:
++          node-version: '22'
++          cache: npm
++          cache-dependency-path: package-lock.json
++      - name: Install and build
++        env:
++          GITHUB_REPOSITORY: ${{ github.repository }}
++          VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
++        run: |
++          npm ci
++          npm run build
++      - uses: actions/upload-pages-artifact@v3
++        with:
++          path: dist
++      - uses: actions/deploy-pages@v4
++        id: deployment
++'@
++  [System.IO.File]::WriteAllText($ingestPath, $ingestNew.TrimEnd() + "`n", $utf8)
++  Write-Host 'Updated ingest.yml (publish-pages job)' -ForegroundColor Cyan
++} else {
++  Write-Host 'ingest.yml already has publish-pages' -ForegroundColor Green
++}
++
++$pagesPath = Join-Path $RepoRoot '.github\workflows\pages.yml'
++$pagesNew = @'
++name: GitHub Pages
++on:
++  push:
++    branches: [main]
++  workflow_dispatch:
++permissions:
++  contents: read
++  pages: write
++  id-token: write
++concurrency:
++  group: pages
++  cancel-in-progress: true
++jobs:
++  build:
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@v4
++      - uses: actions/setup-node@v4
++        with:
++          node-version: '22'
++          cache: npm
++          cache-dependency-path: package-lock.json
++      - name: Install and build
++        env:
++          GITHUB_REPOSITORY: ${{ github.repository }}
++          VITE_MAPBOX_TOKEN: ${{ secrets.VITE_MAPBOX_TOKEN }}
++        run: |
++          npm ci
++          echo "Token present: ${{ secrets.VITE_MAPBOX_TOKEN != '' }}"
++          npm run build
++      - uses: actions/upload-pages-artifact@v3
++        with:
++          path: dist
++  deploy:
++    needs: build
++    runs-on: ubuntu-latest
++    environment:
++      name: github-pages
++      url: ${{ steps.deployment.outputs.page_url }}
++    steps:
++      - uses: actions/deploy-pages@v4
++        id: deployment
++'@
++$pagesCur = Get-Content -Raw -LiteralPath $pagesPath -ErrorAction SilentlyContinue
++if ($pagesCur -match 'workflow_run:') {
++  [System.IO.File]::WriteAllText($pagesPath, $pagesNew.TrimEnd() + "`n", $utf8)
++  Write-Host 'Updated pages.yml (removed broken workflow_run)' -ForegroundColor Cyan
++}
++
++[System.IO.File]::WriteAllText((Join-Path $RepoRoot 'src\loadData.ts'), $loadData.TrimEnd() + "`n", $utf8)
++Write-Host 'Updated src/loadData.ts (live JSON from main via jsDelivr)' -ForegroundColor Cyan
++
++git add src/loadData.ts .github/workflows/ingest.yml .github/workflows/pages.yml scripts/Apply-PermanentPagesFix.ps1
++git diff --cached --quiet
++if ($LASTEXITCODE -eq 0) {
++  Write-Host 'Nothing to commit — fix may already be applied.' -ForegroundColor Yellow
++  exit 0
++}
++
++git commit -m 'fix(pages): live data from main + deploy after each ingest'
++if ($NoPush) {
++  Write-Host 'Committed. Run: git push origin main' -ForegroundColor Yellow
++  exit 0
++}
++git push origin main
++if ($LASTEXITCODE -ne 0) { throw 'git push failed' }
++Write-Host 'Done. GitHub Pages will build on push; every ingest will redeploy after that.' -ForegroundColor Green
+diff --git a/src/App.tsx b/src/App.tsx
+index a1c9db2..f5d679e 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -23,6 +23,7 @@ import {
+ import type { ShipTrackPoint } from './loadData'
+ import type { CasesFile, NewsFile, RedditIntelFile } from './types'
+ import { EMPTY_REDDIT_INTEL } from './types'
++import { countByOutcome, registryRows } from './registryUtils'
+ 
+ type ShipPosState = { lat: number; lng: number; name?: string; course?: number | null }
+ 
+@@ -65,6 +66,7 @@ export default function App() {
+   const [news, setNews] = useState<NewsFile | null>(null)
+   const [redditIntel, setRedditIntel] = useState<RedditIntelFile>(EMPTY_REDDIT_INTEL)
+   const [individualCases, setIndividualCases] = useState<any[]>([])
++  const [registryUpdated, setRegistryUpdated] = useState<string | null>(null)
+   const [shipPos, setShipPos] = useState<ShipPosState | null>(null)
+   const [shipTrackPoints, setShipTrackPoints] = useState<ShipTrackPoint[]>([])
+   const [ingestStatus, setIngestStatus] = useState<Record<string, unknown> | null>(null)
+@@ -83,7 +85,11 @@ export default function App() {
+       }
+     })()
+     loadIndividualCases()
+-      .then((d: any) => { if (!cancelled) setIndividualCases(d.cases || []) })
++      .then((d: any) => {
++        if (cancelled) return
++        setIndividualCases(d.cases || [])
++        setRegistryUpdated(typeof d.updated === 'string' ? d.updated : null)
++      })
+       .catch(() => {})
+     loadShipPosition()
+       .then((s: any) => {
+@@ -124,7 +130,12 @@ export default function App() {
+         const [c, n] = await Promise.all([loadCases(), loadNews()])
+         setCases(c); setNews(n)
+       } catch {}
+-      loadIndividualCases().then((d: any) => setIndividualCases(d.cases || [])).catch(() => {})
++      loadIndividualCases()
++        .then((d: any) => {
++          setIndividualCases(d.cases || [])
++          setRegistryUpdated(typeof d.updated === 'string' ? d.updated : null)
++        })
++        .catch(() => {})
+       loadShipPosition()
+         .then((s: any) => {
+           if (!s) return
+@@ -160,9 +171,10 @@ export default function App() {
+     </div>
+   )
+ 
+-  const totalConfirmed = individualCases.filter((c: any) => c.outcome === 'confirmed' || c.outcome === 'died').length
+-  const totalSuspected = individualCases.filter((c: any) => c.outcome === 'suspected' || c.outcome === 'hospitalized').length
+-  const totalDeaths    = individualCases.filter((c: any) => c.outcome === 'died').length
++  const registry = registryRows(individualCases)
++  const totalConfirmed = countByOutcome(individualCases, ['confirmed', 'died'])
++  const totalSuspected = countByOutcome(individualCases, ['suspected', 'hospitalized'])
++  const totalDeaths = countByOutcome(individualCases, ['died'])
+ 
+   return (
+     <div className="shell">
+@@ -193,8 +205,10 @@ export default function App() {
+         </div>
+         <div style={{marginLeft:'auto',display:'flex',flexDirection:'column',alignItems:'flex-end',gap:4}}>
+           <span className="top-badge">ACTIVE OUTBREAK</span>
+-          <span style={{fontSize:'.65rem',color:'var(--muted)',fontFamily:"'Share Tech Mono',monospace"}}>
+-            UPDATED {cases.updated.slice(0,10)}
++          <span style={{fontSize:'.65rem',color:'var(--muted)',fontFamily:"'Share Tech Mono',monospace",textAlign:'right'}}>
++            SYNCED {((registryUpdated ?? cases.updated) || '').slice(0, 10)}
++            {' · '}
++            {registry.length} registry rows
+           </span>
+         </div>
+       </div>
+@@ -204,7 +218,7 @@ export default function App() {
+       {/* Main 3-column grid â€” fixed height, does not stretch */}
+       <div className="main-grid">
+         <div className="left-col">
+-          <StatsPanel cases={individualCases} regions={cases.regions} />
++          <StatsPanel cases={registry as any[]} regions={cases.regions} />
+           <ShipPanel />
+           <StrainReadout />
+           <div className="sb-section sb-section--ledger">
+@@ -232,8 +246,8 @@ export default function App() {
+       {/* Analytics — page scrolls here */}
+       <div style={{ padding: '1rem 1rem 0' }}>
+         <div className="analytics-row">
+-          <CaseTable cases={individualCases} />
+-          <PivotChart cases={individualCases} />
++          <CaseTable cases={registry as any[]} />
++          <PivotChart cases={registry as any[]} />
+         </div>
+       </div>
+ 
+@@ -248,8 +262,8 @@ export default function App() {
+       </div>
+ 
+       <footer className="footer">
+-        // Intel column mirrors r/hantavirus (reddit_hot.json). Ingest runs ~15 min. Canary reads
+-        cases.json, news.json, reddit_hot.json, cases-individual.json, ingest-status.json, trends.json.
++        // Reddit + news refresh every ingest. Case counts come from cases-individual.json (AI/manual).
++        // Region sidebar + map tint use cases.json (edit by hand). Canary reads all JSON under public/data/.
+       </footer>
+     </div>
+   )
+diff --git a/src/components/RegionList.tsx b/src/components/RegionList.tsx
+index 287933b..78c3fad 100644
+--- a/src/components/RegionList.tsx
++++ b/src/components/RegionList.tsx
+@@ -21,8 +21,8 @@ export function RegionList({ regions, selectedId, onSelect }: Props) {
+   return (
+     <section className="panel region-panel">
+       <header className="panel-head">
+-        <h2>Case Ledger</h2>
+-        <p className="panel-sub">Click a row to fly the map to that location.</p>
++        <h2>Region ledger</h2>
++        <p className="panel-sub">Counts synced from registry each ingest. Notes preserved from ledger template.</p>
+       </header>
+       <ul className="region-list">
+         {regions.map((r) => (
+diff --git a/src/components/StatsPanel.tsx b/src/components/StatsPanel.tsx
+index 908624e..7c6d7da 100644
+--- a/src/components/StatsPanel.tsx
++++ b/src/components/StatsPanel.tsx
+@@ -1,16 +1,19 @@
+-﻿interface Case { outcome?: string | null }
++﻿import { countByOutcome, registryRows } from '../registryUtils'
++
++interface Case { outcome?: string | null }
+ interface Region { id: string; outbreak_level?: string }
+ 
+ export function StatsPanel({ cases, regions }: { cases: Case[]; regions: Region[] }) {
+-  const deaths    = cases.filter(c => c.outcome === 'died').length
+-  const confirmed = cases.filter(c => c.outcome === 'confirmed' || c.outcome === 'died').length
+-  const suspected = cases.filter(c => c.outcome === 'suspected' || c.outcome === 'hospitalized').length
++  const rows = registryRows(cases)
++  const deaths = countByOutcome(cases, ['died'])
++  const confirmed = countByOutcome(cases, ['confirmed', 'died'])
++  const suspected = countByOutcome(cases, ['suspected', 'hospitalized'])
+   const countries = new Set(regions.filter(r => r.outbreak_level !== 'informational' || true).map(r => r.id.split('-')[0])).size
+   const cfr = confirmed > 0 ? ((deaths / confirmed) * 100).toFixed(1) : '0'
+ 
+   return (
+     <div className="sb-section">
+-      <div className="sb-label">GLOBAL CLUSTER</div>
++      <div className="sb-label">GLOBAL CLUSTER · {rows.length} registry rows</div>
+       <div className="stat-block">
+         <div className="stat-label">CONFIRMED DEATHS</div>
+         <div className="stat-val stat-red">{deaths}</div>
+diff --git a/src/loadData.ts b/src/loadData.ts
+index 33ea173..a7b4156 100644
+--- a/src/loadData.ts
++++ b/src/loadData.ts
+@@ -1,38 +1,52 @@
+ ﻿import type { CasesFile, NewsFile, RedditIntelFile } from './types'
+ 
++const LIVE_DATA_REPO = 'Beastros/hantavirus-dashboard'
++const LIVE_DATA_BRANCH = 'main'
++
+ function basePath(): string {
+   const base = import.meta.env.BASE_URL
+   return base.endsWith('/') ? base : `${base}/`
+ }
+ 
+-async function fetchJson<T>(path: string): Promise<T> {
+-  const bust = path.includes('?') ? `&_=${Date.now()}` : `?_=${Date.now()}`
+-  const res = await fetch(`${path}${bust}`, { cache: 'no-store' })
+-  if (!res.ok) throw new Error(`Failed to load ${path}: ${res.status}`)
++function isGithubPages(): boolean {
++  if (typeof window === 'undefined') return false
++  return window.location.hostname.endsWith('.github.io')
++}
++
++function dataJsonUrl(file: string): string {
++  if (isGithubPages()) {
++    return `https://cdn.jsdelivr.net/gh/${LIVE_DATA_REPO}@${LIVE_DATA_BRANCH}/public/data/${file}`
++  }
++  return `${basePath()}data/${file}`
++}
++
++async function fetchJson<T>(url: string): Promise<T> {
++  const bust = url.includes('?') ? `&_=${Date.now()}` : `?_=${Date.now()}`
++  const res = await fetch(`${url}${bust}`, { cache: 'no-store' })
++  if (!res.ok) throw new Error(`Failed to load ${url}: ${res.status}`)
+   return res.json() as Promise<T>
+ }
+ 
+ export function loadCases(): Promise<CasesFile> {
+-  return fetchJson<CasesFile>(`${basePath()}data/cases.json`)
++  return fetchJson<CasesFile>(dataJsonUrl('cases.json'))
+ }
+ export function loadNews(): Promise<NewsFile> {
+-  return fetchJson<NewsFile>(`${basePath()}data/news.json`)
++  return fetchJson<NewsFile>(dataJsonUrl('news.json'))
+ }
+ 
+ export function loadRedditIntel(): Promise<RedditIntelFile> {
+-  return fetchJson<RedditIntelFile>(`${basePath()}data/reddit_hot.json`)
++  return fetchJson<RedditIntelFile>(dataJsonUrl('reddit_hot.json'))
+ }
+ export function loadIndividualCases(): Promise<any> {
+-  return fetchJson<any>(`${basePath()}data/cases-individual.json`)
++  return fetchJson<any>(dataJsonUrl('cases-individual.json'))
+ }
+ export function loadIngestStatus(): Promise<any> {
+-  return fetchJson<any>(`${basePath()}data/ingest-status.json`)
++  return fetchJson<any>(dataJsonUrl('ingest-status.json'))
+ }
+ export function loadShipPosition(): Promise<any> {
+-  return fetchJson<any>(`${basePath()}data/ship-position.json`)
++  return fetchJson<any>(dataJsonUrl('ship-position.json'))
+ }
+ 
+-/** Chronological AIS / ingest breadcrumbs for the MV Hondius map (`public/data/ship-track.json`). */
+ export type ShipTrackPoint = {
+   t?: string
+   lat: number
+@@ -42,8 +56,8 @@ export type ShipTrackPoint = {
+ }
+ 
+ export function loadShipTrack(): Promise<{ updated?: string; mmsi?: string; points: ShipTrackPoint[] }> {
+-  return fetchJson(`${basePath()}data/ship-track.json`)
++  return fetchJson(dataJsonUrl('ship-track.json'))
+ }
+ export function loadTrends(): Promise<any> {
+-  return fetchJson<any>(`${basePath()}data/trends.json`)
++  return fetchJson<any>(dataJsonUrl('trends.json'))
+ }
+diff --git a/src/registryUtils.ts b/src/registryUtils.ts
+new file mode 100644
+index 0000000..95ece36
+--- /dev/null
++++ b/src/registryUtils.ts
+@@ -0,0 +1,20 @@
++/** Rows shown in case counts / table — drops vague AI headline aggregates. */
++export function registryRows(cases: unknown[]): Record<string, unknown>[] {
++  if (!Array.isArray(cases)) return []
++  return cases.filter((raw): raw is Record<string, unknown> => {
++    if (!raw || typeof raw !== 'object') return false
++    const c = raw as Record<string, unknown>
++    if (c.source !== 'ai-extracted') return true
++    const note = String(c.notes ?? '').toLowerCase()
++    if (/\d+\s+deaths?\s+reported/.test(note)) return false
++    if (!c.nationality && c.age == null && !c.sex && c.location === 'cruise ship') return false
++    return true
++  })
++}
++
++export function countByOutcome(
++  cases: unknown[],
++  outcomes: string[],
++): number {
++  return registryRows(cases).filter((c) => outcomes.includes(String(c.outcome ?? ''))).length
++}
