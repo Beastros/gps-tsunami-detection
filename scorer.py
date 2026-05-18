@@ -586,6 +586,10 @@ def is_ready_to_score(event):
     return hours_since >= 24.0
 
 
+def is_retroactive_rescore(event):
+    return bool(event.get("retroactive_trigger") or event.get("retro_trigger_reason"))
+
+
 def main(event_id=None, force=False):
     log.info("=" * 55)
     log.info("GPS Tsunami Detector — Scorer v2 (multi-sensor)")
@@ -602,9 +606,12 @@ def main(event_id=None, force=False):
     if event_id:
         events = [e for e in events if e["usgs_id"] == event_id]
 
-    ready = [e for e in events
-             if (is_ready_to_score(e) or force)
-             and e["usgs_id"] not in already_scored]
+    ready = [
+        e
+        for e in events
+        if (is_ready_to_score(e) or force)
+        and (e["usgs_id"] not in already_scored or force or is_retroactive_rescore(e))
+    ]
 
     log.info(f"Events ready to score: {len(ready)}")
 
@@ -661,6 +668,12 @@ def main(event_id=None, force=False):
         event["score"]       = score
         event["status"]      = "scored"
         event["scored_utc"]  = datetime.now(timezone.utc).isoformat()
+        if is_retroactive_rescore(event):
+            event.pop("retroactive_pending", None)
+            event["retroactive_completed_utc"] = event["scored_utc"]
+            log_data["scored_events"] = [
+                e for e in log_data["scored_events"] if e.get("usgs_id") != event["usgs_id"]
+            ]
 
         log_data["scored_events"].append(score)
         update_summary(log_data)
