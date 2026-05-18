@@ -4,12 +4,25 @@ Use this when `git merge cursor/outbreak-dashboard-gh-pages-e7aa` fails (branch 
 
 ## Quick apply (Windows)
 
-```powershell
+**Command Prompt (cmd)** — paste all lines:
+
+```bat
 cd C:\Users\Mike\dev\hantavirus-dashboard
-powershell -ExecutionPolicy Bypass -File .\scripts\Apply-SyncFix-FromUrl.ps1
+if not exist scripts mkdir scripts
+curl -fsSL -o scripts\Apply-SyncFix-FromUrl.ps1 https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/hantavirus-dashboard-patches/Apply-SyncFix-FromUrl.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\Apply-SyncFix-FromUrl.ps1
 ```
 
-Or download `sync-fix.patch` from this folder on `gps-tsunami-detection` and run `Apply-SyncFix.ps1` from your repo’s `scripts\` folder.
+**Or** download `Apply-SyncFix-Standalone.cmd` from this folder, copy it into `hantavirus-dashboard`, double-click.
+
+**PowerShell window** (not cmd):
+
+```powershell
+cd C:\Users\Mike\dev\hantavirus-dashboard
+New-Item -ItemType Directory -Force -Path scripts | Out-Null
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/main/hantavirus-dashboard-patches/Apply-SyncFix-FromUrl.ps1" -OutFile .\scripts\Apply-SyncFix-FromUrl.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\Apply-SyncFix-FromUrl.ps1
+```
 
 **Raw patch URL (stable after push):**
 
