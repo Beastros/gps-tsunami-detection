@@ -193,12 +193,24 @@ def is_eligible_for_retro_check(event: dict) -> bool:
 def queue_retroactive_reprocess(event: dict, reason: str, probe: dict) -> dict:
     """Reset pipeline state and annotate for Discord + downstream steps."""
     prior_prediction = deepcopy(event.get("prediction")) if event.get("prediction") else None
+    prior_score = deepcopy(event.get("score")) if event.get("score") else None
     prior_status = event.get("status")
     prior_detected = None
     if isinstance(prior_prediction, dict):
         prior_detected = prior_prediction.get("detected")
+    prior_state = {
+        "scored": event.get("scored"),
+        "scored_utc": event.get("scored_utc"),
+        "detector_run": event.get("detector_run"),
+        "detector_run_utc": event.get("detector_run_utc"),
+        "rinex_downloaded": event.get("rinex_downloaded"),
+        "rinex_dir": event.get("rinex_dir"),
+        "rinex_download_utc": event.get("rinex_download_utc"),
+        "result": deepcopy(event.get("result")) if event.get("result") is not None else None,
+    }
 
-    reset_event_for_reprocess(event)
+    # Keep the published running_log entry until a replacement score is ready.
+    reset_event_for_reprocess(event, clear_prior_score=False)
     event["retroactive_pending"] = True
     event["retroactive_trigger"] = True
     event["retro_trigger_reason"] = reason
@@ -207,6 +219,8 @@ def queue_retroactive_reprocess(event: dict, reason: str, probe: dict) -> dict:
     event["retro_run_count"] = int(event.get("retro_run_count", 0)) + 1
     event["retro_prior_status"] = prior_status
     event["retro_prior_prediction"] = prior_prediction
+    event["retro_prior_score"] = prior_score
+    event["retro_prior_state"] = prior_state
     event["retro_prior_detected"] = prior_detected
     event["rinex_coverage_probe"] = probe
 
@@ -295,3 +309,49 @@ def update_event_coverage_from_manifest(event: dict, manifest_path: Path) -> Non
     if fp:
         fp["updated_utc"] = _utcnow().isoformat()
         event["rinex_coverage"] = fp
+
+
+def restore_prior_result(event: dict, reason: str) -> None:
+    """Rollback a failed retroactive attempt without losing the last scored result."""
+    prior_state = event.get("retro_prior_state") or {}
+    prior_prediction = event.get("retro_prior_prediction")
+    prior_score = event.get("retro_prior_score")
+
+    if isinstance(prior_prediction, dict):
+        event["prediction"] = prior_prediction
+    else:
+        event.pop("prediction", None)
+
+    if isinstance(prior_score, dict):
+        event["score"] = prior_score
+    else:
+        event.pop("score", None)
+
+    for key in (
+        "scored",
+        "scored_utc",
+        "detector_run",
+        "detector_run_utc",
+        "rinex_downloaded",
+        "rinex_dir",
+        "rinex_download_utc",
+        "result",
+    ):
+        if key in prior_state and prior_state[key] is not None:
+            event[key] = prior_state[key]
+        elif key in prior_state:
+            event.pop(key, None)
+
+    prior_status = event.get("retro_prior_status")
+    if prior_status:
+        event["status"] = prior_status
+    elif isinstance(prior_score, dict):
+        event["status"] = "scored"
+    elif isinstance(prior_prediction, dict):
+        event["status"] = "predicted"
+    else:
+        event["status"] = "rinex_failed"
+
+    event["retroactive_aborted_utc"] = _utcnow().isoformat()
+    event["retroactive_abort_reason"] = reason
+    event.pop("retroactive_pending", None)
