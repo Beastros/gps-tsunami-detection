@@ -1,7 +1,19 @@
 {
-  "generated": "2026-05-18T23:47:52Z",
+  "generated": "2026-05-19T03:51:12Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000syik",
+      "mag": 5.1,
+      "place": "26 km NW of Liuzhou, China",
+      "time_ms": 1779111866230,
+      "lat": 24.48,
+      "lon": 109.207,
+      "depth": 10.0,
+      "dyfi_responses": 10,
+      "dyfi_maxmmi": null
+    }
+  ]
 }

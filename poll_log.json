@@ -13274,10 +13274,24 @@
       "total_queued": 1,
       "pending": 0,
       "scored": 1
+    },
+    {
+      "ts": "2026-05-19T03:51:01.644335+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-19T03:51:05.312445+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
     }
   ],
-  "last_updated": "2026-05-18T23:47:27.206998+00:00",
-  "total_polls": 2203,
+  "last_updated": "2026-05-19T03:51:05.312445+00:00",
+  "total_polls": 2205,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -13458,6 +13472,16 @@
       "depth": 56.0,
       "reason": "below threshold",
       "delta": -0.8
+    },
+    {
+      "ts": "2026-05-19T02:29:25.526000+00:00",
+      "mag": 5.8,
+      "place": "49 km SSW of Port-Vila, Vanuatu",
+      "lat": -18.16,
+      "lon": 168.17,
+      "depth": 37.4,
+      "reason": "below threshold",
+      "delta": -0.7
     }
   ],
   "expected_poll_interval_sec": 900
