@@ -13344,10 +13344,24 @@
       "total_queued": 1,
       "pending": 0,
       "scored": 1
+    },
+    {
+      "ts": "2026-05-19T19:26:57.422544+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-19T19:27:00.603727+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
     }
   ],
-  "last_updated": "2026-05-19T17:16:00.592220+00:00",
-  "total_polls": 2213,
+  "last_updated": "2026-05-19T19:27:00.603727+00:00",
+  "total_polls": 2215,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -13538,6 +13552,16 @@
       "depth": 37.4,
       "reason": "below threshold",
       "delta": -0.7
+    },
+    {
+      "ts": "2026-05-19T17:57:54.757000+00:00",
+      "mag": 5.9,
+      "place": "25 km ESE of Pampa de Tate, Peru",
+      "lat": -14.24,
+      "lon": -75.48,
+      "depth": 62.7,
+      "reason": "below threshold",
+      "delta": -0.6
     }
   ],
   "expected_poll_interval_sec": 900
