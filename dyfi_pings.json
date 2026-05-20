@@ -1,8 +1,8 @@
 {
-  "generated": "2026-05-20T16:40:11Z",
+  "generated": "2026-05-20T19:09:01Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
+  "count": 1,
   "pings": [
     {
       "usgs_id": "us6000syw4",
@@ -14,17 +14,6 @@
       "depth": 42.0,
       "dyfi_responses": 19,
       "dyfi_maxmmi": 4.7
-    },
-    {
-      "usgs_id": "us6000syt5",
-      "mag": 5.8,
-      "place": "20 km ESE of Pampa de Tate, Peru",
-      "time_ms": 1779213474220,
-      "lat": -14.207,
-      "lon": -75.517,
-      "depth": 56.5,
-      "dyfi_responses": 27,
-      "dyfi_maxmmi": 4.9
     }
   ]
 }
