@@ -1,9 +1,20 @@
 {
-  "generated": "2026-05-19T23:46:39Z",
+  "generated": "2026-05-20T03:51:24Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 2,
   "pings": [
+    {
+      "usgs_id": "us6000syw4",
+      "mag": 5.9,
+      "place": "10 km NNW of China, Japan",
+      "time_ms": 1779245185412,
+      "lat": 27.427,
+      "lon": 128.544,
+      "depth": 49.7,
+      "dyfi_responses": 15,
+      "dyfi_maxmmi": 4.8
+    },
     {
       "usgs_id": "us6000syt5",
       "mag": 5.8,
@@ -12,19 +23,8 @@
       "lat": -14.207,
       "lon": -75.517,
       "depth": 56.5,
-      "dyfi_responses": 25,
+      "dyfi_responses": 27,
       "dyfi_maxmmi": 4.9
-    },
-    {
-      "usgs_id": "us6000synm",
-      "mag": 5.7,
-      "place": "51 km SSW of Port-Vila, Vanuatu",
-      "time_ms": 1779157764366,
-      "lat": -18.151,
-      "lon": 168.093,
-      "depth": 27.0,
-      "dyfi_responses": 12,
-      "dyfi_maxmmi": 4.1
     }
   ]
 }
