@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-20T03:51:24Z",
+  "generated": "2026-05-20T07:49:11Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 2,
@@ -7,13 +7,13 @@
     {
       "usgs_id": "us6000syw4",
       "mag": 5.9,
-      "place": "10 km NNW of China, Japan",
-      "time_ms": 1779245185412,
-      "lat": 27.427,
-      "lon": 128.544,
-      "depth": 49.7,
-      "dyfi_responses": 15,
-      "dyfi_maxmmi": 4.8
+      "place": "8 km E of Wadomari, Japan",
+      "time_ms": 1779245184884,
+      "lat": 27.392,
+      "lon": 128.734,
+      "depth": 42.0,
+      "dyfi_responses": 18,
+      "dyfi_maxmmi": 4.7
     },
     {
       "usgs_id": "us6000syt5",
