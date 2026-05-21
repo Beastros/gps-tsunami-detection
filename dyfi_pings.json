@@ -1,19 +1,7 @@
 {
-  "generated": "2026-05-21T00:10:24Z",
+  "generated": "2026-05-21T04:45:58Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us6000syw4",
-      "mag": 5.9,
-      "place": "8 km E of Wadomari, Japan",
-      "time_ms": 1779245184884,
-      "lat": 27.392,
-      "lon": 128.734,
-      "depth": 42.0,
-      "dyfi_responses": 19,
-      "dyfi_maxmmi": 4.7
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
