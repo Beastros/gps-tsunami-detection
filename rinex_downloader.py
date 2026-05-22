@@ -537,7 +537,12 @@ def _clear_running_log_score(usgs_id: str) -> None:
         log.warning("Could not trim running_log for %s: %s", usgs_id, e)
 
 
-def reset_event_for_reprocess(event: dict, *, keep_retro_meta: bool = False) -> None:
+def reset_event_for_reprocess(
+    event: dict,
+    *,
+    keep_retro_meta: bool = False,
+    preserve_outputs: bool = False,
+) -> None:
     """Allow re-download + re-run detector on an already-processed event."""
     retro_meta = None
     if keep_retro_meta:
@@ -555,17 +560,28 @@ def reset_event_for_reprocess(event: dict, *, keep_retro_meta: bool = False) -> 
             )
             if event.get(k) is not None
         }
-    _clear_running_log_score(event["usgs_id"])
+    if not preserve_outputs:
+        _clear_running_log_score(event["usgs_id"])
     event["rinex_downloaded"] = False
     event["detector_run"] = False
+    if not preserve_outputs:
+        event["scored"] = False
+        event.pop("prediction", None)
+        event.pop("score", None)
+        event.pop("discord_alerted", None)
+        event["status"] = "queued"
+    event["reprocess_requested"] = True
+    if retro_meta:
+        event.update(retro_meta)
+
+
+def clear_event_outputs_for_replacement(event: dict) -> None:
+    """Drop stale outputs only after replacement RINEX files are on disk."""
+    _clear_running_log_score(event["usgs_id"])
     event["scored"] = False
     event.pop("prediction", None)
     event.pop("score", None)
     event.pop("discord_alerted", None)
-    event["status"] = "queued"
-    event["reprocess_requested"] = True
-    if retro_meta:
-        event.update(retro_meta)
 
 
 def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
@@ -621,19 +637,27 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
     for event in ready:
         count, event_dir = download_event(event, auth)
         if count > 0:
+            if event.get("retroactive_pending"):
+                clear_event_outputs_for_replacement(event)
             event["rinex_downloaded"] = True
             event["rinex_dir"] = event_dir
             event["rinex_download_utc"] = datetime.now(timezone.utc).isoformat()
             event["status"] = "rinex_ready"
             event.pop("rinex_last_fail_utc", None)
+            event.pop("retro_download_last_fail_utc", None)
+            event.pop("retro_download_fail_count", None)
             save_queue(queue)
             log.info(f"Updated queue: {event['usgs_id']} → rinex_ready ({count} files)")
         else:
-            event["status"] = "rinex_failed"
-            event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
-            event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
             if event.get("retroactive_pending"):
-                event.pop("retroactive_pending", None)
+                event["retro_download_fail_count"] = int(event.get("retro_download_fail_count", 0)) + 1
+                event["retro_download_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
+                if event.get("retro_prior_status"):
+                    event["status"] = event["retro_prior_status"]
+            else:
+                event["status"] = "rinex_failed"
+                event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
+                event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
             save_queue(queue)
 
     return retro_triggered
