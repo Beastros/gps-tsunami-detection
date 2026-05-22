@@ -35,6 +35,7 @@ class CriticalRegressionTests(unittest.TestCase):
         with (
             patch.object(usgs_listener, "fetch_feed", return_value=[_feature("upgrade-event", 6.7)]),
             patch.object(usgs_listener, "fetch_focal_mechanism", return_value=None),
+            patch.object(usgs_listener, "_activate_fast_poll"),
         ):
             new_count, near_misses = usgs_listener.check_feed(queue)
 
