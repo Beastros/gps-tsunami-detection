@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-23T08:36:11Z",
+  "generated": "2026-05-23T10:16:32Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 1,
@@ -7,13 +7,13 @@
     {
       "usgs_id": "hv74966427",
       "mag": 6.0,
-      "place": "12 km S of Honaunau-Napoopoo, Hawaii",
-      "time_ms": 1779522361450,
-      "lat": 19.341,
-      "lon": -155.845,
-      "depth": 22.4,
-      "dyfi_responses": 2662,
-      "dyfi_maxmmi": 7.1
+      "place": "13 km S of Honaunau-Napoopoo, Hawaii",
+      "time_ms": 1779522361480,
+      "lat": 19.34,
+      "lon": -155.843,
+      "depth": 22.6,
+      "dyfi_responses": 5401,
+      "dyfi_maxmmi": 7.2
     }
   ]
 }
