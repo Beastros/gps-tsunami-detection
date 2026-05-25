@@ -488,12 +488,13 @@ def download_event(event, auth: HTTPBasicAuth):
     manifest["updated_utc"] = datetime.now(timezone.utc).isoformat()
     manifest_path = event_dir / "rinex_manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-    try:
-        from retroactive_rinex import update_event_coverage_from_manifest
+    if downloaded > 0:
+        try:
+            from retroactive_rinex import update_event_coverage_from_manifest
 
-        update_event_coverage_from_manifest(event, manifest_path)
-    except Exception as exc:
-        log.debug("Could not update rinex_coverage fingerprint: %s", exc)
+            update_event_coverage_from_manifest(event, manifest_path)
+        except Exception as exc:
+            log.debug("Could not update rinex_coverage fingerprint: %s", exc)
     log.info(f"  Total {downloaded} RINEX files in {event_dir}")
     return downloaded, str(event_dir)
 
