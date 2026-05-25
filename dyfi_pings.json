@@ -1,19 +1,7 @@
 {
-  "generated": "2026-05-25T16:33:38Z",
+  "generated": "2026-05-25T18:17:01Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us6000szxz",
-      "mag": 5.5,
-      "place": "13 km E of Cortes, Philippines",
-      "time_ms": 1779641320754,
-      "lat": 9.303,
-      "lon": 126.311,
-      "depth": 34.0,
-      "dyfi_responses": 10,
-      "dyfi_maxmmi": 4.7
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
