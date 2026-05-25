@@ -335,6 +335,9 @@ def score_event(event, gauge_results, dart_result=None):
         "magnitude":             event["magnitude"],
         "place":                 event["place"],
         "anchor":                anchor,
+        "detector_run_utc":      event.get("detector_run_utc"),
+        "prediction_run_utc":    pred.get("run_utc"),
+        "retro_run":             event.get("retro_run_count") if event.get("retroactive_trigger") else None,
 
         # Legacy fields (keep for dashboard backward compat)
         "kp":                    pred.get("kp"),
@@ -586,6 +589,26 @@ def is_ready_to_score(event):
     return hours_since >= 24.0
 
 
+def _score_run_id_from_event(event):
+    pred = event.get("prediction") or {}
+    return event.get("detector_run_utc") or pred.get("run_utc")
+
+
+def _score_run_id_from_record(record):
+    return record.get("detector_run_utc") or record.get("prediction_run_utc")
+
+
+def _is_already_scored(event, scored_records):
+    run_id = _score_run_id_from_event(event)
+    if run_id:
+        return any(
+            record.get("usgs_id") == event["usgs_id"]
+            and _score_run_id_from_record(record) == run_id
+            for record in scored_records
+        )
+    return any(record.get("usgs_id") == event["usgs_id"] for record in scored_records)
+
+
 def main(event_id=None, force=False):
     log.info("=" * 55)
     log.info("GPS Tsunami Detector — Scorer v2 (multi-sensor)")
@@ -596,7 +619,7 @@ def main(event_id=None, force=False):
         return
 
     log_data      = load_log()
-    already_scored = {e["usgs_id"] for e in log_data["scored_events"]}
+    scored_records = log_data["scored_events"]
 
     events = queue["events"]
     if event_id:
@@ -604,7 +627,7 @@ def main(event_id=None, force=False):
 
     ready = [e for e in events
              if (is_ready_to_score(e) or force)
-             and e["usgs_id"] not in already_scored]
+             and not _is_already_scored(e, scored_records)]
 
     log.info(f"Events ready to score: {len(ready)}")
 

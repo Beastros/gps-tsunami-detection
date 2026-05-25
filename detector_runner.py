@@ -20,7 +20,7 @@ import argparse
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from scipy.signal import butter, filtfilt
 from itertools import combinations
@@ -53,6 +53,7 @@ RESAMPLE_SEC     = 30
 LONG_BASELINE_KM = 1000
 KP_THRESHOLD     = 4.0
 PARAM_FREEZE_DATE = "2025-04-22"
+RINEX_DOY_OFFSETS = (-1, 0, 1)
 
 # â”€â”€ Calibration model (frozen) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 CALIB_A = 2283.839
@@ -395,22 +396,85 @@ def get_dtec_onsets(dtec, quake_utc):
     return onsets
 
 
-def _rinex_obs_path(rinex_dir, sid, doy, yr2):
+def _rinex_obs_path(rinex_dir, sid, doy, yr2, code=None):
     """First existing observation archive (.Z or .gz) for station/day."""
-    base = rinex_dir / f"{sid}{doy:03d}0.{yr2}o"
+    station_code = (code or sid).lower()
+    base = rinex_dir / f"{station_code}{doy:03d}0.{yr2}o"
     for ext in (".Z", ".gz"):
         p = Path(str(base) + ext)
         if p.exists():
             return p
     return base.with_suffix(".Z")
 
-def _rinex_nav_path(rinex_dir, sid, doy, yr2):
-    base = rinex_dir / f"{sid}{doy:03d}0.{yr2}n"
+def _rinex_nav_path(rinex_dir, sid, doy, yr2, code=None):
+    station_code = (code or sid).lower()
+    base = rinex_dir / f"{station_code}{doy:03d}0.{yr2}n"
     for ext in (".Z", ".gz"):
         p = Path(str(base) + ext)
         if p.exists():
             return p
     return base.with_suffix(".Z")
+
+def _event_rinex_days(quake_dt):
+    """RINEX days downloaded for an event, including UTC boundary spillover."""
+    days = []
+    for off in RINEX_DOY_OFFSETS:
+        dt = quake_dt + timedelta(days=off)
+        days.append(
+            {
+                "offset": off,
+                "year": dt.year,
+                "doy": dt.timetuple().tm_yday,
+                "yr2": str(dt.year)[-2:],
+            }
+        )
+    return days
+
+def _load_rinex_manifest_days(rinex_dir):
+    """Map (year, doy) -> logical station id -> CDDIS filename code."""
+    manifest_path = Path(rinex_dir) / "rinex_manifest.json"
+    if not manifest_path.exists():
+        return {}
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    days = {}
+    for day in manifest.get("days") or []:
+        try:
+            key = (int(day.get("year")), int(day.get("doy")))
+        except (TypeError, ValueError):
+            continue
+        resolved = day.get("resolved") or {}
+        days[key] = {
+            str(logical).lower(): str(code).lower()
+            for logical, code in resolved.items()
+            if logical and code
+        }
+    return days
+
+def _station_codes_for_day(manifest_days, sid, year, doy):
+    codes = []
+    resolved = manifest_days.get((year, doy), {})
+    code = resolved.get(sid.lower())
+    if code:
+        codes.append(code)
+    codes.append(sid.lower())
+    unique = []
+    seen = set()
+    for code in codes:
+        if code not in seen:
+            seen.add(code)
+            unique.append(code)
+    return unique
+
+def _merge_filter_segments(segments):
+    if not segments:
+        return None
+    if len(segments) == 1:
+        return segments[0]
+    merged = pd.concat(segments).sort_index()
+    return merged[~merged.index.duplicated(keep="first")]
 
 def decompress(gz):
   p = Path(gz)
@@ -602,9 +666,8 @@ def run_event(event, kp_override=None):
     mw        = event["magnitude"]
 
     quake_dt = datetime.fromisoformat(quake_utc.replace("Z","+00:00"))
-    year = quake_dt.year
-    doy  = quake_dt.timetuple().tm_yday
-    yr2  = str(year)[-2:]
+    rinex_days = _event_rinex_days(quake_dt)
+    manifest_days = _load_rinex_manifest_days(rinex_dir)
 
     log.info(f"\nRunning detector: {event['usgs_id']}")
     log.info(f"  {event['place']}  Mw{mw}  {quake_utc[:16]}")
@@ -612,27 +675,36 @@ def run_event(event, kp_override=None):
     # Determine which stations have files
     filts = {}
     for sid in STATIONS:
-        og = _rinex_obs_path(rinex_dir, sid, doy, yr2)
-        ng = _rinex_nav_path(rinex_dir, sid, doy, yr2)
-        if not og.exists(): continue
-        op = decompress(og)
-        if not op: continue
-        nav = {}
-        if ng.exists():
-            np_ = decompress(ng)
-            if np_:
-                nav = parse_nav(np_)
-                if nav:
-                    tsv=list(nav.keys())[0]; pos=keplerian_to_ecef(nav[tsv][0][1],nav[tsv][0][0])
-                    if pos:
-                        d=np.sqrt(sum(p**2 for p in pos))/1000
-                        if not 20000<d<30000: nav={}
         scfg = STATIONS[sid]
-        log.info(f"  Processing {sid.upper()}...")
-        filt = compute_tec(op, nav, scfg['lat'], scfg['lon'], scfg['alt'])
-        if filt is not None:
-            filts[sid] = filt
-            log.info(f"    â†’ {sid.upper()} OK")
+        segments = []
+        for day in rinex_days:
+            for code in _station_codes_for_day(manifest_days, sid, day["year"], day["doy"]):
+                og = _rinex_obs_path(rinex_dir, sid, day["doy"], day["yr2"], code=code)
+                if not og.exists():
+                    continue
+                ng = _rinex_nav_path(rinex_dir, sid, day["doy"], day["yr2"], code=code)
+                op = decompress(og)
+                if not op:
+                    continue
+                nav = {}
+                if ng.exists():
+                    np_ = decompress(ng)
+                    if np_:
+                        nav = parse_nav(np_)
+                        if nav:
+                            tsv=list(nav.keys())[0]; pos=keplerian_to_ecef(nav[tsv][0][1],nav[tsv][0][0])
+                            if pos:
+                                d=np.sqrt(sum(p**2 for p in pos))/1000
+                                if not 20000<d<30000: nav={}
+                log.info(f"  Processing {sid.upper()} {day['year']}/{day['doy']:03d} ({code})...")
+                filt = compute_tec(op, nav, scfg['lat'], scfg['lon'], scfg['alt'])
+                if filt is not None:
+                    segments.append(filt)
+                    log.info(f"    â†’ {sid.upper()} {day['doy']:03d} OK")
+                break
+        merged = _merge_filter_segments(segments)
+        if merged is not None:
+            filts[sid] = merged
 
 
     # Multi-constellation TEC (GLONASS + Galileo cross-check)
@@ -640,13 +712,28 @@ def run_event(event, kp_override=None):
     for _const in ('R', 'E'):
         _cfilts = {}
         for _sid in STATIONS:
-            _og = _rinex_obs_path(rinex_dir, _sid, doy, yr2)
-            if not _og.exists(): continue
-            _op = decompress(_og)
-            if not _op: continue
             _scfg = STATIONS[_sid]
-            _cf = compute_tec_for_constellation(_op, _const, _scfg['lat'], _scfg['lon'], _scfg['alt'])
-            if _cf is not None: _cfilts[_sid] = _cf
+            _segments = []
+            for _day in rinex_days:
+                for _code in _station_codes_for_day(
+                    manifest_days, _sid, _day["year"], _day["doy"]
+                ):
+                    _og = _rinex_obs_path(
+                        rinex_dir, _sid, _day["doy"], _day["yr2"], code=_code
+                    )
+                    if not _og.exists():
+                        continue
+                    _op = decompress(_og)
+                    if not _op:
+                        continue
+                    _cf = compute_tec_for_constellation(
+                        _op, _const, _scfg['lat'], _scfg['lon'], _scfg['alt']
+                    )
+                    if _cf is not None:
+                        _segments.append(_cf)
+                    break
+            _merged = _merge_filter_segments(_segments)
+            if _merged is not None: _cfilts[_sid] = _merged
         if _cfilts: log.info(f"  [{_const}] {len(_cfilts)} station(s) with data")
         filts_by_const[_const] = _cfilts
     if len(filts) < 2:
