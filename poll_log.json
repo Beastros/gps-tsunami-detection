@@ -14324,10 +14324,423 @@
       "total_queued": 1,
       "pending": 0,
       "scored": 1
+    },
+    {
+      "ts": "2026-05-25T22:42:57.353568+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T22:43:00.860220+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T22:45:13.681381+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T22:47:21.241670+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T22:49:28.755816+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T22:51:36.414867+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T22:53:44.096875+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T22:55:51.627490+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T22:57:58.975328+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:00:06.247928+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:02:14.525886+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:04:21.784444+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:06:29.339661+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:08:36.628390+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:10:44.131024+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:12:51.484873+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:14:59.231173+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:17:06.843949+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:19:14.403553+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:21:21.766680+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:23:29.043724+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:25:36.770598+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:27:44.481240+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:29:51.925852+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:31:59.505745+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:34:07.229667+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:36:14.738824+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:38:22.273032+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:40:29.968530+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:42:37.478137+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:44:44.737825+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:46:52.223849+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:48:59.967903+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:51:07.812301+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:53:15.365562+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:55:22.861696+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:57:30.521698+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-25T23:59:38.033194+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:01:45.516286+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:03:49.931519+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:05:54.173082+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:07:58.355768+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:10:02.365991+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:12:06.941080+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:14:11.201672+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:16:15.341117+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:18:19.623366+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:20:24.871382+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:22:28.890258+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:24:33.221450+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:26:37.420190+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:28:41.671534+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:30:46.103007+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:32:50.571221+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:34:55.023799+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:36:59.224900+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:39:03.269105+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:41:07.303891+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-05-26T00:43:11.724545+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
     }
   ],
-  "last_updated": "2026-05-25T21:34:56.926095+00:00",
-  "total_polls": 2353,
+  "last_updated": "2026-05-26T00:43:11.724545+00:00",
+  "total_polls": 2412,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -14538,6 +14951,16 @@
       "depth": 14.9,
       "reason": "below threshold",
       "delta": -0.9
+    },
+    {
+      "ts": "2026-05-25T21:52:19.567000+00:00",
+      "mag": 6.9,
+      "place": "31 km E of Calama, Chile",
+      "lat": -22.4,
+      "lon": -68.62,
+      "depth": 101.3,
+      "reason": "too deep (101km)",
+      "delta": null
     }
   ],
   "expected_poll_interval_sec": 900

@@ -1,7 +1,19 @@
 {
-  "generated": "2026-05-25T21:35:05Z",
+  "generated": "2026-05-26T00:43:15Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000t04s",
+      "mag": 6.9,
+      "place": "29 km ENE of Calama, Chile",
+      "time_ms": 1779745940043,
+      "lat": -22.388,
+      "lon": -68.642,
+      "depth": 109.0,
+      "dyfi_responses": 52,
+      "dyfi_maxmmi": null
+    }
+  ]
 }
