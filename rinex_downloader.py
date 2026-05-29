@@ -568,6 +568,22 @@ def reset_event_for_reprocess(event: dict, *, keep_retro_meta: bool = False) -> 
         event.update(retro_meta)
 
 
+def _prepare_successful_reprocess(event: dict) -> None:
+    """Clear old detector/scorer state only after replacement RINEX exists."""
+    if event.get("retroactive_pending"):
+        reset_event_for_reprocess(event, keep_retro_meta=True)
+
+
+def _mark_retroactive_download_failed(event: dict, detail: str) -> None:
+    """Abort a retroactive attempt without deleting the prior completed result."""
+    prior_status = event.get("retro_prior_status")
+    if prior_status:
+        event["status"] = prior_status
+    event["retroactive_download_failed"] = True
+    event["retroactive_abort_reason"] = detail
+    event.pop("retroactive_pending", None)
+
+
 def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
     log.info("=" * 55)
     log.info("GPS Tsunami Detector — RINEX Downloader")
@@ -621,19 +637,26 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
     for event in ready:
         count, event_dir = download_event(event, auth)
         if count > 0:
+            _prepare_successful_reprocess(event)
             event["rinex_downloaded"] = True
             event["rinex_dir"] = event_dir
             event["rinex_download_utc"] = datetime.now(timezone.utc).isoformat()
             event["status"] = "rinex_ready"
             event.pop("rinex_last_fail_utc", None)
+            event.pop("retroactive_download_failed", None)
+            event.pop("retroactive_abort_reason", None)
             save_queue(queue)
             log.info(f"Updated queue: {event['usgs_id']} → rinex_ready ({count} files)")
         else:
-            event["status"] = "rinex_failed"
             event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
             event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
             if event.get("retroactive_pending"):
-                event.pop("retroactive_pending", None)
+                _mark_retroactive_download_failed(
+                    event,
+                    "Download returned 0 files; preserving previous detector/scorer result.",
+                )
+            else:
+                event["status"] = "rinex_failed"
             save_queue(queue)
 
     return retro_triggered
