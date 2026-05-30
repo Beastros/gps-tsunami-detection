@@ -2,6 +2,7 @@ import json
 import os
 import sys
 import tempfile
+import types
 import unittest
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
@@ -13,9 +14,13 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 import notify_discord
-import pipeline
 import retroactive_rinex
 import rinex_downloader
+
+for module_name in ("detector_runner", "dyfi_poller", "notify", "scorer", "usgs_listener"):
+    sys.modules.setdefault(module_name, types.ModuleType(module_name))
+
+import pipeline
 
 
 @contextmanager
