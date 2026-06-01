@@ -15941,10 +15941,24 @@
       "total_queued": 1,
       "pending": 0,
       "scored": 1
+    },
+    {
+      "ts": "2026-06-01T04:20:40.301889+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-06-01T04:20:44.488696+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
     }
   ],
-  "last_updated": "2026-06-01T00:33:50.035735+00:00",
-  "total_polls": 2584,
+  "last_updated": "2026-06-01T04:20:44.488696+00:00",
+  "total_polls": 2586,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -16175,6 +16189,16 @@
       "depth": 15.7,
       "reason": "below threshold",
       "delta": -0.5
+    },
+    {
+      "ts": "2026-06-01T03:34:30.498000+00:00",
+      "mag": 5.7,
+      "place": "Izu Islands, Japan region",
+      "lat": 30.65,
+      "lon": 141.84,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.8
     }
   ],
   "expected_poll_interval_sec": 900
