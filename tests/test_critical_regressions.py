@@ -21,7 +21,7 @@ def _usgs_feature(usgs_id, mag):
             "mag": mag,
             "place": "Japan test event",
             "type": "earthquake",
-            "time": int(datetime(2026, 6, 1, tzinfo=timezone.utc).timestamp() * 1000),
+            "time": int(datetime.now(timezone.utc).timestamp() * 1000),
         },
         "geometry": {"coordinates": [142.0, 39.0, 20.0]},
     }
