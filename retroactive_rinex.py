@@ -193,12 +193,18 @@ def is_eligible_for_retro_check(event: dict) -> bool:
 def queue_retroactive_reprocess(event: dict, reason: str, probe: dict) -> dict:
     """Reset pipeline state and annotate for Discord + downstream steps."""
     prior_prediction = deepcopy(event.get("prediction")) if event.get("prediction") else None
+    prior_score = deepcopy(event.get("score")) if event.get("score") else None
     prior_status = event.get("status")
     prior_detected = None
     if isinstance(prior_prediction, dict):
         prior_detected = prior_prediction.get("detected")
 
-    reset_event_for_reprocess(event)
+    prior_scored = bool(event.get("scored", False))
+    prior_detector_run = bool(event.get("detector_run", False))
+    prior_rinex_downloaded = bool(event.get("rinex_downloaded", False))
+    prior_discord_alerted = event.get("discord_alerted")
+
+    reset_event_for_reprocess(event, preserve_prior_result=True)
     event["retroactive_pending"] = True
     event["retroactive_trigger"] = True
     event["retro_trigger_reason"] = reason
@@ -207,6 +213,11 @@ def queue_retroactive_reprocess(event: dict, reason: str, probe: dict) -> dict:
     event["retro_run_count"] = int(event.get("retro_run_count", 0)) + 1
     event["retro_prior_status"] = prior_status
     event["retro_prior_prediction"] = prior_prediction
+    event["retro_prior_score"] = prior_score
+    event["retro_prior_scored"] = prior_scored
+    event["retro_prior_detector_run"] = prior_detector_run
+    event["retro_prior_rinex_downloaded"] = prior_rinex_downloaded
+    event["retro_prior_discord_alerted"] = prior_discord_alerted
     event["retro_prior_detected"] = prior_detected
     event["rinex_coverage_probe"] = probe
 
