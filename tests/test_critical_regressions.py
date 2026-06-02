@@ -31,7 +31,8 @@ class CriticalRegressionTests(unittest.TestCase):
     def test_seen_id_does_not_block_later_magnitude_upgrade(self):
         queue = {"events": [], "seen_ids": []}
 
-        with mock.patch.object(usgs_listener, "fetch_feed", return_value=[_usgs_feature("upgrade1", 6.1)]):
+        with mock.patch.object(usgs_listener, "fetch_feed", return_value=[_usgs_feature("upgrade1", 6.1)]), \
+             mock.patch.object(usgs_listener, "_activate_fast_poll"):
             new, near_misses = usgs_listener.check_feed(queue)
 
         self.assertEqual(new, 0)
@@ -40,6 +41,7 @@ class CriticalRegressionTests(unittest.TestCase):
         self.assertEqual(len(near_misses), 1)
 
         with mock.patch.object(usgs_listener, "fetch_feed", return_value=[_usgs_feature("upgrade1", 6.7)]), \
+             mock.patch.object(usgs_listener, "_activate_fast_poll"), \
              mock.patch.object(usgs_listener, "fetch_focal_mechanism", return_value=None):
             new, _ = usgs_listener.check_feed(queue)
 
