@@ -1,7 +1,30 @@
 {
-  "generated": "2026-06-03T10:23:27Z",
+  "generated": "2026-06-03T15:18:39Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 2,
+  "pings": [
+    {
+      "usgs_id": "nc75370186",
+      "mag": 5.1,
+      "place": "64 km W of Petrolia, CA",
+      "time_ms": 1780490735090,
+      "lat": 40.36,
+      "lon": -125.045,
+      "depth": 0.2,
+      "dyfi_responses": 90,
+      "dyfi_maxmmi": 3.6
+    },
+    {
+      "usgs_id": "us7000sq93",
+      "mag": 5.7,
+      "place": "154 km WSW of Pistol River, Oregon",
+      "time_ms": 1780484034074,
+      "lat": 41.897,
+      "lon": -126.186,
+      "depth": 10.0,
+      "dyfi_responses": 23,
+      "dyfi_maxmmi": 3.9
+    }
+  ]
 }

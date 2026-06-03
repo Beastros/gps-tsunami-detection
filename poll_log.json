@@ -16151,10 +16151,24 @@
       "total_queued": 1,
       "pending": 0,
       "scored": 1
+    },
+    {
+      "ts": "2026-06-03T15:18:10.862172+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-06-03T15:18:15.657021+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
     }
   ],
-  "last_updated": "2026-06-03T10:23:00.212590+00:00",
-  "total_polls": 2614,
+  "last_updated": "2026-06-03T15:18:15.657021+00:00",
+  "total_polls": 2616,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -16395,6 +16409,26 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.8
+    },
+    {
+      "ts": "2026-06-03T10:53:54.074000+00:00",
+      "mag": 5.7,
+      "place": "154 km WSW of Pistol River, Oregon",
+      "lat": 41.9,
+      "lon": -126.19,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.8
+    },
+    {
+      "ts": "2026-06-03T10:20:37.618000+00:00",
+      "mag": 5.6,
+      "place": "Vanuatu region",
+      "lat": -20.45,
+      "lon": 173.04,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.9
     }
   ],
   "expected_poll_interval_sec": 900
