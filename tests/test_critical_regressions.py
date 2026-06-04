@@ -47,6 +47,7 @@ class CriticalRegressionTests(unittest.TestCase):
 
         self.patch_attr(usgs_listener, "fetch_feed", lambda: [feature])
         self.patch_attr(usgs_listener, "fetch_focal_mechanism", lambda _eid: None)
+        self.patch_attr(usgs_listener, "_activate_fast_poll", lambda *_args: None)
 
         new_count, near_misses = usgs_listener.check_feed(queue)
 
