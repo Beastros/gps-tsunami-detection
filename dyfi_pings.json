@@ -1,19 +1,7 @@
 {
-  "generated": "2026-06-04T12:20:31Z",
+  "generated": "2026-06-04T16:00:41Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "nc75370186",
-      "mag": 5.1,
-      "place": "62 km W of Petrolia, CA",
-      "time_ms": 1780490736790,
-      "lat": 40.365,
-      "lon": -125.018,
-      "depth": 10.0,
-      "dyfi_responses": 122,
-      "dyfi_maxmmi": 3.5
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
