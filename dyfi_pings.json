@@ -1,7 +1,19 @@
 {
-  "generated": "2026-06-05T13:43:45Z",
+  "generated": "2026-06-05T16:20:02Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us7000squy",
+      "mag": 5.3,
+      "place": "7 km NNW of Manito, Philippines",
+      "time_ms": 1780667879739,
+      "lat": 13.186,
+      "lon": 123.851,
+      "depth": 10.0,
+      "dyfi_responses": 26,
+      "dyfi_maxmmi": null
+    }
+  ]
 }
