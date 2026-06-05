@@ -32,7 +32,7 @@ class CriticalRegressionTests(unittest.TestCase):
     def test_seen_id_does_not_block_later_usgs_upgrade(self):
         import usgs_listener
 
-        quake_ms = int(datetime(2026, 6, 4, tzinfo=timezone.utc).timestamp() * 1000)
+        quake_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
         feature = {
             "id": "upgrade-me",
             "properties": {
