@@ -1,17 +1,17 @@
 {
-  "generated": "2026-06-06T13:58:28Z",
+  "generated": "2026-06-06T15:18:49Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 1,
   "pings": [
     {
       "usgs_id": "us7000sqzv",
-      "mag": 5.1,
-      "place": "0 km SSW of Quetzalapa, Mexico",
-      "time_ms": 1780692905129,
-      "lat": 16.778,
-      "lon": -98.504,
-      "depth": 47.9,
+      "mag": 5.2,
+      "place": "2 km WSW of Santa Mar\u00eda, Mexico",
+      "time_ms": 1780692903336,
+      "lat": 16.765,
+      "lon": -98.411,
+      "depth": 32.9,
       "dyfi_responses": 18,
       "dyfi_maxmmi": null
     }
