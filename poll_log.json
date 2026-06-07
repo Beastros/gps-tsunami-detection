@@ -17117,10 +17117,24 @@
       "total_queued": 1,
       "pending": 0,
       "scored": 1
+    },
+    {
+      "ts": "2026-06-07T15:54:12.774835+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-06-07T15:54:15.305680+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
     }
   ],
-  "last_updated": "2026-06-07T14:29:18.006764+00:00",
-  "total_polls": 2752,
+  "last_updated": "2026-06-07T15:54:15.305680+00:00",
+  "total_polls": 2754,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -17391,6 +17405,16 @@
       "depth": 35,
       "reason": "below threshold",
       "delta": -0.4
+    },
+    {
+      "ts": "2026-06-07T14:53:56.180000+00:00",
+      "mag": 5.5,
+      "place": "139 km SE of Severo-Kuril\u2019sk, Russia",
+      "lat": 49.9,
+      "lon": 157.66,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -1.0
     }
   ],
   "expected_poll_interval_sec": 900
