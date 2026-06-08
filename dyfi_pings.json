@@ -1,7 +1,19 @@
 {
-  "generated": "2026-06-07T22:47:28Z",
+  "generated": "2026-06-08T00:12:06Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us7000srb1",
+      "mag": 7.8,
+      "place": "24 km WSW of Burias, Philippines",
+      "time_ms": 1780875460292,
+      "lat": 5.6,
+      "lon": 125.065,
+      "depth": 35.0,
+      "dyfi_responses": 28,
+      "dyfi_maxmmi": 7.6
+    }
+  ]
 }
