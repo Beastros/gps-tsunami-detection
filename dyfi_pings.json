@@ -1,8 +1,8 @@
 {
-  "generated": "2026-06-08T23:13:39Z",
+  "generated": "2026-06-09T00:17:30Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
+  "count": 1,
   "pings": [
     {
       "usgs_id": "us7000srjx",
@@ -12,19 +12,8 @@
       "lat": 22.785,
       "lon": -85.15,
       "depth": 26.0,
-      "dyfi_responses": 5074,
+      "dyfi_responses": 5171,
       "dyfi_maxmmi": 4.8
-    },
-    {
-      "usgs_id": "us7000srb1",
-      "mag": 7.8,
-      "place": "26 km SW of Kablalan, Philippines",
-      "time_ms": 1780875461803,
-      "lat": 5.592,
-      "lon": 125.047,
-      "depth": 55.2,
-      "dyfi_responses": 145,
-      "dyfi_maxmmi": 8.4
     }
   ]
 }
