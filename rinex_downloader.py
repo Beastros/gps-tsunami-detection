@@ -16,6 +16,7 @@ import shutil
 import time
 import logging
 import argparse
+from copy import deepcopy
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -537,7 +538,9 @@ def _clear_running_log_score(usgs_id: str) -> None:
         log.warning("Could not trim running_log for %s: %s", usgs_id, e)
 
 
-def reset_event_for_reprocess(event: dict, *, keep_retro_meta: bool = False) -> None:
+def reset_event_for_reprocess(
+    event: dict, *, keep_retro_meta: bool = False, preserve_results: bool = False
+) -> None:
     """Allow re-download + re-run detector on an already-processed event."""
     retro_meta = None
     if keep_retro_meta:
@@ -551,21 +554,96 @@ def reset_event_for_reprocess(event: dict, *, keep_retro_meta: bool = False) -> 
                 "retro_prior_status",
                 "retro_prior_prediction",
                 "retro_prior_detected",
+                "retro_prior_score",
+                "retro_prior_scored",
+                "retro_prior_detector_run",
+                "retro_prior_rinex_downloaded",
                 "rinex_coverage_probe",
             )
             if event.get(k) is not None
         }
-    _clear_running_log_score(event["usgs_id"])
+    if not preserve_results:
+        _clear_running_log_score(event["usgs_id"])
     event["rinex_downloaded"] = False
+    event["detector_run"] = False
+    if not preserve_results:
+        event["scored"] = False
+        event.pop("prediction", None)
+        event.pop("score", None)
+        event.pop("discord_alerted", None)
+    event["status"] = "queued"
+    event["reprocess_requested"] = True
+    if retro_meta:
+        event.update(retro_meta)
+
+
+def _manifest_path_for_event(event: dict) -> Path:
+    return Path(RINEX_BASE_DIR) / event["usgs_id"] / "rinex_manifest.json"
+
+
+def _snapshot_retro_state(event: dict) -> dict:
+    manifest_path = _manifest_path_for_event(event)
+    manifest_text = None
+    if manifest_path.exists():
+        try:
+            manifest_text = manifest_path.read_text(encoding="utf-8")
+        except OSError:
+            manifest_text = None
+    return {
+        "status": event.get("retro_prior_status", event.get("status")),
+        "prediction": deepcopy(event.get("retro_prior_prediction", event.get("prediction"))),
+        "score": deepcopy(event.get("retro_prior_score", event.get("score"))),
+        "scored": event.get("retro_prior_scored", event.get("scored")),
+        "detector_run": event.get("retro_prior_detector_run", event.get("detector_run")),
+        "rinex_downloaded": event.get(
+            "retro_prior_rinex_downloaded", event.get("rinex_downloaded")
+        ),
+        "rinex_coverage": deepcopy(event.get("rinex_coverage")),
+        "manifest_path": manifest_path,
+        "manifest_text": manifest_text,
+    }
+
+
+def _prepare_successful_retro_reprocess(event: dict) -> None:
+    _clear_running_log_score(event["usgs_id"])
     event["detector_run"] = False
     event["scored"] = False
     event.pop("prediction", None)
     event.pop("score", None)
     event.pop("discord_alerted", None)
-    event["status"] = "queued"
-    event["reprocess_requested"] = True
-    if retro_meta:
-        event.update(retro_meta)
+    event.pop("retroactive_aborted", None)
+    event.pop("retroactive_abort_reason", None)
+    event.pop("retroactive_abort_alerted", None)
+
+
+def _restore_failed_retro_reprocess(event: dict, snapshot: dict) -> None:
+    event["status"] = snapshot.get("status") or "predicted"
+    event["detector_run"] = bool(snapshot.get("detector_run"))
+    event["scored"] = bool(snapshot.get("scored"))
+    event["rinex_downloaded"] = bool(snapshot.get("rinex_downloaded"))
+    if snapshot.get("prediction") is not None:
+        event["prediction"] = snapshot["prediction"]
+    if snapshot.get("score") is not None:
+        event["score"] = snapshot["score"]
+    if snapshot.get("rinex_coverage") is not None:
+        event["rinex_coverage"] = snapshot["rinex_coverage"]
+    elif "rinex_coverage" in event:
+        event.pop("rinex_coverage", None)
+
+    manifest_path = snapshot.get("manifest_path")
+    manifest_text = snapshot.get("manifest_text")
+    if manifest_path and manifest_text is not None:
+        try:
+            manifest_path.parent.mkdir(parents=True, exist_ok=True)
+            manifest_path.write_text(manifest_text, encoding="utf-8")
+        except OSError as exc:
+            log.warning("Could not restore prior RINEX manifest for %s: %s", event["usgs_id"], exc)
+
+    event["retroactive_aborted"] = True
+    event["retroactive_abort_reason"] = (
+        "Download returned 0 files; prior detector/scorer result was preserved."
+    )
+    event.pop("retroactive_pending", None)
 
 
 def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
@@ -619,8 +697,11 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
         return retro_triggered
 
     for event in ready:
+        retro_snapshot = _snapshot_retro_state(event) if event.get("retroactive_pending") else None
         count, event_dir = download_event(event, auth)
         if count > 0:
+            if event.get("retroactive_pending"):
+                _prepare_successful_retro_reprocess(event)
             event["rinex_downloaded"] = True
             event["rinex_dir"] = event_dir
             event["rinex_download_utc"] = datetime.now(timezone.utc).isoformat()
@@ -632,8 +713,8 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
             event["status"] = "rinex_failed"
             event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
             event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
-            if event.get("retroactive_pending"):
-                event.pop("retroactive_pending", None)
+            if event.get("retroactive_pending") and retro_snapshot:
+                _restore_failed_retro_reprocess(event, retro_snapshot)
             save_queue(queue)
 
     return retro_triggered
