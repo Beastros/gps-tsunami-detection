@@ -1,19 +1,7 @@
 {
-  "generated": "2026-06-09T17:27:13Z",
+  "generated": "2026-06-09T19:35:25Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us7000srjx",
-      "mag": 6.1,
-      "place": "104 km WNW of Mantua, Cuba",
-      "time_ms": 1780941627786,
-      "lat": 22.785,
-      "lon": -85.15,
-      "depth": 26.0,
-      "dyfi_responses": 5653,
-      "dyfi_maxmmi": 4.8
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
