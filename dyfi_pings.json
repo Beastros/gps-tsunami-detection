@@ -1,7 +1,19 @@
 {
-  "generated": "2026-06-10T00:22:20Z",
+  "generated": "2026-06-10T04:59:33Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us7000sry7",
+      "mag": 5.1,
+      "place": "11 km WSW of Sardinal, Costa Rica",
+      "time_ms": 1781060495137,
+      "lat": 10.464,
+      "lon": -85.738,
+      "depth": 65.0,
+      "dyfi_responses": 79,
+      "dyfi_maxmmi": null
+    }
+  ]
 }
