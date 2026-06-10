@@ -17481,10 +17481,24 @@
       "total_queued": 1,
       "pending": 0,
       "scored": 1
+    },
+    {
+      "ts": "2026-06-10T12:33:20.312503+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-06-10T12:33:23.448889+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
     }
   ],
-  "last_updated": "2026-06-10T08:58:51.996257+00:00",
-  "total_polls": 2804,
+  "last_updated": "2026-06-10T12:33:23.448889+00:00",
+  "total_polls": 2806,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -17765,6 +17779,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -1.0
+    },
+    {
+      "ts": "2026-06-10T10:34:17.371000+00:00",
+      "mag": 5.7,
+      "place": "33 km ESE of Ol\u2019ga, Russia",
+      "lat": 43.63,
+      "lon": 135.67,
+      "depth": 343.3,
+      "reason": "below threshold",
+      "delta": -0.8
     }
   ],
   "expected_poll_interval_sec": 900
