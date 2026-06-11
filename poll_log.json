@@ -17593,10 +17593,24 @@
       "total_queued": 1,
       "pending": 0,
       "scored": 1
+    },
+    {
+      "ts": "2026-06-11T14:57:07.402626+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-06-11T14:57:12.247852+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
     }
   ],
-  "last_updated": "2026-06-11T11:13:19.186318+00:00",
-  "total_polls": 2820,
+  "last_updated": "2026-06-11T14:57:12.247852+00:00",
+  "total_polls": 2822,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -17887,6 +17901,16 @@
       "depth": 343.3,
       "reason": "below threshold",
       "delta": -0.8
+    },
+    {
+      "ts": "2026-06-11T12:22:06.272000+00:00",
+      "mag": 5.5,
+      "place": "128 km NW of Vallenar, Chile",
+      "lat": -27.8,
+      "lon": -71.74,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -1.0
     }
   ],
   "expected_poll_interval_sec": 900
