@@ -16,6 +16,7 @@ import shutil
 import time
 import logging
 import argparse
+from copy import deepcopy
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -550,6 +551,7 @@ def reset_event_for_reprocess(event: dict, *, keep_retro_meta: bool = False) -> 
                 "retro_triggered_utc",
                 "retro_prior_status",
                 "retro_prior_prediction",
+                "retro_prior_score",
                 "retro_prior_detected",
                 "rinex_coverage_probe",
             )
@@ -619,21 +621,47 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
         return retro_triggered
 
     for event in ready:
+        retro_pending = bool(event.get("retroactive_pending"))
+        manifest_path = Path(RINEX_BASE_DIR) / event["usgs_id"] / "rinex_manifest.json"
+        prior_manifest = (
+            manifest_path.read_text(encoding="utf-8") if retro_pending and manifest_path.exists() else None
+        )
+        prior_coverage = deepcopy(event.get("rinex_coverage")) if retro_pending else None
         count, event_dir = download_event(event, auth)
         if count > 0:
+            if retro_pending:
+                reset_event_for_reprocess(event, keep_retro_meta=True)
             event["rinex_downloaded"] = True
             event["rinex_dir"] = event_dir
             event["rinex_download_utc"] = datetime.now(timezone.utc).isoformat()
             event["status"] = "rinex_ready"
             event.pop("rinex_last_fail_utc", None)
+            event.pop("retroactive_abort_pending", None)
+            event.pop("retroactive_abort_reason", None)
             save_queue(queue)
             log.info(f"Updated queue: {event['usgs_id']} → rinex_ready ({count} files)")
         else:
-            event["status"] = "rinex_failed"
             event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
             event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
-            if event.get("retroactive_pending"):
+            if retro_pending:
+                if prior_manifest is not None:
+                    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+                    manifest_path.write_text(prior_manifest, encoding="utf-8")
+                elif manifest_path.exists():
+                    manifest_path.unlink()
+                if prior_coverage is not None:
+                    event["rinex_coverage"] = prior_coverage
+                else:
+                    event.pop("rinex_coverage", None)
                 event.pop("retroactive_pending", None)
+                event["retroactive_abort_pending"] = True
+                event["retroactive_abort_reason"] = (
+                    "Download returned 0 files; preserved previous prediction/score "
+                    "and will retry on a later cycle if CDDIS fills in."
+                )
+                event["reprocess_requested"] = False
+            else:
+                event["status"] = "rinex_failed"
             save_queue(queue)
 
     return retro_triggered
