@@ -408,6 +408,13 @@ def _activate_fast_poll(usgs_id, mag, place, fp_path):
 
 def check_feed(queue):
     """Check feed for new qualifying events. Returns (new_count, near_misses)."""
+    queue.setdefault("events", [])
+    queue.setdefault("seen_ids", [])
+    queued_ids = {
+        ev.get("usgs_id")
+        for ev in queue.get("events", [])
+        if ev.get("usgs_id")
+    }
     features = fetch_feed()
     new_count = 0
     near_misses = []
@@ -423,10 +430,8 @@ def check_feed(queue):
         time_ms = props.get("time", 0)
         coords  = geom.get("coordinates", [None, None, None])
 
-        if eid in queue["seen_ids"]:
+        if eid in queued_ids:
             continue
-
-        queue["seen_ids"].append(eid)
 
         if time_ms:
             event_time = datetime.fromtimestamp(time_ms/1000, tz=timezone.utc)
@@ -441,6 +446,9 @@ def check_feed(queue):
         candidate = assess_event(feat)
         if candidate:
             queue["events"].append(candidate)
+            queued_ids.add(eid)
+            if eid not in queue["seen_ids"]:
+                queue["seen_ids"].append(eid)
             new_count += 1
             w = candidate.get("detection_window") or {}
             log.info(
