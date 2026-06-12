@@ -35,7 +35,10 @@ class CriticalRegressionTests(unittest.TestCase):
     def test_usgs_upgrade_after_near_miss_can_queue(self):
         queue = {"events": [], "seen_ids": []}
 
-        with mock.patch.object(usgs_listener, "fetch_feed", return_value=[_feature(mag=6.4)]):
+        with (
+            mock.patch.object(usgs_listener, "fetch_feed", return_value=[_feature(mag=6.4)]),
+            mock.patch.object(usgs_listener, "_activate_fast_poll", return_value=None),
+        ):
             new_count, near_misses = usgs_listener.check_feed(queue)
 
         self.assertEqual(new_count, 0)
@@ -50,6 +53,7 @@ class CriticalRegressionTests(unittest.TestCase):
                 "fetch_focal_mechanism",
                 return_value={"available": False, "fault_type": "unknown", "rake_score": 0.5},
             ),
+            mock.patch.object(usgs_listener, "_activate_fast_poll", return_value=None),
         ):
             new_count, _ = usgs_listener.check_feed(queue)
 
