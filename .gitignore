@@ -44,6 +44,10 @@ outbreak-dashboard/node_modules/
 outbreak-dashboard/dist/
 outbreak-dashboard/ingest/.venv/
 
+# Location 2FA (Next.js)
+location-2fa/node_modules/
+location-2fa/.next/
+
 # Jupyter
 .ipynb_checkpoints/
 
