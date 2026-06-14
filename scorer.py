@@ -152,9 +152,9 @@ def fetch_all_gauges(quake_utc_str):
         }
         if tsunami:
             log.info(
-                f"    → TSUNAMI SIGNAL: +{tsunami['arrival_h_post_quake']:.1f}h "
-                f"amplitude={tsunami['amplitude_m']:.3f}m "
-                f"method={tsunami['detection_method']}"
+                f"    → TSUNAMI SIGNAL: +{_fmt_num(tsunami.get('arrival_h_post_quake'), '.1f')}h "
+                f"amplitude={_fmt_num(tsunami.get('amplitude_m'))}m "
+                f"method={tsunami.get('detection_method', '?')}"
             )
         else:
             log.info(f"    → No signal")
@@ -645,7 +645,7 @@ def main(event_id=None, force=False):
         if score.get("lead_time_min") is not None:
             log.info(f"  Lead time: {score['lead_time_min']} min")
         if score.get("amplitude_error_pct") is not None:
-            log.info(f"  Amplitude error: {score['amplitude_error_pct']:+.0f}%")
+            log.info(f"  Amplitude error: {_fmt_num(score['amplitude_error_pct'], '+.0f')}%")
 
         # Update queue and log
         event["scored"]      = True
@@ -683,7 +683,18 @@ def main(event_id=None, force=False):
         if s.get("confidence_calibration"):
             log.info("  Calibration (confidence → hit rate):")
             for bucket, data in s["confidence_calibration"].items():
-                log.info(f"    {bucket}: {data['hit_rate']:.0%} ({data['n']} events)")
+                log.info(
+                    f"    {bucket}: {_fmt_num(data.get('hit_rate'), '.0%')} "
+                    f"({data.get('n', 0)} events)"
+                )
+
+    # Drop scored rows from the live queue — running_log.json is the archive
+    before = len(queue.get("events", []))
+    queue["events"] = [e for e in queue.get("events", []) if e.get("status") != "scored"]
+    removed = before - len(queue["events"])
+    if removed:
+        save_queue(queue)
+        log.info(f"Pruned {removed} scored event(s) from {EVENT_QUEUE_FILE}")
 
 
 if __name__ == "__main__":

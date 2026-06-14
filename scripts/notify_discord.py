@@ -23,6 +23,15 @@ WEBHOOK_COOLDOWN_SEC = 6 * 3600
 ERROR_DEDUP_SEC = 3600
 
 
+def _fmt_num(value, fmt=".3f", missing="—"):
+    if value is None:
+        return missing
+    try:
+        return format(value, fmt)
+    except (TypeError, ValueError):
+        return missing
+
+
 def _load_env(path=".env"):
     try:
         raw = open(path, "rb").read().lstrip(b"\xef\xbb\xbf").decode("utf-8")
@@ -136,7 +145,7 @@ def _prediction_summary(evt) -> str:
     detected = pred.get("detected", False)
     reason = pred.get("reason") or ("coherent_pairs" if detected else "—")
     conf = pred.get("combined_confidence")
-    conf_s = f"{conf:.3f}" if conf is not None else "—"
+    conf_s = _fmt_num(conf)
     stations = pred.get("stations_processed") or []
     st_s = ", ".join(stations).upper() if stations else "—"
     dart = pred.get("dart_status") or "n/a"
@@ -151,11 +160,11 @@ def _prediction_summary(evt) -> str:
         d = pred["detection"]
         pair = d.get("pair", "?")
         post_h = d.get("post_h")
-        post_s = f"+{post_h:.1f}h" if post_h is not None else "—"
+        post_s = f"+{_fmt_num(post_h, '.1f')}h" if post_h is not None else "—"
         lines.append(f"**Best pair:** {pair} {post_s}")
     wf = pred.get("wave_forecast")
     if wf and wf.get("predicted_wave_m") is not None:
-        lines.append(f"**Hilo forecast:** {wf['predicted_wave_m']:.3f} m")
+        lines.append(f"**Hilo forecast:** {_fmt_num(wf.get('predicted_wave_m'))} m")
     return "\n".join(lines)
 
 
@@ -280,7 +289,7 @@ def send_pipeline_error(component: str, err: str) -> bool:
         log.info("Skipping duplicate Discord pipeline error (sent %.0fm ago)", (now - prev["ts"]) / 60)
         return False
 
-    text = f"**{component}** error:\n```{err[:1800]}```"
+    text = f"**{component}** error:\n```\n{err[:1800]}\n```"
     ok = _post_webhook({"content": text[:2000], "username": "GPS Tsunami"})
     if ok:
         last_errors[key] = {"ts": now, "component": component}
@@ -298,7 +307,7 @@ def send_near_miss_alerts(near_misses: list) -> bool:
         place = (nm.get("place") or "?")[:90]
         reason = (nm.get("reason") or "?")[:120]
         delta = nm.get("delta")
-        dstr = f"ΔMw vs 6.5 threshold: {delta:+.1f}" if delta is not None else "ΔMw: —"
+        dstr = f"ΔMw vs 6.5 threshold: {_fmt_num(delta, '+.1f')}" if delta is not None else "ΔMw: —"
         ts = str(nm.get("ts", ""))[:22]
         dep = nm.get("depth")
         dline = f"Depth: {dep} km" if dep is not None else ""

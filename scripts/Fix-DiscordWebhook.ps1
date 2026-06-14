@@ -11,14 +11,16 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$Branch = "cursor/discord-webhook-spam-fix-fa7f"
+$Branch = "cursor/dashboard-poller-retention-fa7f"
 $RawBase = "https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/$Branch"
 $FilesToSync = @(
     "notify_discord.py",
     "pipeline.py",
     "health_check.py",
     "scorer.py",
-    "usgs_listener.py"
+    "usgs_listener.py",
+    "detector_runner.py",
+    "index.html"
 )
 
 function Write-Step([string]$msg) { Write-Host ""; Write-Host "==> $msg" -ForegroundColor Cyan }
