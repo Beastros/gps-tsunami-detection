@@ -1,11 +1,6 @@
 # Fix-DiscordWebhook.ps1
 # One-shot fix for Discord webhook disconnect spam on Windows.
-#
-# Usage (paste in PowerShell):
-#   irm https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/cursor/discord-webhook-spam-fix-fa7f/scripts/Fix-DiscordWebhook.ps1 | iex
-#
-# Or with your new webhook URL already copied:
-#   & $env:TEMP\Fix-DiscordWebhook.ps1 -WebhookUrl "https://discord.com/api/webhooks/ID/TOKEN"
+# ASCII-only strings for Windows PowerShell 5.1
 
 [CmdletBinding()]
 param(
@@ -24,7 +19,7 @@ $FilesToSync = @(
     "health_check.py"
 )
 
-function Write-Step([string]$msg) { Write-Host "`n==> $msg" -ForegroundColor Cyan }
+function Write-Step([string]$msg) { Write-Host ""; Write-Host "==> $msg" -ForegroundColor Cyan }
 function Write-Ok([string]$msg)   { Write-Host "OK  $msg" -ForegroundColor Green }
 function Write-Warn([string]$msg) { Write-Host "!!  $msg" -ForegroundColor Yellow }
 
@@ -61,7 +56,7 @@ function Update-EnvWebhook([string]$dir, [string]$url) {
     if ($raw -match "(?m)^DISCORD_WEBHOOK_URL=") {
         $new = [regex]::Replace($raw, "(?m)^DISCORD_WEBHOOK_URL=.*", $line)
     } else {
-        $new = $raw.TrimEnd() + "`n" + $line + "`n"
+        $new = $raw.TrimEnd() + [Environment]::NewLine + $line + [Environment]::NewLine
     }
     [System.IO.File]::WriteAllText($envPath, $new, [System.Text.UTF8Encoding]::new($false))
     return "updated"
@@ -95,8 +90,8 @@ function Test-DiscordWebhook([string]$url) {
 }
 
 Write-Host ""
-Write-Host "GPS Tsunami — Discord webhook fix" -ForegroundColor White
-Write-Host "=================================" -ForegroundColor White
+Write-Host "GPS Tsunami - Discord webhook fix" -ForegroundColor White
+Write-Host "===================================" -ForegroundColor White
 
 Resolve-DefaultDirs
 if (-not $PipelineDir -or -not (Test-Path $PipelineDir)) {
@@ -120,7 +115,7 @@ if ($WebhookUrl -notmatch "^https://discord\.com/api/webhooks/\d+/") {
 
 Write-Step "Testing webhook"
 $channel = Test-DiscordWebhook -url $WebhookUrl
-Write-Ok "Webhook works — channel: $channel"
+Write-Ok "Webhook works - channel: $channel"
 
 Write-Step "Updating .env files"
 foreach ($dir in @($PipelineDir, $RepoDir) | Select-Object -Unique) {
@@ -133,7 +128,7 @@ foreach ($dir in @($PipelineDir, $RepoDir) | Select-Object -Unique) {
 Write-Step "Downloading fixed pipeline files from GitHub"
 $targets = @($PipelineDir)
 if ($RepoDir -and $RepoDir -ne $PipelineDir) { $targets += $RepoDir }
-foreach ($dir in $targets | Select-Object -Unique) {
+foreach ($dir in ($targets | Select-Object -Unique)) {
     foreach ($f in $FilesToSync) {
         Sync-FileFromGitHub -destDir $dir -name $f
         Write-Ok "Synced $f -> $dir"
@@ -146,36 +141,49 @@ foreach ($dir in $targets | Select-Object -Unique) {
 }
 
 if (-not $SkipGitHubSecret) {
-    Write-Step "GitHub secret (optional — stops CI double-posting)"
+    Write-Step "GitHub secret (optional - stops CI double-posting)"
     $gh = Get-Command gh -ErrorAction SilentlyContinue
     if ($gh) {
-        $repoRoot = if ($RepoDir -and (Test-Path (Join-Path $RepoDir ".git"))) { $RepoDir } else { $null }
+        $repoRoot = $null
+        if ($RepoDir -and (Test-Path (Join-Path $RepoDir ".git"))) {
+            $repoRoot = $RepoDir
+        }
         if ($repoRoot) {
             Push-Location $repoRoot
             try {
-                echo $WebhookUrl | gh secret set DISCORD_WEBHOOK_URL 2>&1 | Out-Null
-                if ($LASTEXITCODE -eq 0) { Write-Ok "GitHub secret DISCORD_WEBHOOK_URL updated" }
-                else { Write-Warn "Could not set GitHub secret — run: gh secret set DISCORD_WEBHOOK_URL" }
-            } finally { Pop-Location }
+                $WebhookUrl | gh secret set DISCORD_WEBHOOK_URL 2>&1 | Out-Null
+                if ($LASTEXITCODE -eq 0) {
+                    Write-Ok "GitHub secret DISCORD_WEBHOOK_URL updated"
+                } else {
+                    Write-Warn "Could not set GitHub secret - run: gh secret set DISCORD_WEBHOOK_URL"
+                }
+            } finally {
+                Pop-Location
+            }
         } else {
-            Write-Warn "No git repo found — skip GitHub secret or set manually in repo Settings -> Secrets"
+            Write-Warn "No git repo found - skip GitHub secret or set in repo Settings -> Secrets"
         }
     } else {
-        Write-Warn "gh CLI not installed — skip GitHub secret or install gh and run: gh secret set DISCORD_WEBHOOK_URL"
+        Write-Warn "gh CLI not installed - skip GitHub secret or install gh"
     }
 }
 
 Write-Step "Running health check"
-$py = if (Get-Command py -ErrorAction SilentlyContinue) { "py -3" } else { "python" }
+$py = "python"
+if (Get-Command py -ErrorAction SilentlyContinue) { $py = "py -3" }
 $hc = Join-Path $PipelineDir "health_check.py"
 if (Test-Path $hc) {
     Push-Location $PipelineDir
-    try { Invoke-Expression "$py `"$hc`"" } finally { Pop-Location }
+    try {
+        Invoke-Expression "$py `"$hc`""
+    } finally {
+        Pop-Location
+    }
 } else {
-    Write-Warn "health_check.py not found — skipped"
+    Write-Warn "health_check.py not found - skipped"
 }
 
 Write-Host ""
 Write-Host "DONE. Discord webhook fix applied." -ForegroundColor Green
-Write-Host "If Task Scheduler is running, the next 15-min cycle should stop spamming disconnect errors." -ForegroundColor Green
+Write-Host "Next Task Scheduler cycle (~15 min) should stop disconnect spam." -ForegroundColor Green
 Write-Host ""
