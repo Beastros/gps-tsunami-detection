@@ -28,21 +28,12 @@ import json
 import logging
 import argparse
 import numpy as np
-
-
-def _fmt_num(value, fmt=".3f", missing="—"):
-    """Format a number for logs; None or bad values become a dash."""
-    if value is None:
-        return missing
-    try:
-        return format(value, fmt)
-    except (TypeError, ValueError):
-        return missing
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 
 def _fmt_num(value, fmt=".3f", missing="—"):
+    """Format a number for logs; None or bad values become a dash."""
     if value is None:
         return missing
     try:

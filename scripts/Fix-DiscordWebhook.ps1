@@ -16,7 +16,9 @@ $RawBase = "https://raw.githubusercontent.com/Beastros/gps-tsunami-detection/$Br
 $FilesToSync = @(
     "notify_discord.py",
     "pipeline.py",
-    "health_check.py"
+    "health_check.py",
+    "scorer.py",
+    "usgs_listener.py"
 )
 
 function Write-Step([string]$msg) { Write-Host ""; Write-Host "==> $msg" -ForegroundColor Cyan }
