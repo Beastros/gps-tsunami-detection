@@ -402,7 +402,8 @@ def _activate_fast_poll(usgs_id, mag, place, fp_path):
         "expires_utc":     (now + _td(minutes=FAST_POLL_DURATION_MIN)).isoformat(),
         "poll_interval_sec": FAST_POLL_INTERVAL_SEC,
     }
-    open(fp_path, "w", encoding="utf-8").write(_json.dumps(state, indent=2))
+    with open(fp_path, "w", encoding="utf-8") as f:
+        f.write(_json.dumps(state, indent=2))
     log.info(f"FAST POLL ACTIVATED: Mw{mag} {place} -- 2-min cycles for {FAST_POLL_DURATION_MIN} min")
 
 
