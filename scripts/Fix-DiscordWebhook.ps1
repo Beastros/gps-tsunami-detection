@@ -151,20 +151,23 @@ if (-not $SkipGitHubSecret) {
         if ($repoRoot) {
             Push-Location $repoRoot
             try {
-                $WebhookUrl | gh secret set DISCORD_WEBHOOK_URL 2>&1 | Out-Null
+                $ghOut = $WebhookUrl | gh secret set DISCORD_WEBHOOK_URL 2>&1
                 if ($LASTEXITCODE -eq 0) {
                     Write-Ok "GitHub secret DISCORD_WEBHOOK_URL updated"
                 } else {
-                    Write-Warn "Could not set GitHub secret - run: gh secret set DISCORD_WEBHOOK_URL"
+                    Write-Warn "GitHub secret skipped (gh not logged in or no access)"
+                    Write-Warn "Optional: GitHub.com -> repo Settings -> Secrets -> DISCORD_WEBHOOK_URL"
                 }
+            } catch {
+                Write-Warn "GitHub secret skipped: $($_.Exception.Message)"
             } finally {
                 Pop-Location
             }
         } else {
-            Write-Warn "No git repo found - skip GitHub secret or set in repo Settings -> Secrets"
+            Write-Warn "No git repo found - set secret in GitHub.com -> Settings -> Secrets"
         }
     } else {
-        Write-Warn "gh CLI not installed - skip GitHub secret or install gh"
+        Write-Warn "gh CLI not installed - set secret in GitHub.com -> Settings -> Secrets"
     }
 }
 
