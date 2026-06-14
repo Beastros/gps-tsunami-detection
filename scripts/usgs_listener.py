@@ -50,7 +50,7 @@ PACIFIC_ZONES = [
         "name": "Japan/Kuril",
         "lat": (30, 55), "lon": (130, 165),
         "anchor": "guam",
-        "note": "Tōhoku, Kuril corridors → GUAM upstream"
+        "note": "Japan/Kuril → Japan IGS + Marianas + Hawaii RINEX (guam anchor)"
     },
     {
         "name": "Alaska/Aleutian",
@@ -119,8 +119,14 @@ log = logging.getLogger(__name__)
 
 # ── Helpers ────────────────────────────────────────────────────────
 def load_queue():
-    if Path(EVENT_QUEUE_FILE).exists():
-        return json.loads(Path(EVENT_QUEUE_FILE).read_text(encoding="utf-8"))
+    p = Path(EVENT_QUEUE_FILE)
+    if p.exists():
+        raw = p.read_text(encoding="utf-8").strip()
+        if raw:
+            try:
+                return json.loads(raw)
+            except json.JSONDecodeError:
+                log.warning("event_queue.json corrupt — resetting to empty queue")
     return {"events": [], "seen_ids": []}
 
 def save_queue(q):
