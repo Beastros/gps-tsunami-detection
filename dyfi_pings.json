@@ -1,19 +1,7 @@
 {
-  "generated": "2026-06-16T05:38:18Z",
+  "generated": "2026-06-16T10:32:07Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us7000st1c",
-      "mag": 6.2,
-      "place": "67 km ESE of Pondaguitan, Philippines",
-      "time_ms": 1781515118846,
-      "lat": 6.193,
-      "lon": 126.761,
-      "depth": 111.9,
-      "dyfi_responses": 14,
-      "dyfi_maxmmi": 4.1
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
