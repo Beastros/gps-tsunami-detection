@@ -1,7 +1,19 @@
 {
-  "generated": "2026-06-16T10:32:07Z",
+  "generated": "2026-06-16T15:34:25Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us7000std7",
+      "mag": 5.5,
+      "place": "4 km NW of Noda, Japan",
+      "time_ms": 1781606794658,
+      "lat": 35.981,
+      "lon": 139.837,
+      "depth": 71.8,
+      "dyfi_responses": 95,
+      "dyfi_maxmmi": 4.3
+    }
+  ]
 }

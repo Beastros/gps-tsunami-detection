@@ -18195,10 +18195,24 @@
       "total_queued": 1,
       "pending": 0,
       "scored": 1
+    },
+    {
+      "ts": "2026-06-16T15:34:15.396578+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
+    },
+    {
+      "ts": "2026-06-16T15:34:17.927037+00:00",
+      "new_candidates": 0,
+      "total_queued": 1,
+      "pending": 0,
+      "scored": 1
     }
   ],
-  "last_updated": "2026-06-16T10:32:01.253689+00:00",
-  "total_polls": 2906,
+  "last_updated": "2026-06-16T15:34:17.927037+00:00",
+  "total_polls": 2908,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -18497,6 +18511,16 @@
       "lat": -27.8,
       "lon": -71.74,
       "depth": 10,
+      "reason": "below threshold",
+      "delta": -1.0
+    },
+    {
+      "ts": "2026-06-16T10:46:34.658000+00:00",
+      "mag": 5.5,
+      "place": "4 km NW of Noda, Japan",
+      "lat": 35.98,
+      "lon": 139.84,
+      "depth": 71.8,
       "reason": "below threshold",
       "delta": -1.0
     }
