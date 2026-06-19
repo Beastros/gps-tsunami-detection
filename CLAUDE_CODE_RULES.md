@@ -112,6 +112,8 @@ GPS_TSUNAMI_REPO_DIR=<optional git clone path for health_check section 15>
 
 - **Public inquiries** (footer on `index.html`, README): **`emfproj@proton.me`** — not the same as `NOTIFY_EMAIL` unless you intentionally use Proton SMTP for sends.
 - Regenerate **Discord webhook** if it was ever exposed in a chat log.
+- **Phone alerts** come from the **Windows** pipeline host only. GitHub Actions sets `DISCORD_ALERTS_ENABLED=0` so CI does not double-post every 15 min.
+- If you see constant **webhook disconnect** spam: regenerate the webhook in Discord, update `DISCORD_WEBHOOK_URL` in Windows `.env`, update/delete the GitHub secret, and see `scripts/renew_discord_webhook.md`.
 
 ---
 
