@@ -598,9 +598,9 @@
         "expected_lead_time_min": 55,
         "rinex_download_after_h": 6.9
       },
-      "status": "queued",
-      "rinex_downloaded": false,
-      "detector_run": false,
+      "status": "predicted",
+      "rinex_downloaded": true,
+      "detector_run": true,
       "scored": false,
       "result": null,
       "focal_mechanism": {
@@ -610,7 +610,49 @@
         "rake_score": 0.5,
         "product_type": null
       },
-      "tsunamigenic_index": null
+      "tsunamigenic_index": null,
+      "rinex_coverage": {
+        "stations": [
+          "hnlc",
+          "holb"
+        ],
+        "n_stations": 2,
+        "total_files": 3,
+        "days": [
+          {
+            "year": 2026,
+            "doy": 169,
+            "stations": [
+              "hnlc",
+              "holb"
+            ],
+            "n": 2
+          },
+          {
+            "year": 2026,
+            "doy": 170,
+            "stations": [],
+            "n": 0
+          },
+          {
+            "year": 2026,
+            "doy": 171,
+            "stations": [],
+            "n": 0
+          }
+        ],
+        "source": "manifest",
+        "updated_utc": "2026-06-19T15:25:48.405472+00:00"
+      },
+      "rinex_dir": "rinex_live/us7000sui3",
+      "rinex_download_utc": "2026-06-19T15:25:48.406448+00:00",
+      "prediction": {
+        "detected": false,
+        "reason": "insufficient_stations",
+        "stations_processed": []
+      },
+      "detector_run_utc": "2026-06-19T15:25:48.515904+00:00",
+      "discord_alerted": true
     }
   ],
   "seen_ids": [
