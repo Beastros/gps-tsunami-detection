@@ -29,6 +29,7 @@ Or create a .env file with those lines (never commit to GitHub).
 import time
 import logging
 import argparse
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -80,20 +81,52 @@ def run_pipeline():
         new_events = [e for e in queue["events"] if e.get("status") == "queued"][-new:]
         notify.send_event_alert(new_events)
 
-    # Step 2: Download RINEX
-    log.info("\n[2/4] Downloading RINEX...")
-    rinex_downloader.main()
+    # Step 2: Rolling RINEX cache + retroactive probe + event download
+    log.info("\n[2/4] RINEX cache refresh + retroactive check + event download...")
+    retro_triggered = rinex_downloader.main() or []
+    for _info in retro_triggered:
+        try:
+            notify_discord.send_retroactive_triggered(_info)
+        except Exception as d_err:
+            log.warning("Discord retro trigger alert failed: %s", d_err)
 
     # Step 3: Run detector
     log.info("\n[3/4] Running detector...")
     detector_runner.main()
 
-    # Discord alerts for newly predicted events
+    # Discord alerts for newly predicted events (incl. retroactive re-runs)
     _queue = usgs_listener.load_queue()
     for _evt in _queue.get("events", []):
         if _evt.get("status") == "predicted" and not _evt.get("discord_alerted"):
-            notify_discord.send_detection_alert(_evt)
-            _evt["discord_alerted"] = True
+            delivered = False
+            try:
+                if _evt.get("retroactive_trigger") or _evt.get("retro_trigger_reason"):
+                    delivered = notify_discord.send_retroactive_completed(_evt)
+                else:
+                    delivered = notify_discord.send_detection_alert(_evt)
+            except Exception as d_err:
+                log.warning("Discord detection alert failed: %s", d_err)
+            if delivered:
+                _evt["discord_alerted"] = True
+                if _evt.get("retroactive_trigger") or _evt.get("retro_trigger_reason"):
+                    _evt.pop("retroactive_pending", None)
+            else:
+                log.warning("Discord detection alert not delivered; will retry next cycle")
+    for _evt in _queue.get("events", []):
+        if _evt.get("retroactive_pending") and _evt.get("status") == "rinex_failed":
+            detail = _evt.get(
+                "retroactive_abort_reason",
+                "Download returned 0 files; will retry on a later cycle if CDDIS fills in.",
+            )
+            try:
+                delivered = notify_discord.send_retroactive_aborted(_evt, detail)
+            except Exception as d_err:
+                log.warning("Discord retro abort alert failed: %s", d_err)
+                delivered = False
+            if delivered:
+                _evt.pop("retroactive_pending", None)
+            else:
+                log.warning("Discord retro abort alert not delivered; will retry next cycle")
     usgs_listener.save_queue(_queue)
 
     # Step 4: Score
@@ -128,6 +161,9 @@ def main(once=False):
             notify_discord.send_pipeline_error("pipeline", str(e))
 
         if once:
+            if os.environ.get("CI", "").lower() == "true":
+                log.info("--once mode in CI, done.")
+                break
             # ── Fast poll check ────────────────────────────────────────────
             import json as _json
             from datetime import datetime as _dt, timezone as _tz

@@ -42,18 +42,15 @@ jobs:
           if [ -n "$DISCORD_WEBHOOK_URL" ]; then
             printf 'DISCORD_WEBHOOK_URL=%s\n' "$DISCORD_WEBHOOK_URL" >> .env
           else
-            echo "::warning::DISCORD_WEBHOOK_URL secret not set — retroactive Discord alerts disabled in CI"
+            echo "::warning::DISCORD_WEBHOOK_URL secret not set — Discord alerts disabled in CI anyway (DISCORD_ALERTS_ENABLED=0)"
           fi
 
-      - name: USGS poll + DYFI map
-        run: |
-          python usgs_listener.py --once
-          python dyfi_poller.py
-
-      - name: Full pipeline (RINEX cache + detector; needs Earthdata secrets)
+      - name: Full pipeline (USGS poll, RINEX, detector, scorer, DYFI)
         env:
           EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
           EARTHDATA_PASS: ${{ secrets.EARTHDATA_PASS }}
+          DISCORD_ALERTS_ENABLED: "0"
+          CI: "true"
         run: python pipeline.py --once
 
       - name: Commit and push dashboard JSON
