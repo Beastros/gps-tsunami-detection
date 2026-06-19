@@ -21,7 +21,6 @@ from rinex_downloader import (
     load_aliases,
     quake_to_doy,
     resolve_corridor_stations,
-    reset_event_for_reprocess,
     save_aliases,
     stations_for_event,
 )
@@ -193,12 +192,13 @@ def is_eligible_for_retro_check(event: dict) -> bool:
 def queue_retroactive_reprocess(event: dict, reason: str, probe: dict) -> dict:
     """Reset pipeline state and annotate for Discord + downstream steps."""
     prior_prediction = deepcopy(event.get("prediction")) if event.get("prediction") else None
+    prior_score = deepcopy(event.get("score")) if event.get("score") else None
+    prior_coverage = deepcopy(event.get("rinex_coverage")) if event.get("rinex_coverage") else None
     prior_status = event.get("status")
     prior_detected = None
     if isinstance(prior_prediction, dict):
         prior_detected = prior_prediction.get("detected")
 
-    reset_event_for_reprocess(event)
     event["retroactive_pending"] = True
     event["retroactive_trigger"] = True
     event["retro_trigger_reason"] = reason
@@ -207,8 +207,17 @@ def queue_retroactive_reprocess(event: dict, reason: str, probe: dict) -> dict:
     event["retro_run_count"] = int(event.get("retro_run_count", 0)) + 1
     event["retro_prior_status"] = prior_status
     event["retro_prior_prediction"] = prior_prediction
+    event["retro_prior_score"] = prior_score
+    event["retro_prior_scored"] = event.get("scored")
+    event["retro_prior_detector_run"] = event.get("detector_run")
+    event["retro_prior_rinex_downloaded"] = event.get("rinex_downloaded")
+    event["retro_prior_rinex_dir"] = event.get("rinex_dir")
+    event["retro_prior_rinex_coverage"] = prior_coverage
     event["retro_prior_detected"] = prior_detected
     event["rinex_coverage_probe"] = probe
+    event["reprocess_requested"] = True
+    event.pop("retroactive_abort_pending", None)
+    event.pop("retro_abort_detail", None)
 
     return {
         "usgs_id": event["usgs_id"],
