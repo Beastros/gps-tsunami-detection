@@ -20,7 +20,7 @@ import argparse
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from scipy.signal import butter, filtfilt
 from itertools import combinations
@@ -412,6 +412,95 @@ def _rinex_nav_path(rinex_dir, sid, doy, yr2):
             return p
     return base.with_suffix(".Z")
 
+def _load_rinex_manifest(rinex_dir):
+    path = Path(rinex_dir) / "rinex_manifest.json"
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        log.warning(f"Could not read {path}: {exc}")
+        return {}
+
+def _manifest_station_code(manifest, logical_sid, year, doy):
+    logical_sid = logical_sid.lower()
+    for day in manifest.get("days") or []:
+        try:
+            if int(day.get("year")) != int(year) or int(day.get("doy")) != int(doy):
+                continue
+        except (TypeError, ValueError):
+            continue
+        resolved = day.get("resolved") or {}
+        code = resolved.get(logical_sid) or resolved.get(logical_sid.upper())
+        if code:
+            return str(code).lower()
+    return logical_sid
+
+def _rinex_paths_for_station_day(rinex_dir, logical_sid, year, doy, yr2, manifest):
+    code = _manifest_station_code(manifest, logical_sid, year, doy)
+    return (
+        _rinex_obs_path(rinex_dir, code, doy, yr2),
+        _rinex_nav_path(rinex_dir, code, doy, yr2),
+    )
+
+def _event_rinex_days(quake_dt, offsets=(0, 1)):
+    for offset in offsets:
+        dt = quake_dt + timedelta(days=offset)
+        yield dt.year, dt.timetuple().tm_yday, str(dt.year)[-2:]
+
+def _parse_valid_nav(nav_path):
+    if not nav_path.exists():
+        return {}
+    np_ = decompress(nav_path)
+    if not np_:
+        return {}
+    nav = parse_nav(np_)
+    if nav:
+        tsv=list(nav.keys())[0]; pos=keplerian_to_ecef(nav[tsv][0][1],nav[tsv][0][0])
+        if pos:
+            d=np.sqrt(sum(p**2 for p in pos))/1000
+            if not 20000<d<30000:
+                nav={}
+    return nav
+
+def _combine_station_series(parts):
+    if not parts:
+        return None
+    if len(parts) == 1:
+        return parts[0]
+    combined = pd.concat(parts).sort_index()
+    return combined[~combined.index.duplicated(keep="first")]
+
+def _load_station_filter(rinex_dir, logical_sid, quake_dt, manifest):
+    scfg = STATIONS[logical_sid]
+    parts = []
+    for year, doy, yr2 in _event_rinex_days(quake_dt):
+        og, ng = _rinex_paths_for_station_day(rinex_dir, logical_sid, year, doy, yr2, manifest)
+        if not og.exists():
+            continue
+        op = decompress(og)
+        if not op:
+            continue
+        filt = compute_tec(op, _parse_valid_nav(ng), scfg['lat'], scfg['lon'], scfg['alt'])
+        if filt is not None:
+            parts.append(filt)
+    return _combine_station_series(parts)
+
+def _load_constellation_filter(rinex_dir, logical_sid, quake_dt, manifest, constellation):
+    scfg = STATIONS[logical_sid]
+    parts = []
+    for year, doy, yr2 in _event_rinex_days(quake_dt):
+        og, _ng = _rinex_paths_for_station_day(rinex_dir, logical_sid, year, doy, yr2, manifest)
+        if not og.exists():
+            continue
+        op = decompress(og)
+        if not op:
+            continue
+        filt = compute_tec_for_constellation(op, constellation, scfg['lat'], scfg['lon'], scfg['alt'])
+        if filt is not None:
+            parts.append(filt)
+    return _combine_station_series(parts)
+
 def decompress(gz):
   p = Path(gz)
   if p.suffix == ".gz":
@@ -602,9 +691,7 @@ def run_event(event, kp_override=None):
     mw        = event["magnitude"]
 
     quake_dt = datetime.fromisoformat(quake_utc.replace("Z","+00:00"))
-    year = quake_dt.year
-    doy  = quake_dt.timetuple().tm_yday
-    yr2  = str(year)[-2:]
+    rinex_manifest = _load_rinex_manifest(rinex_dir)
 
     log.info(f"\nRunning detector: {event['usgs_id']}")
     log.info(f"  {event['place']}  Mw{mw}  {quake_utc[:16]}")
@@ -612,24 +699,8 @@ def run_event(event, kp_override=None):
     # Determine which stations have files
     filts = {}
     for sid in STATIONS:
-        og = _rinex_obs_path(rinex_dir, sid, doy, yr2)
-        ng = _rinex_nav_path(rinex_dir, sid, doy, yr2)
-        if not og.exists(): continue
-        op = decompress(og)
-        if not op: continue
-        nav = {}
-        if ng.exists():
-            np_ = decompress(ng)
-            if np_:
-                nav = parse_nav(np_)
-                if nav:
-                    tsv=list(nav.keys())[0]; pos=keplerian_to_ecef(nav[tsv][0][1],nav[tsv][0][0])
-                    if pos:
-                        d=np.sqrt(sum(p**2 for p in pos))/1000
-                        if not 20000<d<30000: nav={}
-        scfg = STATIONS[sid]
         log.info(f"  Processing {sid.upper()}...")
-        filt = compute_tec(op, nav, scfg['lat'], scfg['lon'], scfg['alt'])
+        filt = _load_station_filter(rinex_dir, sid, quake_dt, rinex_manifest)
         if filt is not None:
             filts[sid] = filt
             log.info(f"    â†’ {sid.upper()} OK")
@@ -640,12 +711,7 @@ def run_event(event, kp_override=None):
     for _const in ('R', 'E'):
         _cfilts = {}
         for _sid in STATIONS:
-            _og = _rinex_obs_path(rinex_dir, _sid, doy, yr2)
-            if not _og.exists(): continue
-            _op = decompress(_og)
-            if not _op: continue
-            _scfg = STATIONS[_sid]
-            _cf = compute_tec_for_constellation(_op, _const, _scfg['lat'], _scfg['lon'], _scfg['alt'])
+            _cf = _load_constellation_filter(rinex_dir, _sid, quake_dt, rinex_manifest, _const)
             if _cf is not None: _cfilts[_sid] = _cf
         if _cfilts: log.info(f"  [{_const}] {len(_cfilts)} station(s) with data")
         filts_by_const[_const] = _cfilts

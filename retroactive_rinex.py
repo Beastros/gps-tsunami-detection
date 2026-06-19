@@ -198,7 +198,7 @@ def queue_retroactive_reprocess(event: dict, reason: str, probe: dict) -> dict:
     if isinstance(prior_prediction, dict):
         prior_detected = prior_prediction.get("detected")
 
-    reset_event_for_reprocess(event)
+    reset_event_for_reprocess(event, preserve_outputs=True)
     event["retroactive_pending"] = True
     event["retroactive_trigger"] = True
     event["retro_trigger_reason"] = reason
