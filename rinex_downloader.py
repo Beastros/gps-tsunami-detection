@@ -16,6 +16,7 @@ import shutil
 import time
 import logging
 import argparse
+from copy import deepcopy
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -550,6 +551,11 @@ def reset_event_for_reprocess(event: dict, *, keep_retro_meta: bool = False) -> 
                 "retro_triggered_utc",
                 "retro_prior_status",
                 "retro_prior_prediction",
+                "retro_prior_score",
+                "retro_prior_scored",
+                "retro_prior_rinex_downloaded",
+                "retro_prior_rinex_dir",
+                "retro_prior_coverage",
                 "retro_prior_detected",
                 "rinex_coverage_probe",
             )
@@ -619,8 +625,19 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
         return retro_triggered
 
     for event in ready:
+        was_retro = bool(event.get("retroactive_pending"))
+        prior_coverage = deepcopy(event.get("rinex_coverage")) if event.get("rinex_coverage") else None
+        prior_manifest_text = None
+        prior_manifest_path = Path(event.get("rinex_dir") or (Path(RINEX_BASE_DIR) / event["usgs_id"])) / "rinex_manifest.json"
+        if was_retro and prior_manifest_path.exists():
+            try:
+                prior_manifest_text = prior_manifest_path.read_text(encoding="utf-8")
+            except OSError:
+                prior_manifest_text = None
         count, event_dir = download_event(event, auth)
         if count > 0:
+            if was_retro:
+                reset_event_for_reprocess(event, keep_retro_meta=True)
             event["rinex_downloaded"] = True
             event["rinex_dir"] = event_dir
             event["rinex_download_utc"] = datetime.now(timezone.utc).isoformat()
@@ -629,6 +646,29 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
             save_queue(queue)
             log.info(f"Updated queue: {event['usgs_id']} → rinex_ready ({count} files)")
         else:
+            if was_retro:
+                if prior_coverage is not None:
+                    event["rinex_coverage"] = prior_coverage
+                else:
+                    event.pop("rinex_coverage", None)
+                if prior_manifest_text is not None:
+                    try:
+                        Path(event_dir, "rinex_manifest.json").write_text(
+                            prior_manifest_text, encoding="utf-8"
+                        )
+                    except OSError as exc:
+                        log.warning("Could not restore prior manifest for %s: %s", event["usgs_id"], exc)
+                event["retroactive_abort_pending"] = True
+                event["retroactive_abort_reason"] = (
+                    "Download returned 0 files; prior prediction/score preserved."
+                )
+                event["retroactive_aborted_utc"] = datetime.now(timezone.utc).isoformat()
+                event.pop("retroactive_pending", None)
+                event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
+                event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
+                save_queue(queue)
+                log.warning("Retroactive RINEX aborted for %s: 0 files; prior state preserved", event["usgs_id"])
+                continue
             event["status"] = "rinex_failed"
             event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
             event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
