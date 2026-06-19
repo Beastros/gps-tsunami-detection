@@ -16,6 +16,7 @@ import shutil
 import time
 import logging
 import argparse
+from copy import deepcopy
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -619,8 +620,22 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
         return retro_triggered
 
     for event in ready:
+        was_retroactive = bool(event.get("retroactive_pending"))
+        prior_coverage = deepcopy(event.get("rinex_coverage"))
+        prior_manifest = None
+        prior_manifest_path = (
+            Path(event.get("rinex_dir", Path(RINEX_BASE_DIR) / event["usgs_id"]))
+            / "rinex_manifest.json"
+        )
+        if was_retroactive and prior_manifest_path.exists():
+            try:
+                prior_manifest = prior_manifest_path.read_text(encoding="utf-8")
+            except OSError:
+                prior_manifest = None
         count, event_dir = download_event(event, auth)
         if count > 0:
+            if was_retroactive:
+                reset_event_for_reprocess(event, keep_retro_meta=True)
             event["rinex_downloaded"] = True
             event["rinex_dir"] = event_dir
             event["rinex_download_utc"] = datetime.now(timezone.utc).isoformat()
@@ -629,11 +644,28 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
             save_queue(queue)
             log.info(f"Updated queue: {event['usgs_id']} → rinex_ready ({count} files)")
         else:
+            if was_retroactive:
+                if prior_coverage is not None:
+                    event["rinex_coverage"] = prior_coverage
+                else:
+                    event.pop("rinex_coverage", None)
+                if prior_manifest is not None:
+                    try:
+                        Path(event_dir, "rinex_manifest.json").write_text(prior_manifest, encoding="utf-8")
+                    except OSError as exc:
+                        log.warning("Could not restore prior manifest for %s: %s", event["usgs_id"], exc)
+                event["retroactive_abort_reason"] = (
+                    "Download returned 0 new RINEX files; preserved the existing "
+                    "prediction and will retry on a later cycle if CDDIS fills in."
+                )
+                event["retroactive_abort_utc"] = datetime.now(timezone.utc).isoformat()
+                event.pop("retroactive_pending", None)
+                event.pop("reprocess_requested", None)
+                save_queue(queue)
+                continue
             event["status"] = "rinex_failed"
             event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
             event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
-            if event.get("retroactive_pending"):
-                event.pop("retroactive_pending", None)
             save_queue(queue)
 
     return retro_triggered
