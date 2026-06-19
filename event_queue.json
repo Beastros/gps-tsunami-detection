@@ -570,6 +570,47 @@
         }
       },
       "scored_utc": "2026-05-17T01:27:30.810254+00:00"
+    },
+    {
+      "usgs_id": "us7000sui3",
+      "detected_utc": "2026-06-19T07:39:45.859068+00:00",
+      "quake_utc": "2026-06-19T06:52:34.507000+00:00",
+      "magnitude": 6.6,
+      "depth_km": 10,
+      "lat": 53.249,
+      "lon": 160.651,
+      "place": "136 km E of Petropavlovsk-Kamchatsky, Russia",
+      "zones": [
+        "Japan/Kuril"
+      ],
+      "primary_anchor": "guam",
+      "anchor_note": "Japan/Kuril \u2192 Japan IGS + Marianas + Hawaii RINEX (guam anchor)",
+      "detection_window": {
+        "anchor": "guam",
+        "anchor_dist_km": 4635,
+        "hawaii_dist_km": 5297,
+        "tec_onset_anchor_h": 6.4,
+        "tec_onset_window": [
+          5.9,
+          7.9
+        ],
+        "wave_arrival_hawaii_h": 7.4,
+        "expected_lead_time_min": 55,
+        "rinex_download_after_h": 6.9
+      },
+      "status": "queued",
+      "rinex_downloaded": false,
+      "detector_run": false,
+      "scored": false,
+      "result": null,
+      "focal_mechanism": {
+        "available": false,
+        "fault_type": "unknown",
+        "rake_deg": null,
+        "rake_score": 0.5,
+        "product_type": null
+      },
+      "tsunamigenic_index": null
     }
   ],
   "seen_ids": [
@@ -1528,6 +1569,12 @@
     "us7000suc2",
     "us7000sueg",
     "us7000suds",
-    "us7000sugs"
+    "us7000sugs",
+    "us7000sui8",
+    "us7000sui3",
+    "us7000sui2",
+    "us7000suii",
+    "us7000suik",
+    "us7000suij"
   ]
 }
