@@ -395,17 +395,48 @@ def get_dtec_onsets(dtec, quake_utc):
     return onsets
 
 
-def _rinex_obs_path(rinex_dir, sid, doy, yr2):
+def _load_rinex_manifest(rinex_dir):
+    manifest_path = Path(rinex_dir) / "rinex_manifest.json"
+    if not manifest_path.exists():
+        return {}
+    try:
+        return json.loads(manifest_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        log.warning("Could not read %s: %s", manifest_path, exc)
+        return {}
+
+
+def _manifest_code(manifest, sid, year, doy):
+    for day in manifest.get("days") or []:
+        if day.get("year") == year and day.get("doy") == doy:
+            resolved = day.get("resolved") or {}
+            return str(resolved.get(sid, sid)).lower()
+    return sid
+
+
+def _event_days(quake_dt):
+    from datetime import timedelta
+
+    days = []
+    for offset in (-1, 0, 1):
+        dt = quake_dt + timedelta(days=offset)
+        days.append((dt.year, dt.timetuple().tm_yday, str(dt.year)[-2:]))
+    return days
+
+
+def _rinex_obs_path(rinex_dir, sid, doy, yr2, manifest=None, year=None):
     """First existing observation archive (.Z or .gz) for station/day."""
-    base = rinex_dir / f"{sid}{doy:03d}0.{yr2}o"
+    code = _manifest_code(manifest or {}, sid, year, doy) if year is not None else sid
+    base = rinex_dir / f"{code}{doy:03d}0.{yr2}o"
     for ext in (".Z", ".gz"):
         p = Path(str(base) + ext)
         if p.exists():
             return p
     return base.with_suffix(".Z")
 
-def _rinex_nav_path(rinex_dir, sid, doy, yr2):
-    base = rinex_dir / f"{sid}{doy:03d}0.{yr2}n"
+def _rinex_nav_path(rinex_dir, sid, doy, yr2, manifest=None, year=None):
+    code = _manifest_code(manifest or {}, sid, year, doy) if year is not None else sid
+    base = rinex_dir / f"{code}{doy:03d}0.{yr2}n"
     for ext in (".Z", ".gz"):
         p = Path(str(base) + ext)
         if p.exists():
@@ -593,6 +624,61 @@ def detect_lb(filts, onsets, epi_lat, epi_lon, quake_utc):
                     })
     return pairs
 
+
+def _combine_station_series(parts):
+    if not parts:
+        return None
+    if len(parts) == 1:
+        return parts[0]
+    return pd.concat(parts).sort_index().groupby(level=0).mean()
+
+
+def _load_station_filter(rinex_dir, sid, event_days, manifest):
+    scfg = STATIONS[sid]
+    parts = []
+    for year, doy, yr2 in event_days:
+        og = _rinex_obs_path(rinex_dir, sid, doy, yr2, manifest, year)
+        ng = _rinex_nav_path(rinex_dir, sid, doy, yr2, manifest, year)
+        if not og.exists():
+            continue
+        op = decompress(og)
+        if not op:
+            continue
+        nav = {}
+        if ng.exists():
+            np_ = decompress(ng)
+            if np_:
+                nav = parse_nav(np_)
+                if nav:
+                    tsv = list(nav.keys())[0]
+                    pos = keplerian_to_ecef(nav[tsv][0][1], nav[tsv][0][0])
+                    if pos:
+                        d = np.sqrt(sum(p**2 for p in pos)) / 1000
+                        if not 20000 < d < 30000:
+                            nav = {}
+        filt = compute_tec(op, nav, scfg["lat"], scfg["lon"], scfg["alt"])
+        if filt is not None:
+            parts.append(filt)
+    return _combine_station_series(parts)
+
+
+def _load_constellation_filter(rinex_dir, sid, event_days, manifest, constellation):
+    scfg = STATIONS[sid]
+    parts = []
+    for year, doy, yr2 in event_days:
+        og = _rinex_obs_path(rinex_dir, sid, doy, yr2, manifest, year)
+        if not og.exists():
+            continue
+        op = decompress(og)
+        if not op:
+            continue
+        cf = compute_tec_for_constellation(
+            op, constellation, scfg["lat"], scfg["lon"], scfg["alt"]
+        )
+        if cf is not None:
+            parts.append(cf)
+    return _combine_station_series(parts)
+
 def run_event(event, kp_override=None):
     """Run detector on a single event. Returns prediction dict."""
     rinex_dir = Path(event.get("rinex_dir", f"rinex_live/{event['usgs_id']}"))
@@ -605,6 +691,8 @@ def run_event(event, kp_override=None):
     year = quake_dt.year
     doy  = quake_dt.timetuple().tm_yday
     yr2  = str(year)[-2:]
+    event_days = _event_days(quake_dt)
+    manifest = _load_rinex_manifest(rinex_dir)
 
     log.info(f"\nRunning detector: {event['usgs_id']}")
     log.info(f"  {event['place']}  Mw{mw}  {quake_utc[:16]}")
@@ -612,24 +700,8 @@ def run_event(event, kp_override=None):
     # Determine which stations have files
     filts = {}
     for sid in STATIONS:
-        og = _rinex_obs_path(rinex_dir, sid, doy, yr2)
-        ng = _rinex_nav_path(rinex_dir, sid, doy, yr2)
-        if not og.exists(): continue
-        op = decompress(og)
-        if not op: continue
-        nav = {}
-        if ng.exists():
-            np_ = decompress(ng)
-            if np_:
-                nav = parse_nav(np_)
-                if nav:
-                    tsv=list(nav.keys())[0]; pos=keplerian_to_ecef(nav[tsv][0][1],nav[tsv][0][0])
-                    if pos:
-                        d=np.sqrt(sum(p**2 for p in pos))/1000
-                        if not 20000<d<30000: nav={}
-        scfg = STATIONS[sid]
         log.info(f"  Processing {sid.upper()}...")
-        filt = compute_tec(op, nav, scfg['lat'], scfg['lon'], scfg['alt'])
+        filt = _load_station_filter(rinex_dir, sid, event_days, manifest)
         if filt is not None:
             filts[sid] = filt
             log.info(f"    â†’ {sid.upper()} OK")
@@ -640,12 +712,9 @@ def run_event(event, kp_override=None):
     for _const in ('R', 'E'):
         _cfilts = {}
         for _sid in STATIONS:
-            _og = _rinex_obs_path(rinex_dir, _sid, doy, yr2)
-            if not _og.exists(): continue
-            _op = decompress(_og)
-            if not _op: continue
-            _scfg = STATIONS[_sid]
-            _cf = compute_tec_for_constellation(_op, _const, _scfg['lat'], _scfg['lon'], _scfg['alt'])
+            _cf = _load_constellation_filter(
+                rinex_dir, _sid, event_days, manifest, _const
+            )
             if _cf is not None: _cfilts[_sid] = _cf
         if _cfilts: log.info(f"  [{_const}] {len(_cfilts)} station(s) with data")
         filts_by_const[_const] = _cfilts

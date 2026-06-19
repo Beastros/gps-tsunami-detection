@@ -387,7 +387,7 @@ def _activate_fast_poll(usgs_id, mag, place, fp_path):
     # Don't overwrite an active file that was triggered by a larger event
     if os.path.exists(fp_path):
         try:
-            existing = _json.loads(open(fp_path, encoding="utf-8").read())
+            existing = _json.loads(Path(fp_path).read_text(encoding="utf-8"))
             exp = _dt.fromisoformat(existing.get("expires_utc", "2000-01-01T00:00:00+00:00"))
             if exp > now and existing.get("trigger_mag", 0) >= mag:
                 return  # existing trigger is fresher or larger
@@ -402,12 +402,19 @@ def _activate_fast_poll(usgs_id, mag, place, fp_path):
         "expires_utc":     (now + _td(minutes=FAST_POLL_DURATION_MIN)).isoformat(),
         "poll_interval_sec": FAST_POLL_INTERVAL_SEC,
     }
-    open(fp_path, "w", encoding="utf-8").write(_json.dumps(state, indent=2))
+    Path(fp_path).write_text(_json.dumps(state, indent=2), encoding="utf-8")
     log.info(f"FAST POLL ACTIVATED: Mw{mag} {place} -- 2-min cycles for {FAST_POLL_DURATION_MIN} min")
 
 
 def check_feed(queue):
     """Check feed for new qualifying events. Returns (new_count, near_misses)."""
+    queue.setdefault("events", [])
+    queue.setdefault("seen_ids", [])
+    queued_ids = {
+        ev.get("usgs_id")
+        for ev in queue.get("events", [])
+        if ev.get("usgs_id")
+    }
     features = fetch_feed()
     new_count = 0
     near_misses = []
@@ -423,10 +430,8 @@ def check_feed(queue):
         time_ms = props.get("time", 0)
         coords  = geom.get("coordinates", [None, None, None])
 
-        if eid in queue["seen_ids"]:
+        if eid in queued_ids:
             continue
-
-        queue["seen_ids"].append(eid)
 
         if time_ms:
             event_time = datetime.fromtimestamp(time_ms/1000, tz=timezone.utc)
@@ -441,6 +446,9 @@ def check_feed(queue):
         candidate = assess_event(feat)
         if candidate:
             queue["events"].append(candidate)
+            queued_ids.add(eid)
+            if eid not in queue["seen_ids"]:
+                queue["seen_ids"].append(eid)
             new_count += 1
             w = candidate.get("detection_window") or {}
             log.info(
