@@ -45,12 +45,10 @@ jobs:
             echo "::warning::DISCORD_WEBHOOK_URL secret not set — retroactive Discord alerts disabled in CI"
           fi
 
-      - name: USGS poll + DYFI map
-        run: |
-          python usgs_listener.py --once
-          python dyfi_poller.py
+      - name: DYFI map
+        run: python dyfi_poller.py
 
-      - name: Full pipeline (RINEX cache + detector; needs Earthdata secrets)
+      - name: Full pipeline (USGS poll + RINEX cache + detector)
         env:
           EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
           EARTHDATA_PASS: ${{ secrets.EARTHDATA_PASS }}
