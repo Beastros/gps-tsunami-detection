@@ -110,20 +110,131 @@
         "amplitude_m": 0.061,
         "detection_method": "variance_threshold"
       }
+    },
+    {
+      "usgs_id": "us7000sui3",
+      "quake_utc": "2026-06-19T06:52:34.507000+00:00",
+      "magnitude": 6.6,
+      "place": "136 km E of Petropavlovsk-Kamchatsky, Russia",
+      "anchor": "guam",
+      "kp": null,
+      "algo_detected": false,
+      "gauge_tsunami": true,
+      "any_gauge_tsunami": true,
+      "corroborated_by": [
+        "pago"
+      ],
+      "combined_confidence": 0.0,
+      "confidence_detected": false,
+      "confidence_threshold": 0.35,
+      "dart_score_prediction": 0.0,
+      "dart_status_prediction": "no_buoys",
+      "space_weather_score": null,
+      "space_weather_gated": false,
+      "space_weather_flags": [],
+      "dart_reconciliation": {
+        "reconciled": false,
+        "reason": "no_scoring_dart"
+      },
+      "stations_processed": [
+        "hnlc",
+        "holb"
+      ],
+      "detection_reason": "no_coherent_pairs",
+      "constellation_agreement": {
+        "constellations": {
+          "G": {
+            "available": true,
+            "anomaly": true,
+            "n_stations": 2
+          },
+          "R": {
+            "available": true,
+            "anomaly": true,
+            "n_stations": 1
+          },
+          "E": {
+            "available": false,
+            "anomaly": false,
+            "n_stations": 0
+          }
+        },
+        "n_available": 2,
+        "n_detecting": 2,
+        "detecting": [
+          "G",
+          "R"
+        ],
+        "agreement_score": 1.0,
+        "agreement_label": "agreement"
+      },
+      "dtec_corroborates": false,
+      "ionosonde_confirmed": false,
+      "lb_pairs_in_window": 0,
+      "dyfi_contribution": 0.0,
+      "dyfi_responses": 1,
+      "dyfi_maxmmi": 2.0,
+      "dyfi_confirmed": false,
+      "dart_detected": null,
+      "dart_confirming_buoys": null,
+      "dart_buoys_checked": null,
+      "dart_network": null,
+      "gauge_network": {
+        "hilo": {
+          "signal": true,
+          "arrival_h": 4.92,
+          "amplitude_m": 0.052,
+          "method": "variance_threshold"
+        },
+        "midway": {
+          "signal": false,
+          "arrival_h": null,
+          "amplitude_m": null,
+          "method": null
+        },
+        "johnston": {
+          "signal": false,
+          "arrival_h": null,
+          "amplitude_m": null,
+          "method": null
+        },
+        "pago": {
+          "signal": true,
+          "arrival_h": 14.82,
+          "amplitude_m": 0.065,
+          "method": "variance_threshold"
+        }
+      },
+      "outcome": "FALSE_NEGATIVE",
+      "outcome_confidence": "FALSE_NEGATIVE",
+      "lead_time_min": null,
+      "amplitude_predicted_m": null,
+      "amplitude_actual_m": null,
+      "amplitude_error_pct": null,
+      "timing_error_min": null,
+      "notes": [
+        "Multi-gauge confirmed: ['pago']"
+      ],
+      "tide_gauge_truth": {
+        "onset_utc": "2026-06-19T11:48:00+00:00",
+        "arrival_h_post_quake": 4.92,
+        "amplitude_m": 0.052,
+        "detection_method": "variance_threshold"
+      }
     }
   ],
   "summary": {
-    "total_scored": 1,
+    "total_scored": 2,
     "true_positives": 0,
     "true_negatives": 0,
     "false_positives": 0,
-    "false_negatives": 1,
+    "false_negatives": 2,
     "tpr": 0.0,
     "fpr": null,
     "confidence_tp": 0,
     "confidence_tn": 0,
     "confidence_fp": 0,
-    "confidence_fn": 1,
+    "confidence_fn": 2,
     "confidence_tpr": 0.0,
     "confidence_fpr": null,
     "confidence_threshold": 0.35,
@@ -135,10 +246,10 @@
     "dart_pending_at_detection": 0,
     "confidence_calibration": {
       "0.0-0.2": {
-        "n": 1,
+        "n": 2,
         "hit_rate": 1.0
       }
     },
-    "last_updated": "2026-05-17T01:27:30.810422+00:00"
+    "last_updated": "2026-06-20T09:43:25.557054+00:00"
   }
 }
