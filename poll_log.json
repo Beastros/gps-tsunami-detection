@@ -18993,10 +18993,24 @@
       "total_queued": 2,
       "pending": 1,
       "scored": 1
+    },
+    {
+      "ts": "2026-06-20T06:03:39.347917+00:00",
+      "new_candidates": 0,
+      "total_queued": 2,
+      "pending": 1,
+      "scored": 1
+    },
+    {
+      "ts": "2026-06-20T06:03:42.041628+00:00",
+      "new_candidates": 0,
+      "total_queued": 2,
+      "pending": 1,
+      "scored": 1
     }
   ],
-  "last_updated": "2026-06-20T01:35:55.291977+00:00",
-  "total_polls": 3020,
+  "last_updated": "2026-06-20T06:03:42.041628+00:00",
+  "total_polls": 3022,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -19325,6 +19339,16 @@
       "lat": 52.74,
       "lon": 161.11,
       "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.7
+    },
+    {
+      "ts": "2026-06-20T03:49:06.278000+00:00",
+      "mag": 5.8,
+      "place": "140 km ESE of Petropavlovsk-Kamchatsky, Russia",
+      "lat": 52.73,
+      "lon": 160.64,
+      "depth": 35,
       "reason": "below threshold",
       "delta": -0.7
     }
