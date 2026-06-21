@@ -6,6 +6,7 @@ import sys
 import types
 import unittest
 from unittest import mock
+from datetime import datetime, timezone
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -18,7 +19,7 @@ def _feature(usgs_id="upgraded", mag=6.6):
             "mag": mag,
             "place": "Test event near Japan",
             "type": "earthquake",
-            "time": 1_735_689_600_000,
+            "time": int(datetime.now(timezone.utc).timestamp() * 1000),
         },
         "geometry": {"coordinates": [140.0, 40.0, 12.0]},
     }
