@@ -42,7 +42,8 @@ class CriticalRegressionTests(unittest.TestCase):
 
         with mock.patch.object(usgs_listener, "fetch_feed", return_value=[feature]), \
              mock.patch.object(usgs_listener, "assess_event", return_value=candidate), \
-             mock.patch.object(usgs_listener, "in_pacific_zone", return_value=["test"]):
+             mock.patch.object(usgs_listener, "in_pacific_zone", return_value=["test"]), \
+             mock.patch.object(usgs_listener, "_activate_fast_poll", return_value=None):
             new, near_misses = usgs_listener.check_feed(queue)
 
         self.assertEqual(new, 1)
