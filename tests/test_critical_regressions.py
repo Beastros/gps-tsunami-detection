@@ -31,6 +31,12 @@ class CriticalRegressionTests(unittest.TestCase):
             "status": "queued",
             "magnitude": 6.7,
             "place": "Pacific test event",
+            "zones": ["test"],
+            "primary_anchor": "guam",
+            "detection_window": {
+                "tec_onset_window": [3.0, 5.0],
+                "expected_lead_time_min": 120,
+            },
         }
         queue = {"events": [], "seen_ids": [feature["id"]]}
 
