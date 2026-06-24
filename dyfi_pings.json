@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-24T20:09:58Z",
+  "generated": "2026-06-24T21:47:05Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 1,
@@ -8,12 +8,12 @@
       "usgs_id": "nc75382936",
       "mag": 5.6,
       "place": "11 km N of Redwood Valley, CA",
-      "time_ms": 1782313840770,
-      "lat": 39.364,
+      "time_ms": 1782313840760,
+      "lat": 39.362,
       "lon": -123.229,
-      "depth": 8.1,
-      "dyfi_responses": 4930,
-      "dyfi_maxmmi": 7.5
+      "depth": 8.8,
+      "dyfi_responses": 5016,
+      "dyfi_maxmmi": 7.4
     }
   ]
 }
