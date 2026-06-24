@@ -409,6 +409,10 @@ def _activate_fast_poll(usgs_id, mag, place, fp_path):
 def check_feed(queue):
     """Check feed for new qualifying events. Returns (new_count, near_misses)."""
     features = fetch_feed()
+    events = queue.setdefault("events", [])
+    seen_ids = queue.setdefault("seen_ids", [])
+    seen_id_set = set(seen_ids)
+    queued_ids = {e.get("usgs_id") for e in events if e.get("usgs_id")}
     new_count = 0
     near_misses = []
     cutoff = datetime.now(timezone.utc) - timedelta(hours=LOOKBACK_HOURS)
@@ -423,10 +427,16 @@ def check_feed(queue):
         time_ms = props.get("time", 0)
         coords  = geom.get("coordinates", [None, None, None])
 
-        if eid in queue["seen_ids"]:
+        if eid in queued_ids:
+            if eid not in seen_id_set:
+                seen_ids.append(eid)
+                seen_id_set.add(eid)
             continue
 
-        queue["seen_ids"].append(eid)
+        first_seen = eid not in seen_id_set
+        if first_seen:
+            seen_ids.append(eid)
+            seen_id_set.add(eid)
 
         if time_ms:
             event_time = datetime.fromtimestamp(time_ms/1000, tz=timezone.utc)
@@ -440,7 +450,8 @@ def check_feed(queue):
 
         candidate = assess_event(feat)
         if candidate:
-            queue["events"].append(candidate)
+            events.append(candidate)
+            queued_ids.add(eid)
             new_count += 1
             w = candidate.get("detection_window") or {}
             log.info(
@@ -478,7 +489,7 @@ def check_feed(queue):
             else:
                 reason = "filtered"
 
-            if reason is not None:
+            if reason is not None and first_seen:
                 near_misses.append({
                     "ts":     event_time.isoformat(),
                     "mag":    mag,
@@ -493,7 +504,7 @@ def check_feed(queue):
                     log.debug(f"Skipped Mw{mag} {place} — {reason}")
 
         # Fast poll: Mw >= trigger in Pacific (candidate or near-miss)
-        if mag is not None and mag >= FAST_POLL_MW_TRIGGER:
+        if mag is not None and mag >= FAST_POLL_MW_TRIGGER and (first_seen or candidate):
             _zones = in_pacific_zone(
                 coords[1] if coords and coords[1] is not None else 0,
                 coords[0] if coords and coords[0] is not None else 0,
