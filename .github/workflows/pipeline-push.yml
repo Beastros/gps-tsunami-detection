@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: pipeline-push-main
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   poll:
@@ -45,10 +45,8 @@ jobs:
             echo "::warning::DISCORD_WEBHOOK_URL secret not set — retroactive Discord alerts disabled in CI"
           fi
 
-      - name: USGS poll + DYFI map
-        run: |
-          python usgs_listener.py --once
-          python dyfi_poller.py
+      - name: Pre-pipeline DYFI map
+        run: python dyfi_poller.py
 
       - name: Full pipeline (RINEX cache + detector; needs Earthdata secrets)
         env:
