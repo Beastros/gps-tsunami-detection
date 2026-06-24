@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: pipeline-push-main
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   poll:
@@ -46,9 +46,7 @@ jobs:
           fi
 
       - name: USGS poll + DYFI map
-        run: |
-          python usgs_listener.py --once
-          python dyfi_poller.py
+        run: python dyfi_poller.py
 
       - name: Full pipeline (RINEX cache + detector; needs Earthdata secrets)
         env:
