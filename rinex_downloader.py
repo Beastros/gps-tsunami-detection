@@ -488,12 +488,13 @@ def download_event(event, auth: HTTPBasicAuth):
     manifest["updated_utc"] = datetime.now(timezone.utc).isoformat()
     manifest_path = event_dir / "rinex_manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-    try:
-        from retroactive_rinex import update_event_coverage_from_manifest
+    if downloaded > 0:
+        try:
+            from retroactive_rinex import update_event_coverage_from_manifest
 
-        update_event_coverage_from_manifest(event, manifest_path)
-    except Exception as exc:
-        log.debug("Could not update rinex_coverage fingerprint: %s", exc)
+            update_event_coverage_from_manifest(event, manifest_path)
+        except Exception as exc:
+            log.debug("Could not update rinex_coverage fingerprint: %s", exc)
     log.info(f"  Total {downloaded} RINEX files in {event_dir}")
     return downloaded, str(event_dir)
 
@@ -555,7 +556,6 @@ def reset_event_for_reprocess(event: dict, *, keep_retro_meta: bool = False) -> 
             )
             if event.get(k) is not None
         }
-    _clear_running_log_score(event["usgs_id"])
     event["rinex_downloaded"] = False
     event["detector_run"] = False
     event["scored"] = False
@@ -619,8 +619,14 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
         return retro_triggered
 
     for event in ready:
+        retro_pending = bool(event.get("retroactive_pending"))
         count, event_dir = download_event(event, auth)
         if count > 0:
+            if retro_pending:
+                event["detector_run"] = False
+                event["scored"] = False
+                event["reprocess_requested"] = True
+                event.pop("discord_alerted", None)
             event["rinex_downloaded"] = True
             event["rinex_dir"] = event_dir
             event["rinex_download_utc"] = datetime.now(timezone.utc).isoformat()
@@ -629,6 +635,17 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
             save_queue(queue)
             log.info(f"Updated queue: {event['usgs_id']} → rinex_ready ({count} files)")
         else:
+            if retro_pending:
+                event["status"] = event.get("retro_prior_status") or event.get("status", "rinex_failed")
+                event["retro_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
+                event.pop("retroactive_pending", None)
+                event.pop("reprocess_requested", None)
+                save_queue(queue)
+                log.warning(
+                    "Retroactive reprocess for %s returned 0 files; preserved prior state",
+                    event["usgs_id"],
+                )
+                continue
             event["status"] = "rinex_failed"
             event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
             event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
