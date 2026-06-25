@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-25T09:27:37Z",
+  "generated": "2026-06-25T12:03:28Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 3,
@@ -12,7 +12,7 @@
       "lat": 40.291,
       "lon": 142.098,
       "depth": 50.9,
-      "dyfi_responses": 85,
+      "dyfi_responses": 88,
       "dyfi_maxmmi": 6.1
     },
     {
@@ -23,7 +23,7 @@
       "lat": 10.435,
       "lon": -68.472,
       "depth": 10.0,
-      "dyfi_responses": 418,
+      "dyfi_responses": 428,
       "dyfi_maxmmi": 8.9
     },
     {
@@ -34,7 +34,7 @@
       "lat": 39.362,
       "lon": -123.229,
       "depth": 8.8,
-      "dyfi_responses": 5225,
+      "dyfi_responses": 5228,
       "dyfi_maxmmi": 7.4
     }
   ]
