@@ -654,44 +654,32 @@
       "rinex_download_utc": "2026-06-21T10:22:29.884570+00:00",
       "detector_run_utc": "2026-06-21T10:22:33.796923+00:00",
       "rinex_coverage_last_probe": {
-        "stations": [
-          "hnlc",
-          "holb"
-        ],
-        "n_stations": 2,
+        "stations": [],
+        "n_stations": 0,
         "days": [
           {
             "year": 2026,
             "doy": 169,
-            "stations": [
-              "hnlc",
-              "holb"
-            ],
-            "n": 2
+            "stations": [],
+            "n": 0
           },
           {
             "year": 2026,
             "doy": 170,
-            "stations": [
-              "hnlc",
-              "holb"
-            ],
-            "n": 2
+            "stations": [],
+            "n": 0
           },
           {
             "year": 2026,
             "doy": 171,
-            "stations": [
-              "hnlc",
-              "holb"
-            ],
-            "n": 2
+            "stations": [],
+            "n": 0
           }
         ],
         "source": "probe",
-        "probed_utc": "2026-06-21T10:22:24.549516+00:00"
+        "probed_utc": "2026-06-25T06:04:03.255774+00:00"
       },
-      "retro_last_probe_utc": "2026-06-21T10:22:24.549537+00:00",
+      "retro_last_probe_utc": "2026-06-25T06:04:03.255797+00:00",
       "reprocess_requested": true,
       "retroactive_trigger": true,
       "retro_trigger_reason": "DOY 171 gained HNLC",
@@ -1397,7 +1385,7 @@
         "expected_lead_time_min": 277,
         "rinex_download_after_h": 4.7
       },
-      "status": "queued",
+      "status": "rinex_failed",
       "rinex_downloaded": false,
       "detector_run": false,
       "scored": false,
@@ -1410,7 +1398,36 @@
         "source": "us",
         "available": true
       },
-      "tsunamigenic_index": 0.669
+      "tsunamigenic_index": 0.669,
+      "rinex_coverage": {
+        "stations": [],
+        "n_stations": 0,
+        "total_files": 0,
+        "days": [
+          {
+            "year": 2026,
+            "doy": 174,
+            "stations": [],
+            "n": 0
+          },
+          {
+            "year": 2026,
+            "doy": 175,
+            "stations": [],
+            "n": 0
+          },
+          {
+            "year": 2026,
+            "doy": 176,
+            "stations": [],
+            "n": 0
+          }
+        ],
+        "source": "manifest",
+        "updated_utc": "2026-06-25T06:04:03.259600+00:00"
+      },
+      "rinex_retries": 1,
+      "rinex_last_fail_utc": "2026-06-25T06:04:03.259696+00:00"
     }
   ],
   "seen_ids": [
@@ -2466,6 +2483,8 @@
     "us6000t7yv",
     "us6000t7zq",
     "us6000t7zp",
-    "us6000t7zc"
+    "us6000t7zc",
+    "us6000t817",
+    "us6000t815"
   ]
 }

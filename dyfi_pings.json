@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-25T01:27:42Z",
+  "generated": "2026-06-25T06:04:03Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 3,
@@ -7,24 +7,24 @@
     {
       "usgs_id": "us6000t7zq",
       "mag": 6.9,
-      "place": "35 km ENE of Kuji, Japan",
-      "time_ms": 1782340215418,
-      "lat": 40.346,
-      "lon": 142.132,
-      "depth": 51.7,
-      "dyfi_responses": 54,
+      "place": "30 km ENE of Kuji, Japan",
+      "time_ms": 1782340214931,
+      "lat": 40.291,
+      "lon": 142.098,
+      "depth": 50.9,
+      "dyfi_responses": 76,
       "dyfi_maxmmi": 6.1
     },
     {
       "usgs_id": "us6000t7zp",
       "mag": 7.5,
-      "place": "23 km SE of Yumare, Venezuela",
-      "time_ms": 1782338712092,
-      "lat": 10.453,
-      "lon": -68.514,
+      "place": "28 km SE of Yumare, Venezuela",
+      "time_ms": 1782338711566,
+      "lat": 10.435,
+      "lon": -68.472,
       "depth": 10.0,
-      "dyfi_responses": 249,
-      "dyfi_maxmmi": 8.8
+      "dyfi_responses": 390,
+      "dyfi_maxmmi": 8.6
     },
     {
       "usgs_id": "nc75382936",
@@ -34,7 +34,7 @@
       "lat": 39.362,
       "lon": -123.229,
       "depth": 8.8,
-      "dyfi_responses": 5134,
+      "dyfi_responses": 5211,
       "dyfi_maxmmi": 7.4
     }
   ]
