@@ -1369,6 +1369,48 @@
           "detection_method": "variance_threshold"
         }
       }
+    },
+    {
+      "usgs_id": "us6000t7zq",
+      "detected_utc": "2026-06-24T23:06:22.433329+00:00",
+      "quake_utc": "2026-06-24T22:30:15.418000+00:00",
+      "magnitude": 6.9,
+      "depth_km": 51.7,
+      "lat": 40.346,
+      "lon": 142.132,
+      "place": "35 km ENE of Kuji, Japan",
+      "zones": [
+        "Japan/Kuril"
+      ],
+      "primary_anchor": "guam",
+      "anchor_note": "Japan/Kuril \u2192 Japan IGS + Marianas + Hawaii RINEX (guam anchor)",
+      "detection_window": {
+        "anchor": "guam",
+        "anchor_dist_km": 2998,
+        "hawaii_dist_km": 6323,
+        "tec_onset_anchor_h": 4.2,
+        "tec_onset_window": [
+          3.7,
+          5.7
+        ],
+        "wave_arrival_hawaii_h": 8.8,
+        "expected_lead_time_min": 277,
+        "rinex_download_after_h": 4.7
+      },
+      "status": "queued",
+      "rinex_downloaded": false,
+      "detector_run": false,
+      "scored": false,
+      "result": null,
+      "focal_mechanism": {
+        "rake_deg": 107.1,
+        "fault_type": "thrust",
+        "rake_score": 0.956,
+        "product_type": "moment-tensor",
+        "source": "us",
+        "available": true
+      },
+      "tsunamigenic_index": 0.669
     }
   ],
   "seen_ids": [
@@ -2421,6 +2463,9 @@
     "nc75382936",
     "us6000t7un",
     "us6000t7wm",
-    "us6000t7yv"
+    "us6000t7yv",
+    "us6000t7zq",
+    "us6000t7zp",
+    "us6000t7zc"
   ]
 }
