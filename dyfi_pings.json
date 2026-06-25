@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-25T06:04:03Z",
+  "generated": "2026-06-25T09:27:37Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 3,
@@ -12,7 +12,7 @@
       "lat": 40.291,
       "lon": 142.098,
       "depth": 50.9,
-      "dyfi_responses": 76,
+      "dyfi_responses": 85,
       "dyfi_maxmmi": 6.1
     },
     {
@@ -23,8 +23,8 @@
       "lat": 10.435,
       "lon": -68.472,
       "depth": 10.0,
-      "dyfi_responses": 390,
-      "dyfi_maxmmi": 8.6
+      "dyfi_responses": 418,
+      "dyfi_maxmmi": 8.9
     },
     {
       "usgs_id": "nc75382936",
@@ -34,7 +34,7 @@
       "lat": 39.362,
       "lon": -123.229,
       "depth": 8.8,
-      "dyfi_responses": 5211,
+      "dyfi_responses": 5225,
       "dyfi_maxmmi": 7.4
     }
   ]

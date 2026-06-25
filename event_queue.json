@@ -654,32 +654,44 @@
       "rinex_download_utc": "2026-06-21T10:22:29.884570+00:00",
       "detector_run_utc": "2026-06-21T10:22:33.796923+00:00",
       "rinex_coverage_last_probe": {
-        "stations": [],
-        "n_stations": 0,
+        "stations": [
+          "hnlc",
+          "holb"
+        ],
+        "n_stations": 2,
         "days": [
           {
             "year": 2026,
             "doy": 169,
-            "stations": [],
-            "n": 0
+            "stations": [
+              "hnlc",
+              "holb"
+            ],
+            "n": 2
           },
           {
             "year": 2026,
             "doy": 170,
-            "stations": [],
-            "n": 0
+            "stations": [
+              "hnlc",
+              "holb"
+            ],
+            "n": 2
           },
           {
             "year": 2026,
             "doy": 171,
-            "stations": [],
-            "n": 0
+            "stations": [
+              "hnlc",
+              "holb"
+            ],
+            "n": 2
           }
         ],
         "source": "probe",
-        "probed_utc": "2026-06-25T06:04:03.255774+00:00"
+        "probed_utc": "2026-06-25T09:27:29.591340+00:00"
       },
-      "retro_last_probe_utc": "2026-06-25T06:04:03.255797+00:00",
+      "retro_last_probe_utc": "2026-06-25T09:27:29.591363+00:00",
       "reprocess_requested": true,
       "retroactive_trigger": true,
       "retro_trigger_reason": "DOY 171 gained HNLC",
@@ -1385,9 +1397,9 @@
         "expected_lead_time_min": 277,
         "rinex_download_after_h": 4.7
       },
-      "status": "rinex_failed",
-      "rinex_downloaded": false,
-      "detector_run": false,
+      "status": "predicted",
+      "rinex_downloaded": true,
+      "detector_run": true,
       "scored": false,
       "result": null,
       "focal_mechanism": {
@@ -1400,21 +1412,30 @@
       },
       "tsunamigenic_index": 0.669,
       "rinex_coverage": {
-        "stations": [],
-        "n_stations": 0,
-        "total_files": 0,
+        "stations": [
+          "hnlc",
+          "holb"
+        ],
+        "n_stations": 2,
+        "total_files": 6,
         "days": [
           {
             "year": 2026,
             "doy": 174,
-            "stations": [],
-            "n": 0
+            "stations": [
+              "hnlc",
+              "holb"
+            ],
+            "n": 2
           },
           {
             "year": 2026,
             "doy": 175,
-            "stations": [],
-            "n": 0
+            "stations": [
+              "hnlc",
+              "holb"
+            ],
+            "n": 2
           },
           {
             "year": 2026,
@@ -1424,10 +1445,263 @@
           }
         ],
         "source": "manifest",
-        "updated_utc": "2026-06-25T06:04:03.259600+00:00"
+        "updated_utc": "2026-06-25T09:27:33.180733+00:00"
       },
       "rinex_retries": 1,
-      "rinex_last_fail_utc": "2026-06-25T06:04:03.259696+00:00"
+      "rinex_coverage_last_probe": {
+        "stations": [
+          "hnlc",
+          "holb"
+        ],
+        "n_stations": 2,
+        "days": [
+          {
+            "year": 2026,
+            "doy": 174,
+            "stations": [
+              "hnlc",
+              "holb"
+            ],
+            "n": 2
+          },
+          {
+            "year": 2026,
+            "doy": 175,
+            "stations": [
+              "hnlc",
+              "holb"
+            ],
+            "n": 2
+          },
+          {
+            "year": 2026,
+            "doy": 176,
+            "stations": [],
+            "n": 0
+          }
+        ],
+        "source": "probe",
+        "probed_utc": "2026-06-25T09:27:24.262486+00:00"
+      },
+      "retro_last_probe_utc": "2026-06-25T09:27:24.262499+00:00",
+      "reprocess_requested": true,
+      "retroactive_trigger": true,
+      "retro_trigger_reason": "new stations on CDDIS: HNLC, HOLB",
+      "retro_triggered_utc": "2026-06-25T09:27:24.262729+00:00",
+      "retro_last_trigger_utc": "2026-06-25T09:27:24.262729+00:00",
+      "retro_run_count": 1,
+      "retro_prior_status": "rinex_failed",
+      "retro_prior_prediction": null,
+      "retro_prior_detected": null,
+      "rinex_coverage_probe": {
+        "stations": [
+          "hnlc",
+          "holb"
+        ],
+        "n_stations": 2,
+        "days": [
+          {
+            "year": 2026,
+            "doy": 174,
+            "stations": [
+              "hnlc",
+              "holb"
+            ],
+            "n": 2
+          },
+          {
+            "year": 2026,
+            "doy": 175,
+            "stations": [
+              "hnlc",
+              "holb"
+            ],
+            "n": 2
+          },
+          {
+            "year": 2026,
+            "doy": 176,
+            "stations": [],
+            "n": 0
+          }
+        ],
+        "source": "probe",
+        "probed_utc": "2026-06-25T09:27:24.262486+00:00"
+      },
+      "rinex_dir": "rinex_live/us6000t7zq",
+      "rinex_download_utc": "2026-06-25T09:27:33.181950+00:00",
+      "prediction": {
+        "run_utc": "2026-06-25T09:27:35.999695+00:00",
+        "param_freeze_date": "2025-04-22",
+        "stations_processed": [
+          "hnlc",
+          "holb"
+        ],
+        "onset_summary": {
+          "hnlc": {
+            "n_triggers": 11,
+            "noise_tecu": 0.4828,
+            "triggers": [
+              {
+                "time": "2026-06-24T02:18:00+00:00",
+                "dur_min": 9.0,
+                "snr": 2.767852434803959
+              },
+              {
+                "time": "2026-06-24T03:00:00+00:00",
+                "dur_min": 21.0,
+                "snr": 2.4413527394337264
+              },
+              {
+                "time": "2026-06-24T03:48:00+00:00",
+                "dur_min": 8.5,
+                "snr": 2.384903859910709
+              },
+              {
+                "time": "2026-06-24T05:58:00+00:00",
+                "dur_min": 8.0,
+                "snr": 2.4799608715589176
+              },
+              {
+                "time": "2026-06-24T06:42:00+00:00",
+                "dur_min": 9.0,
+                "snr": 3.1961672506031835
+              }
+            ]
+          },
+          "holb": {
+            "n_triggers": 17,
+            "noise_tecu": 0.2278,
+            "triggers": [
+              {
+                "time": "2026-06-24T00:04:30+00:00",
+                "dur_min": 7.5,
+                "snr": 2.430107773090332
+              },
+              {
+                "time": "2026-06-24T02:51:30+00:00",
+                "dur_min": 3.5,
+                "snr": 2.5945217221738326
+              },
+              {
+                "time": "2026-06-24T02:58:30+00:00",
+                "dur_min": 6.5,
+                "snr": 3.1365302219579947
+              },
+              {
+                "time": "2026-06-24T07:37:30+00:00",
+                "dur_min": 4.5,
+                "snr": 2.282263807228464
+              },
+              {
+                "time": "2026-06-24T16:18:00+00:00",
+                "dur_min": 7.0,
+                "snr": 2.9381778212652483
+              }
+            ]
+          }
+        },
+        "lb_pairs_total": 0,
+        "lb_pairs_in_window": 0,
+        "kp": null,
+        "kp_disturbed": false,
+        "detected": false,
+        "detection": null,
+        "wave_forecast": null,
+        "reason": "no_coherent_pairs",
+        "plot_path": "rinex_live/us6000t7zq/tec_plot.png",
+        "dtec_onsets": {
+          "hnlc": [],
+          "holb": []
+        },
+        "dtec_corroborates": false,
+        "dtec_corroboration": [],
+        "constellation_agreement": {
+          "constellations": {
+            "G": {
+              "available": true,
+              "anomaly": false,
+              "n_stations": 2
+            },
+            "R": {
+              "available": true,
+              "anomaly": false,
+              "n_stations": 1
+            },
+            "E": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            }
+          },
+          "n_available": 2,
+          "n_detecting": 0,
+          "detecting": [],
+          "agreement_score": 0.2,
+          "agreement_label": "disagreement"
+        },
+        "ionosonde_result": {
+          "stations_checked": 5,
+          "stations_with_data": 0,
+          "ionosonde_detected": false,
+          "confirming_stations": 0,
+          "nearest_station_km": 1987,
+          "results": {
+            "RP536": {
+              "name": "Okinawa",
+              "dist_km": 1987,
+              "lat": 26.7,
+              "lon": 128.2,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "TW637": {
+              "name": "Zhongli",
+              "dist_km": 2586,
+              "lat": 25.0,
+              "lon": 121.2,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "GU513": {
+              "name": "Guam",
+              "dist_km": 2986,
+              "lat": 13.6,
+              "lon": 144.9,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "WP937": {
+              "name": "Wake Island",
+              "dist_km": 3302,
+              "lat": 19.3,
+              "lon": 166.6,
+              "data": false,
+              "detected": false,
+              "detection": null
+            },
+            "KJ609": {
+              "name": "Kwajalein",
+              "dist_km": 4304,
+              "lat": 9.0,
+              "lon": 167.7,
+              "data": false,
+              "detected": false,
+              "detection": null
+            }
+          }
+        },
+        "ionosonde_confirmed": false,
+        "dart_result": null,
+        "dart_score": 0.0,
+        "dart_status": "no_buoys",
+        "combined_confidence": 0.0
+      },
+      "detector_run_utc": "2026-06-25T09:27:37.031886+00:00",
+      "discord_alerted": true
     }
   ],
   "seen_ids": [
@@ -2485,6 +2759,8 @@
     "us6000t7zp",
     "us6000t7zc",
     "us6000t817",
-    "us6000t815"
+    "us6000t815",
+    "us6000t81q",
+    "us6000t80d"
   ]
 }
