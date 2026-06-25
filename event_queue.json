@@ -1397,10 +1397,10 @@
         "expected_lead_time_min": 277,
         "rinex_download_after_h": 4.7
       },
-      "status": "predicted",
+      "status": "scored",
       "rinex_downloaded": true,
       "detector_run": true,
-      "scored": false,
+      "scored": true,
       "result": null,
       "focal_mechanism": {
         "rake_deg": 107.1,
@@ -1701,7 +1701,106 @@
         "combined_confidence": 0.0
       },
       "detector_run_utc": "2026-06-25T09:27:37.031886+00:00",
-      "discord_alerted": true
+      "discord_alerted": true,
+      "score": {
+        "usgs_id": "us6000t7zq",
+        "quake_utc": "2026-06-24T22:30:15.418000+00:00",
+        "magnitude": 6.9,
+        "place": "35 km ENE of Kuji, Japan",
+        "anchor": "guam",
+        "kp": null,
+        "algo_detected": false,
+        "gauge_tsunami": false,
+        "any_gauge_tsunami": false,
+        "corroborated_by": [],
+        "combined_confidence": 0.0,
+        "confidence_detected": false,
+        "confidence_threshold": 0.35,
+        "dart_score_prediction": 0.0,
+        "dart_status_prediction": "no_buoys",
+        "space_weather_score": null,
+        "space_weather_gated": false,
+        "space_weather_flags": [],
+        "dart_reconciliation": {
+          "reconciled": false,
+          "reason": "no_scoring_dart"
+        },
+        "stations_processed": [
+          "hnlc",
+          "holb"
+        ],
+        "detection_reason": "no_coherent_pairs",
+        "constellation_agreement": {
+          "constellations": {
+            "G": {
+              "available": true,
+              "anomaly": false,
+              "n_stations": 2
+            },
+            "R": {
+              "available": true,
+              "anomaly": false,
+              "n_stations": 1
+            },
+            "E": {
+              "available": false,
+              "anomaly": false,
+              "n_stations": 0
+            }
+          },
+          "n_available": 2,
+          "n_detecting": 0,
+          "detecting": [],
+          "agreement_score": 0.2,
+          "agreement_label": "disagreement"
+        },
+        "dtec_corroborates": false,
+        "ionosonde_confirmed": false,
+        "lb_pairs_in_window": 0,
+        "dyfi_contribution": 0.04,
+        "dyfi_responses": 93,
+        "dyfi_maxmmi": 6.9,
+        "dyfi_confirmed": true,
+        "dart_detected": null,
+        "dart_confirming_buoys": null,
+        "dart_buoys_checked": null,
+        "dart_network": null,
+        "gauge_network": {
+          "hilo": {
+            "signal": false,
+            "arrival_h": null,
+            "amplitude_m": null,
+            "method": null
+          },
+          "midway": {
+            "signal": false,
+            "arrival_h": null,
+            "amplitude_m": null,
+            "method": null
+          },
+          "johnston": {
+            "signal": false,
+            "arrival_h": null,
+            "amplitude_m": null,
+            "method": null
+          },
+          "pago": {
+            "signal": false,
+            "arrival_h": null,
+            "amplitude_m": null,
+            "method": null
+          }
+        },
+        "outcome": "TRUE_NEGATIVE",
+        "outcome_confidence": "TRUE_NEGATIVE",
+        "lead_time_min": null,
+        "amplitude_predicted_m": null,
+        "amplitude_actual_m": null,
+        "amplitude_error_pct": null,
+        "timing_error_min": null,
+        "notes": []
+      },
+      "scored_utc": "2026-06-25T22:49:07.171929+00:00"
     }
   ],
   "seen_ids": [
@@ -2765,6 +2864,7 @@
     "us6000t839",
     "us6000t83p",
     "us6000t83l",
-    "us6000t84x"
+    "us6000t84x",
+    "us6000t8al"
   ]
 }
