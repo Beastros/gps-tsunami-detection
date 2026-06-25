@@ -1,8 +1,8 @@
 {
-  "generated": "2026-06-25T12:03:28Z",
+  "generated": "2026-06-25T15:15:27Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 3,
+  "count": 2,
   "pings": [
     {
       "usgs_id": "us6000t7zq",
@@ -12,7 +12,7 @@
       "lat": 40.291,
       "lon": 142.098,
       "depth": 50.9,
-      "dyfi_responses": 88,
+      "dyfi_responses": 92,
       "dyfi_maxmmi": 6.1
     },
     {
@@ -23,19 +23,8 @@
       "lat": 10.435,
       "lon": -68.472,
       "depth": 10.0,
-      "dyfi_responses": 428,
+      "dyfi_responses": 453,
       "dyfi_maxmmi": 8.9
-    },
-    {
-      "usgs_id": "nc75382936",
-      "mag": 5.6,
-      "place": "11 km N of Redwood Valley, CA",
-      "time_ms": 1782313840760,
-      "lat": 39.362,
-      "lon": -123.229,
-      "depth": 8.8,
-      "dyfi_responses": 5228,
-      "dyfi_maxmmi": 7.4
     }
   ]
 }
