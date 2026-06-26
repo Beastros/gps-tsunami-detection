@@ -1,9 +1,20 @@
 {
-  "generated": "2026-06-26T15:55:45Z",
+  "generated": "2026-06-26T17:51:30Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 3,
+  "count": 4,
   "pings": [
+    {
+      "usgs_id": "pr2026177000",
+      "mag": 5.0,
+      "place": "51 km S of Boca de Yuma, Dominican Republic",
+      "time_ms": 1782490009450,
+      "lat": 17.918,
+      "lon": -68.522,
+      "depth": 82.0,
+      "dyfi_responses": 106,
+      "dyfi_maxmmi": null
+    },
     {
       "usgs_id": "us6000t8fe",
       "mag": 5.7,
@@ -12,8 +23,8 @@
       "lat": 35.523,
       "lon": 138.857,
       "depth": 50.9,
-      "dyfi_responses": 110,
-      "dyfi_maxmmi": 4.7
+      "dyfi_responses": 116,
+      "dyfi_maxmmi": 4.6
     },
     {
       "usgs_id": "us6000t8ec",
@@ -34,7 +45,7 @@
       "lat": 35.631,
       "lon": 140.51,
       "depth": 43.0,
-      "dyfi_responses": 57,
+      "dyfi_responses": 59,
       "dyfi_maxmmi": 4.7
     }
   ]
