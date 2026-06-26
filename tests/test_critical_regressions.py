@@ -36,6 +36,7 @@ class CriticalRegressionTests(unittest.TestCase):
                 return_value=[pacific_feature("upgrade-event", 6.8)],
             ),
             patch.object(usgs_listener, "fetch_focal_mechanism", return_value=None),
+            patch.object(usgs_listener, "_activate_fast_poll"),
         ):
             new_count, near_misses = usgs_listener.check_feed(queue)
 
