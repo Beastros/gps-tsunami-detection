@@ -689,9 +689,9 @@
           }
         ],
         "source": "probe",
-        "probed_utc": "2026-06-26T00:12:44.483330+00:00"
+        "probed_utc": "2026-06-26T08:22:19.478934+00:00"
       },
-      "retro_last_probe_utc": "2026-06-26T00:12:44.483356+00:00",
+      "retro_last_probe_utc": "2026-06-26T08:22:19.478958+00:00",
       "reprocess_requested": true,
       "retroactive_trigger": true,
       "retro_trigger_reason": "DOY 171 gained HNLC",
@@ -1417,7 +1417,7 @@
           "holb"
         ],
         "n_stations": 2,
-        "total_files": 7,
+        "total_files": 9,
         "days": [
           {
             "year": 2026,
@@ -1441,13 +1441,14 @@
             "year": 2026,
             "doy": 176,
             "stations": [
+              "hnlc",
               "holb"
             ],
-            "n": 1
+            "n": 2
           }
         ],
         "source": "manifest",
-        "updated_utc": "2026-06-26T00:12:55.047774+00:00"
+        "updated_utc": "2026-06-26T08:22:30.672367+00:00"
       },
       "rinex_retries": 1,
       "rinex_coverage_last_probe": {
@@ -1479,24 +1480,25 @@
             "year": 2026,
             "doy": 176,
             "stations": [
+              "hnlc",
               "holb"
             ],
-            "n": 1
+            "n": 2
           }
         ],
         "source": "probe",
-        "probed_utc": "2026-06-26T00:12:45.360006+00:00"
+        "probed_utc": "2026-06-26T08:22:20.349407+00:00"
       },
-      "retro_last_probe_utc": "2026-06-26T00:12:45.360025+00:00",
+      "retro_last_probe_utc": "2026-06-26T08:22:20.349427+00:00",
       "reprocess_requested": true,
       "retroactive_trigger": true,
-      "retro_trigger_reason": "DOY 176 gained HOLB",
-      "retro_triggered_utc": "2026-06-26T00:12:45.361157+00:00",
-      "retro_last_trigger_utc": "2026-06-26T00:12:45.361157+00:00",
-      "retro_run_count": 2,
+      "retro_trigger_reason": "DOY 176 gained HNLC",
+      "retro_triggered_utc": "2026-06-26T08:22:20.350547+00:00",
+      "retro_last_trigger_utc": "2026-06-26T08:22:20.350547+00:00",
+      "retro_run_count": 3,
       "retro_prior_status": "scored",
       "retro_prior_prediction": {
-        "run_utc": "2026-06-25T09:27:35.999695+00:00",
+        "run_utc": "2026-06-26T00:12:58.143807+00:00",
         "param_freeze_date": "2025-04-22",
         "stations_processed": [
           "hnlc",
@@ -1695,20 +1697,21 @@
             "year": 2026,
             "doy": 176,
             "stations": [
+              "hnlc",
               "holb"
             ],
-            "n": 1
+            "n": 2
           }
         ],
         "source": "probe",
-        "probed_utc": "2026-06-26T00:12:45.360006+00:00"
+        "probed_utc": "2026-06-26T08:22:20.349407+00:00"
       },
       "rinex_dir": "rinex_live/us6000t7zq",
-      "rinex_download_utc": "2026-06-26T00:12:55.048670+00:00",
-      "detector_run_utc": "2026-06-26T00:13:00.198902+00:00",
-      "scored_utc": "2026-06-26T00:13:01.700521+00:00",
+      "rinex_download_utc": "2026-06-26T08:22:30.673369+00:00",
+      "detector_run_utc": "2026-06-26T08:22:35.468653+00:00",
+      "scored_utc": "2026-06-26T08:22:36.941740+00:00",
       "prediction": {
-        "run_utc": "2026-06-26T00:12:58.143807+00:00",
+        "run_utc": "2026-06-26T08:22:33.654967+00:00",
         "param_freeze_date": "2025-04-22",
         "stations_processed": [
           "hnlc",
@@ -3042,6 +3045,8 @@
     "us6000t84x",
     "us6000t8al",
     "us6000t8bm",
-    "us6000t8cy"
+    "us6000t8cy",
+    "us6000t8di",
+    "us6000t8dg"
   ]
 }
