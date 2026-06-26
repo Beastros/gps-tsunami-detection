@@ -20127,10 +20127,24 @@
       "total_queued": 3,
       "pending": 0,
       "scored": 3
+    },
+    {
+      "ts": "2026-06-26T04:41:54.014384+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
+    },
+    {
+      "ts": "2026-06-26T04:41:58.316767+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
     }
   ],
-  "last_updated": "2026-06-26T00:12:26.434950+00:00",
-  "total_polls": 3182,
+  "last_updated": "2026-06-26T04:41:58.316767+00:00",
+  "total_polls": 3184,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -20469,6 +20483,16 @@
       "lat": 52.73,
       "lon": 160.64,
       "depth": 35,
+      "reason": "below threshold",
+      "delta": -0.7
+    },
+    {
+      "ts": "2026-06-26T03:46:37.180000+00:00",
+      "mag": 5.8,
+      "place": "4 km SSE of Yokoshiba, Japan",
+      "lat": 35.61,
+      "lon": 140.5,
+      "depth": 55.6,
       "reason": "below threshold",
       "delta": -0.7
     }

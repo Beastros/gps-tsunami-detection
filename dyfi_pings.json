@@ -1,7 +1,19 @@
 {
-  "generated": "2026-06-26T00:13:02Z",
+  "generated": "2026-06-26T04:42:19Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000t8cy",
+      "mag": 5.8,
+      "place": "4 km SSE of Yokoshiba, Japan",
+      "time_ms": 1782445597180,
+      "lat": 35.609,
+      "lon": 140.502,
+      "depth": 55.6,
+      "dyfi_responses": 21,
+      "dyfi_maxmmi": 4.6
+    }
+  ]
 }
