@@ -278,7 +278,7 @@
       "ionosonde_confirmed": false,
       "lb_pairs_in_window": 0,
       "dyfi_contribution": 0.04,
-      "dyfi_responses": 93,
+      "dyfi_responses": 95,
       "dyfi_maxmmi": 6.9,
       "dyfi_confirmed": true,
       "dart_detected": null,
@@ -348,6 +348,6 @@
         "hit_rate": 0.667
       }
     },
-    "last_updated": "2026-06-25T22:49:07.172086+00:00"
+    "last_updated": "2026-06-26T00:13:01.700667+00:00"
   }
 }
