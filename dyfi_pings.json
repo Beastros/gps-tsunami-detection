@@ -1,8 +1,8 @@
 {
-  "generated": "2026-06-27T11:37:04Z",
+  "generated": "2026-06-27T12:56:37Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 3,
+  "count": 2,
   "pings": [
     {
       "usgs_id": "pr2026177000",
@@ -12,7 +12,7 @@
       "lat": 17.918,
       "lon": -68.522,
       "depth": 82.0,
-      "dyfi_responses": 123,
+      "dyfi_responses": 124,
       "dyfi_maxmmi": null
     },
     {
@@ -23,19 +23,8 @@
       "lat": 35.523,
       "lon": 138.857,
       "depth": 50.9,
-      "dyfi_responses": 136,
+      "dyfi_responses": 137,
       "dyfi_maxmmi": 4.6
-    },
-    {
-      "usgs_id": "us6000t8ey",
-      "mag": 5.2,
-      "place": "7 km NE of Villa El Carmen, Nicaragua",
-      "time_ms": 1782475045458,
-      "lat": 12.031,
-      "lon": -86.457,
-      "depth": 120.5,
-      "dyfi_responses": 11,
-      "dyfi_maxmmi": null
     }
   ]
 }
