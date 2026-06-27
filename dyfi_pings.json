@@ -1,8 +1,8 @@
 {
-  "generated": "2026-06-27T00:11:32Z",
+  "generated": "2026-06-27T04:17:36Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 5,
+  "count": 4,
   "pings": [
     {
       "usgs_id": "pr2026177000",
@@ -12,7 +12,7 @@
       "lat": 17.918,
       "lon": -68.522,
       "depth": 82.0,
-      "dyfi_responses": 115,
+      "dyfi_responses": 121,
       "dyfi_maxmmi": null
     },
     {
@@ -23,7 +23,7 @@
       "lat": 35.523,
       "lon": 138.857,
       "depth": 50.9,
-      "dyfi_responses": 124,
+      "dyfi_responses": 133,
       "dyfi_maxmmi": 4.6
     },
     {
@@ -34,7 +34,7 @@
       "lat": 12.031,
       "lon": -86.457,
       "depth": 120.5,
-      "dyfi_responses": 10,
+      "dyfi_responses": 11,
       "dyfi_maxmmi": null
     },
     {
@@ -47,17 +47,6 @@
       "depth": 42.0,
       "dyfi_responses": 45,
       "dyfi_maxmmi": 7.0
-    },
-    {
-      "usgs_id": "us6000t8cy",
-      "mag": 5.8,
-      "place": "3 km SE of Yokoshiba, Japan",
-      "time_ms": 1782445595803,
-      "lat": 35.631,
-      "lon": 140.51,
-      "depth": 43.0,
-      "dyfi_responses": 62,
-      "dyfi_maxmmi": 4.7
     }
   ]
 }
