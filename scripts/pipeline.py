@@ -92,8 +92,13 @@ def run_pipeline():
     _queue = usgs_listener.load_queue()
     for _evt in _queue.get("events", []):
         if _evt.get("status") == "predicted" and not _evt.get("discord_alerted"):
-            notify_discord.send_detection_alert(_evt)
-            _evt["discord_alerted"] = True
+            try:
+                delivered = notify_discord.send_detection_alert(_evt)
+            except Exception as d_err:
+                log.warning("Discord detection alert failed: %s", d_err)
+                delivered = False
+            if delivered:
+                _evt["discord_alerted"] = True
     usgs_listener.save_queue(_queue)
 
     # Step 4: Score
