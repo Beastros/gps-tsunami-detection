@@ -1,9 +1,20 @@
 {
-  "generated": "2026-06-27T12:56:37Z",
+  "generated": "2026-06-27T15:10:02Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 2,
   "pings": [
+    {
+      "usgs_id": "us6000t8me",
+      "mag": 5.2,
+      "place": "114 km SSW of Trenggalek, Indonesia",
+      "time_ms": 1782546443012,
+      "lat": -8.956,
+      "lon": 111.15,
+      "depth": 65.6,
+      "dyfi_responses": 10,
+      "dyfi_maxmmi": null
+    },
     {
       "usgs_id": "pr2026177000",
       "mag": 5.0,
@@ -14,17 +25,6 @@
       "depth": 82.0,
       "dyfi_responses": 124,
       "dyfi_maxmmi": null
-    },
-    {
-      "usgs_id": "us6000t8fe",
-      "mag": 5.7,
-      "place": "7 km N of Oshino, Japan",
-      "time_ms": 1782480541877,
-      "lat": 35.523,
-      "lon": 138.857,
-      "depth": 50.9,
-      "dyfi_responses": 137,
-      "dyfi_maxmmi": 4.6
     }
   ]
 }
