@@ -1,9 +1,20 @@
 {
-  "generated": "2026-06-28T16:13:43Z",
+  "generated": "2026-06-28T17:37:43Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
+  "count": 2,
   "pings": [
+    {
+      "usgs_id": "us6000t8u3",
+      "mag": 5.2,
+      "place": "8 km WNW of Changning, China",
+      "time_ms": 1782663128958,
+      "lat": 28.603,
+      "lon": 104.842,
+      "depth": 10.0,
+      "dyfi_responses": 14,
+      "dyfi_maxmmi": null
+    },
     {
       "usgs_id": "us6000t8qd",
       "mag": 5.8,
