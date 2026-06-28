@@ -1,8 +1,8 @@
 {
-  "generated": "2026-06-28T06:21:58Z",
+  "generated": "2026-06-28T09:42:13Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
+  "count": 1,
   "pings": [
     {
       "usgs_id": "us6000t8qd",
@@ -14,17 +14,6 @@
       "depth": 34.0,
       "dyfi_responses": 10,
       "dyfi_maxmmi": 4.2
-    },
-    {
-      "usgs_id": "us6000t8me",
-      "mag": 5.2,
-      "place": "114 km SSW of Trenggalek, Indonesia",
-      "time_ms": 1782546443012,
-      "lat": -8.956,
-      "lon": 111.15,
-      "depth": 65.6,
-      "dyfi_responses": 10,
-      "dyfi_maxmmi": null
     }
   ]
 }
