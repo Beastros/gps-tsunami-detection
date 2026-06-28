@@ -1,8 +1,8 @@
 {
-  "generated": "2026-06-28T20:16:05Z",
+  "generated": "2026-06-28T21:38:41Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
+  "count": 1,
   "pings": [
     {
       "usgs_id": "us6000t8u3",
@@ -14,17 +14,6 @@
       "depth": 10.0,
       "dyfi_responses": 17,
       "dyfi_maxmmi": null
-    },
-    {
-      "usgs_id": "us6000t8qd",
-      "mag": 5.8,
-      "place": "51 km ENE of Noda, Japan",
-      "time_ms": 1782591710769,
-      "lat": 40.206,
-      "lon": 142.414,
-      "depth": 34.0,
-      "dyfi_responses": 11,
-      "dyfi_maxmmi": 4.2
     }
   ]
 }
