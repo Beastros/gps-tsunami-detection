@@ -1,9 +1,20 @@
 {
-  "generated": "2026-06-29T13:16:15Z",
+  "generated": "2026-06-29T16:45:38Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 2,
   "pings": [
+    {
+      "usgs_id": "us6000t8yt",
+      "mag": 5.5,
+      "place": "218 km W of Bandon, Oregon",
+      "time_ms": 1782732933629,
+      "lat": 43.383,
+      "lon": -127.079,
+      "depth": 10.0,
+      "dyfi_responses": 14,
+      "dyfi_maxmmi": 3.1
+    },
     {
       "usgs_id": "aka2026msxacu",
       "mag": 5.3,
@@ -12,19 +23,8 @@
       "lat": 60.237,
       "lon": -145.91,
       "depth": 13.3,
-      "dyfi_responses": 97,
+      "dyfi_responses": 98,
       "dyfi_maxmmi": 4.3
-    },
-    {
-      "usgs_id": "us6000t8u3",
-      "mag": 5.2,
-      "place": "8 km WNW of Changning, China",
-      "time_ms": 1782663128958,
-      "lat": 28.603,
-      "lon": 104.842,
-      "depth": 10.0,
-      "dyfi_responses": 19,
-      "dyfi_maxmmi": null
     }
   ]
 }
