@@ -20659,10 +20659,24 @@
       "total_queued": 3,
       "pending": 0,
       "scored": 3
+    },
+    {
+      "ts": "2026-06-29T13:15:52.996903+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
+    },
+    {
+      "ts": "2026-06-29T13:15:55.659333+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
     }
   ],
-  "last_updated": "2026-06-29T09:10:50.936244+00:00",
-  "total_polls": 3258,
+  "last_updated": "2026-06-29T13:15:55.659333+00:00",
+  "total_polls": 3260,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -21033,6 +21047,16 @@
       "depth": 34,
       "reason": "below threshold",
       "delta": -0.7
+    },
+    {
+      "ts": "2026-06-29T11:35:33.629000+00:00",
+      "mag": 5.5,
+      "place": "218 km W of Bandon, Oregon",
+      "lat": 43.38,
+      "lon": -127.08,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -1.0
     }
   ],
   "expected_poll_interval_sec": 900
