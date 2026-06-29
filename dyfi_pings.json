@@ -1,9 +1,20 @@
 {
-  "generated": "2026-06-28T23:51:37Z",
+  "generated": "2026-06-29T04:11:44Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
+  "count": 2,
   "pings": [
+    {
+      "usgs_id": "aka2026msxacu",
+      "mag": 5.3,
+      "place": "35 km SSW of Cordova, Alaska",
+      "time_ms": 1782703959606,
+      "lat": 60.237,
+      "lon": -145.91,
+      "depth": 13.3,
+      "dyfi_responses": 80,
+      "dyfi_maxmmi": 4.3
+    },
     {
       "usgs_id": "us6000t8u3",
       "mag": 5.2,
