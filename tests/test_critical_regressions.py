@@ -1,9 +1,12 @@
 import importlib
 import importlib.util
+import json
+import os
 import sys
+import tempfile
 import types
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
 
@@ -146,6 +149,39 @@ class CriticalRegressionTests(unittest.TestCase):
         pipeline.run_pipeline()
 
         self.assertTrue(saved_queues[-1]["events"][0]["discord_alerted"])
+
+    def test_ci_once_exits_instead_of_sleeping_during_fast_poll(self):
+        pipeline, _ = self._import_pipeline_with_stubs(True)
+        previous_cwd = os.getcwd()
+
+        with tempfile.TemporaryDirectory() as td:
+            os.chdir(td)
+            try:
+                Path("fast_poll.json").write_text(
+                    json.dumps(
+                        {
+                            "active": True,
+                            "expires_utc": (
+                                datetime.now(timezone.utc) + timedelta(hours=1)
+                            ).isoformat(),
+                            "poll_interval_sec": 120,
+                            "trigger_mag": 7.1,
+                            "trigger_place": "Vanuatu test region",
+                        },
+                    ),
+                    encoding="utf-8",
+                )
+                with (
+                    patch.dict(os.environ, {"CI": "true"}),
+                    patch.object(pipeline, "run_pipeline") as run_pipeline,
+                    patch.object(pipeline.time, "sleep") as sleep,
+                ):
+                    pipeline.main(once=True)
+            finally:
+                os.chdir(previous_cwd)
+
+        self.assertEqual(run_pipeline.call_count, 1)
+        sleep.assert_not_called()
 
     def test_scheduled_runners_let_pipeline_own_usgs_polling(self):
         workflow = (ROOT / ".github" / "workflows" / "pipeline-push.yml").read_text(

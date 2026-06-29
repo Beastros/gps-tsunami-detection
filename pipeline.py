@@ -170,6 +170,11 @@ def main(once=False):
                 _interval = _state.get("poll_interval_sec", 120)
                 _mag      = _state.get("trigger_mag","?")
                 _place    = _state.get("trigger_place","?")
+                import os as _os
+                if _os.environ.get("CI", "").lower() == "true":
+                    log.info(f"FAST POLL MODE: Mw{_mag} {_place} active; CI --once run will exit so state can be committed")
+                    log.info("--once mode, done.")
+                    break
                 log.info(f"FAST POLL MODE: Mw{_mag} {_place} -- next cycle in {_interval}s")
                 time.sleep(_interval)
                 continue   # re-run pipeline cycle
