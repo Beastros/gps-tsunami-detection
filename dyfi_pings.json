@@ -1,19 +1,7 @@
 {
-  "generated": "2026-06-30T09:51:57Z",
+  "generated": "2026-06-30T12:11:48Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us6000t8yt",
-      "mag": 5.5,
-      "place": "218 km W of Bandon, Oregon",
-      "time_ms": 1782732933629,
-      "lat": 43.383,
-      "lon": -127.079,
-      "depth": 10.0,
-      "dyfi_responses": 20,
-      "dyfi_maxmmi": 3.1
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
