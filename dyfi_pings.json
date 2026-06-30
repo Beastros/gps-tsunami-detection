@@ -1,7 +1,19 @@
 {
-  "generated": "2026-06-30T19:00:18Z",
+  "generated": "2026-06-30T21:02:33Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000t99j",
+      "mag": 6.0,
+      "place": "75 km SSW of El Progreso, Mexico",
+      "time_ms": 1782848740116,
+      "lat": 24.824,
+      "lon": -108.928,
+      "depth": 10.0,
+      "dyfi_responses": 10,
+      "dyfi_maxmmi": 4.8
+    }
+  ]
 }
