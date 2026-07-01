@@ -21401,10 +21401,24 @@
       "total_queued": 3,
       "pending": 0,
       "scored": 3
+    },
+    {
+      "ts": "2026-07-01T22:04:53.348870+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
+    },
+    {
+      "ts": "2026-07-01T22:04:55.587094+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
     }
   ],
-  "last_updated": "2026-07-01T20:26:35.071201+00:00",
-  "total_polls": 3364,
+  "last_updated": "2026-07-01T22:04:55.587094+00:00",
+  "total_polls": 3366,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -21805,6 +21819,16 @@
       "depth": 43.6,
       "reason": "below threshold",
       "delta": -0.5
+    },
+    {
+      "ts": "2026-07-01T21:13:41.188000+00:00",
+      "mag": 5.7,
+      "place": "153 km SW of Hihifo, Tonga",
+      "lat": -16.9,
+      "lon": -174.85,
+      "depth": 265.9,
+      "reason": "below threshold",
+      "delta": -0.8
     }
   ],
   "expected_poll_interval_sec": 900
