@@ -20911,10 +20911,24 @@
       "total_queued": 3,
       "pending": 0,
       "scored": 3
+    },
+    {
+      "ts": "2026-07-01T11:44:00.839267+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
+    },
+    {
+      "ts": "2026-07-01T11:44:03.850068+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
     }
   ],
-  "last_updated": "2026-07-01T08:32:20.080191+00:00",
-  "total_polls": 3294,
+  "last_updated": "2026-07-01T11:44:03.850068+00:00",
+  "total_polls": 3296,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -21295,6 +21309,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -1.0
+    },
+    {
+      "ts": "2026-07-01T10:42:43.103000+00:00",
+      "mag": 5.6,
+      "place": "224 km S of Suva, Fiji",
+      "lat": -20.15,
+      "lon": 178.69,
+      "depth": 536.7,
+      "reason": "below threshold",
+      "delta": -0.9
     }
   ],
   "expected_poll_interval_sec": 900
