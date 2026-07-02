@@ -1,6 +1,15 @@
 {
-  "fetched_at": "2026-07-02T13:56:53+00:00",
+  "fetched_at": "2026-07-02T19:22:14+00:00",
   "items": [
+    {
+      "id": "6efba16714217746",
+      "title": "WHO says Hantavirus outbreak linked to ship is over",
+      "url": "https://www.bbc.co.uk/news/articles/cd7wjy2e1d8o",
+      "published_at": "2026-07-02",
+      "source_name": "BBC News — Health",
+      "source_tier": 2,
+      "summary": "The World Health Organization's director general says no further cases have been reported since 25 May."
+    },
     {
       "id": "c38998d470c074cc",
       "title": "Canadian from hantavirus-hit cruise ship tests positive",
