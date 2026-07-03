@@ -95,6 +95,8 @@ def merge_items(
         if not u:
             continue
         key = normalize_url(u)
+        if not key:
+            continue
         prev = by_url.get(key)
         if prev is None:
             row["url"] = key
