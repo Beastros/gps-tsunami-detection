@@ -22031,10 +22031,24 @@
       "total_queued": 3,
       "pending": 0,
       "scored": 3
+    },
+    {
+      "ts": "2026-07-05T15:47:21.640798+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
+    },
+    {
+      "ts": "2026-07-05T15:47:24.044734+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
     }
   ],
-  "last_updated": "2026-07-05T14:16:57.414156+00:00",
-  "total_polls": 3454,
+  "last_updated": "2026-07-05T15:47:24.044734+00:00",
+  "total_polls": 3456,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -22455,6 +22469,16 @@
       "depth": 75.8,
       "reason": "below threshold",
       "delta": -0.6
+    },
+    {
+      "ts": "2026-07-05T14:22:26.034000+00:00",
+      "mag": 5.8,
+      "place": "274 km SE of Levuka, Fiji",
+      "lat": -19.98,
+      "lon": -179.03,
+      "depth": 685.7,
+      "reason": "below threshold",
+      "delta": -0.7
     }
   ],
   "expected_poll_interval_sec": 900
