@@ -26,11 +26,11 @@ def _load_env(path=".env"):
 _load_env()
 
 
-def _post_webhook(payload: dict):
+def _post_webhook(payload: dict) -> bool:
     url = os.environ.get("DISCORD_WEBHOOK_URL", "").strip()
     if not url or "discord.com/api/webhooks/" not in url:
         log.warning("DISCORD_WEBHOOK_URL not set or malformed — skipping Discord post")
-        return
+        return False
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
         url,
@@ -45,10 +45,13 @@ def _post_webhook(payload: dict):
         with urllib.request.urlopen(req, timeout=20) as r:
             if r.status not in (200, 204):
                 log.warning("Discord webhook HTTP %s", r.status)
+                return False
+            return True
     except urllib.error.HTTPError as e:
         log.error("Discord webhook failed: HTTP %s %s", e.code, e.reason)
     except Exception as e:
         log.error("Discord webhook failed: %s", e)
+    return False
 
 
 def _prediction_summary(evt) -> str:
@@ -97,7 +100,7 @@ def send_detection_alert(evt):
             {"name": "USGS id", "value": str(usgs)[:48] or "—", "inline": True},
         ],
     }
-    _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
+    return _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
 
 
 def send_retroactive_triggered(info: dict):
@@ -135,7 +138,7 @@ def send_retroactive_triggered(info: dict):
             },
         ],
     }
-    _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
+    return _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
 
 
 def send_retroactive_completed(evt: dict):
@@ -172,7 +175,7 @@ def send_retroactive_completed(evt: dict):
             },
         ],
     }
-    _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
+    return _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
 
 
 def send_retroactive_aborted(evt: dict, detail: str):
@@ -189,17 +192,17 @@ def send_retroactive_aborted(evt: dict, detail: str):
             {"name": "Location", "value": place, "inline": True},
         ],
     }
-    _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
+    return _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
 
 
 def send_pipeline_error(component: str, err: str):
     text = f"**{component}** error:\n```{err[:1800]}```"
-    _post_webhook({"content": text[:2000], "username": "GPS Tsunami"})
+    return _post_webhook({"content": text[:2000], "username": "GPS Tsunami"})
 
 
 def send_near_miss_alerts(near_misses: list):
     if not near_misses:
-        return
+        return True
     chunks = []
     for nm in near_misses[:10]:
         mag = nm.get("mag", "?")
@@ -219,4 +222,4 @@ def send_near_miss_alerts(near_misses: list):
         "description": desc[:4000],
         "color": 0xFFA726,
     }
-    _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})
+    return _post_webhook({"embeds": [embed], "username": "GPS Tsunami"})

@@ -20,11 +20,6 @@ if errorlevel 1 (
 
 %PY% -m pip install -q -r requirements.txt >>"%LOG%" 2>&1
 
-%PY% usgs_listener.py --once >>"%LOG%" 2>&1
-if errorlevel 1 echo usgs_listener FAILED>>"%LOG%"
-
-%PY% dyfi_poller.py >>"%LOG%" 2>&1
-
 %PY% pipeline.py --once >>"%LOG%" 2>&1
 if errorlevel 1 echo pipeline.py exit %errorlevel%>>"%LOG%"
 

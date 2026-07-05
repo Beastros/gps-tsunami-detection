@@ -34,10 +34,13 @@ DROP_QUERY_KEYS = frozenset(
         "at_campaign",
     },
 )
+ALLOWED_URL_SCHEMES = {"http", "https"}
 
 
 def normalize_url(url: str) -> str:
     parsed = urlparse(url.strip())
+    if parsed.scheme.lower() not in ALLOWED_URL_SCHEMES or not parsed.netloc:
+        return ""
     # Drop fragment; strip common marketing/query noise.
     q = []
     if parsed.query:
@@ -92,6 +95,8 @@ def merge_items(
         if not u:
             continue
         key = normalize_url(u)
+        if not key:
+            continue
         prev = by_url.get(key)
         if prev is None:
             row["url"] = key
@@ -165,6 +170,8 @@ def main() -> None:
                 if keywords and not text_matches(blob, keywords):
                     continue
                 norm = normalize_url(link)
+                if not norm:
+                    continue
                 published = None
                 if entry.get("published_parsed"):
                     try:
