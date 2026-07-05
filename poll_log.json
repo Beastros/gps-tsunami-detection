@@ -21947,10 +21947,24 @@
       "total_queued": 3,
       "pending": 0,
       "scored": 3
+    },
+    {
+      "ts": "2026-07-05T01:26:56.272441+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
+    },
+    {
+      "ts": "2026-07-05T01:26:58.398470+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
     }
   ],
-  "last_updated": "2026-07-04T23:44:29.425503+00:00",
-  "total_polls": 3442,
+  "last_updated": "2026-07-05T01:26:58.398470+00:00",
+  "total_polls": 3444,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
