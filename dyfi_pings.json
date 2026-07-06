@@ -1,18 +1,18 @@
 {
-  "generated": "2026-07-06T14:30:27Z",
+  "generated": "2026-07-06T17:23:03Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 1,
   "pings": [
     {
-      "usgs_id": "us6000taaa",
-      "mag": 5.0,
-      "place": "26 km NNW of Mianzhu, Deyang, Sichuan, China",
-      "time_ms": 1783265413631,
-      "lat": 31.565,
-      "lon": 104.126,
-      "depth": 10.0,
-      "dyfi_responses": 10,
+      "usgs_id": "us6000tahc",
+      "mag": 5.1,
+      "place": "56 km W of La Ligua, Chile",
+      "time_ms": 1783354551905,
+      "lat": -32.545,
+      "lon": -71.825,
+      "depth": 21.0,
+      "dyfi_responses": 38,
       "dyfi_maxmmi": null
     }
   ]
