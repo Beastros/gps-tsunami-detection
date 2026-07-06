@@ -47,6 +47,9 @@ class CriticalRegressionTests(unittest.TestCase):
                 "usgs_id": feat["id"],
                 "magnitude": mag,
                 "place": feat["properties"]["place"],
+                "zones": ["Japan/Kuril"],
+                "primary_anchor": "guam",
+                "detection_window": {},
                 "status": "queued",
             }
 
