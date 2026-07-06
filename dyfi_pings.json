@@ -1,7 +1,19 @@
 {
-  "generated": "2026-07-05T23:30:38Z",
+  "generated": "2026-07-06T01:19:37Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000taaa",
+      "mag": 5.0,
+      "place": "26 km NNW of Mianzhu, Deyang, Sichuan, China",
+      "time_ms": 1783265413631,
+      "lat": 31.565,
+      "lon": 104.126,
+      "depth": 10.0,
+      "dyfi_responses": 10,
+      "dyfi_maxmmi": null
+    }
+  ]
 }
