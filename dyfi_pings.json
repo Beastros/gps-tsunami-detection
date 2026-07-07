@@ -1,19 +1,7 @@
 {
-  "generated": "2026-07-07T15:52:48Z",
+  "generated": "2026-07-07T18:02:30Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us6000tahc",
-      "mag": 5.1,
-      "place": "56 km W of La Ligua, Chile",
-      "time_ms": 1783354551905,
-      "lat": -32.545,
-      "lon": -71.825,
-      "depth": 21.0,
-      "dyfi_responses": 49,
-      "dyfi_maxmmi": null
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
