@@ -1,19 +1,7 @@
 {
-  "generated": "2026-07-08T17:10:43Z",
+  "generated": "2026-07-08T18:46:52Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us6000tarc",
-      "mag": 5.3,
-      "place": "10 km WSW of Orotina, Costa Rica",
-      "time_ms": 1783447892787,
-      "lat": 9.864,
-      "lon": -84.604,
-      "depth": 47.8,
-      "dyfi_responses": 29,
-      "dyfi_maxmmi": null
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
