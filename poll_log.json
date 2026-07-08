@@ -22437,10 +22437,24 @@
       "total_queued": 3,
       "pending": 0,
       "scored": 3
+    },
+    {
+      "ts": "2026-07-08T11:18:14.341300+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
+    },
+    {
+      "ts": "2026-07-08T11:18:16.854141+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
     }
   ],
-  "last_updated": "2026-07-08T09:09:24.729126+00:00",
-  "total_polls": 3512,
+  "last_updated": "2026-07-08T11:18:16.854141+00:00",
+  "total_polls": 3514,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -22869,6 +22883,16 @@
       "lat": -19.98,
       "lon": -179.03,
       "depth": 685.7,
+      "reason": "below threshold",
+      "delta": -0.7
+    },
+    {
+      "ts": "2026-07-08T09:50:23.421000+00:00",
+      "mag": 5.8,
+      "place": "91 km SSW of Isangel, Vanuatu",
+      "lat": -20.26,
+      "lon": 168.84,
+      "depth": 10,
       "reason": "below threshold",
       "delta": -0.7
     }
