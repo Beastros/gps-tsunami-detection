@@ -28,6 +28,8 @@ from space_weather import get_space_weather_quality
 
 EVENT_QUEUE_FILE = "event_queue.json"
 LOG_FILE = "runner.log"
+RINEX_DAY_OFFSETS = (-1, 0, 1)
+RINEX_SUFFIXES = (".Z", ".gz", "")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -364,6 +366,59 @@ def get_dtec_onsets(dtec, quake_utc):
     return onsets
 
 
+def _load_rinex_manifest(rinex_dir):
+    manifest_path = Path(rinex_dir) / "rinex_manifest.json"
+    if not manifest_path.exists():
+        return {}
+    try:
+        return json.loads(manifest_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        log.warning("Could not read %s: %s", manifest_path, exc)
+        return {}
+
+
+def _event_rinex_days(quake_dt):
+    return [
+        (
+            dt.year,
+            dt.timetuple().tm_yday,
+            str(dt.year)[-2:],
+        )
+        for dt in (quake_dt + pd.Timedelta(days=off) for off in RINEX_DAY_OFFSETS)
+    ]
+
+
+def _station_codes_for_day(manifest, sid, year, doy):
+    codes = [sid]
+    for day in manifest.get("days", []):
+        if day.get("year") == year and day.get("doy") == doy:
+            code = (day.get("resolved") or {}).get(sid)
+            if code and code not in codes:
+                codes.append(code)
+    return codes
+
+
+def _rinex_file_path(rinex_dir, station_codes, doy, yr2, ftype):
+    if isinstance(station_codes, str):
+        station_codes = [station_codes]
+    fallback = Path(rinex_dir) / f"{station_codes[0]}{doy:03d}0.{yr2}{ftype}.Z"
+    for code in station_codes:
+        base = Path(rinex_dir) / f"{code}{doy:03d}0.{yr2}{ftype}"
+        for ext in RINEX_SUFFIXES:
+            p = Path(str(base) + ext)
+            if p.exists():
+                return p
+    return fallback
+
+
+def _rinex_obs_path(rinex_dir, sid, doy, yr2):
+    return _rinex_file_path(rinex_dir, sid, doy, yr2, "o")
+
+
+def _rinex_nav_path(rinex_dir, sid, doy, yr2):
+    return _rinex_file_path(rinex_dir, sid, doy, yr2, "n")
+
+
 def decompress(gz):
     out=Path(str(gz).replace('.Z',''))
     if out.exists(): return out
@@ -539,9 +594,8 @@ def run_event(event, kp_override=None):
     mw        = event["magnitude"]
 
     quake_dt = datetime.fromisoformat(quake_utc.replace("Z","+00:00"))
-    year = quake_dt.year
-    doy  = quake_dt.timetuple().tm_yday
-    yr2  = str(year)[-2:]
+    rinex_manifest = _load_rinex_manifest(rinex_dir)
+    rinex_days = _event_rinex_days(quake_dt)
 
     log.info(f"\nRunning detector: {event['usgs_id']}")
     log.info(f"  {event['place']}  Mw{mw}  {quake_utc[:16]}")
@@ -549,10 +603,15 @@ def run_event(event, kp_override=None):
     # Determine which stations have files
     filts = {}
     for sid in STATIONS:
-        og = rinex_dir / f"{sid}{doy:03d}0.{yr2}o.Z"
-        ng = rinex_dir / f"{sid}{doy:03d}0.{yr2}n.Z"
-        print('CHECK', str(og), og.exists())
-        if not og.exists(): continue
+        og = ng = None
+        for year, doy, yr2 in rinex_days:
+            codes = _station_codes_for_day(rinex_manifest, sid, year, doy)
+            candidate_og = _rinex_obs_path(rinex_dir, codes, doy, yr2)
+            if candidate_og.exists():
+                og = candidate_og
+                ng = _rinex_nav_path(rinex_dir, codes, doy, yr2)
+                break
+        if og is None or not og.exists(): continue
         op = decompress(og)
         if not op: continue
         nav = {}
@@ -578,8 +637,14 @@ def run_event(event, kp_override=None):
     for _const in ('R', 'E'):
         _cfilts = {}
         for _sid in STATIONS:
-            _og = rinex_dir / f"{_sid}{doy:03d}0.{yr2}o.Z"
-            if not _og.exists(): continue
+            _og = None
+            for year, doy, yr2 in rinex_days:
+                codes = _station_codes_for_day(rinex_manifest, _sid, year, doy)
+                candidate_og = _rinex_obs_path(rinex_dir, codes, doy, yr2)
+                if candidate_og.exists():
+                    _og = candidate_og
+                    break
+            if _og is None or not _og.exists(): continue
             _op = decompress(_og)
             if not _op: continue
             _scfg = STATIONS[_sid]
