@@ -24040,10 +24040,24 @@
       "total_queued": 3,
       "pending": 0,
       "scored": 3
+    },
+    {
+      "ts": "2026-07-14T23:12:48.890274+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
+    },
+    {
+      "ts": "2026-07-14T23:12:51.393890+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
     }
   ],
-  "last_updated": "2026-07-14T22:12:55.574010+00:00",
-  "total_polls": 3741,
+  "last_updated": "2026-07-14T23:12:51.393890+00:00",
+  "total_polls": 3743,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -24504,6 +24518,16 @@
       "depth": 140.1,
       "reason": "below threshold",
       "delta": -0.9
+    },
+    {
+      "ts": "2026-07-14T22:50:12.020000+00:00",
+      "mag": 5.5,
+      "place": "Fiji region",
+      "lat": -20.75,
+      "lon": -178.51,
+      "depth": 574.3,
+      "reason": "below threshold",
+      "delta": -1.0
     }
   ],
   "expected_poll_interval_sec": 900
