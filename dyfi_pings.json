@@ -1,7 +1,30 @@
 {
-  "generated": "2026-07-14T16:16:02Z",
+  "generated": "2026-07-14T17:23:18Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 2,
+  "pings": [
+    {
+      "usgs_id": "us7000t0d0",
+      "mag": 6.2,
+      "place": "34 km WSW of Sarangani, Philippines",
+      "time_ms": 1784044181603,
+      "lat": 5.327,
+      "lon": 125.165,
+      "depth": 67.9,
+      "dyfi_responses": 35,
+      "dyfi_maxmmi": 5.3
+    },
+    {
+      "usgs_id": "us7000t0bm",
+      "mag": 5.1,
+      "place": "3 km NNW of Sugal, Philippines",
+      "time_ms": 1784034908009,
+      "lat": 5.69,
+      "lon": 125.443,
+      "depth": 24.1,
+      "dyfi_responses": 10,
+      "dyfi_maxmmi": null
+    }
+  ]
 }
