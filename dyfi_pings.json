@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-14T17:23:18Z",
+  "generated": "2026-07-14T18:40:36Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 2,
@@ -12,8 +12,8 @@
       "lat": 5.327,
       "lon": 125.165,
       "depth": 67.9,
-      "dyfi_responses": 35,
-      "dyfi_maxmmi": 5.3
+      "dyfi_responses": 42,
+      "dyfi_maxmmi": 5.6
     },
     {
       "usgs_id": "us7000t0bm",
@@ -23,7 +23,7 @@
       "lat": 5.69,
       "lon": 125.443,
       "depth": 24.1,
-      "dyfi_responses": 10,
+      "dyfi_responses": 11,
       "dyfi_maxmmi": null
     }
   ]
