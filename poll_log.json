@@ -23900,10 +23900,24 @@
       "total_queued": 3,
       "pending": 0,
       "scored": 3
+    },
+    {
+      "ts": "2026-07-14T08:55:10.016844+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
+    },
+    {
+      "ts": "2026-07-14T08:55:13.124783+00:00",
+      "new_candidates": 0,
+      "total_queued": 3,
+      "pending": 0,
+      "scored": 3
     }
   ],
-  "last_updated": "2026-07-14T06:35:01.363842+00:00",
-  "total_polls": 3721,
+  "last_updated": "2026-07-14T08:55:13.124783+00:00",
+  "total_polls": 3723,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -24354,6 +24368,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.2
+    },
+    {
+      "ts": "2026-07-14T08:21:06.499000+00:00",
+      "mag": 5.6,
+      "place": "11 km N of Pichigua, Peru",
+      "lat": -14.58,
+      "lon": -71.44,
+      "depth": 140.1,
+      "reason": "below threshold",
+      "delta": -0.9
     }
   ],
   "expected_poll_interval_sec": 900
