@@ -1,9 +1,20 @@
 {
-  "generated": "2026-07-15T00:07:42Z",
+  "generated": "2026-07-15T03:53:50Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
+  "count": 3,
   "pings": [
+    {
+      "usgs_id": "us7000t0it",
+      "mag": 5.1,
+      "place": "52 km NNW of Valpara\u00edso, Chile",
+      "time_ms": 1784077760402,
+      "lat": -32.603,
+      "lon": -71.863,
+      "depth": 26.0,
+      "dyfi_responses": 18,
+      "dyfi_maxmmi": null
+    },
     {
       "usgs_id": "us7000t0d0",
       "mag": 6.2,
@@ -12,7 +23,7 @@
       "lat": 5.327,
       "lon": 125.165,
       "depth": 67.9,
-      "dyfi_responses": 53,
+      "dyfi_responses": 59,
       "dyfi_maxmmi": 5.6
     },
     {
