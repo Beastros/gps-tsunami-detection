@@ -1,8 +1,8 @@
 {
-  "generated": "2026-07-15T12:00:55Z",
+  "generated": "2026-07-15T14:10:36Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 3,
+  "count": 2,
   "pings": [
     {
       "usgs_id": "us7000t0it",
@@ -25,17 +25,6 @@
       "depth": 67.9,
       "dyfi_responses": 77,
       "dyfi_maxmmi": 5.6
-    },
-    {
-      "usgs_id": "us7000t0bm",
-      "mag": 5.1,
-      "place": "3 km NNW of Sugal, Philippines",
-      "time_ms": 1784034908009,
-      "lat": 5.69,
-      "lon": 125.443,
-      "depth": 24.1,
-      "dyfi_responses": 11,
-      "dyfi_maxmmi": null
     }
   ]
 }
