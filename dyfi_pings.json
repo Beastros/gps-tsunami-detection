@@ -1,7 +1,19 @@
 {
-  "generated": "2026-07-16T08:35:05Z",
+  "generated": "2026-07-16T10:45:39Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us7000t0xb",
+      "mag": 5.9,
+      "place": "42 km NNW of Te Anau, New Zealand",
+      "time_ms": 1784193294293,
+      "lat": -45.043,
+      "lon": 167.611,
+      "depth": 76.4,
+      "dyfi_responses": 26,
+      "dyfi_maxmmi": 4.8
+    }
+  ]
 }
