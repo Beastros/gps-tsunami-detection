@@ -1,9 +1,20 @@
 {
-  "generated": "2026-07-16T10:45:39Z",
+  "generated": "2026-07-16T12:20:14Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
+  "count": 2,
   "pings": [
+    {
+      "usgs_id": "aka2026nyxoap",
+      "mag": 5.2,
+      "place": "122 km SE of McCarthy, Alaska",
+      "time_ms": 1784201841034,
+      "lat": 60.569,
+      "lon": -141.508,
+      "depth": 8.5,
+      "dyfi_responses": 10,
+      "dyfi_maxmmi": 5.8
+    },
     {
       "usgs_id": "us7000t0xb",
       "mag": 5.9,
@@ -12,8 +23,8 @@
       "lat": -45.043,
       "lon": 167.611,
       "depth": 76.4,
-      "dyfi_responses": 26,
-      "dyfi_maxmmi": 4.8
+      "dyfi_responses": 27,
+      "dyfi_maxmmi": 5.0
     }
   ]
 }
