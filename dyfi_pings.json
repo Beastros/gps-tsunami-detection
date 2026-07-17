@@ -1,8 +1,8 @@
 {
-  "generated": "2026-07-17T08:59:15Z",
+  "generated": "2026-07-17T10:55:36Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
+  "count": 1,
   "pings": [
     {
       "usgs_id": "aka2026nyxoap",
@@ -14,17 +14,6 @@
       "depth": 8.5,
       "dyfi_responses": 15,
       "dyfi_maxmmi": 5.8
-    },
-    {
-      "usgs_id": "us7000t0xb",
-      "mag": 5.9,
-      "place": "42 km NNW of Te Anau, New Zealand",
-      "time_ms": 1784193294293,
-      "lat": -45.043,
-      "lon": 167.611,
-      "depth": 76.4,
-      "dyfi_responses": 31,
-      "dyfi_maxmmi": 5.0
     }
   ]
 }
