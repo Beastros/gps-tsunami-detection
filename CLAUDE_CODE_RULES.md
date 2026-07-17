@@ -201,6 +201,26 @@ Prefer summary feeds (`4.5_week.geojson`, etc.) or build query URLs with **f-str
 - After `health_check.py` surgery, grep or read file to confirm new section exists before commit.
 - **LF/CRLF warnings** on `git add` from Windows are usually harmless if files are UTF-8 text.
 
+### GitHub PAT renewal (Windows `git push` from Task Scheduler)
+
+`run_and_push.bat` / `push_logs.bat` push JSON to `main` over HTTPS. Git Credential Manager stores your **Personal Access Token** as the password for `github.com`.
+
+**Symptoms when the PAT expires**
+
+- Last commits on `main` are only `github-actions[bot]` (`CI: pipeline JSON update`), not `Auto-update pipeline logs`.
+- `task_runner.log` contains `git push FAILED`.
+- `health_check.py` section **[ 15 ]** reports push auth failure.
+
+**Fix (on the Windows repo machine)**
+
+1. Create a new token: [github.com/settings/tokens](https://github.com/settings/tokens) — classic PAT with **`repo`** scope, or fine-grained with **Contents: Read and write** on `gps-tsunami-detection`.
+2. Open **Credential Manager** → **Windows Credentials** → edit `git:https://github.com` (or remove it so Git prompts again).
+3. Username: your GitHub username. Password: paste the **new PAT** (not your GitHub account password).
+4. From the repo folder: `git push --dry-run origin main` — should succeed with no auth error.
+5. Re-run `run_and_push.bat` once manually; confirm `task_runner.log` has no push failure.
+
+**Note:** GitHub Actions CI keeps the dashboard alive without your PAT, but only your Windows machine runs the full RINEX pipeline with local `.env` credentials. Restoring push fixes that disconnect.
+
 ---
 
 ## 17. Session changelog (high level)
