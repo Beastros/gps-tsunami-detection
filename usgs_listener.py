@@ -33,7 +33,9 @@ except ImportError:
 # ── Config ─────────────────────────────────────────────────────────
 POLL_INTERVAL_SEC = 900          # 15 minutes
 MW_THRESHOLD      = 6.5          # minimum magnitude
-LOOKBACK_HOURS    = 24           # how far back to look on startup
+LOOKBACK_HOURS    = 24           # minimum lookback on each poll
+LOOKBACK_MAX_HOURS = 168         # cap catch-up window (7 days)
+RECENT_SEISMICITY_HOURS = 48     # prune poll_log near-miss rows older than this
 EVENT_QUEUE_FILE  = "event_queue.json"
 POLL_LOG_FILE     = "poll_log.json"
 LOG_FILE          = "listener.log"
@@ -119,9 +121,62 @@ log = logging.getLogger(__name__)
 
 # ── Helpers ────────────────────────────────────────────────────────
 def load_queue():
-    if Path(EVENT_QUEUE_FILE).exists():
-        return json.loads(Path(EVENT_QUEUE_FILE).read_text(encoding="utf-8"))
-    return {"events": [], "seen_ids": []}
+    p = Path(EVENT_QUEUE_FILE)
+    if p.exists():
+        raw = p.read_text(encoding="utf-8").strip()
+        if raw:
+            try:
+                queue = json.loads(raw)
+                _ensure_seen_state(queue)
+                return queue
+            except json.JSONDecodeError:
+                log.warning("event_queue.json corrupt — resetting to empty queue")
+    return {"events": [], "seen_ids": [], "seen_mags": {}}
+
+
+def _ensure_seen_state(queue):
+    """Track max magnitude per USGS id so upgrades can re-enter the pipeline."""
+    if "seen_mags" not in queue or not isinstance(queue["seen_mags"], dict):
+        queue["seen_mags"] = {}
+    for eid in queue.get("seen_ids", []):
+        queue["seen_mags"].setdefault(eid, None)
+    for ev in queue.get("events", []):
+        eid = ev.get("usgs_id")
+        mag = ev.get("magnitude")
+        if eid and mag is not None:
+            prev = queue["seen_mags"].get(eid)
+            if prev is None or mag > prev:
+                queue["seen_mags"][eid] = mag
+
+
+def effective_lookback_hours():
+    """Extend lookback after downtime so first poll still catches recent events."""
+    poll_path = Path(POLL_LOG_FILE)
+    if not poll_path.exists():
+        return LOOKBACK_HOURS
+    try:
+        data = json.loads(poll_path.read_text(encoding="utf-8"))
+        last = data.get("last_updated")
+        if not last:
+            return LOOKBACK_HOURS
+        last_dt = datetime.fromisoformat(last.replace("Z", "+00:00"))
+        gap_h = (datetime.now(timezone.utc) - last_dt).total_seconds() / 3600
+        return int(min(LOOKBACK_MAX_HOURS, max(LOOKBACK_HOURS, gap_h + 1)))
+    except Exception:
+        return LOOKBACK_HOURS
+
+
+def _prune_recent_seismicity(entries):
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=RECENT_SEISMICITY_HOURS)
+    kept = []
+    for e in entries or []:
+        try:
+            ts = datetime.fromisoformat(str(e.get("ts", "")).replace("Z", "+00:00"))
+            if ts >= cutoff:
+                kept.append(e)
+        except Exception:
+            continue
+    return kept
 
 def save_queue(q):
     Path(EVENT_QUEUE_FILE).write_text(
@@ -408,10 +463,14 @@ def _activate_fast_poll(usgs_id, mag, place, fp_path):
 
 def check_feed(queue):
     """Check feed for new qualifying events. Returns (new_count, near_misses)."""
+    _ensure_seen_state(queue)
     features = fetch_feed()
     new_count = 0
     near_misses = []
-    cutoff = datetime.now(timezone.utc) - timedelta(hours=LOOKBACK_HOURS)
+    lookback_h = effective_lookback_hours()
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=lookback_h)
+    if lookback_h > LOOKBACK_HOURS:
+        log.info(f"Extended lookback to {lookback_h}h (poller was offline)")
 
     for feat in features:
         eid = event_id(feat)
@@ -423,10 +482,23 @@ def check_feed(queue):
         time_ms = props.get("time", 0)
         coords  = geom.get("coordinates", [None, None, None])
 
-        if eid in queue["seen_ids"]:
-            continue
-
-        queue["seen_ids"].append(eid)
+        prior_mag = queue["seen_mags"].get(eid)
+        if eid in queue["seen_mags"]:
+            if prior_mag is None:
+                if mag is not None:
+                    queue["seen_mags"][eid] = mag
+                continue
+            if mag is None or mag <= prior_mag:
+                continue
+            log.info(f"USGS magnitude upgrade: {eid} Mw{prior_mag} -> Mw{mag} ({place[:50]})")
+            queue["events"] = [
+                e for e in queue.get("events", [])
+                if e.get("usgs_id") != eid or e.get("status") not in ("queued", "rinex_failed")
+            ]
+        if eid not in queue["seen_ids"]:
+            queue["seen_ids"].append(eid)
+        if mag is not None:
+            queue["seen_mags"][eid] = mag
 
         if time_ms:
             event_time = datetime.fromtimestamp(time_ms/1000, tz=timezone.utc)
@@ -570,10 +642,9 @@ def write_poll_log(new_candidates, queue, near_misses=None):
     # Dashboard: countdown to next expected poll (seconds — matches pipeline sleep)
     data["expected_poll_interval_sec"] = effective_poll_interval_sec()
 
-    # Append near-misses, keep last 100
     if near_misses:
         data["recent_seismicity"].extend(near_misses)
-        data["recent_seismicity"] = data["recent_seismicity"][-100:]
+    data["recent_seismicity"] = _prune_recent_seismicity(data["recent_seismicity"])
 
     poll_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
     log.info(f"Poll log updated — total polls: {data['total_polls']}, "
