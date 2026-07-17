@@ -1979,6 +1979,48 @@
         "timing_error_min": null,
         "notes": []
       }
+    },
+    {
+      "usgs_id": "us7000t1bu",
+      "detected_utc": "2026-07-17T15:40:57.414648+00:00",
+      "quake_utc": "2026-07-17T14:48:39.768000+00:00",
+      "magnitude": 7.3,
+      "depth_km": 15.2,
+      "lat": 14.691,
+      "lon": -92.885,
+      "place": "48 km SW of Aquiles Serd\u00e1n, Mexico",
+      "zones": [
+        "Central America"
+      ],
+      "primary_anchor": "chat",
+      "anchor_note": "Central America \u2192 CHAT corridor possible",
+      "detection_window": {
+        "anchor": "chat",
+        "anchor_dist_km": 10642,
+        "hawaii_dist_km": 6596,
+        "tec_onset_anchor_h": 14.8,
+        "tec_onset_window": [
+          14.3,
+          16.3
+        ],
+        "wave_arrival_hawaii_h": 9.2,
+        "expected_lead_time_min": -337,
+        "rinex_download_after_h": 15.3
+      },
+      "status": "queued",
+      "rinex_downloaded": false,
+      "detector_run": false,
+      "scored": false,
+      "result": null,
+      "focal_mechanism": {
+        "rake_deg": 97.7,
+        "fault_type": "thrust",
+        "rake_score": 0.991,
+        "product_type": "moment-tensor",
+        "source": "us",
+        "available": true
+      },
+      "tsunamigenic_index": 0.991
     }
   ],
   "seen_ids": [
@@ -3383,6 +3425,19 @@
     "us7000t1b3",
     "us7000t1b0",
     "us7000t19u",
-    "us7000t19a"
+    "us7000t19a",
+    "us7000t1c1",
+    "us7000t1bu",
+    "us7000t1ai",
+    "us7000t1c2",
+    "us7000t1cc",
+    "us7000t1du",
+    "us7000t1dv",
+    "us7000t1e8",
+    "us7000t1ej",
+    "us7000t1dz",
+    "us7000t1ey",
+    "us7000t1ep",
+    "us7000t1f0"
   ]
 }

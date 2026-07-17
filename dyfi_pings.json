@@ -1,7 +1,19 @@
 {
-  "generated": "2026-07-17T14:13:30Z",
+  "generated": "2026-07-17T17:41:46Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us7000t1bu",
+      "mag": 7.3,
+      "place": "58 km WSW of Puerto Madero, Mexico",
+      "time_ms": 1784299719769,
+      "lat": 14.604,
+      "lon": -92.952,
+      "depth": 18.6,
+      "dyfi_responses": 244,
+      "dyfi_maxmmi": 6.9
+    }
+  ]
 }
