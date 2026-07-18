@@ -2046,10 +2046,10 @@
           }
         ],
         "source": "manifest",
-        "updated_utc": "2026-07-18T13:50:24.374288+00:00"
+        "updated_utc": "2026-07-18T14:55:57.812995+00:00"
       },
-      "rinex_retries": 6,
-      "rinex_last_fail_utc": "2026-07-18T13:50:24.374361+00:00",
+      "rinex_retries": 7,
+      "rinex_last_fail_utc": "2026-07-18T14:55:57.813064+00:00",
       "rinex_coverage_last_probe": {
         "stations": [],
         "n_stations": 0,
@@ -2074,9 +2074,9 @@
           }
         ],
         "source": "probe",
-        "probed_utc": "2026-07-18T13:50:24.370974+00:00"
+        "probed_utc": "2026-07-18T14:55:57.810553+00:00"
       },
-      "retro_last_probe_utc": "2026-07-18T13:50:24.370987+00:00"
+      "retro_last_probe_utc": "2026-07-18T14:55:57.810566+00:00"
     }
   ],
   "seen_ids": [
