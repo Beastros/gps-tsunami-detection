@@ -2046,10 +2046,10 @@
           }
         ],
         "source": "manifest",
-        "updated_utc": "2026-07-18T14:55:57.812995+00:00"
+        "updated_utc": "2026-07-18T16:00:16.706835+00:00"
       },
-      "rinex_retries": 7,
-      "rinex_last_fail_utc": "2026-07-18T14:55:57.813064+00:00",
+      "rinex_retries": 8,
+      "rinex_last_fail_utc": "2026-07-18T16:00:16.706907+00:00",
       "rinex_coverage_last_probe": {
         "stations": [],
         "n_stations": 0,
@@ -2074,9 +2074,9 @@
           }
         ],
         "source": "probe",
-        "probed_utc": "2026-07-18T14:55:57.810553+00:00"
+        "probed_utc": "2026-07-18T16:00:16.703799+00:00"
       },
-      "retro_last_probe_utc": "2026-07-18T14:55:57.810566+00:00"
+      "retro_last_probe_utc": "2026-07-18T16:00:16.703809+00:00"
     }
   ],
   "seen_ids": [
@@ -3522,6 +3522,7 @@
     "us7000t1l8",
     "us7000t1l4",
     "us7000t1ld",
-    "us7000t1gu"
+    "us7000t1gu",
+    "us7000t1gi"
   ]
 }
