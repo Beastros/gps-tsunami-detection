@@ -25195,10 +25195,24 @@
       "total_queued": 4,
       "pending": 1,
       "scored": 3
+    },
+    {
+      "ts": "2026-07-18T18:08:30.650007+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 1,
+      "scored": 3
+    },
+    {
+      "ts": "2026-07-18T18:08:33.307453+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 1,
+      "scored": 3
     }
   ],
-  "last_updated": "2026-07-18T17:07:37.311724+00:00",
-  "total_polls": 3906,
+  "last_updated": "2026-07-18T18:08:33.307453+00:00",
+  "total_polls": 3908,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -25689,6 +25703,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.5
+    },
+    {
+      "ts": "2026-07-18T17:26:25.879000+00:00",
+      "mag": 5.7,
+      "place": "72 km SW of Puerto Madero, Mexico",
+      "lat": 14.24,
+      "lon": -92.88,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.8
     }
   ],
   "expected_poll_interval_sec": 900
