@@ -2007,7 +2007,7 @@
         "expected_lead_time_min": -337,
         "rinex_download_after_h": 15.3
       },
-      "status": "queued",
+      "status": "rinex_failed",
       "rinex_downloaded": false,
       "detector_run": false,
       "scored": false,
@@ -2020,7 +2020,36 @@
         "source": "us",
         "available": true
       },
-      "tsunamigenic_index": 0.991
+      "tsunamigenic_index": 0.991,
+      "rinex_coverage": {
+        "stations": [],
+        "n_stations": 0,
+        "total_files": 0,
+        "days": [
+          {
+            "year": 2026,
+            "doy": 197,
+            "stations": [],
+            "n": 0
+          },
+          {
+            "year": 2026,
+            "doy": 198,
+            "stations": [],
+            "n": 0
+          },
+          {
+            "year": 2026,
+            "doy": 199,
+            "stations": [],
+            "n": 0
+          }
+        ],
+        "source": "manifest",
+        "updated_utc": "2026-07-18T06:23:37.296390+00:00"
+      },
+      "rinex_retries": 1,
+      "rinex_last_fail_utc": "2026-07-18T06:23:37.296483+00:00"
     }
   ],
   "seen_ids": [
@@ -3452,6 +3481,11 @@
     "us7000t1ie",
     "us7000t1i9",
     "us7000t1i4",
-    "us7000t1hp"
+    "us7000t1hp",
+    "us7000t1jq",
+    "us7000t1jp",
+    "us7000t1jb",
+    "us7000t1j4",
+    "us7000t1ig"
   ]
 }
