@@ -25293,10 +25293,24 @@
       "total_queued": 4,
       "pending": 1,
       "scored": 3
+    },
+    {
+      "ts": "2026-07-19T04:36:05.875717+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 1,
+      "scored": 3
+    },
+    {
+      "ts": "2026-07-19T04:36:08.711817+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 1,
+      "scored": 3
     }
   ],
-  "last_updated": "2026-07-19T01:04:18.230297+00:00",
-  "total_polls": 3920,
+  "last_updated": "2026-07-19T04:36:08.711817+00:00",
+  "total_polls": 3922,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -25797,6 +25811,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.8
+    },
+    {
+      "ts": "2026-07-19T02:24:36.324000+00:00",
+      "mag": 5.5,
+      "place": "2 km WSW of Sicaya, Peru",
+      "lat": -12.04,
+      "lon": -75.3,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -1.0
     }
   ],
   "expected_poll_interval_sec": 900
