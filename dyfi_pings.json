@@ -1,7 +1,19 @@
 {
-  "generated": "2026-07-20T08:07:24Z",
+  "generated": "2026-07-20T11:13:47Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us7000t1wn",
+      "mag": 5.2,
+      "place": "22 km NNW of Scarborough, Trinidad and Tobago",
+      "time_ms": 1784540710282,
+      "lat": 11.374,
+      "lon": -60.804,
+      "depth": 83.5,
+      "dyfi_responses": 12,
+      "dyfi_maxmmi": null
+    }
+  ]
 }
