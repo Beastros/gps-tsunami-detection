@@ -319,12 +319,84 @@
       "amplitude_error_pct": null,
       "timing_error_min": null,
       "notes": []
+    },
+    {
+      "usgs_id": "us7000t1bu",
+      "quake_utc": "2026-07-17T14:48:39.768000+00:00",
+      "magnitude": 7.3,
+      "place": "48 km SW of Aquiles Serd\u00e1n, Mexico",
+      "anchor": "chat",
+      "kp": null,
+      "algo_detected": false,
+      "gauge_tsunami": false,
+      "any_gauge_tsunami": false,
+      "corroborated_by": [],
+      "combined_confidence": null,
+      "confidence_detected": false,
+      "confidence_threshold": 0.35,
+      "dart_score_prediction": null,
+      "dart_status_prediction": null,
+      "space_weather_score": null,
+      "space_weather_gated": false,
+      "space_weather_flags": [],
+      "dart_reconciliation": {
+        "reconciled": false,
+        "reason": "no_scoring_dart"
+      },
+      "stations_processed": [],
+      "detection_reason": "insufficient_stations",
+      "constellation_agreement": null,
+      "dtec_corroborates": false,
+      "ionosonde_confirmed": false,
+      "lb_pairs_in_window": null,
+      "dyfi_contribution": 0.02,
+      "dyfi_responses": 286,
+      "dyfi_maxmmi": 5.4,
+      "dyfi_confirmed": true,
+      "dart_detected": null,
+      "dart_confirming_buoys": null,
+      "dart_buoys_checked": null,
+      "dart_network": null,
+      "gauge_network": {
+        "hilo": {
+          "signal": false,
+          "arrival_h": null,
+          "amplitude_m": null,
+          "method": null
+        },
+        "midway": {
+          "signal": false,
+          "arrival_h": null,
+          "amplitude_m": null,
+          "method": null
+        },
+        "johnston": {
+          "signal": false,
+          "arrival_h": null,
+          "amplitude_m": null,
+          "method": null
+        },
+        "pago": {
+          "signal": false,
+          "arrival_h": null,
+          "amplitude_m": null,
+          "method": null
+        }
+      },
+      "outcome": "TRUE_NEGATIVE",
+      "outcome_confidence": null,
+      "lead_time_min": null,
+      "amplitude_predicted_m": null,
+      "amplitude_actual_m": null,
+      "amplitude_error_pct": null,
+      "timing_error_min": null,
+      "notes": []
     }
   ],
   "summary": {
-    "total_scored": 3,
+    "total_scored": 4,
     "true_positives": 0,
-    "true_negatives": 1,
+    "true_negatives": 2,
     "false_positives": 0,
     "false_negatives": 2,
     "tpr": 0.0,
@@ -348,6 +420,6 @@
         "hit_rate": 0.667
       }
     },
-    "last_updated": "2026-06-26T08:22:36.941898+00:00"
+    "last_updated": "2026-07-20T17:02:24.162980+00:00"
   }
 }

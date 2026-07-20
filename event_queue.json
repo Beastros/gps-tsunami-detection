@@ -2007,10 +2007,10 @@
         "expected_lead_time_min": -337,
         "rinex_download_after_h": 15.3
       },
-      "status": "rinex_failed",
-      "rinex_downloaded": false,
-      "detector_run": false,
-      "scored": false,
+      "status": "scored",
+      "rinex_downloaded": true,
+      "detector_run": true,
+      "scored": true,
       "result": null,
       "focal_mechanism": {
         "rake_deg": 97.7,
@@ -2022,61 +2022,201 @@
       },
       "tsunamigenic_index": 0.991,
       "rinex_coverage": {
-        "stations": [],
-        "n_stations": 0,
-        "total_files": 0,
+        "stations": [
+          "iqqe"
+        ],
+        "n_stations": 1,
+        "total_files": 3,
         "days": [
           {
             "year": 2026,
             "doy": 197,
-            "stations": [],
-            "n": 0
+            "stations": [
+              "iqqe"
+            ],
+            "n": 1
           },
           {
             "year": 2026,
             "doy": 198,
-            "stations": [],
-            "n": 0
+            "stations": [
+              "iqqe"
+            ],
+            "n": 1
           },
           {
             "year": 2026,
             "doy": 199,
-            "stations": [],
-            "n": 0
+            "stations": [
+              "iqqe"
+            ],
+            "n": 1
           }
         ],
         "source": "manifest",
-        "updated_utc": "2026-07-18T16:00:16.706835+00:00"
+        "updated_utc": "2026-07-20T17:02:22.875251+00:00"
       },
       "rinex_retries": 8,
-      "rinex_last_fail_utc": "2026-07-18T16:00:16.706907+00:00",
       "rinex_coverage_last_probe": {
-        "stations": [],
-        "n_stations": 0,
+        "stations": [
+          "iqqe"
+        ],
+        "n_stations": 1,
         "days": [
           {
             "year": 2026,
             "doy": 197,
-            "stations": [],
-            "n": 0
+            "stations": [
+              "iqqe"
+            ],
+            "n": 1
           },
           {
             "year": 2026,
             "doy": 198,
-            "stations": [],
-            "n": 0
+            "stations": [
+              "iqqe"
+            ],
+            "n": 1
           },
           {
             "year": 2026,
             "doy": 199,
-            "stations": [],
-            "n": 0
+            "stations": [
+              "iqqe"
+            ],
+            "n": 1
           }
         ],
         "source": "probe",
-        "probed_utc": "2026-07-18T16:00:16.703799+00:00"
+        "probed_utc": "2026-07-20T17:02:19.382349+00:00"
       },
-      "retro_last_probe_utc": "2026-07-18T16:00:16.703809+00:00"
+      "retro_last_probe_utc": "2026-07-20T17:02:19.382368+00:00",
+      "reprocess_requested": true,
+      "retroactive_trigger": true,
+      "retro_trigger_reason": "new stations on CDDIS: IQQE",
+      "retro_triggered_utc": "2026-07-20T17:02:19.382806+00:00",
+      "retro_last_trigger_utc": "2026-07-20T17:02:19.382806+00:00",
+      "retro_run_count": 1,
+      "retro_prior_status": "rinex_failed",
+      "retro_prior_prediction": null,
+      "retro_prior_detected": null,
+      "rinex_coverage_probe": {
+        "stations": [
+          "iqqe"
+        ],
+        "n_stations": 1,
+        "days": [
+          {
+            "year": 2026,
+            "doy": 197,
+            "stations": [
+              "iqqe"
+            ],
+            "n": 1
+          },
+          {
+            "year": 2026,
+            "doy": 198,
+            "stations": [
+              "iqqe"
+            ],
+            "n": 1
+          },
+          {
+            "year": 2026,
+            "doy": 199,
+            "stations": [
+              "iqqe"
+            ],
+            "n": 1
+          }
+        ],
+        "source": "probe",
+        "probed_utc": "2026-07-20T17:02:19.382349+00:00"
+      },
+      "rinex_dir": "rinex_live/us7000t1bu",
+      "rinex_download_utc": "2026-07-20T17:02:22.876394+00:00",
+      "prediction": {
+        "detected": false,
+        "reason": "insufficient_stations",
+        "stations_processed": []
+      },
+      "detector_run_utc": "2026-07-20T17:02:23.231906+00:00",
+      "discord_alerted": true,
+      "score": {
+        "usgs_id": "us7000t1bu",
+        "quake_utc": "2026-07-17T14:48:39.768000+00:00",
+        "magnitude": 7.3,
+        "place": "48 km SW of Aquiles Serd\u00e1n, Mexico",
+        "anchor": "chat",
+        "kp": null,
+        "algo_detected": false,
+        "gauge_tsunami": false,
+        "any_gauge_tsunami": false,
+        "corroborated_by": [],
+        "combined_confidence": null,
+        "confidence_detected": false,
+        "confidence_threshold": 0.35,
+        "dart_score_prediction": null,
+        "dart_status_prediction": null,
+        "space_weather_score": null,
+        "space_weather_gated": false,
+        "space_weather_flags": [],
+        "dart_reconciliation": {
+          "reconciled": false,
+          "reason": "no_scoring_dart"
+        },
+        "stations_processed": [],
+        "detection_reason": "insufficient_stations",
+        "constellation_agreement": null,
+        "dtec_corroborates": false,
+        "ionosonde_confirmed": false,
+        "lb_pairs_in_window": null,
+        "dyfi_contribution": 0.02,
+        "dyfi_responses": 286,
+        "dyfi_maxmmi": 5.4,
+        "dyfi_confirmed": true,
+        "dart_detected": null,
+        "dart_confirming_buoys": null,
+        "dart_buoys_checked": null,
+        "dart_network": null,
+        "gauge_network": {
+          "hilo": {
+            "signal": false,
+            "arrival_h": null,
+            "amplitude_m": null,
+            "method": null
+          },
+          "midway": {
+            "signal": false,
+            "arrival_h": null,
+            "amplitude_m": null,
+            "method": null
+          },
+          "johnston": {
+            "signal": false,
+            "arrival_h": null,
+            "amplitude_m": null,
+            "method": null
+          },
+          "pago": {
+            "signal": false,
+            "arrival_h": null,
+            "amplitude_m": null,
+            "method": null
+          }
+        },
+        "outcome": "TRUE_NEGATIVE",
+        "outcome_confidence": null,
+        "lead_time_min": null,
+        "amplitude_predicted_m": null,
+        "amplitude_actual_m": null,
+        "amplitude_error_pct": null,
+        "timing_error_min": null,
+        "notes": []
+      },
+      "scored_utc": "2026-07-20T17:02:24.162813+00:00"
     }
   ],
   "seen_ids": [
