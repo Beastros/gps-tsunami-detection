@@ -1,19 +1,7 @@
 {
-  "generated": "2026-07-20T01:14:22Z",
+  "generated": "2026-07-20T04:56:12Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us7000t1q7",
-      "mag": 5.5,
-      "place": "2 km WSW of Sicaya, Peru",
-      "time_ms": 1784427876324,
-      "lat": -12.043,
-      "lon": -75.301,
-      "depth": 10.0,
-      "dyfi_responses": 11,
-      "dyfi_maxmmi": 6.7
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
