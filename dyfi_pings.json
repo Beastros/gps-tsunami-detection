@@ -1,8 +1,8 @@
 {
-  "generated": "2026-07-21T06:30:21Z",
+  "generated": "2026-07-21T09:13:24Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
+  "count": 1,
   "pings": [
     {
       "usgs_id": "us7000t1wn",
@@ -14,17 +14,6 @@
       "depth": 83.5,
       "dyfi_responses": 18,
       "dyfi_maxmmi": null
-    },
-    {
-      "usgs_id": "us7000t1w2",
-      "mag": 5.6,
-      "place": "208 km SW of Port McNeill, Canada",
-      "time_ms": 1784529690614,
-      "lat": 49.408,
-      "lon": -129.342,
-      "depth": 10.0,
-      "dyfi_responses": 22,
-      "dyfi_maxmmi": 3.5
     }
   ]
 }
