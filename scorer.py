@@ -305,7 +305,10 @@ def score_event(event, gauge_results, dart_result=None):
         for name, g in gauge_results.items()
         if not g["primary"] and g["tsunami"] is not None
     }
-    any_gauge_tsunami = tide_tsunami is not None or len(secondary_signals) > 0
+    truth_tsunami = tide_tsunami
+    if truth_tsunami is None and secondary_signals:
+        truth_tsunami = next(iter(secondary_signals.values()))
+    any_gauge_tsunami = truth_tsunami is not None
     corroborated      = len(secondary_signals) > 0
 
     # ── DART reconciliation ───────────────────────────────────────
@@ -397,24 +400,23 @@ def score_event(event, gauge_results, dart_result=None):
     }
 
     # ── Layer 1 outcome (binary TEC) ──────────────────────────────
-    if detected_by_algo and tide_tsunami:
+    if detected_by_algo and any_gauge_tsunami:
         score["outcome"] = "TRUE_POSITIVE"
-    elif not detected_by_algo and not tide_tsunami:
+    elif not detected_by_algo and not any_gauge_tsunami:
         score["outcome"] = ("CORRECT_ABSTENTION_NO_ANCHOR" if not anchor
                             else "TRUE_NEGATIVE")
-    elif detected_by_algo and not tide_tsunami:
-        if corroborated:
-            score["outcome"] = "TRUE_POSITIVE"
+    elif detected_by_algo and not any_gauge_tsunami:
+        score["outcome"] = "FALSE_POSITIVE"
+    elif not detected_by_algo and any_gauge_tsunami:
+        score["outcome"] = ("GEOMETRY_LIMITED_MISS" if not anchor
+                            else "FALSE_NEGATIVE")
+
+    if any_gauge_tsunami and corroborated:
+        if tide_tsunami is None:
             score["notes"].append(
                 f"Hilo no signal; confirmed by: {list(secondary_signals.keys())}"
             )
-            tide_tsunami = list(secondary_signals.values())[0]
         else:
-            score["outcome"] = "FALSE_POSITIVE"
-    elif not detected_by_algo and tide_tsunami:
-        score["outcome"] = ("GEOMETRY_LIMITED_MISS" if not anchor
-                            else "FALSE_NEGATIVE")
-        if corroborated:
             score["notes"].append(
                 f"Multi-gauge confirmed: {list(secondary_signals.keys())}"
             )
@@ -447,17 +449,17 @@ def score_event(event, gauge_results, dart_result=None):
         )
 
     # ── Quantitative metrics (true positives only) ────────────────
-    if tide_tsunami and detected_by_algo:
+    if truth_tsunami and detected_by_algo:
         det = pred.get("detection") or {}
         wf  = pred.get("wave_forecast") or {}
 
         algo_onset_h     = det.get("post_h", 0)
-        actual_arrival_h = tide_tsunami["arrival_h_post_quake"]
+        actual_arrival_h = truth_tsunami["arrival_h_post_quake"]
         score["lead_time_min"] = round((actual_arrival_h - algo_onset_h) * 60)
 
         if wf.get("predicted_wave_m") is not None:
             pred_wave   = wf["predicted_wave_m"]
-            actual_wave = tide_tsunami["amplitude_m"]
+            actual_wave = truth_tsunami["amplitude_m"]
             score["amplitude_predicted_m"] = pred_wave
             score["amplitude_actual_m"]    = actual_wave
             if actual_wave > 0:
@@ -465,8 +467,8 @@ def score_event(event, gauge_results, dart_result=None):
                     (pred_wave - actual_wave) / actual_wave * 100, 1
                 )
 
-    if tide_tsunami:
-        score["tide_gauge_truth"] = tide_tsunami
+    if truth_tsunami:
+        score["tide_gauge_truth"] = truth_tsunami
 
     return score
 
