@@ -1,7 +1,19 @@
 {
-  "generated": "2026-07-23T09:59:24Z",
+  "generated": "2026-07-23T12:15:29Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "tx2026ojlaky",
+      "mag": 5.0,
+      "place": "38 km SSE of Spearman, Texas",
+      "time_ms": 1784802103909,
+      "lat": 35.902,
+      "lon": -100.976,
+      "depth": 5.7,
+      "dyfi_responses": 264,
+      "dyfi_maxmmi": 6.0
+    }
+  ]
 }
