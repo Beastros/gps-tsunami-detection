@@ -1,19 +1,7 @@
 {
-  "generated": "2026-07-25T16:05:59Z",
+  "generated": "2026-07-25T17:16:43Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us7000t34g",
-      "mag": 5.7,
-      "place": "49 km W of Turangi, New Zealand",
-      "time_ms": 1784911897514,
-      "lat": -38.962,
-      "lon": 175.233,
-      "depth": 10.0,
-      "dyfi_responses": 74,
-      "dyfi_maxmmi": 6.7
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
