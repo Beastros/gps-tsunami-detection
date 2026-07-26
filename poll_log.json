@@ -27022,10 +27022,24 @@
       "total_queued": 4,
       "pending": 0,
       "scored": 4
+    },
+    {
+      "ts": "2026-07-26T09:03:27.048475+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
+    },
+    {
+      "ts": "2026-07-26T09:03:30.457165+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
     }
   ],
-  "last_updated": "2026-07-26T06:44:52.473183+00:00",
-  "total_polls": 4167,
+  "last_updated": "2026-07-26T09:03:30.457165+00:00",
+  "total_polls": 4169,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -27576,6 +27590,16 @@
       "depth": 44.6,
       "reason": "below threshold",
       "delta": -0.5
+    },
+    {
+      "ts": "2026-07-26T08:35:18.849000+00:00",
+      "mag": 5.8,
+      "place": "99 km SE of Atka, Alaska",
+      "lat": 51.5,
+      "lon": -173.31,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.7
     }
   ],
   "expected_poll_interval_sec": 900
