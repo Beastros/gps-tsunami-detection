@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-28T17:56:00Z",
+  "generated": "2026-07-28T19:37:19Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 2,
@@ -13,7 +13,7 @@
       "lon": 130.722,
       "depth": 10.0,
       "dyfi_responses": 57,
-      "dyfi_maxmmi": 8.5
+      "dyfi_maxmmi": 9.2
     },
     {
       "usgs_id": "us6000tgau",
