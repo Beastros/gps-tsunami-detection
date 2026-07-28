@@ -1,7 +1,19 @@
 {
-  "generated": "2026-07-28T04:29:43Z",
+  "generated": "2026-07-28T07:19:27Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000tgau",
+      "mag": 5.9,
+      "place": "50 km WSW of Brisas Barra de Suchiate, Mexico",
+      "time_ms": 1785216918079,
+      "lat": 14.296,
+      "lon": -92.622,
+      "depth": 35.0,
+      "dyfi_responses": 16,
+      "dyfi_maxmmi": 4.5
+    }
+  ]
 }

@@ -27372,10 +27372,24 @@
       "total_queued": 4,
       "pending": 0,
       "scored": 4
+    },
+    {
+      "ts": "2026-07-28T07:19:16.533563+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
+    },
+    {
+      "ts": "2026-07-28T07:19:19.371373+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
     }
   ],
-  "last_updated": "2026-07-28T04:29:23.932850+00:00",
-  "total_polls": 4217,
+  "last_updated": "2026-07-28T07:19:19.371373+00:00",
+  "total_polls": 4219,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -27936,6 +27950,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.7
+    },
+    {
+      "ts": "2026-07-28T05:35:18.079000+00:00",
+      "mag": 5.9,
+      "place": "50 km WSW of Brisas Barra de Suchiate, Mexico",
+      "lat": 14.3,
+      "lon": -92.62,
+      "depth": 35,
+      "reason": "below threshold",
+      "delta": -0.6
     }
   ],
   "expected_poll_interval_sec": 900
