@@ -1,9 +1,20 @@
 {
-  "generated": "2026-07-28T07:19:27Z",
+  "generated": "2026-07-28T12:09:50Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
+  "count": 2,
   "pings": [
+    {
+      "usgs_id": "us6000tgb9",
+      "mag": 6.8,
+      "place": "5 km E of Uto, Japan",
+      "time_ms": 1785223635512,
+      "lat": 32.682,
+      "lon": 130.722,
+      "depth": 10.0,
+      "dyfi_responses": 43,
+      "dyfi_maxmmi": 8.2
+    },
     {
       "usgs_id": "us6000tgau",
       "mag": 5.9,
@@ -12,8 +23,8 @@
       "lat": 14.296,
       "lon": -92.622,
       "depth": 35.0,
-      "dyfi_responses": 16,
-      "dyfi_maxmmi": 4.5
+      "dyfi_responses": 20,
+      "dyfi_maxmmi": 4.6
     }
   ]
 }
