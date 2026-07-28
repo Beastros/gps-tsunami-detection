@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-28T16:24:57Z",
+  "generated": "2026-07-28T17:56:00Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 2,
@@ -7,7 +7,7 @@
     {
       "usgs_id": "us6000tgb9",
       "mag": 6.8,
-      "place": "5 km E of Uto, Japan",
+      "place": "2026 Uto, Japan Earthquake\u00a0",
       "time_ms": 1785223635512,
       "lat": 32.682,
       "lon": 130.722,
