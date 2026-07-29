@@ -1,8 +1,8 @@
 {
-  "generated": "2026-07-29T07:20:36Z",
+  "generated": "2026-07-29T10:27:04Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
+  "count": 1,
   "pings": [
     {
       "usgs_id": "aka2026ovufno",
@@ -14,17 +14,6 @@
       "depth": 5.0,
       "dyfi_responses": 160,
       "dyfi_maxmmi": 5.2
-    },
-    {
-      "usgs_id": "us6000tgb9",
-      "mag": 6.8,
-      "place": "2026 Uto, Japan Earthquake\u00a0",
-      "time_ms": 1785223635512,
-      "lat": 32.682,
-      "lon": 130.722,
-      "depth": 10.0,
-      "dyfi_responses": 75,
-      "dyfi_maxmmi": 9.2
     }
   ]
 }
