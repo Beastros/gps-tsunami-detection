@@ -1,7 +1,41 @@
 {
-  "generated": "2026-07-29T14:46:29Z",
+  "generated": "2026-07-29T16:12:17Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 3,
+  "pings": [
+    {
+      "usgs_id": "us6000tgnu",
+      "mag": 5.1,
+      "place": "79 km NE of Casuguran, Philippines",
+      "time_ms": 1785334263513,
+      "lat": 15.269,
+      "lon": 122.853,
+      "depth": 10.0,
+      "dyfi_responses": 12,
+      "dyfi_maxmmi": null
+    },
+    {
+      "usgs_id": "us6000tgmy",
+      "mag": 5.0,
+      "place": "4 km NNE of Balangonan, Philippines",
+      "time_ms": 1785331019109,
+      "lat": 5.616,
+      "lon": 125.365,
+      "depth": 54.2,
+      "dyfi_responses": 10,
+      "dyfi_maxmmi": null
+    },
+    {
+      "usgs_id": "aka2026ovufno",
+      "mag": 5.0,
+      "place": "52 km E of Denali National Park, Alaska",
+      "time_ms": 1785271764979,
+      "lat": 63.611,
+      "lon": -150.673,
+      "depth": 5.0,
+      "dyfi_responses": 163,
+      "dyfi_maxmmi": 5.2
+    }
+  ]
 }
