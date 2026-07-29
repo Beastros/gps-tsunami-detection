@@ -1,19 +1,7 @@
 {
-  "generated": "2026-07-29T12:21:54Z",
+  "generated": "2026-07-29T14:46:29Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "aka2026ovufno",
-      "mag": 5.0,
-      "place": "52 km E of Denali National Park, Alaska",
-      "time_ms": 1785271764979,
-      "lat": 63.611,
-      "lon": -150.673,
-      "depth": 5.0,
-      "dyfi_responses": 160,
-      "dyfi_maxmmi": 5.2
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
