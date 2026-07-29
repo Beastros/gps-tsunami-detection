@@ -1,8 +1,8 @@
 {
-  "generated": "2026-07-29T04:18:42Z",
+  "generated": "2026-07-29T07:20:36Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 3,
+  "count": 2,
   "pings": [
     {
       "usgs_id": "aka2026ovufno",
@@ -12,7 +12,7 @@
       "lat": 63.611,
       "lon": -150.673,
       "depth": 5.0,
-      "dyfi_responses": 159,
+      "dyfi_responses": 160,
       "dyfi_maxmmi": 5.2
     },
     {
@@ -25,17 +25,6 @@
       "depth": 10.0,
       "dyfi_responses": 75,
       "dyfi_maxmmi": 9.2
-    },
-    {
-      "usgs_id": "us6000tgau",
-      "mag": 5.9,
-      "place": "50 km WSW of Brisas Barra de Suchiate, Mexico",
-      "time_ms": 1785216918079,
-      "lat": 14.296,
-      "lon": -92.622,
-      "depth": 35.0,
-      "dyfi_responses": 21,
-      "dyfi_maxmmi": 4.6
     }
   ]
 }
