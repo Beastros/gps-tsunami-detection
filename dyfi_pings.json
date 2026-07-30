@@ -1,30 +1,7 @@
 {
-  "generated": "2026-07-30T13:10:31Z",
+  "generated": "2026-07-30T15:23:44Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
-  "pings": [
-    {
-      "usgs_id": "us6000tgnu",
-      "mag": 5.1,
-      "place": "79 km NE of Casuguran, Philippines",
-      "time_ms": 1785334263513,
-      "lat": 15.269,
-      "lon": 122.853,
-      "depth": 10.0,
-      "dyfi_responses": 14,
-      "dyfi_maxmmi": null
-    },
-    {
-      "usgs_id": "us6000tgmy",
-      "mag": 5.0,
-      "place": "4 km NNE of Balangonan, Philippines",
-      "time_ms": 1785331019109,
-      "lat": 5.616,
-      "lon": 125.365,
-      "depth": 54.2,
-      "dyfi_responses": 11,
-      "dyfi_maxmmi": null
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
