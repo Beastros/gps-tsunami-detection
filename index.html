@@ -821,6 +821,12 @@ async function loadPipeline(){
   }
 }
 
+function filterRecent24h(rs){
+  var now=Date.now(),h24=86400000;
+  return (rs||[]).filter(function(e){
+    try{var ms=new Date(e.ts).getTime();return !isNaN(ms)&&(now-ms)<=h24;}catch(x){return false;}
+  });
+}
 function plReasonStyle(reason){
   var r=(reason||'').toLowerCase();
   if(r.indexOf('below threshold')>=0)return{row:'rs-below',chip:'rc-below'};
@@ -862,7 +868,7 @@ function renderPoll(d){
   }else{
     var last=polls[polls.length-1];
     var t=new Date(last.ts);
-    el('st-queued').textContent=last.total_queued!=null?String(last.total_queued):'--';
+    el('st-queued').textContent=last.pending!=null?String(last.pending):(last.total_queued!=null?String(last.total_queued):'--');
     var slice50=polls.slice(-50);
     var errN=slice50.filter(function(p){return p.error;}).length;
     if(plHl){
@@ -878,10 +884,11 @@ function renderPoll(d){
     el('poll-body').innerHTML='<table class="data-table"><thead><tr><th>Time (UTC)</th><th>New</th><th>Queued</th><th>Scored</th><th>Status</th></tr></thead><tbody>'+rows+'</tbody></table>';
   }
   var rs=d.recent_seismicity||[];
-  var n24=rs.filter(function(e){try{var ms=new Date(e.ts).getTime();return!isNaN(ms)&&(now-ms)<=h24;}catch(x){return false;}}).length;
+  var rs24=filterRecent24h(rs);
+  var n24=rs24.length;
   if(plM24)plM24.textContent=String(n24);
-  if(rs.length){
-    var rows2=rs.slice(-50).reverse().map(function(e){
+  if(rs24.length){
+    var rows2=rs24.slice(-50).reverse().map(function(e){
       var st=plReasonStyle(e.reason);
       var delta=e.delta!=null?e.delta:null;
       var dStr=delta!=null?'<span class="'+(delta>=0?'delta-pos':'delta-neg')+'">'+(delta>=0?'+':'')+delta.toFixed(1)+'</span>':'—';
@@ -889,9 +896,10 @@ function renderPoll(d){
       return '<tr class="seismic-row '+st.row+'"><td>'+fmtDate(e.ts)+'</td><td style="font-family:var(--font-m)">Mw '+(e.mag!=null?e.mag.toFixed(1):'--')+'</td><td>'+(e.place||'--')+'</td><td>'+(e.depth!=null?e.depth+' km':'—')+'</td><td><span class="reason-chip '+st.chip+'" title="'+reasonEsc+'">'+(e.reason||'--')+'</span></td><td class="col-delta" style="font-family:var(--font-m)">'+dStr+'</td></tr>';
     }).join('');
     el('seismic-body').innerHTML='<table class="data-table"><thead><tr><th>Time (UTC)</th><th>Mag</th><th>Location</th><th>Depth</th><th>Reason</th><th title="ΔMw vs M6.5 threshold">Δ Mw</th></tr></thead><tbody>'+rows2+'</tbody></table>';
-    renderSeismicOnMap(rs);
+    renderSeismicOnMap(rs24);
   }else{
-    el('seismic-body').innerHTML='<div class="empty-state"><div class="empty-icon">🌍</div><div class="empty-title">No near-miss rows</div><div class="empty-sub">Pacific Mw5.5+ that did not queue. Orange rings on the Dashboard use this same list.</div></div>';
+    el('seismic-body').innerHTML='<div class="empty-state"><div class="empty-icon">🌍</div><div class="empty-title">No near-miss rows (last 24h)</div><div class="empty-sub">Pacific Mw5.5+ that did not queue. Orange rings on the Dashboard use this same list.</div></div>';
+    renderSeismicOnMap([]);
   }
   restartPollCountdownFromLog(d);
 }
@@ -1207,8 +1215,9 @@ function initMap() {
 
 function renderSeismicOnMap(rs) {
   var svg=window._mapSvg, proj=window._mapProj;
-  if(!svg||!proj||!rs||!rs.length) return;
+  if(!svg||!proj) return;
   svg.selectAll('.seismic-marker').remove();
+  if(!rs||!rs.length) return;
   var now=Date.now();
   var colNear='#ffc857', colOther='#ff9a3c';
   rs.slice(-80).forEach(function(e){
@@ -1218,7 +1227,7 @@ function renderSeismicOnMap(rs) {
     var mag=e.mag||5.5;
     var r=Math.max(3,(mag-4.5)*4);
     var age=(now-new Date(e.ts).getTime())/(1000*3600);
-    var op=Math.max(0.5,0.92-age/36);
+    var op=Math.max(0.12,0.92-age/24);
     var nearMiss=e.delta!=null&&e.delta>-0.5&&e.delta<=0;
     var color=nearMiss?colNear:colOther;
     var sw=nearMiss?2.4:1.6;

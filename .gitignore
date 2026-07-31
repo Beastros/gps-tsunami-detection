@@ -32,6 +32,7 @@ __pycache__/
 *.pyo
 .env
 venv/
+.discord_webhook_state.json
 
 # Local pipeline logs (Task Scheduler / manual runs)
 *.log
