@@ -26,6 +26,7 @@ Environment variables needed:
 Or create a .env file with those lines (never commit to GitHub).
 """
 
+import os
 import time
 import logging
 import argparse
@@ -53,6 +54,43 @@ logging.basicConfig(
     ]
 )
 log = logging.getLogger(__name__)
+
+
+def _active_fast_poll_state():
+    """Return active fast-poll state, if fast_poll.json has not expired."""
+    import json as _json
+
+    fp = Path("fast_poll.json")
+    if not fp.exists():
+        return None
+    try:
+        state = _json.loads(fp.read_text(encoding="utf-8"))
+        exp = datetime.fromisoformat(
+            state.get("expires_utc", "2000-01-01T00:00:00+00:00")
+        )
+    except Exception:
+        return None
+    if state.get("active", False) and exp > datetime.now(timezone.utc):
+        return state
+    return None
+
+
+def _is_ci_environment():
+    return (
+        os.environ.get("CI", "").lower() == "true"
+        or os.environ.get("GITHUB_ACTIONS", "").lower() == "true"
+    )
+
+
+def _fast_poll_interval_or_default():
+    state = _active_fast_poll_state()
+    if not state:
+        return POLL_INTERVAL
+    interval = int(state.get("poll_interval_sec", 120))
+    mag = state.get("trigger_mag", "?")
+    place = state.get("trigger_place", "?")
+    log.info(f"FAST POLL MODE: Mw{mag} {place} -- next cycle in {interval}s")
+    return interval
 
 def run_pipeline():
     """Run one full pipeline cycle."""
@@ -149,30 +187,22 @@ def main(once=False):
             notify_discord.send_pipeline_error("pipeline", str(e))
 
         if once:
-            # ── Fast poll check ────────────────────────────────────────────
-            import json as _json
-            from datetime import datetime as _dt, timezone as _tz
-            _fp = Path("fast_poll.json")
-            _fast = False
-            if _fp.exists():
-                try:
-                    _state = _json.loads(_fp.read_text(encoding="utf-8"))
-                    _exp   = _dt.fromisoformat(_state.get("expires_utc","2000-01-01T00:00:00+00:00"))
-                    _fast  = _state.get("active", False) and _exp > _dt.now(_tz.utc)
-                except Exception:
-                    pass
-            if _fast:
-                _interval = _state.get("poll_interval_sec", 120)
-                _mag      = _state.get("trigger_mag","?")
-                _place    = _state.get("trigger_place","?")
+            _state = _active_fast_poll_state()
+            if _state and not _is_ci_environment():
+                _interval = int(_state.get("poll_interval_sec", 120))
+                _mag = _state.get("trigger_mag", "?")
+                _place = _state.get("trigger_place", "?")
                 log.info(f"FAST POLL MODE: Mw{_mag} {_place} -- next cycle in {_interval}s")
                 time.sleep(_interval)
                 continue   # re-run pipeline cycle
+            if _state:
+                log.info("CI --once mode ignoring active fast poll.")
             log.info("--once mode, done.")
             break
 
-        log.info(f"\nSleeping {POLL_INTERVAL}s...")
-        time.sleep(POLL_INTERVAL)
+        _interval = _fast_poll_interval_or_default()
+        log.info(f"\nSleeping {_interval}s...")
+        time.sleep(_interval)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
