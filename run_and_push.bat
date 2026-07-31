@@ -41,7 +41,11 @@ if errorlevel 1 (
     exit /b 1
   )
   git push origin main >>"%LOG%" 2>&1
-  if errorlevel 1 echo git push FAILED>>"%LOG%"
+  if errorlevel 1 (
+    echo git push FAILED — GitHub token may be expired>>"%LOG%"
+    echo Renew PAT at https://github.com/settings/tokens then update Windows Credential Manager>>"%LOG%"
+    exit /b 1
+  )
 ) else (
   echo No JSON changes to push>>"%LOG%"
 )

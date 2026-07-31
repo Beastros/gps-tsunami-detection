@@ -366,6 +366,40 @@ else:
         else: ok("Repo working tree clean")
         rem = subprocess.run(["git","-C",str(REPO_DIR),"ls-remote","--heads","origin"], capture_output=True, text=True, timeout=15)
         ok("GitHub remote reachable") if rem.returncode == 0 else (fail("GitHub remote unreachable"), issues.append("Git remote unreachable"))
+        push_test = subprocess.run(
+            ["git", "-C", str(REPO_DIR), "push", "--dry-run", "origin", "main"],
+            capture_output=True, text=True, timeout=20,
+        )
+        err = (push_test.stderr or push_test.stdout or "").strip()
+        auth_markers = (
+            "authentication failed",
+            "invalid credentials",
+            "could not read username",
+            "403",
+            "401",
+            "denied",
+            "permission",
+        )
+        if push_test.returncode == 0:
+            ok("Git push credentials valid (dry-run)")
+        elif any(m in err.lower() for m in auth_markers):
+            fail("Git push auth failed — renew GitHub PAT in Credential Manager")
+            issues.append("GitHub token expired or missing — push disconnected")
+            if err:
+                info(err.splitlines()[-1][:120])
+        else:
+            warn("Git push dry-run inconclusive (may be up to date)")
+            if err:
+                info(err.splitlines()[-1][:120])
+        log_path = PIPELINE_DIR / "task_runner.log"
+        if log_path.exists():
+            tail = log_path.read_text(encoding="utf-8", errors="ignore")[-8000:]
+            if "git push FAILED" in tail:
+                fail("task_runner.log shows recent git push FAILED")
+                issues.append("Recent git push failure in task_runner.log")
+            elif "Authentication failed" in tail or "invalid credentials" in tail.lower():
+                fail("task_runner.log shows GitHub authentication errors")
+                issues.append("GitHub auth errors in task_runner.log")
     except Exception as e:
         warn(f"Git check error: {e}")
 
