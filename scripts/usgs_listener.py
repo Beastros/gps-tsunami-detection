@@ -412,6 +412,12 @@ def check_feed(queue):
     new_count = 0
     near_misses = []
     cutoff = datetime.now(timezone.utc) - timedelta(hours=LOOKBACK_HOURS)
+    seen_ids = queue.setdefault("seen_ids", [])
+    queued_event_ids = {
+        event.get("usgs_id")
+        for event in queue.get("events", [])
+        if event.get("usgs_id")
+    }
 
     for feat in features:
         eid = event_id(feat)
@@ -423,10 +429,12 @@ def check_feed(queue):
         time_ms = props.get("time", 0)
         coords  = geom.get("coordinates", [None, None, None])
 
-        if eid in queue["seen_ids"]:
+        if eid in queued_event_ids:
             continue
 
-        queue["seen_ids"].append(eid)
+        already_seen = eid in seen_ids
+        if not already_seen:
+            seen_ids.append(eid)
 
         if time_ms:
             event_time = datetime.fromtimestamp(time_ms/1000, tz=timezone.utc)
@@ -438,9 +446,10 @@ def check_feed(queue):
         if mag is None or mag < 5.5:
             continue
 
-        candidate = assess_event(feat)
+        candidate = None if already_seen and mag < MW_THRESHOLD else assess_event(feat)
         if candidate:
             queue["events"].append(candidate)
+            queued_event_ids.add(eid)
             new_count += 1
             w = candidate.get("detection_window") or {}
             log.info(
@@ -449,7 +458,7 @@ def check_feed(queue):
                 f"TEC_window=+{w.get('tec_onset_window','?')}h "
                 f"expected_lead={w.get('expected_lead_time_min','?')}min"
             )
-        else:
+        elif not already_seen:
             # Near-misses for dashboard map + Poll Log (Mw5.5+ inside Pacific zones only)
             lon = coords[0] if coords and coords[0] is not None else None
             lat = coords[1] if coords and coords[1] is not None else None
