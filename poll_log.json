@@ -28282,10 +28282,24 @@
       "total_queued": 4,
       "pending": 0,
       "scored": 4
+    },
+    {
+      "ts": "2026-07-31T03:51:13.048591+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
+    },
+    {
+      "ts": "2026-07-31T03:51:16.867418+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
     }
   ],
-  "last_updated": "2026-07-31T00:04:12.822680+00:00",
-  "total_polls": 4347,
+  "last_updated": "2026-07-31T03:51:16.867418+00:00",
+  "total_polls": 4349,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -28896,6 +28910,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.7
+    },
+    {
+      "ts": "2026-07-31T00:58:44.364000+00:00",
+      "mag": 5.6,
+      "place": "13 km ENE of San Fernando, Peru",
+      "lat": -8.33,
+      "lon": -74.44,
+      "depth": 154.4,
+      "reason": "below threshold",
+      "delta": -0.9
     }
   ],
   "expected_poll_interval_sec": 900
