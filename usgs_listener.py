@@ -402,7 +402,7 @@ def _activate_fast_poll(usgs_id, mag, place, fp_path):
         "expires_utc":     (now + _td(minutes=FAST_POLL_DURATION_MIN)).isoformat(),
         "poll_interval_sec": FAST_POLL_INTERVAL_SEC,
     }
-    open(fp_path, "w", encoding="utf-8").write(_json.dumps(state, indent=2))
+    Path(fp_path).write_text(_json.dumps(state, indent=2), encoding="utf-8")
     log.info(f"FAST POLL ACTIVATED: Mw{mag} {place} -- 2-min cycles for {FAST_POLL_DURATION_MIN} min")
 
 
@@ -412,6 +412,8 @@ def check_feed(queue):
     new_count = 0
     near_misses = []
     cutoff = datetime.now(timezone.utc) - timedelta(hours=LOOKBACK_HOURS)
+    queued_ids = {e.get("usgs_id") for e in queue.get("events", [])}
+    seen_ids = set(queue.setdefault("seen_ids", []))
 
     for feat in features:
         eid = event_id(feat)
@@ -423,10 +425,13 @@ def check_feed(queue):
         time_ms = props.get("time", 0)
         coords  = geom.get("coordinates", [None, None, None])
 
-        if eid in queue["seen_ids"]:
+        if eid in queued_ids:
             continue
 
-        queue["seen_ids"].append(eid)
+        already_seen = eid in seen_ids
+        if not already_seen:
+            queue["seen_ids"].append(eid)
+            seen_ids.add(eid)
 
         if time_ms:
             event_time = datetime.fromtimestamp(time_ms/1000, tz=timezone.utc)
@@ -441,6 +446,7 @@ def check_feed(queue):
         candidate = assess_event(feat)
         if candidate:
             queue["events"].append(candidate)
+            queued_ids.add(eid)
             new_count += 1
             w = candidate.get("detection_window") or {}
             log.info(
@@ -478,7 +484,7 @@ def check_feed(queue):
             else:
                 reason = "filtered"
 
-            if reason is not None:
+            if reason is not None and not already_seen:
                 near_misses.append({
                     "ts":     event_time.isoformat(),
                     "mag":    mag,
