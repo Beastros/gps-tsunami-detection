@@ -1,7 +1,19 @@
 {
-  "generated": "2026-07-31T12:19:32Z",
+  "generated": "2026-07-31T14:36:15Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000th4k",
+      "mag": 5.6,
+      "place": "13 km ENE of San Fernando, Peru",
+      "time_ms": 1785459524364,
+      "lat": -8.335,
+      "lon": -74.435,
+      "depth": 154.4,
+      "dyfi_responses": 12,
+      "dyfi_maxmmi": 3.6
+    }
+  ]
 }
