@@ -29,6 +29,7 @@ Or create a .env file with those lines (never commit to GitHub).
 import time
 import logging
 import argparse
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -92,8 +93,11 @@ def run_pipeline():
     _queue = usgs_listener.load_queue()
     for _evt in _queue.get("events", []):
         if _evt.get("status") == "predicted" and not _evt.get("discord_alerted"):
-            notify_discord.send_detection_alert(_evt)
-            _evt["discord_alerted"] = True
+            try:
+                if notify_discord.send_detection_alert(_evt):
+                    _evt["discord_alerted"] = True
+            except Exception as d_err:
+                log.warning("Discord detection alert failed: %s", d_err)
     usgs_listener.save_queue(_queue)
 
     # Step 4: Score
@@ -128,6 +132,9 @@ def main(once=False):
             notify_discord.send_pipeline_error("pipeline", str(e))
 
         if once:
+            if os.environ.get("CI", "").lower() == "true":
+                log.info("--once mode in CI, done.")
+                break
             # ── Fast poll check ────────────────────────────────────────────
             import json as _json
             from datetime import datetime as _dt, timezone as _tz
