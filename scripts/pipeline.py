@@ -29,6 +29,7 @@ Or create a .env file with those lines (never commit to GitHub).
 import time
 import logging
 import argparse
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -92,8 +93,18 @@ def run_pipeline():
     _queue = usgs_listener.load_queue()
     for _evt in _queue.get("events", []):
         if _evt.get("status") == "predicted" and not _evt.get("discord_alerted"):
-            notify_discord.send_detection_alert(_evt)
-            _evt["discord_alerted"] = True
+            _sent = False
+            try:
+                _sent = notify_discord.send_detection_alert(_evt)
+            except Exception as d_err:
+                log.warning("Discord detection alert failed: %s", d_err)
+            if _sent:
+                _evt["discord_alerted"] = True
+            else:
+                log.warning(
+                    "Discord detection alert not acknowledged for %s; will retry",
+                    _evt.get("usgs_id", "?"),
+                )
     usgs_listener.save_queue(_queue)
 
     # Step 4: Score
@@ -141,6 +152,9 @@ def main(once=False):
                 except Exception:
                     pass
             if _fast:
+                if os.environ.get("CI", "").lower() == "true":
+                    log.info("FAST POLL MODE active, but CI --once exits after one cycle.")
+                    break
                 _interval = _state.get("poll_interval_sec", 120)
                 _mag      = _state.get("trigger_mag","?")
                 _place    = _state.get("trigger_place","?")
