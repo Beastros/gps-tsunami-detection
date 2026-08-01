@@ -28450,10 +28450,24 @@
       "total_queued": 4,
       "pending": 0,
       "scored": 4
+    },
+    {
+      "ts": "2026-08-01T04:41:11.055681+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
+    },
+    {
+      "ts": "2026-08-01T04:41:13.935539+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
     }
   ],
-  "last_updated": "2026-08-01T01:15:19.877592+00:00",
-  "total_polls": 4371,
+  "last_updated": "2026-08-01T04:41:13.935539+00:00",
+  "total_polls": 4373,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -29074,6 +29088,16 @@
       "depth": 154.4,
       "reason": "below threshold",
       "delta": -0.9
+    },
+    {
+      "ts": "2026-08-01T02:48:01.570000+00:00",
+      "mag": 5.5,
+      "place": "57 km E of Mutsu, Japan",
+      "lat": 41.35,
+      "lon": 141.9,
+      "depth": 82.3,
+      "reason": "below threshold",
+      "delta": -1.0
     }
   ],
   "expected_poll_interval_sec": 900
