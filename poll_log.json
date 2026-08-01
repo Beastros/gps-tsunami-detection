@@ -28464,10 +28464,24 @@
       "total_queued": 4,
       "pending": 0,
       "scored": 4
+    },
+    {
+      "ts": "2026-08-01T07:16:02.378882+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
+    },
+    {
+      "ts": "2026-08-01T07:16:06.164819+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
     }
   ],
-  "last_updated": "2026-08-01T04:41:13.935539+00:00",
-  "total_polls": 4373,
+  "last_updated": "2026-08-01T07:16:06.164819+00:00",
+  "total_polls": 4375,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -29098,6 +29112,16 @@
       "depth": 82.3,
       "reason": "below threshold",
       "delta": -1.0
+    },
+    {
+      "ts": "2026-08-01T04:49:01.269000+00:00",
+      "mag": 5.6,
+      "place": "200 km SW of Port McNeill, Canada",
+      "lat": 49.6,
+      "lon": -129.43,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.9
     }
   ],
   "expected_poll_interval_sec": 900
