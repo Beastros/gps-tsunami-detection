@@ -1,7 +1,19 @@
 {
-  "generated": "2026-08-02T09:00:09Z",
+  "generated": "2026-08-02T10:47:13Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000thl3",
+      "mag": 5.6,
+      "place": "14 km S of Hicks Bay, New Zealand",
+      "time_ms": 1785659727066,
+      "lat": -37.73,
+      "lon": 178.329,
+      "depth": 52.8,
+      "dyfi_responses": 22,
+      "dyfi_maxmmi": 4.4
+    }
+  ]
 }
