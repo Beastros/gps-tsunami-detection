@@ -1,9 +1,20 @@
 {
-  "generated": "2026-08-05T06:31:26Z",
+  "generated": "2026-08-05T09:09:07Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
+  "count": 2,
   "pings": [
+    {
+      "usgs_id": "us6000ti8i",
+      "mag": 6.3,
+      "place": "south of the Kermadec Islands",
+      "time_ms": 1785915807317,
+      "lat": -33.806,
+      "lon": 179.473,
+      "depth": 226.1,
+      "dyfi_responses": 11,
+      "dyfi_maxmmi": 3.3
+    },
     {
       "usgs_id": "us6000ti6x",
       "mag": 6.3,
@@ -12,7 +23,7 @@
       "lat": 5.181,
       "lon": 125.276,
       "depth": 10.0,
-      "dyfi_responses": 24,
+      "dyfi_responses": 36,
       "dyfi_maxmmi": 6.7
     }
   ]
