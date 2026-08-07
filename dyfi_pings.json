@@ -1,7 +1,19 @@
 {
-  "generated": "2026-08-07T00:41:26Z",
+  "generated": "2026-08-07T03:40:09Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000tivb",
+      "mag": 5.0,
+      "place": "7 km NW of Cabacao, Philippines",
+      "time_ms": 1786070290013,
+      "lat": 13.386,
+      "lon": 120.611,
+      "depth": 90.2,
+      "dyfi_responses": 13,
+      "dyfi_maxmmi": null
+    }
+  ]
 }
