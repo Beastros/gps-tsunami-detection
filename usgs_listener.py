@@ -54,9 +54,10 @@ PACIFIC_ZONES = [
     },
     {
         "name": "Alaska/Aleutian",
-        "lat": (48, 62), "lon": (-180, -145),
+        # lon wraps antimeridian: western Aleutians (165..180) + eastern arc (-180..-145)
+        "lat": (48, 62), "lon": (165, -145),
         "anchor": "guam",
-        "note": "Alaska corridor → GUAM or no anchor depending on geometry"
+        "note": "Alaska/Aleutian arc across dateline → GUAM or no anchor depending on geometry"
     },
     {
         "name": "Cascadia/BC",
