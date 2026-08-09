@@ -20,7 +20,7 @@ import argparse
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from scipy.signal import butter, filtfilt
 from itertools import combinations
@@ -28,6 +28,7 @@ from space_weather import get_space_weather_quality
 
 EVENT_QUEUE_FILE = "event_queue.json"
 LOG_FILE = "runner.log"
+RINEX_DAY_OFFSETS = (-1, 0, 1)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -395,22 +396,68 @@ def get_dtec_onsets(dtec, quake_utc):
     return onsets
 
 
-def _rinex_obs_path(rinex_dir, sid, doy, yr2):
-    """First existing observation archive (.Z or .gz) for station/day."""
-    base = rinex_dir / f"{sid}{doy:03d}0.{yr2}o"
+def _load_rinex_manifest(rinex_dir):
+    path = rinex_dir / "rinex_manifest.json"
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+def _rinex_file_path(rinex_dir, code, doy, yr2, ftype):
+    base = rinex_dir / f"{code.lower()}{doy:03d}0.{yr2}{ftype}"
     for ext in (".Z", ".gz"):
         p = Path(str(base) + ext)
         if p.exists():
             return p
     return base.with_suffix(".Z")
 
+def _manifest_codes_for_day(manifest, sid, year, doy):
+    codes = []
+    sid_l = sid.lower()
+    for day in manifest.get("days") or []:
+        if day.get("year") != year or day.get("doy") != doy:
+            continue
+        resolved = day.get("resolved") or {}
+        resolved_l = {str(k).lower(): str(v).lower() for k, v in resolved.items()}
+        if sid_l in resolved_l:
+            codes.append(resolved_l[sid_l])
+    codes.append(sid_l)
+    out = []
+    for code in codes:
+        if code and code not in out:
+            out.append(code)
+    return out
+
+def _rinex_paths_for_station_day(rinex_dir, sid, year, doy, yr2, manifest=None):
+    manifest = manifest or {}
+    for code in _manifest_codes_for_day(manifest, sid, year, doy):
+        obs = _rinex_file_path(rinex_dir, code, doy, yr2, "o")
+        if obs.exists():
+            return obs, _rinex_file_path(rinex_dir, code, doy, yr2, "n")
+    sid_l = sid.lower()
+    return (
+        _rinex_file_path(rinex_dir, sid_l, doy, yr2, "o"),
+        _rinex_file_path(rinex_dir, sid_l, doy, yr2, "n"),
+    )
+
+def _rinex_paths_for_station(rinex_dir, sid, quake_dt, manifest=None):
+    for day_off in RINEX_DAY_OFFSETS:
+        dt = quake_dt + timedelta(days=day_off)
+        year, doy, yr2 = dt.year, dt.timetuple().tm_yday, str(dt.year)[-2:]
+        obs, nav = _rinex_paths_for_station_day(rinex_dir, sid, year, doy, yr2, manifest)
+        if obs.exists():
+            return obs, nav
+    year, doy, yr2 = quake_dt.year, quake_dt.timetuple().tm_yday, str(quake_dt.year)[-2:]
+    return _rinex_paths_for_station_day(rinex_dir, sid, year, doy, yr2, manifest)
+
+def _rinex_obs_path(rinex_dir, sid, doy, yr2):
+    """First existing observation archive (.Z or .gz) for station/day."""
+    return _rinex_file_path(rinex_dir, sid, doy, yr2, "o")
+
 def _rinex_nav_path(rinex_dir, sid, doy, yr2):
-    base = rinex_dir / f"{sid}{doy:03d}0.{yr2}n"
-    for ext in (".Z", ".gz"):
-        p = Path(str(base) + ext)
-        if p.exists():
-            return p
-    return base.with_suffix(".Z")
+    return _rinex_file_path(rinex_dir, sid, doy, yr2, "n")
 
 def decompress(gz):
   p = Path(gz)
@@ -605,6 +652,7 @@ def run_event(event, kp_override=None):
     year = quake_dt.year
     doy  = quake_dt.timetuple().tm_yday
     yr2  = str(year)[-2:]
+    manifest = _load_rinex_manifest(rinex_dir)
 
     log.info(f"\nRunning detector: {event['usgs_id']}")
     log.info(f"  {event['place']}  Mw{mw}  {quake_utc[:16]}")
@@ -612,8 +660,7 @@ def run_event(event, kp_override=None):
     # Determine which stations have files
     filts = {}
     for sid in STATIONS:
-        og = _rinex_obs_path(rinex_dir, sid, doy, yr2)
-        ng = _rinex_nav_path(rinex_dir, sid, doy, yr2)
+        og, ng = _rinex_paths_for_station(rinex_dir, sid, quake_dt, manifest)
         if not og.exists(): continue
         op = decompress(og)
         if not op: continue
@@ -640,7 +687,7 @@ def run_event(event, kp_override=None):
     for _const in ('R', 'E'):
         _cfilts = {}
         for _sid in STATIONS:
-            _og = _rinex_obs_path(rinex_dir, _sid, doy, yr2)
+            _og, _ng = _rinex_paths_for_station(rinex_dir, _sid, quake_dt, manifest)
             if not _og.exists(): continue
             _op = decompress(_og)
             if not _op: continue
