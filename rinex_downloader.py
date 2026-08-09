@@ -550,8 +550,14 @@ def reset_event_for_reprocess(event: dict, *, keep_retro_meta: bool = False) -> 
                 "retro_triggered_utc",
                 "retro_prior_status",
                 "retro_prior_prediction",
+                "retro_prior_score",
+                "retro_prior_scored",
+                "retro_prior_detector_run",
+                "retro_prior_rinex_downloaded",
+                "retro_prior_rinex_dir",
                 "retro_prior_detected",
                 "rinex_coverage_probe",
+                "retroactive_abort_reason",
             )
             if event.get(k) is not None
         }
@@ -621,19 +627,29 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
     for event in ready:
         count, event_dir = download_event(event, auth)
         if count > 0:
+            if event.get("retroactive_pending"):
+                reset_event_for_reprocess(event, keep_retro_meta=True)
             event["rinex_downloaded"] = True
             event["rinex_dir"] = event_dir
             event["rinex_download_utc"] = datetime.now(timezone.utc).isoformat()
             event["status"] = "rinex_ready"
+            event.pop("retroactive_abort_reason", None)
             event.pop("rinex_last_fail_utc", None)
             save_queue(queue)
             log.info(f"Updated queue: {event['usgs_id']} → rinex_ready ({count} files)")
         else:
-            event["status"] = "rinex_failed"
-            event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
-            event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
             if event.get("retroactive_pending"):
-                event.pop("retroactive_pending", None)
+                event["retroactive_abort_reason"] = (
+                    "Download returned 0 files; preserved previous detector/scoring result."
+                )
+                event["retroactive_last_abort_utc"] = datetime.now(timezone.utc).isoformat()
+                event["retroactive_download_failures"] = (
+                    int(event.get("retroactive_download_failures", 0)) + 1
+                )
+            else:
+                event["status"] = "rinex_failed"
+                event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
+                event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
             save_queue(queue)
 
     return retro_triggered

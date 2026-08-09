@@ -412,6 +412,8 @@ def check_feed(queue):
     new_count = 0
     near_misses = []
     cutoff = datetime.now(timezone.utc) - timedelta(hours=LOOKBACK_HOURS)
+    queued_ids = {e.get("usgs_id") for e in queue.get("events", [])}
+    seen_ids = queue.setdefault("seen_ids", [])
 
     for feat in features:
         eid = event_id(feat)
@@ -423,10 +425,10 @@ def check_feed(queue):
         time_ms = props.get("time", 0)
         coords  = geom.get("coordinates", [None, None, None])
 
-        if eid in queue["seen_ids"]:
+        if eid in queued_ids:
             continue
 
-        queue["seen_ids"].append(eid)
+        already_seen = eid in seen_ids
 
         if time_ms:
             event_time = datetime.fromtimestamp(time_ms/1000, tz=timezone.utc)
@@ -441,6 +443,9 @@ def check_feed(queue):
         candidate = assess_event(feat)
         if candidate:
             queue["events"].append(candidate)
+            queued_ids.add(eid)
+            if not already_seen:
+                seen_ids.append(eid)
             new_count += 1
             w = candidate.get("detection_window") or {}
             log.info(
@@ -479,21 +484,23 @@ def check_feed(queue):
                 reason = "filtered"
 
             if reason is not None:
-                near_misses.append({
-                    "ts":     event_time.isoformat(),
-                    "mag":    mag,
-                    "place":  place[:60],
-                    "lat":    round(lat, 2) if lat is not None else None,
-                    "lon":    round(lon, 2) if lon is not None else None,
-                    "depth":  round(depth_km, 1) if depth_km else None,
-                    "reason": reason,
-                    "delta":  delta,
-                })
+                if not already_seen:
+                    near_misses.append({
+                        "ts":     event_time.isoformat(),
+                        "mag":    mag,
+                        "place":  place[:60],
+                        "lat":    round(lat, 2) if lat is not None else None,
+                        "lon":    round(lon, 2) if lon is not None else None,
+                        "depth":  round(depth_km, 1) if depth_km else None,
+                        "reason": reason,
+                        "delta":  delta,
+                    })
+                    seen_ids.append(eid)
                 if mag >= MW_THRESHOLD:
                     log.debug(f"Skipped Mw{mag} {place} — {reason}")
 
         # Fast poll: Mw >= trigger in Pacific (candidate or near-miss)
-        if mag is not None and mag >= FAST_POLL_MW_TRIGGER:
+        if (candidate or not already_seen) and mag is not None and mag >= FAST_POLL_MW_TRIGGER:
             _zones = in_pacific_zone(
                 coords[1] if coords and coords[1] is not None else 0,
                 coords[0] if coords and coords[0] is not None else 0,
