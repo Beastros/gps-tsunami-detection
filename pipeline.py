@@ -161,13 +161,15 @@ def main(once=False):
                     _fast  = _state.get("active", False) and _exp > _dt.now(_tz.utc)
                 except Exception:
                     pass
-            if _fast:
+            if _fast and not __import__("os").environ.get("CI"):
                 _interval = _state.get("poll_interval_sec", 120)
                 _mag      = _state.get("trigger_mag","?")
                 _place    = _state.get("trigger_place","?")
                 log.info(f"FAST POLL MODE: Mw{_mag} {_place} -- next cycle in {_interval}s")
                 time.sleep(_interval)
                 continue   # re-run pipeline cycle
+            if _fast:
+                log.info("FAST POLL MODE active, but CI --once exits after one cycle.")
             log.info("--once mode, done.")
             break
 
