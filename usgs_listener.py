@@ -412,6 +412,9 @@ def check_feed(queue):
     new_count = 0
     near_misses = []
     cutoff = datetime.now(timezone.utc) - timedelta(hours=LOOKBACK_HOURS)
+    queue.setdefault("events", [])
+    queue.setdefault("seen_ids", [])
+    queued_ids = {e.get("usgs_id") for e in queue["events"]}
 
     for feat in features:
         eid = event_id(feat)
@@ -423,10 +426,25 @@ def check_feed(queue):
         time_ms = props.get("time", 0)
         coords  = geom.get("coordinates", [None, None, None])
 
-        if eid in queue["seen_ids"]:
+        already_seen = eid in queue["seen_ids"]
+        already_queued = eid in queued_ids
+        if already_queued:
+            continue
+        if already_seen and (mag is None or mag < MW_THRESHOLD):
+            if mag is not None and mag >= FAST_POLL_MW_TRIGGER:
+                _zones = in_pacific_zone(
+                    coords[1] if coords and coords[1] is not None else 0,
+                    coords[0] if coords and coords[0] is not None else 0,
+                )
+                if _zones:
+                    _activate_fast_poll(
+                        eid, mag, place,
+                        os.path.join(os.path.dirname(os.path.abspath(__file__)), FAST_POLL_FILE)
+                    )
             continue
 
-        queue["seen_ids"].append(eid)
+        if not already_seen:
+            queue["seen_ids"].append(eid)
 
         if time_ms:
             event_time = datetime.fromtimestamp(time_ms/1000, tz=timezone.utc)
@@ -441,6 +459,7 @@ def check_feed(queue):
         candidate = assess_event(feat)
         if candidate:
             queue["events"].append(candidate)
+            queued_ids.add(eid)
             new_count += 1
             w = candidate.get("detection_window") or {}
             log.info(
@@ -450,6 +469,8 @@ def check_feed(queue):
                 f"expected_lead={w.get('expected_lead_time_min','?')}min"
             )
         else:
+            if already_seen:
+                continue
             # Near-misses for dashboard map + Poll Log (Mw5.5+ inside Pacific zones only)
             lon = coords[0] if coords and coords[0] is not None else None
             lat = coords[1] if coords and coords[1] is not None else None

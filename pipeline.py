@@ -29,6 +29,7 @@ Or create a .env file with those lines (never commit to GitHub).
 import time
 import logging
 import argparse
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -149,6 +150,9 @@ def main(once=False):
             notify_discord.send_pipeline_error("pipeline", str(e))
 
         if once:
+            if os.environ.get("CI", "").lower() == "true":
+                log.info("--once mode in CI, done.")
+                break
             # ── Fast poll check ────────────────────────────────────────────
             import json as _json
             from datetime import datetime as _dt, timezone as _tz
