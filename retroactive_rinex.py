@@ -23,6 +23,7 @@ from rinex_downloader import (
     resolve_corridor_stations,
     reset_event_for_reprocess,
     save_aliases,
+    snapshot_retro_prior_state,
     stations_for_event,
 )
 from requests.auth import HTTPBasicAuth
@@ -198,7 +199,8 @@ def queue_retroactive_reprocess(event: dict, reason: str, probe: dict) -> dict:
     if isinstance(prior_prediction, dict):
         prior_detected = prior_prediction.get("detected")
 
-    reset_event_for_reprocess(event)
+    event["retro_prior_state"] = snapshot_retro_prior_state(event)
+    reset_event_for_reprocess(event, preserve_existing_result=True)
     event["retroactive_pending"] = True
     event["retroactive_trigger"] = True
     event["retro_trigger_reason"] = reason
