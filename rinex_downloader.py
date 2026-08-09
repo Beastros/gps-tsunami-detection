@@ -621,19 +621,23 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
     for event in ready:
         count, event_dir = download_event(event, auth)
         if count > 0:
+            if event.get("retroactive_pending"):
+                reset_event_for_reprocess(event, keep_retro_meta=True)
             event["rinex_downloaded"] = True
             event["rinex_dir"] = event_dir
             event["rinex_download_utc"] = datetime.now(timezone.utc).isoformat()
             event["status"] = "rinex_ready"
+            event.pop("retroactive_download_failed", None)
             event.pop("rinex_last_fail_utc", None)
             save_queue(queue)
             log.info(f"Updated queue: {event['usgs_id']} → rinex_ready ({count} files)")
         else:
-            event["status"] = "rinex_failed"
+            if event.get("retroactive_pending"):
+                event["retroactive_download_failed"] = True
+            else:
+                event["status"] = "rinex_failed"
             event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
             event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
-            if event.get("retroactive_pending"):
-                event.pop("retroactive_pending", None)
             save_queue(queue)
 
     return retro_triggered

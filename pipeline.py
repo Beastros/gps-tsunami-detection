@@ -97,24 +97,32 @@ def run_pipeline():
     _queue = usgs_listener.load_queue()
     for _evt in _queue.get("events", []):
         if _evt.get("status") == "predicted" and not _evt.get("discord_alerted"):
+            _sent = False
             try:
                 if _evt.get("retroactive_trigger") or _evt.get("retro_trigger_reason"):
-                    notify_discord.send_retroactive_completed(_evt)
-                    _evt.pop("retroactive_pending", None)
+                    _sent = notify_discord.send_retroactive_completed(_evt)
+                    if _sent:
+                        _evt.pop("retroactive_pending", None)
                 else:
-                    notify_discord.send_detection_alert(_evt)
+                    _sent = notify_discord.send_detection_alert(_evt)
             except Exception as d_err:
                 log.warning("Discord detection alert failed: %s", d_err)
-            _evt["discord_alerted"] = True
+            if _sent:
+                _evt["discord_alerted"] = True
     for _evt in _queue.get("events", []):
-        if _evt.get("retroactive_pending") and _evt.get("status") == "rinex_failed":
+        if _evt.get("retroactive_pending") and (
+            _evt.get("status") == "rinex_failed" or _evt.get("retroactive_download_failed")
+        ):
+            _sent = False
             try:
-                notify_discord.send_retroactive_aborted(
+                _sent = notify_discord.send_retroactive_aborted(
                     _evt, "Download returned 0 files; will retry on a later cycle if CDDIS fills in."
                 )
             except Exception as d_err:
                 log.warning("Discord retro abort alert failed: %s", d_err)
-            _evt.pop("retroactive_pending", None)
+            if _sent:
+                _evt.pop("retroactive_pending", None)
+                _evt.pop("retroactive_download_failed", None)
     usgs_listener.save_queue(_queue)
 
     # Step 4: Score
