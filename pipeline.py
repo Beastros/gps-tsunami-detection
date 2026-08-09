@@ -29,6 +29,7 @@ Or create a .env file with those lines (never commit to GitHub).
 import time
 import logging
 import argparse
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -97,24 +98,34 @@ def run_pipeline():
     _queue = usgs_listener.load_queue()
     for _evt in _queue.get("events", []):
         if _evt.get("status") == "predicted" and not _evt.get("discord_alerted"):
+            _sent = False
             try:
                 if _evt.get("retroactive_trigger") or _evt.get("retro_trigger_reason"):
-                    notify_discord.send_retroactive_completed(_evt)
-                    _evt.pop("retroactive_pending", None)
+                    _sent = notify_discord.send_retroactive_completed(_evt)
                 else:
-                    notify_discord.send_detection_alert(_evt)
+                    _sent = notify_discord.send_detection_alert(_evt)
             except Exception as d_err:
                 log.warning("Discord detection alert failed: %s", d_err)
-            _evt["discord_alerted"] = True
+            if _sent:
+                _evt.pop("retroactive_pending", None)
+                _evt["discord_alerted"] = True
+            else:
+                log.warning("Discord detection alert not acknowledged for %s", _evt.get("usgs_id"))
     for _evt in _queue.get("events", []):
-        if _evt.get("retroactive_pending") and _evt.get("status") == "rinex_failed":
+        if _evt.get("retroactive_aborted") and not _evt.get("retroactive_abort_alerted"):
+            detail = _evt.get(
+                "retroactive_abort_reason",
+                "Download returned 0 files; will retry on a later cycle if CDDIS fills in.",
+            )
+            _sent = False
             try:
-                notify_discord.send_retroactive_aborted(
-                    _evt, "Download returned 0 files; will retry on a later cycle if CDDIS fills in."
-                )
+                _sent = notify_discord.send_retroactive_aborted(_evt, detail)
             except Exception as d_err:
                 log.warning("Discord retro abort alert failed: %s", d_err)
-            _evt.pop("retroactive_pending", None)
+            if _sent:
+                _evt["retroactive_abort_alerted"] = True
+                _evt.pop("retroactive_aborted", None)
+                _evt.pop("retroactive_pending", None)
     usgs_listener.save_queue(_queue)
 
     # Step 4: Score
@@ -165,6 +176,10 @@ def main(once=False):
                 _interval = _state.get("poll_interval_sec", 120)
                 _mag      = _state.get("trigger_mag","?")
                 _place    = _state.get("trigger_place","?")
+                if os.environ.get("CI", "").lower() == "true":
+                    log.info(f"FAST POLL MODE active for Mw{_mag} {_place}; CI --once exits without sleeping")
+                    log.info("--once mode, done.")
+                    break
                 log.info(f"FAST POLL MODE: Mw{_mag} {_place} -- next cycle in {_interval}s")
                 time.sleep(_interval)
                 continue   # re-run pipeline cycle
