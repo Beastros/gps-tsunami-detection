@@ -537,7 +537,12 @@ def _clear_running_log_score(usgs_id: str) -> None:
         log.warning("Could not trim running_log for %s: %s", usgs_id, e)
 
 
-def reset_event_for_reprocess(event: dict, *, keep_retro_meta: bool = False) -> None:
+def reset_event_for_reprocess(
+    event: dict,
+    *,
+    keep_retro_meta: bool = False,
+    clear_prior_score: bool = True,
+) -> None:
     """Allow re-download + re-run detector on an already-processed event."""
     retro_meta = None
     if keep_retro_meta:
@@ -555,7 +560,8 @@ def reset_event_for_reprocess(event: dict, *, keep_retro_meta: bool = False) -> 
             )
             if event.get(k) is not None
         }
-    _clear_running_log_score(event["usgs_id"])
+    if clear_prior_score:
+        _clear_running_log_score(event["usgs_id"])
     event["rinex_downloaded"] = False
     event["detector_run"] = False
     event["scored"] = False
@@ -629,11 +635,22 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
             save_queue(queue)
             log.info(f"Updated queue: {event['usgs_id']} → rinex_ready ({count} files)")
         else:
-            event["status"] = "rinex_failed"
             event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
             event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
             if event.get("retroactive_pending"):
-                event.pop("retroactive_pending", None)
+                try:
+                    from retroactive_rinex import restore_prior_result
+
+                    restore_prior_result(
+                        event,
+                        "Retroactive RINEX download returned 0 files",
+                    )
+                except Exception as exc:
+                    log.warning("Could not restore prior result for %s: %s", event.get("usgs_id"), exc)
+                    event["status"] = "rinex_failed"
+                    event.pop("retroactive_pending", None)
+            else:
+                event["status"] = "rinex_failed"
             save_queue(queue)
 
     return retro_triggered
