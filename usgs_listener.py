@@ -412,6 +412,9 @@ def check_feed(queue):
     new_count = 0
     near_misses = []
     cutoff = datetime.now(timezone.utc) - timedelta(hours=LOOKBACK_HOURS)
+    seen_ids = queue.setdefault("seen_ids", [])
+    queued_ids = {e.get("usgs_id") for e in queue.get("events", [])}
+    fast_poll_ids = queue.setdefault("fast_poll_ids", [])
 
     for feat in features:
         eid = event_id(feat)
@@ -423,10 +426,12 @@ def check_feed(queue):
         time_ms = props.get("time", 0)
         coords  = geom.get("coordinates", [None, None, None])
 
-        if eid in queue["seen_ids"]:
+        if eid in queued_ids:
             continue
 
-        queue["seen_ids"].append(eid)
+        previously_seen = eid in seen_ids
+        if not previously_seen:
+            seen_ids.append(eid)
 
         if time_ms:
             event_time = datetime.fromtimestamp(time_ms/1000, tz=timezone.utc)
@@ -441,6 +446,7 @@ def check_feed(queue):
         candidate = assess_event(feat)
         if candidate:
             queue["events"].append(candidate)
+            queued_ids.add(eid)
             new_count += 1
             w = candidate.get("detection_window") or {}
             log.info(
@@ -478,7 +484,7 @@ def check_feed(queue):
             else:
                 reason = "filtered"
 
-            if reason is not None:
+            if reason is not None and not previously_seen:
                 near_misses.append({
                     "ts":     event_time.isoformat(),
                     "mag":    mag,
@@ -493,12 +499,13 @@ def check_feed(queue):
                     log.debug(f"Skipped Mw{mag} {place} — {reason}")
 
         # Fast poll: Mw >= trigger in Pacific (candidate or near-miss)
-        if mag is not None and mag >= FAST_POLL_MW_TRIGGER:
+        if mag is not None and mag >= FAST_POLL_MW_TRIGGER and eid not in fast_poll_ids:
             _zones = in_pacific_zone(
                 coords[1] if coords and coords[1] is not None else 0,
                 coords[0] if coords and coords[0] is not None else 0,
             )
             if _zones:
+                fast_poll_ids.append(eid)
                 _activate_fast_poll(
                     eid, mag, place,
                     os.path.join(os.path.dirname(os.path.abspath(__file__)), FAST_POLL_FILE)
