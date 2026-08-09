@@ -1,19 +1,7 @@
 {
-  "generated": "2026-08-09T04:02:09Z",
+  "generated": "2026-08-09T05:18:52Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "aka2026powmkf",
-      "mag": 5.6,
-      "place": "57 km WNW of Skwentna, Alaska",
-      "time_ms": 1786164634985,
-      "lat": 62.269,
-      "lon": -152.314,
-      "depth": 10.0,
-      "dyfi_responses": 1132,
-      "dyfi_maxmmi": 5.9
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
