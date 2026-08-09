@@ -20,7 +20,7 @@ import argparse
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from scipy.signal import butter, filtfilt
 from itertools import combinations
@@ -395,22 +395,62 @@ def get_dtec_onsets(dtec, quake_utc):
     return onsets
 
 
-def _rinex_obs_path(rinex_dir, sid, doy, yr2):
-    """First existing observation archive (.Z or .gz) for station/day."""
-    base = rinex_dir / f"{sid}{doy:03d}0.{yr2}o"
-    for ext in (".Z", ".gz"):
-        p = Path(str(base) + ext)
-        if p.exists():
-            return p
-    return base.with_suffix(".Z")
+def _manifest_station_codes(rinex_dir, sid, year, doy):
+    """Logical station id plus any CDDIS alias recorded by the downloader."""
+    codes = [sid]
+    manifest_path = Path(rinex_dir) / "rinex_manifest.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        for day in manifest.get("days") or []:
+            if int(day.get("year", -1)) != int(year) or int(day.get("doy", -1)) != int(doy):
+                continue
+            resolved = day.get("resolved") or {}
+            code = resolved.get(sid) or resolved.get(sid.lower()) or resolved.get(sid.upper())
+            if code:
+                codes.append(str(code).lower())
+            break
+    except Exception:
+        pass
+    deduped = []
+    seen = set()
+    for code in codes:
+        code = str(code).lower()
+        if code not in seen:
+            seen.add(code)
+            deduped.append(code)
+    return deduped
 
-def _rinex_nav_path(rinex_dir, sid, doy, yr2):
-    base = rinex_dir / f"{sid}{doy:03d}0.{yr2}n"
-    for ext in (".Z", ".gz"):
-        p = Path(str(base) + ext)
-        if p.exists():
-            return p
-    return base.with_suffix(".Z")
+
+def _event_rinex_days(quake_dt):
+    """Quake UTC day plus next day when the +22h TEC window crosses midnight."""
+    days = [quake_dt]
+    if (quake_dt + timedelta(hours=MAX_POST_QUAKE_H)).date() != quake_dt.date():
+        days.append(quake_dt + timedelta(days=1))
+    return [(dt.year, dt.timetuple().tm_yday, str(dt.year)[-2:]) for dt in days]
+
+
+def _rinex_obs_path(rinex_dir, sid, doy, yr2, year=None):
+    """First existing observation archive (.Z or .gz) for station/day."""
+    codes = _manifest_station_codes(rinex_dir, sid, year, doy) if year is not None else [sid]
+    fallback = rinex_dir / f"{codes[0]}{doy:03d}0.{yr2}o.Z"
+    for code in codes:
+        base = rinex_dir / f"{code}{doy:03d}0.{yr2}o"
+        for ext in (".Z", ".gz"):
+            p = Path(str(base) + ext)
+            if p.exists():
+                return p
+    return fallback
+
+def _rinex_nav_path(rinex_dir, sid, doy, yr2, year=None):
+    codes = _manifest_station_codes(rinex_dir, sid, year, doy) if year is not None else [sid]
+    fallback = rinex_dir / f"{codes[0]}{doy:03d}0.{yr2}n.Z"
+    for code in codes:
+        base = rinex_dir / f"{code}{doy:03d}0.{yr2}n"
+        for ext in (".Z", ".gz"):
+            p = Path(str(base) + ext)
+            if p.exists():
+                return p
+    return fallback
 
 def decompress(gz):
   p = Path(gz)
@@ -602,9 +642,7 @@ def run_event(event, kp_override=None):
     mw        = event["magnitude"]
 
     quake_dt = datetime.fromisoformat(quake_utc.replace("Z","+00:00"))
-    year = quake_dt.year
-    doy  = quake_dt.timetuple().tm_yday
-    yr2  = str(year)[-2:]
+    rinex_days = _event_rinex_days(quake_dt)
 
     log.info(f"\nRunning detector: {event['usgs_id']}")
     log.info(f"  {event['place']}  Mw{mw}  {quake_utc[:16]}")
@@ -612,27 +650,32 @@ def run_event(event, kp_override=None):
     # Determine which stations have files
     filts = {}
     for sid in STATIONS:
-        og = _rinex_obs_path(rinex_dir, sid, doy, yr2)
-        ng = _rinex_nav_path(rinex_dir, sid, doy, yr2)
-        if not og.exists(): continue
-        op = decompress(og)
-        if not op: continue
-        nav = {}
-        if ng.exists():
-            np_ = decompress(ng)
-            if np_:
-                nav = parse_nav(np_)
-                if nav:
-                    tsv=list(nav.keys())[0]; pos=keplerian_to_ecef(nav[tsv][0][1],nav[tsv][0][0])
-                    if pos:
-                        d=np.sqrt(sum(p**2 for p in pos))/1000
-                        if not 20000<d<30000: nav={}
         scfg = STATIONS[sid]
-        log.info(f"  Processing {sid.upper()}...")
-        filt = compute_tec(op, nav, scfg['lat'], scfg['lon'], scfg['alt'])
-        if filt is not None:
-            filts[sid] = filt
-            log.info(f"    â†’ {sid.upper()} OK")
+        station_filts = []
+        for year, doy, yr2 in rinex_days:
+            og = _rinex_obs_path(rinex_dir, sid, doy, yr2, year=year)
+            ng = _rinex_nav_path(rinex_dir, sid, doy, yr2, year=year)
+            if not og.exists(): continue
+            op = decompress(og)
+            if not op: continue
+            nav = {}
+            if ng.exists():
+                np_ = decompress(ng)
+                if np_:
+                    nav = parse_nav(np_)
+                    if nav:
+                        tsv=list(nav.keys())[0]; pos=keplerian_to_ecef(nav[tsv][0][1],nav[tsv][0][0])
+                        if pos:
+                            d=np.sqrt(sum(p**2 for p in pos))/1000
+                            if not 20000<d<30000: nav={}
+            log.info(f"  Processing {sid.upper()} DOY {doy:03d}...")
+            filt = compute_tec(op, nav, scfg['lat'], scfg['lon'], scfg['alt'])
+            if filt is not None:
+                station_filts.append(filt)
+                log.info(f"    â†’ {sid.upper()} DOY {doy:03d} OK")
+        if station_filts:
+            combined = pd.concat(station_filts).sort_index()
+            filts[sid] = combined[~combined.index.duplicated(keep="first")]
 
 
     # Multi-constellation TEC (GLONASS + Galileo cross-check)
@@ -640,13 +683,19 @@ def run_event(event, kp_override=None):
     for _const in ('R', 'E'):
         _cfilts = {}
         for _sid in STATIONS:
-            _og = _rinex_obs_path(rinex_dir, _sid, doy, yr2)
-            if not _og.exists(): continue
-            _op = decompress(_og)
-            if not _op: continue
             _scfg = STATIONS[_sid]
-            _cf = compute_tec_for_constellation(_op, _const, _scfg['lat'], _scfg['lon'], _scfg['alt'])
-            if _cf is not None: _cfilts[_sid] = _cf
+            _parts = []
+            for _year, _doy, _yr2 in rinex_days:
+                _og = _rinex_obs_path(rinex_dir, _sid, _doy, _yr2, year=_year)
+                if not _og.exists(): continue
+                _op = decompress(_og)
+                if not _op: continue
+                _cf = compute_tec_for_constellation(_op, _const, _scfg['lat'], _scfg['lon'], _scfg['alt'])
+                if _cf is not None:
+                    _parts.append(_cf)
+            if _parts:
+                _combined = pd.concat(_parts).sort_index()
+                _cfilts[_sid] = _combined[~_combined.index.duplicated(keep="first")]
         if _cfilts: log.info(f"  [{_const}] {len(_cfilts)} station(s) with data")
         filts_by_const[_const] = _cfilts
     if len(filts) < 2:
