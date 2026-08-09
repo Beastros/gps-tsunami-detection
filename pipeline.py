@@ -26,6 +26,7 @@ Environment variables needed:
 Or create a .env file with those lines (never commit to GitHub).
 """
 
+import os
 import time
 import logging
 import argparse
@@ -53,6 +54,44 @@ logging.basicConfig(
     ]
 )
 log = logging.getLogger(__name__)
+
+
+def send_pending_discord_alerts(_queue):
+    """Send retryable Discord alerts for completed detector and retroactive states."""
+    for _evt in _queue.get("events", []):
+        if _evt.get("status") == "predicted" and not _evt.get("discord_alerted"):
+            _delivered = False
+            try:
+                if _evt.get("retroactive_trigger") or _evt.get("retro_trigger_reason"):
+                    _delivered = notify_discord.send_retroactive_completed(_evt)
+                    if _delivered:
+                        _evt.pop("retroactive_pending", None)
+                else:
+                    _delivered = notify_discord.send_detection_alert(_evt)
+            except Exception as d_err:
+                log.warning("Discord detection alert failed: %s", d_err)
+            if _delivered:
+                _evt["discord_alerted"] = True
+
+    for _evt in _queue.get("events", []):
+        if _evt.get("retroactive_aborted") or (
+            _evt.get("retroactive_pending") and _evt.get("status") == "rinex_failed"
+        ):
+            _detail = _evt.get("retroactive_abort_detail") or (
+                "Download returned 0 files; will retry on a later cycle if CDDIS fills in."
+            )
+            _delivered = False
+            try:
+                _delivered = notify_discord.send_retroactive_aborted(
+                    _evt, _detail
+                )
+            except Exception as d_err:
+                log.warning("Discord retro abort alert failed: %s", d_err)
+            if _delivered:
+                _evt.pop("retroactive_pending", None)
+                _evt.pop("retroactive_aborted", None)
+                _evt.pop("retroactive_abort_detail", None)
+
 
 def run_pipeline():
     """Run one full pipeline cycle."""
@@ -95,26 +134,7 @@ def run_pipeline():
 
     # Discord alerts for newly predicted events (incl. retroactive re-runs)
     _queue = usgs_listener.load_queue()
-    for _evt in _queue.get("events", []):
-        if _evt.get("status") == "predicted" and not _evt.get("discord_alerted"):
-            try:
-                if _evt.get("retroactive_trigger") or _evt.get("retro_trigger_reason"):
-                    notify_discord.send_retroactive_completed(_evt)
-                    _evt.pop("retroactive_pending", None)
-                else:
-                    notify_discord.send_detection_alert(_evt)
-            except Exception as d_err:
-                log.warning("Discord detection alert failed: %s", d_err)
-            _evt["discord_alerted"] = True
-    for _evt in _queue.get("events", []):
-        if _evt.get("retroactive_pending") and _evt.get("status") == "rinex_failed":
-            try:
-                notify_discord.send_retroactive_aborted(
-                    _evt, "Download returned 0 files; will retry on a later cycle if CDDIS fills in."
-                )
-            except Exception as d_err:
-                log.warning("Discord retro abort alert failed: %s", d_err)
-            _evt.pop("retroactive_pending", None)
+    send_pending_discord_alerts(_queue)
     usgs_listener.save_queue(_queue)
 
     # Step 4: Score
@@ -161,13 +181,15 @@ def main(once=False):
                     _fast  = _state.get("active", False) and _exp > _dt.now(_tz.utc)
                 except Exception:
                     pass
-            if _fast:
+            if _fast and os.environ.get("CI", "").lower() not in {"1", "true", "yes"}:
                 _interval = _state.get("poll_interval_sec", 120)
                 _mag      = _state.get("trigger_mag","?")
                 _place    = _state.get("trigger_place","?")
                 log.info(f"FAST POLL MODE: Mw{_mag} {_place} -- next cycle in {_interval}s")
                 time.sleep(_interval)
                 continue   # re-run pipeline cycle
+            if _fast:
+                log.info("FAST POLL MODE active, but CI --once exits after one cycle.")
             log.info("--once mode, done.")
             break
 
