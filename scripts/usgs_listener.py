@@ -72,9 +72,11 @@ PACIFIC_ZONES = [
     },
     {
         "name": "Tonga/Kermadec",
-        "lat": (-35, -15), "lon": (-180, -172),
+        # lon crosses the antimeridian: 172→180 and -180→-172 (lo_min > lo_max)
+        # so east-of-dateline Kermadec events (e.g. lon≈+179) are not dropped.
+        "lat": (-35, -15), "lon": (172, -172),
         "anchor": "thti",
-        "note": "Tonga corridor → THTI (Tahiti) upstream"
+        "note": "Tonga/Kermadec corridor (both sides of dateline) → THTI upstream"
     },
     {
         "name": "Vanuatu/Solomon",
