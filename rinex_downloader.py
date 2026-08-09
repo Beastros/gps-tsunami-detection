@@ -550,6 +550,12 @@ def reset_event_for_reprocess(event: dict, *, keep_retro_meta: bool = False) -> 
                 "retro_triggered_utc",
                 "retro_prior_status",
                 "retro_prior_prediction",
+                "retro_prior_score",
+                "retro_prior_scored",
+                "retro_prior_detector_run",
+                "retro_prior_rinex_downloaded",
+                "retro_prior_rinex_dir",
+                "retro_prior_rinex_coverage",
                 "retro_prior_detected",
                 "rinex_coverage_probe",
             )
@@ -619,21 +625,57 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
         return retro_triggered
 
     for event in ready:
+        is_retro = bool(event.get("retroactive_pending"))
+        manifest_path = Path(event.get("rinex_dir") or Path(RINEX_BASE_DIR) / event["usgs_id"]) / "rinex_manifest.json"
+        manifest_before = None
+        manifest_existed = manifest_path.exists()
+        if is_retro and manifest_existed:
+            try:
+                manifest_before = manifest_path.read_text(encoding="utf-8")
+            except OSError:
+                manifest_before = None
         count, event_dir = download_event(event, auth)
         if count > 0:
+            if is_retro:
+                reset_event_for_reprocess(event, keep_retro_meta=True)
             event["rinex_downloaded"] = True
             event["rinex_dir"] = event_dir
             event["rinex_download_utc"] = datetime.now(timezone.utc).isoformat()
             event["status"] = "rinex_ready"
             event.pop("rinex_last_fail_utc", None)
+            event.pop("retroactive_abort_pending", None)
+            event.pop("retro_abort_detail", None)
             save_queue(queue)
             log.info(f"Updated queue: {event['usgs_id']} → rinex_ready ({count} files)")
         else:
-            event["status"] = "rinex_failed"
-            event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
-            event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
-            if event.get("retroactive_pending"):
+            if is_retro:
+                if manifest_before is not None:
+                    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+                    manifest_path.write_text(manifest_before, encoding="utf-8")
+                elif not manifest_existed:
+                    _safe_unlink(manifest_path)
+                prior_coverage = event.get("retro_prior_rinex_coverage")
+                if prior_coverage is not None:
+                    event["rinex_coverage"] = prior_coverage
+                else:
+                    event.pop("rinex_coverage", None)
+                event["status"] = event.get("retro_prior_status") or event.get("status") or "queued"
+                event["rinex_downloaded"] = bool(event.get("retro_prior_rinex_downloaded"))
+                if event.get("retro_prior_rinex_dir"):
+                    event["rinex_dir"] = event["retro_prior_rinex_dir"]
+                event["detector_run"] = bool(event.get("retro_prior_detector_run"))
+                event["scored"] = bool(event.get("retro_prior_scored"))
+                event["retroactive_abort_pending"] = True
+                event["retro_abort_detail"] = (
+                    "Download returned 0 files; prior prediction and score were preserved. "
+                    "The event will be eligible for another retroactive probe after cooldown."
+                )
+                event["retro_last_abort_utc"] = datetime.now(timezone.utc).isoformat()
                 event.pop("retroactive_pending", None)
+            else:
+                event["status"] = "rinex_failed"
+                event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
+                event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
             save_queue(queue)
 
     return retro_triggered
