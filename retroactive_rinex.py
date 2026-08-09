@@ -21,7 +21,6 @@ from rinex_downloader import (
     load_aliases,
     quake_to_doy,
     resolve_corridor_stations,
-    reset_event_for_reprocess,
     save_aliases,
     stations_for_event,
 )
@@ -191,14 +190,13 @@ def is_eligible_for_retro_check(event: dict) -> bool:
 
 
 def queue_retroactive_reprocess(event: dict, reason: str, probe: dict) -> dict:
-    """Reset pipeline state and annotate for Discord + downstream steps."""
+    """Annotate an event for a safe retroactive RINEX re-download."""
     prior_prediction = deepcopy(event.get("prediction")) if event.get("prediction") else None
     prior_status = event.get("status")
     prior_detected = None
     if isinstance(prior_prediction, dict):
         prior_detected = prior_prediction.get("detected")
 
-    reset_event_for_reprocess(event)
     event["retroactive_pending"] = True
     event["retroactive_trigger"] = True
     event["retro_trigger_reason"] = reason
@@ -209,6 +207,9 @@ def queue_retroactive_reprocess(event: dict, reason: str, probe: dict) -> dict:
     event["retro_prior_prediction"] = prior_prediction
     event["retro_prior_detected"] = prior_detected
     event["rinex_coverage_probe"] = probe
+    event.pop("retroactive_abort_utc", None)
+    event.pop("retroactive_abort_reason", None)
+    event.pop("retroactive_abort_alerted", None)
 
     return {
         "usgs_id": event["usgs_id"],

@@ -412,6 +412,7 @@ def check_feed(queue):
     new_count = 0
     near_misses = []
     cutoff = datetime.now(timezone.utc) - timedelta(hours=LOOKBACK_HOURS)
+    queued_event_ids = {e.get("usgs_id") for e in queue.get("events", []) if e.get("usgs_id")}
 
     for feat in features:
         eid = event_id(feat)
@@ -423,10 +424,11 @@ def check_feed(queue):
         time_ms = props.get("time", 0)
         coords  = geom.get("coordinates", [None, None, None])
 
-        if eid in queue["seen_ids"]:
+        if eid in queued_event_ids:
             continue
 
-        queue["seen_ids"].append(eid)
+        if eid not in queue["seen_ids"]:
+            queue["seen_ids"].append(eid)
 
         if time_ms:
             event_time = datetime.fromtimestamp(time_ms/1000, tz=timezone.utc)
