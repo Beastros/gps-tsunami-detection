@@ -10,21 +10,19 @@ echo ===== %date% %time% =====>>"%LOG%"
 set PY=py -3
 where py >nul 2>&1 || set PY=python
 
-REM Match GitHub first (fixes "dyfi_pings would be overwritten by merge")
+REM Match GitHub first while preserving any unpushed local pipeline commit.
 git fetch origin main >>"%LOG%" 2>&1
-git reset --hard origin/main >>"%LOG%" 2>&1
+git pull --rebase origin main >>"%LOG%" 2>&1
 if errorlevel 1 (
-  echo git reset --hard FAILED>>"%LOG%"
+  echo git pull --rebase FAILED>>"%LOG%"
   exit /b 1
 )
 
 %PY% -m pip install -q -r requirements.txt >>"%LOG%" 2>&1
 
-%PY% usgs_listener.py --once >>"%LOG%" 2>&1
-if errorlevel 1 echo usgs_listener FAILED>>"%LOG%"
-
 %PY% dyfi_poller.py >>"%LOG%" 2>&1
 
+REM pipeline.py owns USGS polling, alerting, RINEX, detector, and scoring.
 %PY% pipeline.py --once >>"%LOG%" 2>&1
 if errorlevel 1 echo pipeline.py exit %errorlevel%>>"%LOG%"
 
@@ -37,7 +35,6 @@ if errorlevel 1 (
     echo git pull --rebase FAILED, retrying>>"%LOG%"
     git rebase --abort >>"%LOG%" 2>&1
     git fetch origin main >>"%LOG%" 2>&1
-    git reset --hard origin/main >>"%LOG%" 2>&1
     exit /b 1
   )
   git push origin main >>"%LOG%" 2>&1
