@@ -92,8 +92,13 @@ def run_pipeline():
     _queue = usgs_listener.load_queue()
     for _evt in _queue.get("events", []):
         if _evt.get("status") == "predicted" and not _evt.get("discord_alerted"):
-            notify_discord.send_detection_alert(_evt)
-            _evt["discord_alerted"] = True
+            try:
+                delivered = notify_discord.send_detection_alert(_evt)
+            except Exception as d_err:
+                log.warning("Discord detection alert failed: %s", d_err)
+                delivered = False
+            if delivered:
+                _evt["discord_alerted"] = True
     usgs_listener.save_queue(_queue)
 
     # Step 4: Score
@@ -144,6 +149,11 @@ def main(once=False):
                 _interval = _state.get("poll_interval_sec", 120)
                 _mag      = _state.get("trigger_mag","?")
                 _place    = _state.get("trigger_place","?")
+                import os as _os
+                if _os.environ.get("CI", "").lower() == "true":
+                    log.info(f"FAST POLL MODE: Mw{_mag} {_place} active; CI --once run will exit so state can be committed")
+                    log.info("--once mode, done.")
+                    break
                 log.info(f"FAST POLL MODE: Mw{_mag} {_place} -- next cycle in {_interval}s")
                 time.sleep(_interval)
                 continue   # re-run pipeline cycle
