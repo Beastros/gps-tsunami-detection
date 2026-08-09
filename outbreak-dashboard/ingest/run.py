@@ -36,6 +36,11 @@ DROP_QUERY_KEYS = frozenset(
 )
 
 
+def is_safe_http_url(url: str) -> bool:
+    parsed = urlparse(url.strip())
+    return parsed.scheme in {"http", "https"} and bool(parsed.netloc)
+
+
 def normalize_url(url: str) -> str:
     parsed = urlparse(url.strip())
     # Drop fragment; strip common marketing/query noise.
@@ -89,7 +94,7 @@ def merge_items(
     by_url: dict[str, dict] = {}
     for row in existing + incoming:
         u = row.get("url") or ""
-        if not u:
+        if not u or not is_safe_http_url(u):
             continue
         key = normalize_url(u)
         prev = by_url.get(key)
@@ -142,6 +147,9 @@ def main() -> None:
             url = src.get("rss_url")
             if not url:
                 continue
+            if not is_safe_http_url(url):
+                print(f"[warn] skipping unsafe RSS URL for {src.get('id') or src.get('name')}: {url!r}")
+                continue
             raw = fetch_bytes(client, url)
             if raw is None:
                 continue
@@ -163,6 +171,9 @@ def main() -> None:
                     continue
                 blob = f"{title}\n{summary}"
                 if keywords and not text_matches(blob, keywords):
+                    continue
+                if not is_safe_http_url(link):
+                    print(f"[warn] skipping unsafe article URL from {src.get('id') or src.get('name')}: {link!r}")
                     continue
                 norm = normalize_url(link)
                 published = None
