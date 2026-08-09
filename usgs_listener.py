@@ -412,6 +412,13 @@ def check_feed(queue):
     new_count = 0
     near_misses = []
     cutoff = datetime.now(timezone.utc) - timedelta(hours=LOOKBACK_HOURS)
+    queue.setdefault("seen_ids", [])
+    queued_ids = {
+        e.get("usgs_id")
+        for e in queue.get("events", [])
+        if e.get("usgs_id")
+    }
+    seen_id_set = set(queue["seen_ids"])
 
     for feat in features:
         eid = event_id(feat)
@@ -423,24 +430,30 @@ def check_feed(queue):
         time_ms = props.get("time", 0)
         coords  = geom.get("coordinates", [None, None, None])
 
-        if eid in queue["seen_ids"]:
+        if eid in queued_ids:
             continue
-
-        queue["seen_ids"].append(eid)
+        already_seen = eid in seen_id_set
 
         if time_ms:
             event_time = datetime.fromtimestamp(time_ms/1000, tz=timezone.utc)
             if event_time < cutoff:
+                if not already_seen:
+                    queue["seen_ids"].append(eid)
+                    seen_id_set.add(eid)
                 continue
         else:
             event_time = datetime.now(timezone.utc)
 
         if mag is None or mag < 5.5:
+            if not already_seen:
+                queue["seen_ids"].append(eid)
+                seen_id_set.add(eid)
             continue
 
         candidate = assess_event(feat)
         if candidate:
             queue["events"].append(candidate)
+            queued_ids.add(eid)
             new_count += 1
             w = candidate.get("detection_window") or {}
             log.info(
@@ -449,7 +462,7 @@ def check_feed(queue):
                 f"TEC_window=+{w.get('tec_onset_window','?')}h "
                 f"expected_lead={w.get('expected_lead_time_min','?')}min"
             )
-        else:
+        elif not already_seen:
             # Near-misses for dashboard map + Poll Log (Mw5.5+ inside Pacific zones only)
             lon = coords[0] if coords and coords[0] is not None else None
             lat = coords[1] if coords and coords[1] is not None else None
@@ -503,6 +516,10 @@ def check_feed(queue):
                     eid, mag, place,
                     os.path.join(os.path.dirname(os.path.abspath(__file__)), FAST_POLL_FILE)
                 )
+
+        if not already_seen:
+            queue["seen_ids"].append(eid)
+            seen_id_set.add(eid)
 
     return new_count, near_misses
 
