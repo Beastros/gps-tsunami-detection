@@ -1,7 +1,19 @@
 {
-  "generated": "2026-08-10T12:41:27Z",
+  "generated": "2026-08-10T14:15:15Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000tjl2",
+      "mag": 7.4,
+      "place": "5 km S of San Jos\u00e9 del Palmar, Colombia",
+      "time_ms": 1786365268125,
+      "lat": 4.844,
+      "lon": -76.242,
+      "depth": 110.3,
+      "dyfi_responses": 607,
+      "dyfi_maxmmi": 6.9
+    }
+  ]
 }
