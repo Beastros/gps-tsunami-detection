@@ -137,11 +137,70 @@ HILO = {"lat": 19.730, "lon": -155.087}  # tide gauge target
 F1,F2=1575.42e6,1227.60e6; LAM1=2.998e8/F1; LAM2=2.998e8/F2
 K=40.3e16*(1/F2**2-1/F1**2); MU=3.986005e14; OMEGA_E=7.2921151467e-5; RE=6371000.0
 
+def _parse_kp_timestamp(value):
+    """Parse NOAA Kp time_tag values (ISO or legacy 'YYYY-MM-DD HH:MM:SS')."""
+    if value is None:
+        return None
+    text = str(value).strip()
+    if not text or text.lower() == "time_tag":
+        return None
+    if text.endswith("Z"):
+        text = text[:-1] + "+00:00"
+    try:
+        dt = datetime.fromisoformat(text)
+    except ValueError:
+        try:
+            dt = datetime.strptime(text, "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt
+
+
+def _kp_rows(data):
+    """Yield (timestamp, kp) pairs from NOAA list-of-dict or legacy list-of-list JSON."""
+    if not isinstance(data, list):
+        return
+    for row in data:
+        try:
+            if isinstance(row, dict):
+                t = _parse_kp_timestamp(row.get("time_tag"))
+                kp_raw = row.get("Kp", row.get("kp"))
+            elif isinstance(row, (list, tuple)) and len(row) >= 2:
+                # Legacy header row: ["time_tag","Kp",...]
+                if str(row[0]).lower() == "time_tag":
+                    continue
+                t = _parse_kp_timestamp(row[0])
+                kp_raw = row[1]
+            else:
+                continue
+            if t is None or kp_raw in (None, "", "Kp", "kp"):
+                continue
+            yield t, float(kp_raw)
+        except (TypeError, ValueError):
+            continue
+
+
+def select_kp_near_quake(data, quake_utc_str):
+    """Pick the Kp sample nearest to quake time from a NOAA planetary-K payload."""
+    quake_dt = datetime.fromisoformat(quake_utc_str.replace("Z", "+00:00"))
+    best_kp = None
+    best_dt = None
+    for t, kp_val in _kp_rows(data):
+        dt = abs((t - quake_dt).total_seconds())
+        if best_dt is None or dt < best_dt:
+            best_dt = dt
+            best_kp = kp_val
+    return best_kp
+
+
 def fetch_kp(quake_utc_str):
     """
     Fetch the actual Kp index from NOAA Space Weather at the time of the quake.
     Returns float Kp value or None on failure.
     NOAA SWPC planetary K-index feed: 3-hour cadence, past 7 days.
+    Supports current list-of-dict JSON and the legacy list-of-list format.
     """
     try:
         import urllib.request
@@ -150,25 +209,13 @@ def fetch_kp(quake_utc_str):
         with urllib.request.urlopen(req, timeout=10) as r:
             data = json.loads(r.read())
 
-        # data[0] is the header row: ["time_tag","Kp","Kp_fraction","a_running","station_count"]
-        quake_dt = datetime.fromisoformat(quake_utc_str.replace("Z", "+00:00"))
-
-        best_kp = None
-        best_dt = None
-        for row in data[1:]:
-            try:
-                t = datetime.strptime(row[0], "%Y-%m-%d %H:%M:%S").replace(tzinfo=timezone.utc)
-                kp_val = float(row[1])
-                dt = abs((t - quake_dt).total_seconds())
-                if best_dt is None or dt < best_dt:
-                    best_dt = dt
-                    best_kp = kp_val
-            except:
-                continue
+        best_kp = select_kp_near_quake(data, quake_utc_str)
 
         if best_kp is not None:
             log.info(f"  Kp index at quake time: {best_kp} "
                      f"({'DISTURBED â€” gate active' if best_kp >= KP_THRESHOLD else 'quiet'})")
+        else:
+            log.warning("  Kp fetch returned no parseable samples — gate disabled for this event")
         return best_kp
 
     except Exception as e:
@@ -875,6 +922,17 @@ def run_event(event, kp_override=None):
     except Exception as _e:
         log.warning(f"  DART check failed: {_e}")
         dart_status = "no_buoys"
+
+    # Space-weather contamination score for confidence fusion (fail-open on errors)
+    try:
+        _sw_quality = get_space_weather_quality() or {}
+    except Exception as _swe:
+        log.warning(f"  Space weather quality check failed: {_swe}")
+        _sw_quality = {}
+    prediction["space_weather_score"] = _sw_quality.get("space_weather_score", 0.0)
+    prediction["space_weather_gated"] = bool(_sw_quality.get("space_weather_gated", False))
+    prediction["space_weather_flags"] = list(_sw_quality.get("space_weather_flags") or [])
+    prediction["space_weather_raw"] = _sw_quality.get("space_weather_raw")
 
     _tec  = prediction.get("detected", False)
     _sw = prediction.get("space_weather_score")
