@@ -83,6 +83,16 @@ PACIFIC_ZONES = [
         "note": "SW Pacific → GUAM or limited geometry"
     },
     {
+        # Philippine Trench / Manila Trench / Taiwan — detector already has PIMO/CNMR
+        # for this corridor (STATION_ZONE_CONSTRAINTS lat -5..25, lon 95..130), but
+        # PACIFIC_ZONES previously jumped from Sumatra (lon<=110) to Japan (lat>=30)
+        # and Vanuatu (lon>=155), silently dropping Mindanao/Philippine Sea events.
+        "name": "Philippines/Taiwan",
+        "lat": (4, 25), "lon": (118, 130),
+        "anchor": "guam",
+        "note": "Philippine/Manila Trench → GUAM corridor (PIMO/CNMR)"
+    },
+    {
         "name": "Sumatra/Andaman",
         "lat": (-5, 20), "lon": (90, 110),
         "anchor": None,
