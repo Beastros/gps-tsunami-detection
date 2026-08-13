@@ -83,6 +83,12 @@ PACIFIC_ZONES = [
         "note": "SW Pacific → GUAM or limited geometry"
     },
     {
+        "name": "Mariana/Izu-Bonin",
+        "lat": (10, 30), "lon": (140, 150),
+        "anchor": "guam",
+        "note": "Mariana Trench and Izu-Bonin → GUAM on-site + Hawaii RINEX"
+    },
+    {
         "name": "Sumatra/Andaman",
         "lat": (-5, 20), "lon": (90, 110),
         "anchor": None,
