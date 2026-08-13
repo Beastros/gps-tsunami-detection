@@ -1,8 +1,8 @@
 {
-  "generated": "2026-08-13T02:37:01Z",
+  "generated": "2026-08-13T04:30:22Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
+  "count": 1,
   "pings": [
     {
       "usgs_id": "us6000tkcb",
@@ -14,17 +14,6 @@
       "depth": 56.8,
       "dyfi_responses": 13,
       "dyfi_maxmmi": 4.4
-    },
-    {
-      "usgs_id": "hv75018296",
-      "mag": 5.2,
-      "place": "42 km ESE of Naalehu, Hawaii",
-      "time_ms": 1786506513980,
-      "lat": 18.879,
-      "lon": -155.233,
-      "depth": 10.7,
-      "dyfi_responses": 66,
-      "dyfi_maxmmi": 3.9
     }
   ]
 }
