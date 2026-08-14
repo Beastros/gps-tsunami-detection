@@ -1,19 +1,7 @@
 {
-  "generated": "2026-08-14T09:09:25Z",
+  "generated": "2026-08-14T10:17:11Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us6000tkfh",
-      "mag": 5.1,
-      "place": "22 km ENE of Lapuan, Philippines",
-      "time_ms": 1786612978999,
-      "lat": 6.248,
-      "lon": 125.879,
-      "depth": 91.2,
-      "dyfi_responses": 12,
-      "dyfi_maxmmi": null
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
