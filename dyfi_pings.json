@@ -1,8 +1,8 @@
 {
-  "generated": "2026-08-13T23:59:38Z",
+  "generated": "2026-08-14T02:36:34Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
+  "count": 1,
   "pings": [
     {
       "usgs_id": "us6000tkfh",
@@ -14,17 +14,6 @@
       "depth": 91.2,
       "dyfi_responses": 11,
       "dyfi_maxmmi": null
-    },
-    {
-      "usgs_id": "us6000tkcb",
-      "mag": 5.5,
-      "place": "69 km SSW of Chirilagua, El Salvador",
-      "time_ms": 1786581004840,
-      "lat": 12.608,
-      "lon": -88.286,
-      "depth": 56.8,
-      "dyfi_responses": 15,
-      "dyfi_maxmmi": 4.4
     }
   ]
 }
