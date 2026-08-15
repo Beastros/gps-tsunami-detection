@@ -1,19 +1,7 @@
 {
-  "generated": "2026-08-15T21:46:35Z",
+  "generated": "2026-08-15T22:23:41Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us6000tkt2",
-      "mag": 7.7,
-      "place": "68 km NNW of Ende, Indonesia",
-      "time_ms": 1786744701564,
-      "lat": -8.31,
-      "lon": 121.352,
-      "depth": 10.0,
-      "dyfi_responses": 41,
-      "dyfi_maxmmi": 8.8
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
