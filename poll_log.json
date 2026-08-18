@@ -34309,10 +34309,24 @@
       "total_queued": 4,
       "pending": 0,
       "scored": 4
+    },
+    {
+      "ts": "2026-08-18T07:04:29.916731+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
+    },
+    {
+      "ts": "2026-08-18T07:04:32.691803+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
     }
   ],
-  "last_updated": "2026-08-18T06:02:47.176943+00:00",
-  "total_polls": 5208,
+  "last_updated": "2026-08-18T07:04:32.691803+00:00",
+  "total_polls": 5210,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -35013,6 +35027,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.8
+    },
+    {
+      "ts": "2026-08-18T06:02:20.229000+00:00",
+      "mag": 5.6,
+      "place": "154 km SSE of Teluk Dalam, Indonesia",
+      "lat": -0.69,
+      "lon": 98.42,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.9
     }
   ],
   "expected_poll_interval_sec": 900
