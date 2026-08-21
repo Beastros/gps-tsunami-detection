@@ -1,19 +1,7 @@
 {
-  "generated": "2026-08-21T17:47:25Z",
+  "generated": "2026-08-21T18:38:55Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us6000tm81",
-      "mag": 6.7,
-      "place": "31 km NW of Aniso, Peru",
-      "time_ms": 1787248818626,
-      "lat": -14.641,
-      "lon": -73.524,
-      "depth": 99.0,
-      "dyfi_responses": 74,
-      "dyfi_maxmmi": 5.8
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
