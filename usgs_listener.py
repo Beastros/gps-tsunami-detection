@@ -53,6 +53,16 @@ PACIFIC_ZONES = [
         "note": "Japan/Kuril → Japan IGS + Marianas + Hawaii RINEX (guam anchor)"
     },
     {
+        # Ryukyu Trench / Nansei Islands — Japan/Kuril starts at lat 30 / lon 130,
+        # Philippines/Taiwan (#77) stops at lat 25, and Mariana/Izu-Bonin (#78)
+        # starts at lon 140. Amami–Okinawa trench events in the 25–30N, 126–132E
+        # gap never queued despite unconstrained GUAM and Japan IGS (AIRA/MIZU).
+        "name": "Ryukyu",
+        "lat": (25, 31), "lon": (126, 132),
+        "anchor": "guam",
+        "note": "Ryukyu Trench (Amami–Okinawa) → GUAM + Japan IGS (AIRA)"
+    },
+    {
         "name": "Alaska/Aleutian",
         "lat": (48, 62), "lon": (-180, -145),
         "anchor": "guam",
