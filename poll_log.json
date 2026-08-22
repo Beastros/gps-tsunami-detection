@@ -36829,10 +36829,24 @@
       "total_queued": 4,
       "pending": 0,
       "scored": 4
+    },
+    {
+      "ts": "2026-08-22T17:22:26.196622+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
+    },
+    {
+      "ts": "2026-08-22T17:22:28.732263+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
     }
   ],
-  "last_updated": "2026-08-22T16:51:57.366997+00:00",
-  "total_polls": 5568,
+  "last_updated": "2026-08-22T17:22:28.732263+00:00",
+  "total_polls": 5570,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -37553,6 +37567,16 @@
       "depth": 99,
       "reason": "normal (rake=-102.5\u00b0)",
       "delta": null
+    },
+    {
+      "ts": "2026-08-22T17:00:41.199000+00:00",
+      "mag": 5.8,
+      "place": "4 km NNW of Toride, Japan",
+      "lat": 35.93,
+      "lon": 140.06,
+      "depth": 77.6,
+      "reason": "below threshold",
+      "delta": -0.7
     }
   ],
   "expected_poll_interval_sec": 900
