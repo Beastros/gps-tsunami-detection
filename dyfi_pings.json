@@ -1,7 +1,19 @@
 {
-  "generated": "2026-08-22T17:22:36Z",
+  "generated": "2026-08-22T17:47:35Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000tmta",
+      "mag": 5.8,
+      "place": "4 km N of Toride, Japan",
+      "time_ms": 1787418039472,
+      "lat": 35.938,
+      "lon": 140.078,
+      "depth": 61.0,
+      "dyfi_responses": 52,
+      "dyfi_maxmmi": 4.6
+    }
+  ]
 }
