@@ -1,19 +1,7 @@
 {
-  "generated": "2026-08-24T13:13:48Z",
+  "generated": "2026-08-24T14:05:01Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us6000tmz6",
-      "mag": 6.0,
-      "place": "33 km SSW of Honch\u014d, Japan",
-      "time_ms": 1787492693514,
-      "lat": 41.834,
-      "lon": 142.826,
-      "depth": 42.9,
-      "dyfi_responses": 12,
-      "dyfi_maxmmi": 4.4
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
