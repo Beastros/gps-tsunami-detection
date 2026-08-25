@@ -1,7 +1,19 @@
 {
-  "generated": "2026-08-25T09:37:16Z",
+  "generated": "2026-08-25T10:12:57Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000tnbm",
+      "mag": 5.5,
+      "place": "108 km NE of Hengchun, Taiwan",
+      "time_ms": 1787641210853,
+      "lat": 22.605,
+      "lon": 121.571,
+      "depth": 14.6,
+      "dyfi_responses": 10,
+      "dyfi_maxmmi": 5.5
+    }
+  ]
 }
