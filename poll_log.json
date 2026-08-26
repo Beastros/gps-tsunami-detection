@@ -38999,10 +38999,24 @@
       "total_queued": 4,
       "pending": 0,
       "scored": 4
+    },
+    {
+      "ts": "2026-08-26T20:11:04.121465+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
+    },
+    {
+      "ts": "2026-08-26T20:11:07.530009+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
     }
   ],
-  "last_updated": "2026-08-26T18:15:25.466977+00:00",
-  "total_polls": 5878,
+  "last_updated": "2026-08-26T20:11:07.530009+00:00",
+  "total_polls": 5880,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -39753,6 +39767,16 @@
       "depth": 528.3,
       "reason": "below threshold",
       "delta": -1.0
+    },
+    {
+      "ts": "2026-08-26T19:21:41.921000+00:00",
+      "mag": 5.6,
+      "place": "212 km E of Onagawa Ch\u014d, Japan",
+      "lat": 38.13,
+      "lon": 143.85,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.9
     }
   ],
   "expected_poll_interval_sec": 900
