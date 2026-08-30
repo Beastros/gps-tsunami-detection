@@ -39209,10 +39209,24 @@
       "total_queued": 4,
       "pending": 0,
       "scored": 4
+    },
+    {
+      "ts": "2026-08-30T13:13:18.918651+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
+    },
+    {
+      "ts": "2026-08-30T13:13:21.689142+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
     }
   ],
-  "last_updated": "2026-08-30T07:28:19.430351+00:00",
-  "total_polls": 5908,
+  "last_updated": "2026-08-30T13:13:21.689142+00:00",
+  "total_polls": 5910,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -39973,6 +39987,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.9
+    },
+    {
+      "ts": "2026-08-30T09:02:09.229000+00:00",
+      "mag": 5.8,
+      "place": "Kermadec Islands, New Zealand",
+      "lat": -30.15,
+      "lon": -177.89,
+      "depth": 35,
+      "reason": "below threshold",
+      "delta": -0.7
     }
   ],
   "expected_poll_interval_sec": 900
