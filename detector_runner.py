@@ -952,8 +952,23 @@ def main(event_id=None):
         except Exception as e:
             log.error(f"Detector failed for {event['usgs_id']}: {e}")
             import traceback; traceback.print_exc()
-            event["status"] = "detector_failed"
-            event["detector_error"] = str(e)
+            if event.get("retroactive_pending"):
+                try:
+                    from retroactive_rinex import restore_prior_result
+
+                    restore_prior_result(event, f"Retroactive detector failed: {e}")
+                    event["detector_error"] = str(e)
+                except Exception as restore_exc:
+                    log.warning(
+                        "Could not restore prior result for %s: %s",
+                        event.get("usgs_id"),
+                        restore_exc,
+                    )
+                    event["status"] = "detector_failed"
+                    event["detector_error"] = str(e)
+            else:
+                event["status"] = "detector_failed"
+                event["detector_error"] = str(e)
             save_queue(queue)
 
 if __name__ == "__main__":
