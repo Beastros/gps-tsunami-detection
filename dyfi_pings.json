@@ -1,8 +1,8 @@
 {
-  "generated": "2026-09-02T11:26:49Z",
+  "generated": "2026-09-02T15:13:45Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
+  "count": 1,
   "pings": [
     {
       "usgs_id": "us7000tdj8",
@@ -14,17 +14,6 @@
       "depth": 10.0,
       "dyfi_responses": 23,
       "dyfi_maxmmi": 5.8
-    },
-    {
-      "usgs_id": "us7000tdbr",
-      "mag": 5.2,
-      "place": "35 km SE of Sarangani, Philippines",
-      "time_ms": 1788268950133,
-      "lat": 5.162,
-      "lon": 125.672,
-      "depth": 120.8,
-      "dyfi_responses": 11,
-      "dyfi_maxmmi": null
     }
   ]
 }
