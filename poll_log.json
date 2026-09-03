@@ -40021,10 +40021,24 @@
       "total_queued": 4,
       "pending": 0,
       "scored": 4
+    },
+    {
+      "ts": "2026-09-03T21:23:02.798240+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
+    },
+    {
+      "ts": "2026-09-03T21:23:06.436849+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
     }
   ],
-  "last_updated": "2026-09-03T18:42:40.630787+00:00",
-  "total_polls": 6024,
+  "last_updated": "2026-09-03T21:23:06.436849+00:00",
+  "total_polls": 6026,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -40835,6 +40849,16 @@
       "depth": 35,
       "reason": "below threshold",
       "delta": -0.2
+    },
+    {
+      "ts": "2026-09-03T20:21:15.216000+00:00",
+      "mag": 5.5,
+      "place": "100 km S of Nikolski, Alaska",
+      "lat": 52.05,
+      "lon": -169.14,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -1.0
     }
   ],
   "expected_poll_interval_sec": 900
