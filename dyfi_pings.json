@@ -1,19 +1,7 @@
 {
-  "generated": "2026-09-03T01:28:00Z",
+  "generated": "2026-09-03T06:24:18Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us7000tdj8",
-      "mag": 5.3,
-      "place": "66 km NNW of Arthurs Point, New Zealand",
-      "time_ms": 1788329613779,
-      "lat": -44.443,
-      "lon": 168.303,
-      "depth": 10.0,
-      "dyfi_responses": 24,
-      "dyfi_maxmmi": 5.8
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
