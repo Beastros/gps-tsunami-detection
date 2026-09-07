@@ -40413,10 +40413,24 @@
       "total_queued": 4,
       "pending": 0,
       "scored": 4
+    },
+    {
+      "ts": "2026-09-07T11:53:37.603380+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
+    },
+    {
+      "ts": "2026-09-07T11:53:40.187695+00:00",
+      "new_candidates": 0,
+      "total_queued": 4,
+      "pending": 0,
+      "scored": 4
     }
   ],
-  "last_updated": "2026-09-07T05:47:53.735935+00:00",
-  "total_polls": 6080,
+  "last_updated": "2026-09-07T11:53:40.187695+00:00",
+  "total_polls": 6082,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -41267,6 +41281,16 @@
       "depth": 38.5,
       "reason": "below threshold",
       "delta": -0.9
+    },
+    {
+      "ts": "2026-09-07T05:50:44.529000+00:00",
+      "mag": 5.5,
+      "place": "southeast of the Loyalty Islands",
+      "lat": -23.42,
+      "lon": 171.68,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -1.0
     }
   ],
   "expected_poll_interval_sec": 900
