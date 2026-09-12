@@ -1,19 +1,19 @@
 {
-  "generated": "2026-09-12T12:43:19Z",
+  "generated": "2026-09-12T16:01:09Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 1,
   "pings": [
     {
       "usgs_id": "us7000tgrk",
-      "mag": 6.6,
-      "place": "115 km NNE of Teluknaga, Indonesia",
-      "time_ms": 1789161835001,
-      "lat": -5.093,
-      "lon": 106.903,
-      "depth": 358.6,
+      "mag": 6.5,
+      "place": "126 km NNE of Teluknaga, Indonesia",
+      "time_ms": 1789161835907,
+      "lat": -4.983,
+      "lon": 106.874,
+      "depth": 372.0,
       "dyfi_responses": 21,
-      "dyfi_maxmmi": 3.6
+      "dyfi_maxmmi": 3.0
     }
   ]
 }
