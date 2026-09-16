@@ -1,7 +1,19 @@
 {
-  "generated": "2026-09-16T12:06:55Z",
+  "generated": "2026-09-16T16:57:42Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us7000thv6",
+      "mag": 5.0,
+      "place": "5 km NE of Mitsukaid\u014d, Japan",
+      "time_ms": 1789571258245,
+      "lat": 36.056,
+      "lon": 140.021,
+      "depth": 77.3,
+      "dyfi_responses": 38,
+      "dyfi_maxmmi": null
+    }
+  ]
 }
