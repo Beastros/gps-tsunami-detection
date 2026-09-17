@@ -1,19 +1,7 @@
 {
-  "generated": "2026-09-17T17:41:58Z",
+  "generated": "2026-09-17T19:18:08Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us7000thwt",
-      "mag": 5.1,
-      "place": "77 km SSW of San Jose Village, Northern Mariana Islands",
-      "time_ms": 1789582000886,
-      "lat": 14.287,
-      "lon": 145.473,
-      "depth": 110.8,
-      "dyfi_responses": 10,
-      "dyfi_maxmmi": null
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
