@@ -1,19 +1,7 @@
 {
-  "generated": "2026-09-19T16:43:15Z",
+  "generated": "2026-09-19T18:58:21Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us7000tid4",
-      "mag": 5.2,
-      "place": "28 km NE of Villa Presidente Frei, Chile",
-      "time_ms": 1789750327958,
-      "lat": -33.311,
-      "lon": -70.334,
-      "depth": 100.0,
-      "dyfi_responses": 32,
-      "dyfi_maxmmi": null
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
