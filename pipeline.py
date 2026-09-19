@@ -97,24 +97,29 @@ def run_pipeline():
     _queue = usgs_listener.load_queue()
     for _evt in _queue.get("events", []):
         if _evt.get("status") == "predicted" and not _evt.get("discord_alerted"):
+            delivered = False
             try:
                 if _evt.get("retroactive_trigger") or _evt.get("retro_trigger_reason"):
-                    notify_discord.send_retroactive_completed(_evt)
-                    _evt.pop("retroactive_pending", None)
+                    delivered = notify_discord.send_retroactive_completed(_evt)
                 else:
-                    notify_discord.send_detection_alert(_evt)
+                    delivered = notify_discord.send_detection_alert(_evt)
             except Exception as d_err:
                 log.warning("Discord detection alert failed: %s", d_err)
-            _evt["discord_alerted"] = True
+            if delivered:
+                if _evt.get("retroactive_trigger") or _evt.get("retro_trigger_reason"):
+                    _evt.pop("retroactive_pending", None)
+                _evt["discord_alerted"] = True
     for _evt in _queue.get("events", []):
         if _evt.get("retroactive_pending") and _evt.get("status") == "rinex_failed":
+            delivered = False
             try:
-                notify_discord.send_retroactive_aborted(
+                delivered = notify_discord.send_retroactive_aborted(
                     _evt, "Download returned 0 files; will retry on a later cycle if CDDIS fills in."
                 )
             except Exception as d_err:
                 log.warning("Discord retro abort alert failed: %s", d_err)
-            _evt.pop("retroactive_pending", None)
+            if delivered:
+                _evt.pop("retroactive_pending", None)
     usgs_listener.save_queue(_queue)
 
     # Step 4: Score
@@ -165,6 +170,11 @@ def main(once=False):
                 _interval = _state.get("poll_interval_sec", 120)
                 _mag      = _state.get("trigger_mag","?")
                 _place    = _state.get("trigger_place","?")
+                import os as _os
+                if _os.environ.get("CI", "").lower() == "true":
+                    log.info(f"FAST POLL MODE: Mw{_mag} {_place} active; CI --once run will exit so state can be committed")
+                    log.info("--once mode, done.")
+                    break
                 log.info(f"FAST POLL MODE: Mw{_mag} {_place} -- next cycle in {_interval}s")
                 time.sleep(_interval)
                 continue   # re-run pipeline cycle

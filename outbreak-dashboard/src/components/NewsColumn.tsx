@@ -11,6 +11,18 @@ function tierLabel(t: number) {
   return 'Discovery'
 }
 
+function safeNewsUrl(url: string) {
+  try {
+    const parsed = new URL(url)
+    if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+      return parsed.href
+    }
+  } catch {
+    return null
+  }
+  return null
+}
+
 export function NewsColumn({ items, fetchedAt }: Props) {
   return (
     <section className="panel news-panel">
@@ -25,18 +37,22 @@ export function NewsColumn({ items, fetchedAt }: Props) {
         ) : null}
       </header>
       <ul className="news-list">
-        {items.map((n) => (
-          <li key={n.id} className="news-item">
-            <a href={n.url} target="_blank" rel="noreferrer">
-              {n.title}
-            </a>
-            <div className="news-meta">
-              <span>{n.source_name}</span>
-              <span className="news-tier">{tierLabel(n.source_tier)}</span>
-              {n.published_at ? <span>{n.published_at}</span> : null}
-            </div>
-          </li>
-        ))}
+        {items.map((n) => {
+          const href = safeNewsUrl(n.url)
+          if (!href) return null
+          return (
+            <li key={n.id} className="news-item">
+              <a href={href} target="_blank" rel="noreferrer">
+                {n.title}
+              </a>
+              <div className="news-meta">
+                <span>{n.source_name}</span>
+                <span className="news-tier">{tierLabel(n.source_tier)}</span>
+                {n.published_at ? <span>{n.published_at}</span> : null}
+              </div>
+            </li>
+          )
+        })}
       </ul>
     </section>
   )
