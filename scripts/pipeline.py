@@ -26,6 +26,7 @@ Environment variables needed:
 Or create a .env file with those lines (never commit to GitHub).
 """
 
+import os
 import time
 import logging
 import argparse
@@ -53,6 +54,11 @@ logging.basicConfig(
     ]
 )
 log = logging.getLogger(__name__)
+
+
+def _running_in_ci():
+    return os.environ.get("GITHUB_ACTIONS", "").lower() == "true" or os.environ.get("CI", "").lower() == "true"
+
 
 def run_pipeline():
     """Run one full pipeline cycle."""
@@ -92,8 +98,11 @@ def run_pipeline():
     _queue = usgs_listener.load_queue()
     for _evt in _queue.get("events", []):
         if _evt.get("status") == "predicted" and not _evt.get("discord_alerted"):
-            notify_discord.send_detection_alert(_evt)
-            _evt["discord_alerted"] = True
+            try:
+                if notify_discord.send_detection_alert(_evt):
+                    _evt["discord_alerted"] = True
+            except Exception as d_err:
+                log.warning("Discord detection alert failed: %s", d_err)
     usgs_listener.save_queue(_queue)
 
     # Step 4: Score
@@ -141,6 +150,10 @@ def main(once=False):
                 except Exception:
                     pass
             if _fast:
+                if _running_in_ci():
+                    log.info("FAST POLL MODE active, but CI --once exits after one cycle.")
+                    log.info("--once mode, done.")
+                    break
                 _interval = _state.get("poll_interval_sec", 120)
                 _mag      = _state.get("trigger_mag","?")
                 _place    = _state.get("trigger_place","?")

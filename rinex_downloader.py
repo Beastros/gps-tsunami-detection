@@ -632,8 +632,6 @@ def main(event_id=None, cache_only=False, force=False, skip_retro_check=False):
             event["status"] = "rinex_failed"
             event["rinex_retries"] = int(event.get("rinex_retries", 0)) + 1
             event["rinex_last_fail_utc"] = datetime.now(timezone.utc).isoformat()
-            if event.get("retroactive_pending"):
-                event.pop("retroactive_pending", None)
             save_queue(queue)
 
     return retro_triggered
