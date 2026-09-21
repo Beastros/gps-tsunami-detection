@@ -1,19 +1,7 @@
 {
-  "generated": "2026-09-21T06:51:28Z",
+  "generated": "2026-09-21T13:43:29Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us7000tiqc",
-      "mag": 6.4,
-      "place": "49 km NNE of Kainantu, Papua New Guinea",
-      "time_ms": 1789895855624,
-      "lat": -5.902,
-      "lon": 146.092,
-      "depth": 104.3,
-      "dyfi_responses": 30,
-      "dyfi_maxmmi": 5.4
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
