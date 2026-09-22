@@ -89,6 +89,12 @@ PACIFIC_ZONES = [
         "note": "Indian Ocean — geometry-limited for Hawaii detection"
     },
     {
+        "name": "Bird's Head/Manokwari",
+        "lat": (-1, 1), "lon": (130, 136),
+        "anchor": "guam",
+        "note": "Bird's Head / Manokwari Trench → GUAM unconstrained"
+    },
+    {
         "name": "Central America",
         "lat": (5, 20), "lon": (-100, -82),
         "anchor": "chat",
