@@ -77,6 +77,12 @@ PACIFIC_ZONES = [
         "note": "Tonga corridor → THTI (Tahiti) upstream"
     },
     {
+        "name": "Hikurangi/New Zealand",
+        "lat": (-48, -34), "lon": (165, 180),
+        "anchor": "chat",
+        "note": "Hikurangi, Kaikoura, Puysegur corridors → CHAT/AUCK + Hawaii RINEX (chat anchor)"
+    },
+    {
         "name": "Vanuatu/Solomon",
         "lat": (-25, -5), "lon": (155, 180),
         "anchor": "guam",
