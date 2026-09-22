@@ -33,7 +33,11 @@ except ImportError:
 # ── Config ─────────────────────────────────────────────────────────
 POLL_INTERVAL_SEC = 900          # 15 minutes
 MW_THRESHOLD      = 6.5          # minimum magnitude
-LOOKBACK_HOURS    = 24           # how far back to look on startup
+# Must cover the full USGS week feed window. A 24h lookback permanently
+# burns candidates first seen after downtime (seen_ids append + skip), so a
+# Mw≥6.5 event aged 25h–7d would never queue even though RINEX/detection
+# can still run.
+LOOKBACK_HOURS    = 24 * 7       # match USGS_FEED_ALL (past 7 days)
 EVENT_QUEUE_FILE  = "event_queue.json"
 POLL_LOG_FILE     = "poll_log.json"
 LOG_FILE          = "listener.log"
