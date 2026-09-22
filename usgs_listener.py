@@ -83,6 +83,12 @@ PACIFIC_ZONES = [
         "note": "SW Pacific → GUAM or limited geometry"
     },
     {
+        "name": "New Britain/New Ireland",
+        "lat": (-8, -2), "lon": (148, 155),
+        "anchor": "guam",
+        "note": "New Britain / New Ireland trench → GUAM upstream"
+    },
+    {
         "name": "Sumatra/Andaman",
         "lat": (-5, 20), "lon": (90, 110),
         "anchor": None,
