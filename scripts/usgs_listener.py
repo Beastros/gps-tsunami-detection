@@ -66,9 +66,11 @@ PACIFIC_ZONES = [
     },
     {
         "name": "South America",
-        "lat": (-45, -5), "lon": (-82, -65),
+        # lat extends north to +5 to cover Ecuador / Colombia Pacific trench
+        # (old max -5 left a hole south of Central America's min lat 5)
+        "lat": (-45, 5), "lon": (-82, -65),
         "anchor": "chat",
-        "note": "Chile/Peru corridor → CHAT (Chatham Islands) upstream"
+        "note": "Chile/Peru/Ecuador/Colombia corridor → CHAT (Chatham Islands) upstream"
     },
     {
         "name": "Tonga/Kermadec",
@@ -90,9 +92,11 @@ PACIFIC_ZONES = [
     },
     {
         "name": "Central America",
-        "lat": (5, 20), "lon": (-100, -82),
+        # lon extends east to -77 to cover Pacific Panama / west Colombia coast
+        # (old max -82 stopped west of the Panama/Colombia trench)
+        "lat": (5, 20), "lon": (-100, -77),
         "anchor": "chat",
-        "note": "Central America → CHAT corridor possible"
+        "note": "Central America / Pacific Panama → CHAT corridor possible"
     },
 ]
 
