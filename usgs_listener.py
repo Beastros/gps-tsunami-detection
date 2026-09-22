@@ -65,6 +65,12 @@ PACIFIC_ZONES = [
         "note": "Haida Gwaii corridor → GUAM upstream"
     },
     {
+        "name": "Queen Charlotte/Haida Gwaii",
+        "lat": (52, 56), "lon": (-136, -130),
+        "anchor": "guam",
+        "note": "Haida Gwaii / Queen Charlotte trench → GUAM upstream"
+    },
+    {
         "name": "South America",
         "lat": (-45, -5), "lon": (-82, -65),
         "anchor": "chat",
