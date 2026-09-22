@@ -53,6 +53,12 @@ PACIFIC_ZONES = [
         "note": "Japan/Kuril → Japan IGS + Marianas + Hawaii RINEX (guam anchor)"
     },
     {
+        "name": "North Kamchatka",
+        "lat": (55, 59), "lon": (161, 166),
+        "anchor": "guam",
+        "note": "Northern Kamchatka / Ozernoy trench → GUAM upstream"
+    },
+    {
         "name": "Alaska/Aleutian",
         "lat": (48, 62), "lon": (-180, -145),
         "anchor": "guam",
