@@ -83,6 +83,12 @@ PACIFIC_ZONES = [
         "note": "SW Pacific → GUAM or limited geometry"
     },
     {
+        "name": "North New Guinea",
+        "lat": (-6, 0), "lon": (136, 148),
+        "anchor": "guam",
+        "note": "New Guinea Trench (Biak–Aitape–Madang) → GUAM upstream"
+    },
+    {
         "name": "Sumatra/Andaman",
         "lat": (-5, 20), "lon": (90, 110),
         "anchor": None,
