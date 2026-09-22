@@ -89,6 +89,12 @@ PACIFIC_ZONES = [
         "note": "Indian Ocean — geometry-limited for Hawaii detection"
     },
     {
+        "name": "Molucca/Sangihe",
+        "lat": (0, 4), "lon": (125, 130),
+        "anchor": "guam",
+        "note": "Molucca Sea / Sangihe-Talaud → GUAM + PIMO corridor"
+    },
+    {
         "name": "Central America",
         "lat": (5, 20), "lon": (-100, -82),
         "anchor": "chat",
