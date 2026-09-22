@@ -94,6 +94,12 @@ PACIFIC_ZONES = [
         "anchor": "chat",
         "note": "Central America → CHAT corridor possible"
     },
+    {
+        "name": "Mexico Pacific",
+        "lat": (14, 24), "lon": (-107, -95),
+        "anchor": "chat",
+        "note": "Mexico Pacific trench (Michoacan/Colima/Jalisco) → CHAT corridor possible"
+    },
 ]
 
 # Known false-positive source types (usually not tsunamigenic)
