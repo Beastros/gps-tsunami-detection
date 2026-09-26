@@ -2217,6 +2217,47 @@
         "notes": []
       },
       "scored_utc": "2026-07-20T17:02:24.162813+00:00"
+    },
+    {
+      "usgs_id": "us6000txpi",
+      "detected_utc": "2026-09-25T23:35:59.715598+00:00",
+      "quake_utc": "2026-09-25T21:23:03.309000+00:00",
+      "magnitude": 6.6,
+      "depth_km": 10,
+      "lat": -21.298,
+      "lon": 168.61,
+      "place": "80 km ENE of Tadine, New Caledonia",
+      "zones": [
+        "Vanuatu/Solomon"
+      ],
+      "primary_anchor": "guam",
+      "anchor_note": "SW Pacific \u2192 GUAM or limited geometry",
+      "detection_window": {
+        "anchor": "guam",
+        "anchor_dist_km": 4656,
+        "hawaii_dist_km": 6033,
+        "tec_onset_anchor_h": 6.5,
+        "tec_onset_window": [
+          6.0,
+          8.0
+        ],
+        "wave_arrival_hawaii_h": 8.4,
+        "expected_lead_time_min": 115,
+        "rinex_download_after_h": 7.0
+      },
+      "status": "queued",
+      "rinex_downloaded": false,
+      "detector_run": false,
+      "scored": false,
+      "result": null,
+      "focal_mechanism": {
+        "available": false,
+        "fault_type": "unknown",
+        "rake_deg": null,
+        "rake_score": 0.5,
+        "product_type": null
+      },
+      "tsunamigenic_index": null
     }
   ],
   "seen_ids": [
@@ -4858,6 +4899,18 @@
     "us6000txk8",
     "us6000txk0",
     "us6000txnq",
-    "us6000txm9"
+    "us6000txm9",
+    "us6000txq2",
+    "us6000txpi",
+    "us6000txpf",
+    "us6000txpa",
+    "us6000txp8",
+    "us6000tx60",
+    "us7000tirs",
+    "us6000txqf",
+    "us6000txqi",
+    "us6000txqk",
+    "us6000txql",
+    "us6000txqu"
   ]
 }
