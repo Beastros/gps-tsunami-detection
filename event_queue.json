@@ -2245,9 +2245,9 @@
         "expected_lead_time_min": 115,
         "rinex_download_after_h": 7.0
       },
-      "status": "queued",
-      "rinex_downloaded": false,
-      "detector_run": false,
+      "status": "predicted",
+      "rinex_downloaded": true,
+      "detector_run": true,
       "scored": false,
       "result": null,
       "focal_mechanism": {
@@ -2257,7 +2257,51 @@
         "rake_score": 0.5,
         "product_type": null
       },
-      "tsunamigenic_index": null
+      "tsunamigenic_index": null,
+      "rinex_coverage": {
+        "stations": [
+          "holb"
+        ],
+        "n_stations": 1,
+        "total_files": 4,
+        "days": [
+          {
+            "year": 2026,
+            "doy": 267,
+            "stations": [
+              "holb"
+            ],
+            "n": 1
+          },
+          {
+            "year": 2026,
+            "doy": 268,
+            "stations": [
+              "holb"
+            ],
+            "n": 1
+          },
+          {
+            "year": 2026,
+            "doy": 269,
+            "stations": [],
+            "n": 0
+          }
+        ],
+        "source": "manifest",
+        "updated_utc": "2026-09-26T07:43:49.555599+00:00"
+      },
+      "rinex_dir": "rinex_live/us6000txpi",
+      "rinex_download_utc": "2026-09-26T07:43:49.555693+00:00",
+      "prediction": {
+        "detected": false,
+        "reason": "insufficient_stations",
+        "stations_processed": [
+          "holb"
+        ]
+      },
+      "detector_run_utc": "2026-09-26T07:43:51.829263+00:00",
+      "discord_alerted": true
     }
   ],
   "seen_ids": [
@@ -4912,6 +4956,11 @@
     "us6000txqk",
     "us6000txql",
     "us6000txqu",
-    "us6000txli"
+    "us6000txli",
+    "us6000txrq",
+    "us6000txrj",
+    "us6000txrf",
+    "us6000txr0",
+    "us6000txlj"
   ]
 }
