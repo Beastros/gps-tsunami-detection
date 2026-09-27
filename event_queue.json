@@ -2263,7 +2263,7 @@
           "holb"
         ],
         "n_stations": 1,
-        "total_files": 4,
+        "total_files": 5,
         "days": [
           {
             "year": 2026,
@@ -2284,15 +2284,103 @@
           {
             "year": 2026,
             "doy": 269,
-            "stations": [],
-            "n": 0
+            "stations": [
+              "holb"
+            ],
+            "n": 1
           }
         ],
         "source": "manifest",
-        "updated_utc": "2026-09-26T07:43:49.555599+00:00"
+        "updated_utc": "2026-09-27T00:38:23.926855+00:00"
       },
       "rinex_dir": "rinex_live/us6000txpi",
-      "rinex_download_utc": "2026-09-26T07:43:49.555693+00:00",
+      "rinex_download_utc": "2026-09-27T00:38:23.927833+00:00",
+      "detector_run_utc": "2026-09-27T00:38:26.072423+00:00",
+      "scored_utc": "2026-09-27T00:38:28.090071+00:00",
+      "rinex_coverage_last_probe": {
+        "stations": [
+          "holb"
+        ],
+        "n_stations": 1,
+        "days": [
+          {
+            "year": 2026,
+            "doy": 267,
+            "stations": [
+              "holb"
+            ],
+            "n": 1
+          },
+          {
+            "year": 2026,
+            "doy": 268,
+            "stations": [
+              "holb"
+            ],
+            "n": 1
+          },
+          {
+            "year": 2026,
+            "doy": 269,
+            "stations": [
+              "holb"
+            ],
+            "n": 1
+          }
+        ],
+        "source": "probe",
+        "probed_utc": "2026-09-27T00:38:18.080109+00:00"
+      },
+      "retro_last_probe_utc": "2026-09-27T00:38:18.080126+00:00",
+      "reprocess_requested": true,
+      "retroactive_trigger": true,
+      "retro_trigger_reason": "DOY 269 gained HOLB",
+      "retro_triggered_utc": "2026-09-27T00:38:18.081161+00:00",
+      "retro_last_trigger_utc": "2026-09-27T00:38:18.081161+00:00",
+      "retro_run_count": 1,
+      "retro_prior_status": "scored",
+      "retro_prior_prediction": {
+        "detected": false,
+        "reason": "insufficient_stations",
+        "stations_processed": [
+          "holb"
+        ]
+      },
+      "retro_prior_detected": false,
+      "rinex_coverage_probe": {
+        "stations": [
+          "holb"
+        ],
+        "n_stations": 1,
+        "days": [
+          {
+            "year": 2026,
+            "doy": 267,
+            "stations": [
+              "holb"
+            ],
+            "n": 1
+          },
+          {
+            "year": 2026,
+            "doy": 268,
+            "stations": [
+              "holb"
+            ],
+            "n": 1
+          },
+          {
+            "year": 2026,
+            "doy": 269,
+            "stations": [
+              "holb"
+            ],
+            "n": 1
+          }
+        ],
+        "source": "probe",
+        "probed_utc": "2026-09-27T00:38:18.080109+00:00"
+      },
       "prediction": {
         "detected": false,
         "reason": "insufficient_stations",
@@ -2300,7 +2388,6 @@
           "holb"
         ]
       },
-      "detector_run_utc": "2026-09-26T07:43:51.829263+00:00",
       "discord_alerted": true,
       "score": {
         "usgs_id": "us6000txpi",
@@ -2375,8 +2462,7 @@
         "amplitude_error_pct": null,
         "timing_error_min": null,
         "notes": []
-      },
-      "scored_utc": "2026-09-26T22:08:52.744490+00:00"
+      }
     }
   ],
   "seen_ids": [
