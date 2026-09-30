@@ -43269,10 +43269,24 @@
       "total_queued": 5,
       "pending": 0,
       "scored": 5
+    },
+    {
+      "ts": "2026-09-30T23:51:35.145416+00:00",
+      "new_candidates": 0,
+      "total_queued": 5,
+      "pending": 0,
+      "scored": 5
+    },
+    {
+      "ts": "2026-09-30T23:51:38.627964+00:00",
+      "new_candidates": 0,
+      "total_queued": 5,
+      "pending": 0,
+      "scored": 5
     }
   ],
-  "last_updated": "2026-09-30T20:02:54.480434+00:00",
-  "total_polls": 6488,
+  "last_updated": "2026-09-30T23:51:38.627964+00:00",
+  "total_polls": 6490,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -44163,6 +44177,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -1.0
+    },
+    {
+      "ts": "2026-09-30T21:55:26.169000+00:00",
+      "mag": 5.6,
+      "place": "94 km SW of Tamarindo, Costa Rica",
+      "lat": 9.75,
+      "lon": -86.51,
+      "depth": 8,
+      "reason": "below threshold",
+      "delta": -0.9
     }
   ],
   "expected_poll_interval_sec": 900
