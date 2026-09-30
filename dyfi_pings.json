@@ -1,7 +1,19 @@
 {
-  "generated": "2026-09-30T02:00:41Z",
+  "generated": "2026-09-30T08:22:57Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000tyhk",
+      "mag": 5.6,
+      "place": "74 km S of Yonakuni, Japan",
+      "time_ms": 1790744424971,
+      "lat": 23.803,
+      "lon": 122.915,
+      "depth": 10.8,
+      "dyfi_responses": 10,
+      "dyfi_maxmmi": 3.7
+    }
+  ]
 }
