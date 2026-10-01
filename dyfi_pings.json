@@ -1,7 +1,19 @@
 {
-  "generated": "2026-10-01T11:26:05Z",
+  "generated": "2026-10-01T17:28:07Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us6000tytg",
+      "mag": 5.3,
+      "place": "0 km NNE of Y\u014dkaichiba, Japan",
+      "time_ms": 1790857631864,
+      "lat": 35.703,
+      "lon": 140.551,
+      "depth": 41.6,
+      "dyfi_responses": 21,
+      "dyfi_maxmmi": null
+    }
+  ]
 }
