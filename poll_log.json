@@ -43493,10 +43493,24 @@
       "total_queued": 5,
       "pending": 0,
       "scored": 5
+    },
+    {
+      "ts": "2026-10-04T02:41:25.246442+00:00",
+      "new_candidates": 0,
+      "total_queued": 5,
+      "pending": 0,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-04T02:41:28.384416+00:00",
+      "new_candidates": 0,
+      "total_queued": 5,
+      "pending": 0,
+      "scored": 5
     }
   ],
-  "last_updated": "2026-10-03T23:07:33.127154+00:00",
-  "total_polls": 6520,
+  "last_updated": "2026-10-04T02:41:28.384416+00:00",
+  "total_polls": 6522,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -44407,6 +44421,16 @@
       "depth": 29.5,
       "reason": "below threshold",
       "delta": -0.7
+    },
+    {
+      "ts": "2026-10-03T23:37:35.621000+00:00",
+      "mag": 5.6,
+      "place": "80 km S of Banda Aceh, Indonesia",
+      "lat": 4.82,
+      "lon": 95.24,
+      "depth": 69.7,
+      "reason": "below threshold",
+      "delta": -0.9
     }
   ],
   "expected_poll_interval_sec": 900
