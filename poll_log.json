@@ -43661,10 +43661,24 @@
       "total_queued": 5,
       "pending": 0,
       "scored": 5
+    },
+    {
+      "ts": "2026-10-06T20:50:09.503706+00:00",
+      "new_candidates": 0,
+      "total_queued": 5,
+      "pending": 0,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-06T20:50:12.946990+00:00",
+      "new_candidates": 0,
+      "total_queued": 5,
+      "pending": 0,
+      "scored": 5
     }
   ],
-  "last_updated": "2026-10-06T15:51:17.955830+00:00",
-  "total_polls": 6544,
+  "last_updated": "2026-10-06T20:50:12.946990+00:00",
+  "total_polls": 6546,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
@@ -44585,6 +44599,26 @@
       "depth": 69.7,
       "reason": "below threshold",
       "delta": -0.9
+    },
+    {
+      "ts": "2026-10-06T18:34:31.760000+00:00",
+      "mag": 5.5,
+      "place": "92 km NNW of Aleneva, Alaska",
+      "lat": 58.8,
+      "lon": -153.61,
+      "depth": 87.6,
+      "reason": "below threshold",
+      "delta": -1.0
+    },
+    {
+      "ts": "2026-10-06T16:48:21.805000+00:00",
+      "mag": 5.9,
+      "place": "264 km SSW of Severo-Kuril\u2019sk, Russia",
+      "lat": 48.46,
+      "lon": 154.81,
+      "depth": 26.0,
+      "reason": "below threshold",
+      "delta": -0.6
     }
   ],
   "expected_poll_interval_sec": 900
