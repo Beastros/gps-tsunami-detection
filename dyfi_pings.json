@@ -1,19 +1,7 @@
 {
-  "generated": "2026-10-07T13:44:36Z",
+  "generated": "2026-10-07T19:35:16Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "aka2026tuxgky",
-      "mag": 5.5,
-      "place": "92 km NNW of Aleneva, Alaska",
-      "time_ms": 1791311671760,
-      "lat": 58.802,
-      "lon": -153.609,
-      "depth": 87.6,
-      "dyfi_responses": 336,
-      "dyfi_maxmmi": 4.2
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
