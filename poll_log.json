@@ -44200,10 +44200,24 @@
       "total_queued": 5,
       "pending": 0,
       "scored": 5
+    },
+    {
+      "ts": "2026-10-08T23:40:57.343027+00:00",
+      "new_candidates": 0,
+      "total_queued": 5,
+      "pending": 0,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-08T23:40:58.893883+00:00",
+      "new_candidates": 0,
+      "total_queued": 5,
+      "pending": 0,
+      "scored": 5
     }
   ],
-  "last_updated": "2026-10-08T18:52:35.705558+00:00",
-  "total_polls": 6621,
+  "last_updated": "2026-10-08T23:40:58.893883+00:00",
+  "total_polls": 6623,
   "recent_seismicity": [
     {
       "ts": "2026-04-26T04:23:24.102000+00:00",
