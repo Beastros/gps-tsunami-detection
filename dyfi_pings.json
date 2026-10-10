@@ -1,9 +1,31 @@
 {
-  "generated": "2026-10-10T01:18:32Z",
+  "generated": "2026-10-10T07:36:05Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
+  "count": 4,
   "pings": [
+    {
+      "usgs_id": "us6000u1cf",
+      "mag": 6.0,
+      "place": "7 km N of La Tronosa, Panama",
+      "time_ms": 1791605641786,
+      "lat": 7.507,
+      "lon": -80.599,
+      "depth": 10.0,
+      "dyfi_responses": 49,
+      "dyfi_maxmmi": 7.6
+    },
+    {
+      "usgs_id": "us6000u1cd",
+      "mag": 5.3,
+      "place": "41 km NNE of Yigo Village, Guam",
+      "time_ms": 1791604698250,
+      "lat": 13.859,
+      "lon": 145.089,
+      "depth": 111.6,
+      "dyfi_responses": 38,
+      "dyfi_maxmmi": null
+    },
     {
       "usgs_id": "us6000u19w",
       "mag": 6.6,
@@ -12,7 +34,7 @@
       "lat": 7.718,
       "lon": -81.469,
       "depth": 10.0,
-      "dyfi_responses": 25,
+      "dyfi_responses": 26,
       "dyfi_maxmmi": 8.1
     },
     {
@@ -23,7 +45,7 @@
       "lat": 7.587,
       "lon": -80.769,
       "depth": 12.6,
-      "dyfi_responses": 654,
+      "dyfi_responses": 707,
       "dyfi_maxmmi": 9.1
     }
   ]
