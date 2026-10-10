@@ -1,8 +1,8 @@
 {
-  "generated": "2026-10-10T13:59:23Z",
+  "generated": "2026-10-10T18:45:17Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 5,
+  "count": 3,
   "pings": [
     {
       "usgs_id": "us6000u1cf",
@@ -12,7 +12,7 @@
       "lat": 7.507,
       "lon": -80.599,
       "depth": 10.0,
-      "dyfi_responses": 55,
+      "dyfi_responses": 59,
       "dyfi_maxmmi": 7.6
     },
     {
@@ -34,30 +34,8 @@
       "lat": 7.718,
       "lon": -81.469,
       "depth": 10.0,
-      "dyfi_responses": 27,
+      "dyfi_responses": 29,
       "dyfi_maxmmi": 8.1
-    },
-    {
-      "usgs_id": "us6000u18x",
-      "mag": 5.8,
-      "place": "1 km S of El Cacao, Panama",
-      "time_ms": 1791571066146,
-      "lat": 7.436,
-      "lon": -80.401,
-      "depth": 10.0,
-      "dyfi_responses": 10,
-      "dyfi_maxmmi": 7.4
-    },
-    {
-      "usgs_id": "us6000u18k",
-      "mag": 7.7,
-      "place": "12 km WSW of Pitaloza Arriba, Panama",
-      "time_ms": 1791568566036,
-      "lat": 7.587,
-      "lon": -80.769,
-      "depth": 12.6,
-      "dyfi_responses": 737,
-      "dyfi_maxmmi": 9.1
     }
   ]
 }
