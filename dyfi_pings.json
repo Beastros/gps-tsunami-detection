@@ -1,19 +1,7 @@
 {
-  "generated": "2026-10-11T22:29:38Z",
+  "generated": "2026-10-12T01:59:05Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us6000u1hw",
-      "mag": 5.0,
-      "place": "3 km NW of Flores, Panama",
-      "time_ms": 1791683452299,
-      "lat": 7.514,
-      "lon": -80.428,
-      "depth": 10.0,
-      "dyfi_responses": 17,
-      "dyfi_maxmmi": null
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
