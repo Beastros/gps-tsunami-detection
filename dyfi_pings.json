@@ -1,19 +1,7 @@
 {
-  "generated": "2026-10-13T20:41:49Z",
+  "generated": "2026-10-13T23:57:11Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us6000u1wn",
-      "mag": 6.1,
-      "place": "17 km W of R\u00edo Grande, Panama",
-      "time_ms": 1791847236003,
-      "lat": 7.69,
-      "lon": -81.49,
-      "depth": 11.0,
-      "dyfi_responses": 70,
-      "dyfi_maxmmi": 7.4
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
