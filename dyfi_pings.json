@@ -1,19 +1,7 @@
 {
-  "generated": "2026-10-16T09:51:50Z",
+  "generated": "2026-10-16T14:38:28Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "aka2026ukynnb",
-      "mag": 5.6,
-      "place": "43 km NNW of Lake Minchumina, Alaska",
-      "time_ms": 1792062421800,
-      "lat": 64.22,
-      "lon": -152.746,
-      "depth": 4.5,
-      "dyfi_responses": 105,
-      "dyfi_maxmmi": 7.0
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
