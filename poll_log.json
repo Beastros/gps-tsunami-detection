@@ -46237,31 +46237,25 @@
       "total_queued": 5,
       "pending": 0,
       "scored": 5
+    },
+    {
+      "ts": "2026-10-19T20:25:32.129525+00:00",
+      "new_candidates": 0,
+      "total_queued": 5,
+      "pending": 0,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-19T20:26:03.785310+00:00",
+      "new_candidates": 0,
+      "total_queued": 5,
+      "pending": 0,
+      "scored": 5
     }
   ],
-  "last_updated": "2026-10-19T16:55:58.340025+00:00",
-  "total_polls": 6912,
+  "last_updated": "2026-10-19T20:26:03.785310+00:00",
+  "total_polls": 6914,
   "recent_seismicity": [
-    {
-      "ts": "2026-04-26T04:23:24.102000+00:00",
-      "mag": 5.9,
-      "place": "168 km SE of Khovd, Mongolia",
-      "lat": 46.79,
-      "lon": 92.97,
-      "depth": 10,
-      "reason": "below threshold",
-      "delta": -0.6
-    },
-    {
-      "ts": "2026-04-26T20:23:55.561000+00:00",
-      "mag": 6.1,
-      "place": "18 km W of Sarabetsu, Japan",
-      "lat": 42.63,
-      "lon": 142.96,
-      "depth": 81,
-      "reason": "below threshold",
-      "delta": -0.4
-    },
     {
       "ts": "2026-04-30T13:27:01.741000+00:00",
       "mag": 5.7,
@@ -47241,6 +47235,26 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.5
+    },
+    {
+      "ts": "2026-10-19T18:55:37.471000+00:00",
+      "mag": 5.7,
+      "place": "203 km WNW of Port-Olry, Vanuatu",
+      "lat": -14.03,
+      "lon": 165.5,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.8
+    },
+    {
+      "ts": "2026-10-19T18:52:36.659000+00:00",
+      "mag": 5.7,
+      "place": "198 km NW of Port-Olry, Vanuatu",
+      "lat": -14.04,
+      "lon": 165.55,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.8
     }
   ],
   "expected_poll_interval_sec": 900
