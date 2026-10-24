@@ -2463,6 +2463,87 @@
         "timing_error_min": null,
         "notes": []
       }
+    },
+    {
+      "usgs_id": "us6000u4j2",
+      "detected_utc": "2026-10-24T06:58:21.353743+00:00",
+      "quake_utc": "2026-10-24T02:31:28.641000+00:00",
+      "magnitude": 6.9,
+      "depth_km": 10,
+      "lat": -14.056,
+      "lon": 165.546,
+      "place": "197 km WNW of Port-Olry, Vanuatu",
+      "zones": [
+        "Vanuatu/Solomon"
+      ],
+      "primary_anchor": "guam",
+      "anchor_note": "SW Pacific \u2192 GUAM or limited geometry",
+      "detection_window": {
+        "anchor": "guam",
+        "anchor_dist_km": 3816,
+        "hawaii_dist_km": 5715,
+        "tec_onset_anchor_h": 5.3,
+        "tec_onset_window": [
+          4.8,
+          6.8
+        ],
+        "wave_arrival_hawaii_h": 7.9,
+        "expected_lead_time_min": 158,
+        "rinex_download_after_h": 5.8
+      },
+      "status": "predicted",
+      "rinex_downloaded": true,
+      "detector_run": true,
+      "scored": false,
+      "result": null,
+      "focal_mechanism": {
+        "available": false,
+        "fault_type": "unknown",
+        "rake_deg": null,
+        "rake_score": 0.5,
+        "product_type": null
+      },
+      "tsunamigenic_index": null,
+      "rinex_coverage": {
+        "stations": [
+          "holb"
+        ],
+        "n_stations": 1,
+        "total_files": 2,
+        "days": [
+          {
+            "year": 2026,
+            "doy": 296,
+            "stations": [
+              "holb"
+            ],
+            "n": 1
+          },
+          {
+            "year": 2026,
+            "doy": 297,
+            "stations": [],
+            "n": 0
+          },
+          {
+            "year": 2026,
+            "doy": 298,
+            "stations": [],
+            "n": 0
+          }
+        ],
+        "source": "manifest",
+        "updated_utc": "2026-10-24T08:20:58.355089+00:00"
+      },
+      "rinex_dir": "rinex_live/us6000u4j2",
+      "rinex_download_utc": "2026-10-24T08:20:58.355885+00:00",
+      "prediction": {
+        "detected": false,
+        "reason": "insufficient_stations",
+        "stations_processed": []
+      },
+      "detector_run_utc": "2026-10-24T08:20:58.581390+00:00",
+      "discord_alerted": true
     }
   ],
   "seen_ids": [
@@ -5703,6 +5784,29 @@
     "us6000u4gj",
     "us6000u4ib",
     "us6000u4i8",
-    "us6000u3zp"
+    "us6000u3zp",
+    "us6000u4kj",
+    "us6000u4kh",
+    "us6000u4ke",
+    "us6000u4k6",
+    "us6000u4k5",
+    "us6000u4k1",
+    "us6000u4k2",
+    "us6000u4jy",
+    "us6000u4jw",
+    "us6000u4ju",
+    "us6000u4jr",
+    "us6000u4jl",
+    "us6000u4ji",
+    "us6000u4jb",
+    "us6000u4j2",
+    "us6000u4kg",
+    "us6000u4kq",
+    "us6000u4ku",
+    "us6000u4kt",
+    "us6000u4kw",
+    "us6000u4l9",
+    "us6000u4ld",
+    "us6000u4lg"
   ]
 }

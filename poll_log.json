@@ -46965,61 +46965,438 @@
       "total_queued": 5,
       "pending": 0,
       "scored": 5
+    },
+    {
+      "ts": "2026-10-24T06:58:21.370342+00:00",
+      "new_candidates": 1,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T06:58:24.654732+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:00:29.233782+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:02:33.148223+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:04:37.197100+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:06:41.044019+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:08:44.712878+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:10:48.210691+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:12:52.058453+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:14:55.824158+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:16:59.422247+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:19:03.253986+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:21:06.966330+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:23:10.880523+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:25:14.640717+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:27:18.183451+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:29:21.808676+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:31:25.528101+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:33:29.476019+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:35:33.203016+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:37:36.743076+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:39:40.759315+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:41:44.357633+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:43:48.104881+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:45:52.067976+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:47:55.615803+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:49:59.175453+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:52:03.195739+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:54:06.799056+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:56:10.320544+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T07:58:14.001240+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:00:17.569023+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:02:21.442632+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:04:25.167460+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:06:28.870646+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:08:32.415718+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:10:35.939819+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:12:39.910082+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:14:43.629967+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:16:47.203566+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:18:50.782537+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:20:54.467856+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:22:59.193212+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:25:03.035755+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:27:06.955931+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:29:10.549248+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:31:14.273119+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:33:18.188096+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:35:21.875714+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:37:25.468056+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:39:29.270356+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:41:33.289322+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:43:37.050371+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:45:40.645885+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:47:44.389768+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:49:47.968159+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:51:51.722266+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:53:55.459403+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:55:59.210128+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T08:58:03.110868+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
+    },
+    {
+      "ts": "2026-10-24T09:00:06.840447+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 1,
+      "scored": 5
     }
   ],
-  "last_updated": "2026-10-24T01:50:38.797175+00:00",
-  "total_polls": 7016,
+  "last_updated": "2026-10-24T09:00:06.840447+00:00",
+  "total_polls": 7077,
   "recent_seismicity": [
-    {
-      "ts": "2026-05-01T12:39:55.578000+00:00",
-      "mag": 5.8,
-      "place": "29 km ENE of Yilan, Taiwan",
-      "lat": 24.87,
-      "lon": 122.02,
-      "depth": 97.3,
-      "reason": "below threshold",
-      "delta": -0.7
-    },
-    {
-      "ts": "2026-05-02T09:28:40.989000+00:00",
-      "mag": 5.7,
-      "place": "17 km SW of K\u014dya, Japan",
-      "lat": 34.11,
-      "lon": 135.49,
-      "depth": 59.1,
-      "reason": "below threshold",
-      "delta": -0.8
-    },
-    {
-      "ts": "2026-05-04T15:19:26.467000+00:00",
-      "mag": 5.7,
-      "place": "2 km SE of Zocoteaca de Le\u00f3n, Mexico",
-      "lat": 16.62,
-      "lon": -97.98,
-      "depth": 22.2,
-      "reason": "below threshold",
-      "delta": -0.8
-    },
-    {
-      "ts": "2026-05-05T06:44:51.479000+00:00",
-      "mag": 5.8,
-      "place": "76 km S of Tambolaka, Indonesia",
-      "lat": -10.11,
-      "lon": 119.32,
-      "depth": 35.5,
-      "reason": "below threshold",
-      "delta": -0.7
-    },
-    {
-      "ts": "2026-05-05T08:00:43.579000+00:00",
-      "mag": 5.8,
-      "place": "127 km ENE of Pauanui, New Zealand",
-      "lat": -36.75,
-      "lon": 177.26,
-      "depth": 10,
-      "reason": "below threshold",
-      "delta": -0.7
-    },
     {
       "ts": "2026-05-06T11:46:48.851000+00:00",
       "mag": 5.6,
@@ -47969,6 +48346,56 @@
       "depth": 16,
       "reason": "below threshold",
       "delta": -0.2
+    },
+    {
+      "ts": "2026-10-24T05:23:40.747000+00:00",
+      "mag": 5.8,
+      "place": "182 km NW of Port-Olry, Vanuatu",
+      "lat": -14.08,
+      "lon": 165.7,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.7
+    },
+    {
+      "ts": "2026-10-24T04:12:05.337000+00:00",
+      "mag": 5.8,
+      "place": "203 km NW of Port-Olry, Vanuatu",
+      "lat": -13.9,
+      "lon": 165.6,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.7
+    },
+    {
+      "ts": "2026-10-24T04:05:36.800000+00:00",
+      "mag": 5.7,
+      "place": "205 km NW of Port-Olry, Vanuatu",
+      "lat": -13.91,
+      "lon": 165.56,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.8
+    },
+    {
+      "ts": "2026-10-24T02:35:57.362000+00:00",
+      "mag": 6.3,
+      "place": "170 km NW of Port-Olry, Vanuatu",
+      "lat": -14.04,
+      "lon": 165.87,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.2
+    },
+    {
+      "ts": "2026-10-24T06:43:09.602000+00:00",
+      "mag": 5.5,
+      "place": "55 km NNE of Port-Olry, Vanuatu",
+      "lat": -14.59,
+      "lon": 167.31,
+      "depth": 194.6,
+      "reason": "below threshold",
+      "delta": -1.0
     }
   ],
   "expected_poll_interval_sec": 900
