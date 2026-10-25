@@ -465,12 +465,86 @@
       "amplitude_error_pct": null,
       "timing_error_min": null,
       "notes": []
+    },
+    {
+      "usgs_id": "us6000u4j2",
+      "quake_utc": "2026-10-24T02:31:28.641000+00:00",
+      "magnitude": 6.9,
+      "place": "197 km WNW of Port-Olry, Vanuatu",
+      "anchor": "guam",
+      "kp": null,
+      "algo_detected": false,
+      "gauge_tsunami": false,
+      "any_gauge_tsunami": true,
+      "corroborated_by": [
+        "midway"
+      ],
+      "combined_confidence": null,
+      "confidence_detected": false,
+      "confidence_threshold": 0.35,
+      "dart_score_prediction": null,
+      "dart_status_prediction": null,
+      "space_weather_score": null,
+      "space_weather_gated": false,
+      "space_weather_flags": [],
+      "dart_reconciliation": {
+        "reconciled": false,
+        "reason": "no_scoring_dart"
+      },
+      "stations_processed": [],
+      "detection_reason": "insufficient_stations",
+      "constellation_agreement": null,
+      "dtec_corroborates": false,
+      "ionosonde_confirmed": false,
+      "lb_pairs_in_window": null,
+      "dyfi_contribution": 0.0,
+      "dyfi_responses": 4,
+      "dyfi_maxmmi": 4.8,
+      "dyfi_confirmed": false,
+      "dart_detected": null,
+      "dart_confirming_buoys": null,
+      "dart_buoys_checked": null,
+      "dart_network": null,
+      "gauge_network": {
+        "hilo": {
+          "signal": false,
+          "arrival_h": null,
+          "amplitude_m": null,
+          "method": null
+        },
+        "midway": {
+          "signal": true,
+          "arrival_h": 5.48,
+          "amplitude_m": 0.051,
+          "method": "variance_threshold"
+        },
+        "johnston": {
+          "signal": false,
+          "arrival_h": null,
+          "amplitude_m": null,
+          "method": null
+        },
+        "pago": {
+          "signal": false,
+          "arrival_h": null,
+          "amplitude_m": null,
+          "method": null
+        }
+      },
+      "outcome": "TRUE_NEGATIVE",
+      "outcome_confidence": null,
+      "lead_time_min": null,
+      "amplitude_predicted_m": null,
+      "amplitude_actual_m": null,
+      "amplitude_error_pct": null,
+      "timing_error_min": null,
+      "notes": []
     }
   ],
   "summary": {
-    "total_scored": 5,
+    "total_scored": 6,
     "true_positives": 0,
-    "true_negatives": 3,
+    "true_negatives": 4,
     "false_positives": 0,
     "false_negatives": 2,
     "tpr": 0.0,
@@ -494,6 +568,6 @@
         "hit_rate": 0.667
       }
     },
-    "last_updated": "2026-09-27T00:38:28.090233+00:00"
+    "last_updated": "2026-10-25T06:39:00.492000+00:00"
   }
 }

@@ -2491,10 +2491,10 @@
         "expected_lead_time_min": 158,
         "rinex_download_after_h": 5.8
       },
-      "status": "predicted",
+      "status": "scored",
       "rinex_downloaded": true,
       "detector_run": true,
-      "scored": false,
+      "scored": true,
       "result": null,
       "focal_mechanism": {
         "available": false,
@@ -2623,7 +2623,82 @@
         "reason": "insufficient_stations",
         "stations_processed": []
       },
-      "discord_alerted": true
+      "discord_alerted": true,
+      "score": {
+        "usgs_id": "us6000u4j2",
+        "quake_utc": "2026-10-24T02:31:28.641000+00:00",
+        "magnitude": 6.9,
+        "place": "197 km WNW of Port-Olry, Vanuatu",
+        "anchor": "guam",
+        "kp": null,
+        "algo_detected": false,
+        "gauge_tsunami": false,
+        "any_gauge_tsunami": true,
+        "corroborated_by": [
+          "midway"
+        ],
+        "combined_confidence": null,
+        "confidence_detected": false,
+        "confidence_threshold": 0.35,
+        "dart_score_prediction": null,
+        "dart_status_prediction": null,
+        "space_weather_score": null,
+        "space_weather_gated": false,
+        "space_weather_flags": [],
+        "dart_reconciliation": {
+          "reconciled": false,
+          "reason": "no_scoring_dart"
+        },
+        "stations_processed": [],
+        "detection_reason": "insufficient_stations",
+        "constellation_agreement": null,
+        "dtec_corroborates": false,
+        "ionosonde_confirmed": false,
+        "lb_pairs_in_window": null,
+        "dyfi_contribution": 0.0,
+        "dyfi_responses": 4,
+        "dyfi_maxmmi": 4.8,
+        "dyfi_confirmed": false,
+        "dart_detected": null,
+        "dart_confirming_buoys": null,
+        "dart_buoys_checked": null,
+        "dart_network": null,
+        "gauge_network": {
+          "hilo": {
+            "signal": false,
+            "arrival_h": null,
+            "amplitude_m": null,
+            "method": null
+          },
+          "midway": {
+            "signal": true,
+            "arrival_h": 5.48,
+            "amplitude_m": 0.051,
+            "method": "variance_threshold"
+          },
+          "johnston": {
+            "signal": false,
+            "arrival_h": null,
+            "amplitude_m": null,
+            "method": null
+          },
+          "pago": {
+            "signal": false,
+            "arrival_h": null,
+            "amplitude_m": null,
+            "method": null
+          }
+        },
+        "outcome": "TRUE_NEGATIVE",
+        "outcome_confidence": null,
+        "lead_time_min": null,
+        "amplitude_predicted_m": null,
+        "amplitude_actual_m": null,
+        "amplitude_error_pct": null,
+        "timing_error_min": null,
+        "notes": []
+      },
+      "scored_utc": "2026-10-25T06:39:00.491800+00:00"
     }
   ],
   "seen_ids": [
@@ -5915,6 +5990,20 @@
     "us6000u4pw",
     "us6000u4qq",
     "us6000u4qp",
-    "us6000u4qm"
+    "us6000u4qm",
+    "us6000u4sv",
+    "us6000u4sm",
+    "us6000u4s5",
+    "us6000u4rr",
+    "us6000u4rf",
+    "us6000u4r9",
+    "us6000u4r7",
+    "us6000u4r3",
+    "pt26298050",
+    "pt26297050",
+    "us6000u4t4",
+    "aka2026vddzqy",
+    "aka2026vdearz",
+    "us6000u4t8"
   ]
 }
