@@ -2509,7 +2509,7 @@
           "holb"
         ],
         "n_stations": 1,
-        "total_files": 2,
+        "total_files": 3,
         "days": [
           {
             "year": 2026,
@@ -2522,8 +2522,10 @@
           {
             "year": 2026,
             "doy": 297,
-            "stations": [],
-            "n": 0
+            "stations": [
+              "holb"
+            ],
+            "n": 1
           },
           {
             "year": 2026,
@@ -2533,16 +2535,94 @@
           }
         ],
         "source": "manifest",
-        "updated_utc": "2026-10-24T08:20:58.355089+00:00"
+        "updated_utc": "2026-10-25T01:26:55.544614+00:00"
       },
       "rinex_dir": "rinex_live/us6000u4j2",
-      "rinex_download_utc": "2026-10-24T08:20:58.355885+00:00",
+      "rinex_download_utc": "2026-10-25T01:26:55.545315+00:00",
+      "detector_run_utc": "2026-10-25T01:26:55.825158+00:00",
+      "rinex_coverage_last_probe": {
+        "stations": [
+          "holb"
+        ],
+        "n_stations": 1,
+        "days": [
+          {
+            "year": 2026,
+            "doy": 296,
+            "stations": [
+              "holb"
+            ],
+            "n": 1
+          },
+          {
+            "year": 2026,
+            "doy": 297,
+            "stations": [
+              "holb"
+            ],
+            "n": 1
+          },
+          {
+            "year": 2026,
+            "doy": 298,
+            "stations": [],
+            "n": 0
+          }
+        ],
+        "source": "probe",
+        "probed_utc": "2026-10-25T01:26:53.707758+00:00"
+      },
+      "retro_last_probe_utc": "2026-10-25T01:26:53.707766+00:00",
+      "reprocess_requested": true,
+      "retroactive_trigger": true,
+      "retro_trigger_reason": "DOY 297 gained HOLB",
+      "retro_triggered_utc": "2026-10-25T01:26:53.707980+00:00",
+      "retro_last_trigger_utc": "2026-10-25T01:26:53.707980+00:00",
+      "retro_run_count": 1,
+      "retro_prior_status": "predicted",
+      "retro_prior_prediction": {
+        "detected": false,
+        "reason": "insufficient_stations",
+        "stations_processed": []
+      },
+      "retro_prior_detected": false,
+      "rinex_coverage_probe": {
+        "stations": [
+          "holb"
+        ],
+        "n_stations": 1,
+        "days": [
+          {
+            "year": 2026,
+            "doy": 296,
+            "stations": [
+              "holb"
+            ],
+            "n": 1
+          },
+          {
+            "year": 2026,
+            "doy": 297,
+            "stations": [
+              "holb"
+            ],
+            "n": 1
+          },
+          {
+            "year": 2026,
+            "doy": 298,
+            "stations": [],
+            "n": 0
+          }
+        ],
+        "source": "probe",
+        "probed_utc": "2026-10-25T01:26:53.707758+00:00"
+      },
       "prediction": {
         "detected": false,
         "reason": "insufficient_stations",
         "stations_processed": []
       },
-      "detector_run_utc": "2026-10-24T08:20:58.581390+00:00",
       "discord_alerted": true
     }
   ],
@@ -5832,6 +5912,9 @@
     "us6000u4ny",
     "us6000u4nv",
     "us6000u4q8",
-    "us6000u4pw"
+    "us6000u4pw",
+    "us6000u4qq",
+    "us6000u4qp",
+    "us6000u4qm"
   ]
 }
