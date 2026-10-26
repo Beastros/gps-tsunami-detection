@@ -48001,21 +48001,25 @@
       "total_queued": 6,
       "pending": 0,
       "scored": 6
+    },
+    {
+      "ts": "2026-10-26T16:37:26.374292+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
+    },
+    {
+      "ts": "2026-10-26T16:37:30.988308+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
     }
   ],
-  "last_updated": "2026-10-26T09:53:01.387189+00:00",
-  "total_polls": 7164,
+  "last_updated": "2026-10-26T16:37:30.988308+00:00",
+  "total_polls": 7166,
   "recent_seismicity": [
-    {
-      "ts": "2026-05-06T15:35:46.736000+00:00",
-      "mag": 5.5,
-      "place": "25 km ENE of Baganga, Philippines",
-      "lat": 7.63,
-      "lon": 126.78,
-      "depth": 10,
-      "reason": "below threshold",
-      "delta": -1.0
-    },
     {
       "ts": "2026-05-08T12:22:31.861000+00:00",
       "mag": 5.6,
@@ -49005,6 +49009,16 @@
       "depth": 116,
       "reason": "below threshold",
       "delta": -0.4
+    },
+    {
+      "ts": "2026-10-26T10:13:01.234000+00:00",
+      "mag": 5.5,
+      "place": "283 km E of Levuka, Fiji",
+      "lat": -18.28,
+      "lon": -178.01,
+      "depth": 641.8,
+      "reason": "below threshold",
+      "delta": -1.0
     }
   ],
   "expected_poll_interval_sec": 900
