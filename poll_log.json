@@ -48057,21 +48057,25 @@
       "total_queued": 6,
       "pending": 0,
       "scored": 6
+    },
+    {
+      "ts": "2026-10-27T10:52:51.449737+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
+    },
+    {
+      "ts": "2026-10-27T10:52:53.404332+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
     }
   ],
-  "last_updated": "2026-10-27T05:30:17.186559+00:00",
-  "total_polls": 7172,
+  "last_updated": "2026-10-27T10:52:53.404332+00:00",
+  "total_polls": 7174,
   "recent_seismicity": [
-    {
-      "ts": "2026-05-08T12:22:31.861000+00:00",
-      "mag": 5.6,
-      "place": "109 km SSE of Lorengau, Papua New Guinea",
-      "lat": -2.91,
-      "lon": 147.73,
-      "depth": 10,
-      "reason": "below threshold",
-      "delta": -0.9
-    },
     {
       "ts": "2026-05-09T04:42:23.298000+00:00",
       "mag": 5.8,
@@ -49061,6 +49065,16 @@
       "depth": 641.8,
       "reason": "below threshold",
       "delta": -1.0
+    },
+    {
+      "ts": "2026-10-27T08:55:23.290000+00:00",
+      "mag": 5.8,
+      "place": "196 km NW of Port-Olry, Vanuatu",
+      "lat": -13.91,
+      "lon": 165.67,
+      "depth": 11,
+      "reason": "below threshold",
+      "delta": -0.7
     }
   ],
   "expected_poll_interval_sec": 900
