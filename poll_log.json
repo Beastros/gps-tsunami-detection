@@ -48547,21 +48547,25 @@
       "total_queued": 6,
       "pending": 0,
       "scored": 6
+    },
+    {
+      "ts": "2026-10-28T18:43:44.054994+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
+    },
+    {
+      "ts": "2026-10-28T18:43:46.674934+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
     }
   ],
-  "last_updated": "2026-10-28T12:56:47.674826+00:00",
-  "total_polls": 7242,
+  "last_updated": "2026-10-28T18:43:46.674934+00:00",
+  "total_polls": 7244,
   "recent_seismicity": [
-    {
-      "ts": "2026-05-12T21:19:34.981000+00:00",
-      "mag": 5.7,
-      "place": "289 km SW of Houma, Tonga",
-      "lat": -23.34,
-      "lon": -176.86,
-      "depth": 135.6,
-      "reason": "below threshold",
-      "delta": -0.8
-    },
     {
       "ts": "2026-05-16T15:17:56.098000+00:00",
       "mag": 5.7,
@@ -49549,6 +49553,16 @@
       "lat": -13.89,
       "lon": 165.39,
       "depth": 10,
+      "reason": "below threshold",
+      "delta": -1.0
+    },
+    {
+      "ts": "2026-10-28T15:07:52.050000+00:00",
+      "mag": 5.5,
+      "place": "5 km ESE of Asahi, Japan",
+      "lat": 35.7,
+      "lon": 140.71,
+      "depth": 41.4,
       "reason": "below threshold",
       "delta": -1.0
     }
