@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-28T18:43:52Z",
+  "generated": "2026-10-28T22:53:30Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 1,
@@ -12,7 +12,7 @@
       "lat": 35.702,
       "lon": 140.706,
       "depth": 41.4,
-      "dyfi_responses": 35,
+      "dyfi_responses": 46,
       "dyfi_maxmmi": 4.8
     }
   ]
