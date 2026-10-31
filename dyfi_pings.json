@@ -1,7 +1,19 @@
 {
-  "generated": "2026-10-31T14:41:50Z",
+  "generated": "2026-10-31T18:47:47Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us7000tujf",
+      "mag": 5.2,
+      "place": "4 km S of Bajo Corral, Panama",
+      "time_ms": 1793461818909,
+      "lat": 7.569,
+      "lon": -80.255,
+      "depth": 10.0,
+      "dyfi_responses": 27,
+      "dyfi_maxmmi": null
+    }
+  ]
 }
