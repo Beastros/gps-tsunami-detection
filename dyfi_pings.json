@@ -1,19 +1,7 @@
 {
-  "generated": "2026-11-01T19:24:41Z",
+  "generated": "2026-11-01T22:58:00Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us7000tuku",
-      "mag": 6.0,
-      "place": "58 km SSE of Shima, Japan",
-      "time_ms": 1793484902901,
-      "lat": 33.822,
-      "lon": 136.985,
-      "depth": 352.4,
-      "dyfi_responses": 28,
-      "dyfi_maxmmi": 3.0
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
