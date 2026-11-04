@@ -1,19 +1,7 @@
 {
-  "generated": "2026-11-04T02:44:46Z",
+  "generated": "2026-11-04T17:54:00Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us7000tv4i",
-      "mag": 5.4,
-      "place": "24 km NNW of Rioblanco, Colombia",
-      "time_ms": 1793697194972,
-      "lat": 3.739,
-      "lon": -75.72,
-      "depth": 10.0,
-      "dyfi_responses": 130,
-      "dyfi_maxmmi": 6.3
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
