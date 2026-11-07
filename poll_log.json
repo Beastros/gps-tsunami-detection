@@ -51116,21 +51116,25 @@
       "total_queued": 6,
       "pending": 0,
       "scored": 6
+    },
+    {
+      "ts": "2026-11-07T13:26:06.003768+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
+    },
+    {
+      "ts": "2026-11-07T13:26:08.507240+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
     }
   ],
-  "last_updated": "2026-11-07T06:25:17.170206+00:00",
-  "total_polls": 7609,
+  "last_updated": "2026-11-07T13:26:08.507240+00:00",
+  "total_polls": 7611,
   "recent_seismicity": [
-    {
-      "ts": "2026-05-25T21:52:19.567000+00:00",
-      "mag": 6.9,
-      "place": "31 km E of Calama, Chile",
-      "lat": -22.4,
-      "lon": -68.62,
-      "depth": 101.3,
-      "reason": "too deep (101km)",
-      "delta": null
-    },
     {
       "ts": "2026-05-31T21:34:17.122000+00:00",
       "mag": 6,
@@ -52120,6 +52124,16 @@
       "depth": 29,
       "reason": "below threshold",
       "delta": -0.4
+    },
+    {
+      "ts": "2026-11-07T11:07:43.355000+00:00",
+      "mag": 5.5,
+      "place": "74 km NE of Hasaki, Japan",
+      "lat": 36.19,
+      "lon": 141.44,
+      "depth": 31.7,
+      "reason": "below threshold",
+      "delta": -1.0
     }
   ],
   "expected_poll_interval_sec": 900
