@@ -51130,21 +51130,25 @@
       "total_queued": 6,
       "pending": 0,
       "scored": 6
+    },
+    {
+      "ts": "2026-11-07T18:12:04.825582+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
+    },
+    {
+      "ts": "2026-11-07T18:12:06.617250+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
     }
   ],
-  "last_updated": "2026-11-07T13:26:08.507240+00:00",
-  "total_polls": 7611,
+  "last_updated": "2026-11-07T18:12:06.617250+00:00",
+  "total_polls": 7613,
   "recent_seismicity": [
-    {
-      "ts": "2026-05-31T21:34:17.122000+00:00",
-      "mag": 6,
-      "place": "36 km NW of Valpara\u00edso, Chile",
-      "lat": -32.77,
-      "lon": -71.85,
-      "depth": 15.7,
-      "reason": "below threshold",
-      "delta": -0.5
-    },
     {
       "ts": "2026-06-01T03:34:30.498000+00:00",
       "mag": 5.7,
@@ -52132,6 +52136,16 @@
       "lat": 36.19,
       "lon": 141.44,
       "depth": 31.7,
+      "reason": "below threshold",
+      "delta": -1.0
+    },
+    {
+      "ts": "2026-11-07T16:04:35.125000+00:00",
+      "mag": 5.5,
+      "place": "10 km NW of Hamakita, Japan",
+      "lat": 34.86,
+      "lon": 137.69,
+      "depth": 38.1,
       "reason": "below threshold",
       "delta": -1.0
     }
