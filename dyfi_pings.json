@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-08T01:10:42Z",
+  "generated": "2026-11-08T07:23:27Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
   "count": 2,
@@ -12,8 +12,8 @@
       "lat": 34.861,
       "lon": 137.691,
       "depth": 38.1,
-      "dyfi_responses": 58,
-      "dyfi_maxmmi": 5.3
+      "dyfi_responses": 67,
+      "dyfi_maxmmi": 6.2
     },
     {
       "usgs_id": "us7000twrq",
