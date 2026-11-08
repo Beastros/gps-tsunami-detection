@@ -1,19 +1,7 @@
 {
-  "generated": "2026-11-08T14:26:58Z",
+  "generated": "2026-11-08T18:59:42Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us7000twt0",
-      "mag": 5.5,
-      "place": "10 km NW of Hamakita, Japan",
-      "time_ms": 1794067475125,
-      "lat": 34.861,
-      "lon": 137.691,
-      "depth": 38.1,
-      "dyfi_responses": 71,
-      "dyfi_maxmmi": 6.2
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
