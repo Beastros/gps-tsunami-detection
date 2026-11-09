@@ -1,7 +1,19 @@
 {
-  "generated": "2026-11-09T02:27:36Z",
+  "generated": "2026-11-09T22:48:23Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us7000tx1f",
+      "mag": 5.7,
+      "place": "106 km ENE of Hasaki, Japan",
+      "time_ms": 1794199971519,
+      "lat": 36.247,
+      "lon": 141.83,
+      "depth": 24.2,
+      "dyfi_responses": 17,
+      "dyfi_maxmmi": 3.8
+    }
+  ]
 }
