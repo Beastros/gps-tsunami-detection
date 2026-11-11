@@ -2506,125 +2506,139 @@
       "tsunamigenic_index": null,
       "rinex_coverage": {
         "stations": [
+          "cnmr",
           "holb"
         ],
-        "n_stations": 1,
-        "total_files": 6,
+        "n_stations": 2,
+        "total_files": 9,
         "days": [
           {
             "year": 2026,
             "doy": 296,
             "stations": [
+              "cnmr",
               "holb"
             ],
-            "n": 1
+            "n": 2
           },
           {
             "year": 2026,
             "doy": 297,
             "stations": [
+              "cnmr",
               "holb"
             ],
-            "n": 1
+            "n": 2
           },
           {
             "year": 2026,
             "doy": 298,
             "stations": [
+              "cnmr",
               "holb"
             ],
-            "n": 1
+            "n": 2
           }
         ],
         "source": "manifest",
-        "updated_utc": "2026-10-26T03:51:07.586070+00:00"
+        "updated_utc": "2026-11-11T20:02:46.893106+00:00"
       },
       "rinex_dir": "rinex_live/us6000u4j2",
-      "rinex_download_utc": "2026-10-26T03:51:07.587066+00:00",
-      "detector_run_utc": "2026-10-26T03:51:09.548233+00:00",
+      "rinex_download_utc": "2026-11-11T20:02:46.894157+00:00",
+      "detector_run_utc": "2026-11-11T20:02:49.485636+00:00",
       "rinex_coverage_last_probe": {
         "stations": [
+          "cnmr",
           "holb"
         ],
-        "n_stations": 1,
+        "n_stations": 2,
         "days": [
           {
             "year": 2026,
             "doy": 296,
             "stations": [
+              "cnmr",
               "holb"
             ],
-            "n": 1
+            "n": 2
           },
           {
             "year": 2026,
             "doy": 297,
             "stations": [
+              "cnmr",
               "holb"
             ],
-            "n": 1
+            "n": 2
           },
           {
             "year": 2026,
             "doy": 298,
             "stations": [
+              "cnmr",
               "holb"
             ],
-            "n": 1
+            "n": 2
           }
         ],
         "source": "probe",
-        "probed_utc": "2026-10-26T03:51:02.572782+00:00"
+        "probed_utc": "2026-11-11T20:02:21.988457+00:00"
       },
-      "retro_last_probe_utc": "2026-10-26T03:51:02.572800+00:00",
+      "retro_last_probe_utc": "2026-11-11T20:02:21.988479+00:00",
       "reprocess_requested": true,
       "retroactive_trigger": true,
-      "retro_trigger_reason": "DOY 298 gained HOLB",
-      "retro_triggered_utc": "2026-10-26T03:51:02.658094+00:00",
-      "retro_last_trigger_utc": "2026-10-26T03:51:02.658094+00:00",
-      "retro_run_count": 2,
+      "retro_trigger_reason": "new stations on CDDIS: CNMR",
+      "retro_triggered_utc": "2026-11-11T20:02:21.989926+00:00",
+      "retro_last_trigger_utc": "2026-11-11T20:02:21.989926+00:00",
+      "retro_run_count": 3,
       "retro_prior_status": "scored",
       "retro_prior_prediction": {
         "detected": false,
         "reason": "insufficient_stations",
-        "stations_processed": []
+        "stations_processed": [
+          "holb"
+        ]
       },
       "retro_prior_detected": false,
       "rinex_coverage_probe": {
         "stations": [
+          "cnmr",
           "holb"
         ],
-        "n_stations": 1,
+        "n_stations": 2,
         "days": [
           {
             "year": 2026,
             "doy": 296,
             "stations": [
+              "cnmr",
               "holb"
             ],
-            "n": 1
+            "n": 2
           },
           {
             "year": 2026,
             "doy": 297,
             "stations": [
+              "cnmr",
               "holb"
             ],
-            "n": 1
+            "n": 2
           },
           {
             "year": 2026,
             "doy": 298,
             "stations": [
+              "cnmr",
               "holb"
             ],
-            "n": 1
+            "n": 2
           }
         ],
         "source": "probe",
-        "probed_utc": "2026-10-26T03:51:02.572782+00:00"
+        "probed_utc": "2026-11-11T20:02:21.988457+00:00"
       },
-      "scored_utc": "2026-10-26T03:51:10.739833+00:00",
+      "scored_utc": "2026-11-11T20:02:51.186271+00:00",
       "prediction": {
         "detected": false,
         "reason": "insufficient_stations",
@@ -2667,7 +2681,7 @@
         "ionosonde_confirmed": false,
         "lb_pairs_in_window": null,
         "dyfi_contribution": 0.0,
-        "dyfi_responses": 4,
+        "dyfi_responses": 7,
         "dyfi_maxmmi": 4.8,
         "dyfi_confirmed": false,
         "dart_detected": null,
@@ -6299,6 +6313,11 @@
     "us7000txi0",
     "us7000txhi",
     "us7000txgv",
-    "us7000txgq"
+    "us7000txgq",
+    "us7000txmq",
+    "us7000txm8",
+    "us7000txjg",
+    "us7000txiz",
+    "us7000txil"
   ]
 }

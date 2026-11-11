@@ -1,19 +1,7 @@
 {
-  "generated": "2026-11-11T12:53:56Z",
+  "generated": "2026-11-11T20:02:51Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us7000txb8",
-      "mag": 5.6,
-      "place": "43 km S of Puerto San Jos\u00e9, Guatemala",
-      "time_ms": 1794322457647,
-      "lat": 13.538,
-      "lon": -90.88,
-      "depth": 35.0,
-      "dyfi_responses": 20,
-      "dyfi_maxmmi": 4.2
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
