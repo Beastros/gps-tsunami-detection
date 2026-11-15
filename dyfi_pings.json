@@ -1,7 +1,19 @@
 {
-  "generated": "2026-11-15T09:28:15Z",
+  "generated": "2026-11-15T16:31:46Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 0,
-  "pings": []
+  "count": 1,
+  "pings": [
+    {
+      "usgs_id": "us7000tyek",
+      "mag": 5.5,
+      "place": "9 km E of Union, Philippines",
+      "time_ms": 1794750095701,
+      "lat": 9.759,
+      "lon": 126.2,
+      "depth": 10.0,
+      "dyfi_responses": 12,
+      "dyfi_maxmmi": 6.4
+    }
+  ]
 }
