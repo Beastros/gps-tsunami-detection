@@ -51942,21 +51942,25 @@
       "total_queued": 6,
       "pending": 0,
       "scored": 6
+    },
+    {
+      "ts": "2026-11-15T09:28:07.885001+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
+    },
+    {
+      "ts": "2026-11-15T09:28:10.399775+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
     }
   ],
-  "last_updated": "2026-11-15T02:08:48.651849+00:00",
-  "total_polls": 7727,
+  "last_updated": "2026-11-15T09:28:10.399775+00:00",
+  "total_polls": 7729,
   "recent_seismicity": [
-    {
-      "ts": "2026-06-07T14:53:56.180000+00:00",
-      "mag": 5.5,
-      "place": "139 km SE of Severo-Kuril\u2019sk, Russia",
-      "lat": 49.9,
-      "lon": 157.66,
-      "depth": 10,
-      "reason": "below threshold",
-      "delta": -1.0
-    },
     {
       "ts": "2026-06-10T10:34:17.371000+00:00",
       "mag": 5.7,
@@ -52946,6 +52950,16 @@
       "depth": 10,
       "reason": "below threshold",
       "delta": -0.7
+    },
+    {
+      "ts": "2026-11-15T05:15:02.697000+00:00",
+      "mag": 5.5,
+      "place": "Fiji region",
+      "lat": -19.56,
+      "lon": -177.82,
+      "depth": 469.9,
+      "reason": "below threshold",
+      "delta": -1.0
     }
   ],
   "expected_poll_interval_sec": 900
