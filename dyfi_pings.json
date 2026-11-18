@@ -1,19 +1,7 @@
 {
-  "generated": "2026-11-17T19:44:56Z",
+  "generated": "2026-11-18T01:53:27Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us7000tymu",
-      "mag": 6.6,
-      "place": "148 km WSW of Tual, Indonesia",
-      "time_ms": 1794863480515,
-      "lat": -6.08,
-      "lon": 131.487,
-      "depth": 68.0,
-      "dyfi_responses": 10,
-      "dyfi_maxmmi": 5.4
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
