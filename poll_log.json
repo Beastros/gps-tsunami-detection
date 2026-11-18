@@ -52082,21 +52082,25 @@
       "total_queued": 6,
       "pending": 0,
       "scored": 6
+    },
+    {
+      "ts": "2026-11-18T09:51:50.114507+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
+    },
+    {
+      "ts": "2026-11-18T09:51:53.064447+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
     }
   ],
-  "last_updated": "2026-11-18T01:53:22.513383+00:00",
-  "total_polls": 7747,
+  "last_updated": "2026-11-18T09:51:53.064447+00:00",
+  "total_polls": 7749,
   "recent_seismicity": [
-    {
-      "ts": "2026-06-10T10:34:17.371000+00:00",
-      "mag": 5.7,
-      "place": "33 km ESE of Ol\u2019ga, Russia",
-      "lat": 43.63,
-      "lon": 135.67,
-      "depth": 343.3,
-      "reason": "below threshold",
-      "delta": -0.8
-    },
     {
       "ts": "2026-06-11T12:22:06.272000+00:00",
       "mag": 5.5,
@@ -53086,6 +53090,16 @@
       "depth": 469.9,
       "reason": "below threshold",
       "delta": -1.0
+    },
+    {
+      "ts": "2026-11-18T06:07:42.780000+00:00",
+      "mag": 5.9,
+      "place": "85 km WNW of San Juan, Peru",
+      "lat": -15.14,
+      "lon": -75.92,
+      "depth": 21.9,
+      "reason": "below threshold",
+      "delta": -0.6
     }
   ],
   "expected_poll_interval_sec": 900
