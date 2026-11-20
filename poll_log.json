@@ -52166,21 +52166,25 @@
       "total_queued": 6,
       "pending": 0,
       "scored": 6
+    },
+    {
+      "ts": "2026-11-20T04:21:26.298257+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
+    },
+    {
+      "ts": "2026-11-20T04:21:28.528123+00:00",
+      "new_candidates": 0,
+      "total_queued": 6,
+      "pending": 0,
+      "scored": 6
     }
   ],
-  "last_updated": "2026-11-19T23:42:30.553790+00:00",
-  "total_polls": 7759,
+  "last_updated": "2026-11-20T04:21:28.528123+00:00",
+  "total_polls": 7761,
   "recent_seismicity": [
-    {
-      "ts": "2026-06-11T12:22:06.272000+00:00",
-      "mag": 5.5,
-      "place": "128 km NW of Vallenar, Chile",
-      "lat": -27.8,
-      "lon": -71.74,
-      "depth": 10,
-      "reason": "below threshold",
-      "delta": -1.0
-    },
     {
       "ts": "2026-06-16T10:46:34.658000+00:00",
       "mag": 5.5,
@@ -53170,6 +53174,16 @@
       "depth": 21.9,
       "reason": "below threshold",
       "delta": -0.6
+    },
+    {
+      "ts": "2026-11-20T00:49:14.102000+00:00",
+      "mag": 5.6,
+      "place": "southeast of the Loyalty Islands",
+      "lat": -24.7,
+      "lon": 171.23,
+      "depth": 10,
+      "reason": "below threshold",
+      "delta": -0.9
     }
   ],
   "expected_poll_interval_sec": 900
