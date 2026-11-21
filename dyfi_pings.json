@@ -1,9 +1,20 @@
 {
-  "generated": "2026-11-21T04:45:39Z",
+  "generated": "2026-11-21T10:16:19Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
+  "count": 2,
   "pings": [
+    {
+      "usgs_id": "us6000ucij",
+      "mag": 6.8,
+      "place": "103 km NE of Lospalos, Timor Leste",
+      "time_ms": 1795254130314,
+      "lat": -7.756,
+      "lon": 127.543,
+      "depth": 143.4,
+      "dyfi_responses": 21,
+      "dyfi_maxmmi": 5.1
+    },
     {
       "usgs_id": "us6000ucfm",
       "mag": 6.7,
@@ -12,7 +23,7 @@
       "lat": -10.855,
       "lon": -75.978,
       "depth": 108.0,
-      "dyfi_responses": 100,
+      "dyfi_responses": 104,
       "dyfi_maxmmi": 5.7
     }
   ]
