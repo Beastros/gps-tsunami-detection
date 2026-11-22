@@ -1,30 +1,7 @@
 {
-  "generated": "2026-11-22T02:33:48Z",
+  "generated": "2026-11-22T10:20:47Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 2,
-  "pings": [
-    {
-      "usgs_id": "us6000ucij",
-      "mag": 6.8,
-      "place": "105 km NE of Lospalos, Timor Leste",
-      "time_ms": 1795254129120,
-      "lat": -7.732,
-      "lon": 127.541,
-      "depth": 132.1,
-      "dyfi_responses": 40,
-      "dyfi_maxmmi": 5.3
-    },
-    {
-      "usgs_id": "us6000uchd",
-      "mag": 5.0,
-      "place": "0 km NE of Carhuamayo, Peru",
-      "time_ms": 1795237924898,
-      "lat": -10.913,
-      "lon": -76.031,
-      "depth": 110.9,
-      "dyfi_responses": 11,
-      "dyfi_maxmmi": null
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
