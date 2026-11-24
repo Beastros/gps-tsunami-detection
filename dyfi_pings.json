@@ -1,19 +1,7 @@
 {
-  "generated": "2026-11-23T14:40:54Z",
+  "generated": "2026-11-24T01:55:07Z",
   "lookback_hrs": 24,
   "max_ping_age_hrs": 24,
-  "count": 1,
-  "pings": [
-    {
-      "usgs_id": "us6000ucuf",
-      "mag": 5.4,
-      "place": "9 km N of Carhuamayo, Peru",
-      "time_ms": 1795383331763,
-      "lat": -10.835,
-      "lon": -76.017,
-      "depth": 117.4,
-      "dyfi_responses": 18,
-      "dyfi_maxmmi": 4.2
-    }
-  ]
+  "count": 0,
+  "pings": []
 }
